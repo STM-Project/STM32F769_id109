@@ -31,7 +31,7 @@
 
 #define MAX_SIZE_CHANGECOLOR_BUFF	300
 
-static const char CharsTab_full[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-.,:;[]{}<>'~*()&#^=_$%∞@|?!•π∆Ê Í£≥—Ò”ÛåúèüØø/1234567890";
+static const char CharsTab_full[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-.,:;[]{}<>'~*()&#^=_$%\xB0@|?!\xA5\xB9\xC6\xE6\xCA\xEA\xA3\xB3\xD1\xF1\xD3\xF3\x8C\x9C\x8F\x9F\xAF\xBF/1234567890";
 static const char CharsTab_digits[]="+-1234567890.";
 
 extern uint32_t pLcd[LCD_BUFF_XSIZE*LCD_BUFF_YSIZE];
@@ -579,7 +579,7 @@ static void SearchCurrentFont_TablePos(char *pbmp, int fontIndex)
 		Font[fontIndex].fontsTabPos[ (int)pChar[j] ][0] = shiftXpos;
 		shiftXpos += (Font[fontIndex].fontsTabPos[ (int)pChar[j] ][1]+1);
 		if(j==0)
-			Font[fontIndex].fontsTabPos[(int)' '][1] = (2*Font[fontIndex].fontsTabPos[ (int)pChar[j] ][1])/3; //spacja na podstawie 2/3 d≥ugosci pierwszej litery z pChar
+			Font[fontIndex].fontsTabPos[(int)' '][1] = (2*Font[fontIndex].fontsTabPos[ (int)pChar[j] ][1])/3; //spacja na podstawie 2/3 dÔøΩugosci pierwszej litery z pChar
 	}
 	Font[fontIndex].fontsTabPos[(int)' '][0] = shiftXpos;
 }
@@ -2444,7 +2444,6 @@ StructTxtPxlLen LCD_StrChangeColorMovV(int idVar, int rot, int posWin, int winWi
 				temp=LCD_DrawStrChangeColor(movableFontsBuffer_pos, FontVar[idVar].FontMov.xImgWidth, fontHeight, fontID,0,0,bufTxt,movableFontsBuffer,OnlyDigits,space,GRAY,fontColor,maxVal,constWidth);
 			else
 				temp=LCD_DrawStrChangeColor(movableFontsBuffer_pos, FontVar[idVar].FontMov.xImgWidth, fontHeight, fontID,0,0,bufTxt,movableFontsBuffer,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
-			//temp=LCD_DrawStrChangeColor(movableFontsBuffer_pos, FontVar[idVar].FontMov.xImgWidth, fontHeight, fontID,0,0,bufTxt,movableFontsBuffer,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
 
 			int diffWidth=winWidth-temp.inPixel;
 			if(diffWidth>0)
@@ -2538,8 +2537,8 @@ int LCD_StrMovVIndirect(int idVar, int incrDecr)
 			{
 				switch(F.rotate)
 				{	case Rotate_0:
-					LCD_RectangleBuff(pLcd,0, M.windowWidth,height_empty ,0,0, M.windowWidth,height_empty, F.bkColor,F.bkColor,F.bkColor);
-					LCD_DisplayBuff((uint32_t)F.xPos,(uint32_t)F.yPos+height_old, M.windowWidth,height_empty, pLcd);
+						LCD_RectangleBuff(pLcd,0, M.windowWidth,height_empty ,0,0, M.windowWidth,height_empty, F.bkColor,F.bkColor,F.bkColor);
+						LCD_DisplayBuff((uint32_t)F.xPos,(uint32_t)F.yPos+height_old, M.windowWidth,height_empty, pLcd);
 						break;
 					case Rotate_90:
 						LCD_RectangleBuff(pLcd,0, height_empty,M.windowWidth ,0,0, height_empty,M.windowWidth, F.bkColor,F.bkColor,F.bkColor);
@@ -2573,7 +2572,7 @@ int LCD_StrMovVIndirect(int idVar, int incrDecr)
 				LCD_CopyBuff2pLcdIndirect(F.rotate,M.posBuff, movableFontsBuffer, M.xImgWidth,height_new, 0, M.windowWidth,0);
 				switch(F.rotate)
 				{	case Rotate_0:
-					LCD_DisplayBuff((uint32_t)F.xPos,(uint32_t)(F.yPos+height_old+M.spaceEndStart), M.windowWidth,height_new, pLcd);
+						LCD_DisplayBuff((uint32_t)F.xPos,(uint32_t)(F.yPos+height_old+M.spaceEndStart), M.windowWidth,height_new, pLcd);
 						break;
 					case Rotate_90:
 						LCD_DisplayBuff((uint32_t)F.xPos,(uint32_t)F.yPos, height_new,M.windowWidth, pLcd);

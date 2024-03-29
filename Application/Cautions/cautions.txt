@@ -22,9 +22,11 @@ KeyID==PRESSED ? BLACK:WHITE
 	
 	
 
-//+-.,[]{}<>'~*()=%∞|?/!1234567890
+//+-.,[]{}<>'~*()=%ÔøΩ|?/!1234567890
 //
-a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z + - . , : ; [ ] { } < > ' ~ * ( ) & # ^ = _ $ % ∞ @ | ? ! • π ∆ Ê   Í £ ≥ — Ò ” Û å ú è ü Ø ø / 1 2 3 4 5 6 7 8 9 0
+a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z + - . , : ; [ ] { } < > ' ~ * ( ) & # ^ = _ $ % ÔøΩ @ | ? ! ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ ÔøΩ / 1 2 3 4 5 6 7 8 9 0
+static const char CharsTab_full[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-.,:;[]{}<>'~*()&#^=_$%\xB0@|?!\xA5\xB9\xC6\xE6\xCA\xEA\xA3\xB3\xD1\xF1\xD3\xF3\x8C\x9C\x8F\x9F\xAF\xBF/1234567890";
+static const char CharsTab_full[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-.,:;[]{}<>'~*()&#^=_$%¬∞@|?!ƒÑƒÖƒÜƒáƒòƒô≈Å≈Ç≈É≈Ñ√ì√≥≈ö≈õ≈π≈∫≈ª≈º/1234567890";
 
 //R 255 120 120
 //B 80  200 255
@@ -351,7 +353,7 @@ int LCD_LoadImage(char *pathName)
   if(FR_OK!=SDCardFileInfo(pathName,&imageFileSize))
     return 3;
 
-  while((imageFileSize%4)!=0)  //wyrÛwnanie do 4bajtÛw dla odczytu SDRAM
+  while((imageFileSize%4)!=0)  //wyrÔøΩwnanie do 4bajtÔøΩw dla odczytu SDRAM
 	  imageFileSize++;
 
   if(true==DynamicImageMemoryAllocation(imageFileSize,imageIndex))
@@ -458,8 +460,8 @@ void SCREEN_ReadPanel(void)
 		//LCD_Str(fontID_1, 0, 30*0, "1111/. 1122  /.Aa11bc/A22A/", fullHight, 0,DARKGREEN,35);
 	//LCD_StrWindow(0,LCD_X,LCD_Y,fontID_1, 0, 30*0, "1111/. 1122  /.Aa11bc/A22A/", fullHight, 0,0,0);
 
-	for(int i=0;i<10;++i) LCD_StrChangeColor(fontID_1, 0, 30*0, "Rafa≥ Markielowski +23.6∞C", fullHight, 0,MYGRAY,BLACK,0xF4);
-	for(int i=0;i<10;++i) LCD_Str(fontID_1, 0, 30*0, "Rafa≥ Markielowski +23.6∞C", fullHight, 0,0,0);
+	for(int i=0;i<10;++i) LCD_StrChangeColor(fontID_1, 0, 30*0, "RafaÔøΩ Markielowski +23.6ÔøΩC", fullHight, 0,MYGRAY,BLACK,0xF4);
+	for(int i=0;i<10;++i) LCD_Str(fontID_1, 0, 30*0, "RafaÔøΩ Markielowski +23.6ÔøΩC", fullHight, 0,0,0);
 	StopMeasureTime(0,"\r\nArialwwww:");
 
 	LCD_Show();
@@ -509,21 +511,21 @@ void SCREEN_ReadPanel(void)
 
 
 
-//	LCD_Str(fontID_3, 250, 0, "Markielowski Rafa≥ 123 ", fullHight, -1);
-//	LCD_Str(fontID_4, 250, 30, "Markielowski Rafa≥ 123", fullHight, -1);
+//	LCD_Str(fontID_3, 250, 0, "Markielowski RafaÔøΩ 123 ", fullHight, -1);
+//	LCD_Str(fontID_4, 250, 30, "Markielowski RafaÔøΩ 123", fullHight, -1);
 
 
-//	LCD_Str(fontID_2, 0, 20, "Markielowski Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_3, 0, 40, "Markielowski Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_4, 0, 60, "Markielowski Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_5, 0, 80, "Markielowski Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_6, 0, 110, "Markielowski Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_7, 0, 140, "Markielowski Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_8, 0, 180, "Markielowski Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_9, 0, 240, "Markielowski Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_10, 150, 0, "Markielowski Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_11, 150, 50, "Rafa≥ 3", halfHight, 0);
-//	LCD_Str(fontID_12, 150, 160, "Rafa≥ 3", halfHight, 0);
+//	LCD_Str(fontID_2, 0, 20, "Markielowski RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_3, 0, 40, "Markielowski RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_4, 0, 60, "Markielowski RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_5, 0, 80, "Markielowski RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_6, 0, 110, "Markielowski RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_7, 0, 140, "Markielowski RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_8, 0, 180, "Markielowski RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_9, 0, 240, "Markielowski RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_10, 150, 0, "Markielowski RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_11, 150, 50, "RafaÔøΩ 3", halfHight, 0);
+//	LCD_Str(fontID_12, 150, 160, "RafaÔøΩ 3", halfHight, 0);
 
 
 
@@ -545,7 +547,7 @@ void SCREEN_ReadPanel(void)
 //	LCD_Shape(350,200,LCD_KeyBackspace,48,24,WHITE,0,MYGRAY);//
 //	LCD_Shape(400,200,LCD_KeyBackspace,48,23,WHITE,0,MYGRAY);
 //	StartMeasurTime(0);
-//	LCD_Str(fontID_6, 80, 10, "Markielowski Rafa≥", fullHight, 0);
+//	LCD_Str(fontID_6, 80, 10, "Markielowski RafaÔøΩ", fullHight, 0);
 //	StopMeasurTime(0,"\r\nArial text::");
 
 
