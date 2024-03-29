@@ -1,0 +1,498 @@
+CUBEMX 6.1.0   dzial dla SD f_mount  wyzsza wersja nie dziala !!!
+RTC_INIT() na samym koncu wszystkich inicjaliacji umiescic bo inczaej zawiesza sie
+f_sync(fp);	
+kolejnosc funkcji init w main tak ajk ustawia cube !!!	i musi byc RCC global interrupt			/* Flush cached data */
+
+
+
+ciekawy powerfail!!
+ADUM130 ADUM140  opto
+AD421  loop power 4-20mA
+
+#define BLUE_LED_TOGGLE   	ShiftReg_WriteVal(SHIFT_REG_DATA^=(1 << 7))  //exor ^ na toogle
+
+  taskENTER_CRITICAL();
+  fr = f_open(&fsrc, "test.txt", FA_OPEN_EXISTING | FA_READ);
+  if (fr == FR_OK)
+  {
+  	HAL_Delay(1);
+  }
+  taskEXIT_CRITICAL();
+
+if..
+else
+  continue;
+
+if (0x01 & xEventGroupGetBits(xBoardResetEvent))
+
+
+f_gets(ParametersReadWriteBuffer, BUFFER_SIZE, &ParametersFile);
+				f_open(&FilEvent, archEventFilePath, FA_OPEN_EXISTING | FA_WRITE);
+				f_lseek(&FilEvent, f_size(&FilEvent));
+				f_printf(&FilEvent, archBufferEvent);
+				f_close(&FilEvent);
+
+screenSaver.c
+void StartScreenSaverTimer(void
+void vScreenSaverCallback(TimerHandle_t pxTimer)
+
+void sendEvent(char* eventDesc)
+{
+	char* eventMessage = pvPortMalloc(100);
+	if (NULL == eventMessage)
+	{
+
+	}
+	else
+	{
+		strncpy(eventMessage,eventDesc,100);
+		if(pdPASS != xQueueSend(xMessageQueue, &eventMessage, 20))
+			vPortFree(eventMessage);
+	}
+}
+
+event group lokalne w watku a nie w main.c globalne
+
+void ResetLogOutTimer(void)
+{
+	xTimerReset(xLogOutTimer, LOG_OUT_TIME);
+}
+void vLogOutTimerCallback(TimerHandle_t pxTimer)
+{
+	UserLogOut();
+	xTimerStop(pxTimer, 0);
+}
+
+xQueueHandle xDataQueue, xDataResolution, xDataStatusQueue;
+xQueueHandle xTotalizerQueue, xTotalizerResolution;
+xQueueHandle xChannelsQueue, xMessageQueue;
+
+xTaskHandle vtaskArchiveHandle;
+EventGroupHandle_t xArchiveEventGroup;
+SemaphoreHandle_t xSwitchSemaphore;
+
+SemaphoreHandle_t xArchiveWrite;
+
+void vtaskArchive(void *pvParameters)
+{
+	vTaskDelay(500);
+	uint8_t ChannelsNumber={0};
+
+	xSwitchSemaphore = xSemaphoreCreateMutex();
+	xArchiveWrite = xSemaphoreCreateMutex();
+
+	xArchiveEventGroup = xEventGroupCreate();
+
+	xMessageQueue = xQueueCreate(20, sizeof(char *));
+
+	xDataQueue = xQueueCreate(100, sizeof(float));
+	xDataStatusQueue = xQueueCreate(100, sizeof(uint8_t));
+	xDataResolution = xQueueCreate(100, sizeof(char));
+
+	xTotalizerQueue = xQueueCreate(200, sizeof(uint64_t));
+	xTotalizerResolution = xQueueCreate(200, sizeof(char));
+
+	archPollingState = FRAM_Read(ARCHIVE_STATE_ADDR);
+	if (archPollingState != 0 && archPollingState != 1)
+		archPollingState = 0;
+
+	memset(archBufferArchive, 0, sizeof(archBufferArchive));
+	memset(archBufferTotalizer, 0, sizeof(archBufferTotalizer));
+
+	while (1)
+	{
+		if (STARTUP_WaitForBits(0x0010))
+		{
+			STARTUP_ClaerBits(0x0010);
+			STARTUP_SetBits(0x0020);
+
+			xQueueReceive(xChannelsQueue, &ChannelsNumber, 0);
+
+			if (FRAM_Read(NEW_ARCHIVE_FLAG_ADDR) == 1)
+			{
+				archCreateNewArchive();
+				FRAM_Write(NEW_ARCHIVE_FLAG_ADDR, 0);
+			}
+
+			archStartArchive();
+
+			sendEvent("SYS:STOP");
+			sendEvent("SYS:START");
+
+			if (ChannelsNumber != 0)
+			{
+				while (1)
+				{
+					if (xEventGroupWaitBits(xArchiveEventGroup, 0x01 | 0x02, pdTRUE, pdFALSE, 0) != 0)
+					{
+						xQueueReset(xDataQueue);
+						xQueueReset(xDataStatusQueue);
+						xQueueReset(xDataResolution);
+						xQueueReset(xTotalizerQueue);
+						archCreateNewArchive();
+					}
+
+					if ( xSemaphoreTake( xSwitchSemaphore, ( TickType_t ) 0 ) == pdTRUE)
+					{
+						if (archPollingState != 0)
+						{
+							updateArchiveTimeAndDate();
+							archDataPolling();
+							archTotalizerPolling();
+						}
+						xSemaphoreGive(xSwitchSemaphore);
+					}
+
+					archEventPolling();
+					WDFlags[5] = ALIVE;
+					vTaskDelay(250);
+				}
+			}
+			else
+			{
+				while (1)
+				{
+					archEventPolling();
+					WDFlags[5] = ALIVE;
+					vTaskDelay(250);
+				}
+			}
+		}
+		else
+			continue;
+	}
+}
+configSUPPORT_DYNAMIC_ALLOCATION  w FreeRtos.h
+
+
+//---------------------------------------------------------------------------------
+
+SemaphoreHandle_t xSwitchSemaphore;
+xSwitchSemaphore = xSemaphoreCreateMutex();
+
+if ( xSemaphoreTake( xSwitchSemaphore, ( TickType_t ) 0 ) == pdTRUE)
+{
+   .....
+   xSemaphoreGive(xSwitchSemaphore);
+}
+
+//---------------------------------------------------------------------------------
+
+
+EventGroupHandle_t xArchiveEventGroup;
+xArchiveEventGroup = xEventGroupCreate();
+
+if (xEventGroupWaitBits(xArchiveEventGroup, 0x01 | 0x02, pdTRUE, pdFALSE, 0) != 0)
+{
+  .....
+}
+
+EventGroupHandle_t taskSequence;
+
+void STARTUP_Init(void)
+{
+	taskSequence = xEventGroupCreate();
+	xEventGroupSetBits(taskSequence, 0x0000);
+}
+
+uint32_t STARTUP_WaitForBits(uint32_t bits)
+{
+	if ((xEventGroupWaitBits(taskSequence, bits,pdFALSE, pdFALSE, 100) & bits) == bits)
+		return 1;
+	else
+		return 0;
+}
+
+
+void STARTUP_SetBits(uint32_t bits)
+{
+	xEventGroupSetBits(taskSequence, bits);
+}
+
+void STARTUP_ClaerBits(uint32_t bits)
+{
+	xEventGroupClearBits(taskSequence, bits);
+}
+
+
+
+//---------------------------------------------------------------------------------
+
+
+xQueueHandle xDataQueue;
+xDataQueue = xQueueCreate(100, sizeof(float));
+xQueueReset(xDataQueue);
+xQueueSend(xDataQueue, (void * ) &Channels[channelNumber].value, 0);
+while (uxQueueMessagesWaiting(xDataQueue) > 0)
+{
+	xQueueReceive(xDataQueue, &archDataVal[queueDataSize], 0);
+	queueDataSize++;
+}
+
+//---------------------------------------------------------------------------------
+
+portTickType xLastExecutionTime;
+xLastExecutionTime = xTaskGetTickCount();
+vTaskDelayUntil(&xLastExecutionTime, 100);
+
+//--------------------------------------------------------------------------------------
+
+xTaskHandle vtaskBSPHandle;
+xTaskCreate(vtaskBSP, "vtaskBSP", 3000, NULL, ( unsigned portBASE_TYPE )2, &vtaskBSPHandle);
+osKernelStart();
+
+void vtaskBSP(void *pvParameters)
+{
+	while (1)
+	{
+		if (STARTUP_WaitForBits(0x0001))
+		{
+			STARTUP_ClaerBits(0x0001);
+			STARTUP_SetBits(0x0002);
+
+			while (1)
+			{
+				BSP_Background();
+				GUI_Exec();
+				vTaskDelay(2);
+			}
+		}
+		else
+			continue;
+	}
+}
+
+void vtaskEth(void *pvParameters)
+{
+	/* Initilaize the LwIP stack */
+
+	while (1)
+	{
+		if (STARTUP_WaitForBits(0x0040))
+		{
+			STARTUP_ClaerBits(0x0040);
+
+			tcpip_init(NULL, NULL);
+
+			Netif_Config();
+			http_server_netconn_init();
+			modbus_init();
+
+			MBTCP_Initialize();
+
+			DNS_Init();
+			EMAIL_Init();
+
+			STARTUP_SetBits(0x0080);
+
+			vTaskDelete(NULL);
+		}
+		else
+			continue;
+	}
+}
+
+
+1.▶
+2. SDRAM period CLOCK z 3 na 2  
+3. priorytety przerwan DMA muszą byc inne a nie 5 I KAZDY mUSI BYC INNYY !!!
+4. callback eth rozlaczenie i wlaczenie kabla  net_config() w zakladdcd set callback
+5. powerfail
+6. RTC DST
+7. usiawienia PHY addres USER fi w cube
+8. screenSaver.xTimer = xTimerCreate("ScreenSaverTimer", screenSaver.time, 0, ( void * )0,  vScreenSaverCallback);  screenSaver.c
+9.f_gets
+10.  char key[] = "1234567890.";  strspn(strIP, key);
+11. strcpy(version, strtok_r(NULL, ",", &readpointer));
+    int major = atoi(strtok_r(version, ".", &readpointer));
+12. extern EXPANSION_CARD ExpansionCards[];  bez indeksu [..]
+13.	f_open(&graphicFile, pathToFile, FA_READ);
+	f_stat(pathToFile,&fno);
+	f_read(&graphicFile, buff, fno.fsize, &bytesReadFromFile); 
+14. f_putc zamiast f_write
+15. mini_vsnprintf(char *buffer, unsigned int buffer_len, const char *fmt, va_list va)
+{
+	char *pbuffer = buffer;
+	char bf[24];
+	char ch;
+
+	int _putc(char ch)
+	{
+		if ((unsigned int)((pbuffer - buffer) + 1) >= buffer_len)
+			return 0;
+		*(pbuffer++) = ch;
+		*(pbuffer) = '\0';
+		return 1;
+	}
+
+	int _puts(char *s, unsigned int len)
+	{
+		unsigned int i;
+
+		if (buffer_len - (pbuffer - buffer) - 1 < len)
+			len = buffer_len - (pbuffer - buffer) - 1;
+
+		/* Copy to buffer */
+		for (i = 0; i < len; i++)
+			*(pbuffer++) = s[i];
+		*(pbuffer) = '\0';
+
+		return len;
+	}
+
+	while ((ch=*(fmt++))) {
+		if ((unsigned int)((pbuffer - buffer) + 1) >= buffer_len)
+			break;
+	.......
+}
+
+16.   	if (ERR_OK == netconn_recv(conn, &inbuf))
+	{
+		if (netconn_err(conn) == ERR_OK)
+		{
+			buflen = netbuf_len(inbuf);
+			buf = pvPortMalloc(buflen*sizeof(char));
+			netbuf_copy(inbuf, buf, buflen);
+			if ((strncmp(buf, "GET /LOGIN", 10) == 0) )
+			{
+				char* ret;
+				char* givenPassword;
+				char* realPassword;
+				ret = strstr(buf,"x-usr-psw");
+
+17.   				f_open(&FilEvent, archEventFilePath, FA_OPEN_EXISTING | FA_WRITE);
+				f_lseek(&FilEvent, f_size(&FilEvent));
+				f_printf(&FilEvent, archBufferEvent);
+				f_close(&FilEvent);
+
+18. w DWORD get_fattime(void)  ustawic RTC zapisu pliku
+19.  
+lowipopts.h
+#define TCP_SND_QUEUELEN 16
+#define DEFAULT_THREAD_STACKSIZE 8000
+*----- Value in opt.h for DEFAULT_UDP_RECVMBOX_SIZE: 0 -----*/
+#define DEFAULT_UDP_RECVMBOX_SIZE 128
+/*----- Value in opt.h for DEFAULT_TCP_RECVMBOX_SIZE: 0 -----*/
+#define DEFAULT_TCP_RECVMBOX_SIZE 128
+/*----- Value in opt.h for DEFAULT_ACCEPTMBOX_SIZE: 0 -----*/
+#define DEFAULT_ACCEPTMBOX_SIZE 128
+#define TCPIP_MBOX_SIZE 128
+#define TCPIP_THREAD_STACKSIZE 16000
+
+opt.h
+#define TCP_MSS                         1460
+#define PBUF_POOL_SIZE                  24
+#define MEMP_NUM_NETCONN                32
+#define MEMP_NUM_NETBUF                 32
+#define MEMP_NUM_TCP_SEG                32
+#define MEMP_NUM_TCP_PCB                32
+#define MEMP_NUM_PBUF                   32
+
+20. w cubeMX opisywać GPIO własne nazwy
+21.  Dst->LowSignalValue = atof(strtok_r(NULL, ",", &readpointer));
+22.  strspn(strIP, key);
+23. register int liczba; zmienna w rejestrze i szybki dostep
+24. if( xTaskGetCurrentTaskHandle() == xIdleHandle )  w EndIdleMonitor();
+25. pvMBFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBPortClose : NULL;
+26. w  funkcji:  char* dest;   result = dest = malloc(in_len / 4 * 3 + 1);   return result;
+27. w pliku .h  dac #include <stdint.h> aby rozumial typy np uint8_t
+28.  void
+vMBPortClose( void )
+{
+    extern void vMBPortSerialClose( void );
+    extern void vMBPortTimersDisable( void );
+    vMBPortSerialClose(  );
+    vMBPortTimersDisable(  );
+}
+29. if (TakeArchiveSemaphore(50))
+					{
+						f_open(&arch_file, filepath, FA_READ);
+						f_lseek(&arch_file, filePointer);
+30. dla HTTP:
+if(ERR_OK == netconn_recv(conn, &inbuf)),  
+buflen = netbuf_len(inbuf);
+buf = pvPortMalloc(buflen*sizeof(char));
+netbuf_copy(inbuf, buf, buflen);
+else if ((strncmp(buf, "GET /archive/", 13) == 0))
+	vPortFree(buf);
+31.
+if (TakeArchiveSemaphore(50))
+{
+						f_open(&arch_file, filepath, FA_READ);
+						f_lseek(&arch_file, filePointer);
+						res = f_read(&arch_file, archDownBuffer, DOWNLOAD_BUFFER_SIZE, &archDownCounter);
+						filePointer = arch_file.fptr;
+						f_close(&arch_file);
+
+	
+					GiveArchiveSemaphore();
+}
+32. ethernetif_notify_conn_changed() tą funkcje uzupelnij aby po wyl zasilania i kabla eth i po wlaczeniu zasilania i pozniej wlozeniu kabla eth strona www dzialala
+33. ciekawa inicjaliza strultur do stanow pierwotnych
+typedef volatile struct {
+	unsigned short noSettings:1;
+	unsigned short firstTimeSettingsLauncher:1;
+	unsigned short receivedNewStates:1;
+	unsigned short watchdog:1;
+
+} MAINFLAGS_StructTypeDef;
+
+volatile MAINFLAGS_StructTypeDef GeneralFlag =
+{
+		TRUE, 	//noSettings
+		TRUE, 	//firstTimeSettingsLauncher
+		FALSE,	//receivedNewStates
+		FALSE		//watchdog
+};
+
+34. fajny zapis:
+*/
+typedef struct { I16P x,y; } GUI_POINT;
+typedef struct { I16 x0,y0,x1,y1; } LCD_RECT;
+35.   if (conn->state == NETCONN_NONE){   }
+36. ALIGN_32BYTES();
+37. ceil() zaokroglenie w gore
+    floor() zaokr. w dół
+38.
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+
+	if (huart->Instance == USART6)
+		SetNewTimeAndDate();
+	if (huart->Instance == USART1)
+		FREQUENCY_SetNewDataEvent();
+}
+void FREQUENCY_SetNewDataEvent(void)
+{
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE, xResult = pdFAIL;
+	xResult = xEventGroupSetBitsFromISR(xDiscreteInputEvent, FREQUENCY_NEW_DATA, &xHigherPriorityTaskWoken);
+	if (xResult == pdPASS)
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
+39.   = NAN;
+40.
+ if(isnan(*rawValue))
+	break;
+41.
+if (xEventGroupWaitBits(xAnalogInputEvent, 0x3, pdTRUE, pdFALSE, 10)) jezeli ktoryklolwiek bit z 0x03 sie zmieni to wchodzi w if i po wyjsciu kasuje ten bit
+void EnableCalibrationMode(void)
+{
+	xEventGroupSetBits(xAnalogInputEvent, 2);
+}
+
+void DisableCalibrationMode(void)
+{
+	xEventGroupSetBits(xAnalogInputEvent, 1);
+}
+42. 	
+HAL_TIM_Base_Stop_IT(&htim4);  jesli to to musi byc to ponizej tez!!! bo inacej zacina sie
+HAL_TIM_Base_MspDeInit(&htim4);
+
+43.   osMessagePut ( ConnectionEvent, CARD_CONNECTED, osWaitForever);
+    event = osMessageGet( ConnectionEvent, osWaitForever );
+    
+    if( event.status == osEventMessage )
+    {
+      switch(event.value.v)
+      {
+
+44. strcat(RS485Buffer, "Zegar ustawiony");
