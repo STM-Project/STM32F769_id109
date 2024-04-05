@@ -35,6 +35,9 @@
 #include "ltdc.h"
 #include "tim.h"
 
+#include "touch.h"
+#include "stmpe811.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -85,6 +88,9 @@ void HARDWARE_Init(void)
 	MX_DMA2D_Init();
 
 	MX_TIM5_Init();
+	MX_I2C1_Init();
+
+	 BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 
 
 

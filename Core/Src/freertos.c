@@ -163,7 +163,7 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-
+int x,y;
 	MX_FATFS_Init();
 
 	 SetLang(2,English);
@@ -183,6 +183,7 @@ void StartDefaultTask(void const * argument)
 
 	 SCREEN_ReadPanel();
 	 vTaskDelay(2);
+	 CheckTouch(&x, &y);
 
 
 
