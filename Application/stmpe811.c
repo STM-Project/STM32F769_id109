@@ -137,7 +137,12 @@
 
 #define TOUCH_RESOLUTION	2
 
-
+typedef enum
+{
+   TS_OK       = 0x00,
+   TS_ERROR    = 0x01,
+   TS_TIMEOUT  = 0x02
+}TS_StatusTypeDef;
 
 typedef enum
 {
@@ -145,9 +150,6 @@ typedef enum
   IO_PIN_SET
 }IO_PinState;
 
-/** @defgroup IO_Driver_structure  IO Driver structure
-  * @{
-  */
 typedef struct
 {
   void       (*Init)(uint16_t);
@@ -160,7 +162,6 @@ typedef struct
   void       (*ClearIT)(uint16_t, uint32_t);
 
 }IO_DrvTypeDef;
-
 
 typedef struct
 {
@@ -301,12 +302,11 @@ static void IOE_Init(void)
 
 static void stmpe811_Init(uint16_t DeviceAddr)
 {
-      /* Initialize IO BUS layer */
-      IOE_Init(); 
+   /* Initialize IO BUS layer */
+   IOE_Init();
       
-      /* Generate stmpe811 Software reset */
-      stmpe811_Reset(DeviceAddr);
-
+   /* Generate stmpe811 Software reset */
+   stmpe811_Reset(DeviceAddr);
 }
 
 static uint16_t stmpe811_ReadID(uint16_t DeviceAddr)
