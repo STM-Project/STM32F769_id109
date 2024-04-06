@@ -1,0 +1,12 @@
+../Application/LCD/Touch/touch.c:130:17:Calibration_GetX	24	static
+../Application/LCD/Touch/touch.c:139:17:Calibration_GetY	24	static
+../Application/LCD/Touch/touch.c:148:9:IsCalibrationDone	4	static
+../Application/LCD/Touch/touch.c:154:6:HAL_GPIO_EXTI_Callback	16	static
+../Application/LCD/Touch/touch.c:159:5:CheckTouch	32	static
+../Application/LCD/Touch/touch.c:194:6:clearTouchTemp	4	static
+../Application/LCD/Touch/touch.c:202:5:isTouchTemp	4	static
+../Application/LCD/Touch/touch.c:210:5:SetTouch	24	static
+../Application/LCD/Touch/touch.c:241:5:GetTouchToTemp	24	static
+../Application/LCD/Touch/touch.c:258:6:DeleteAllTouch	16	static
+../Application/LCD/Touch/touch.c:267:6:DeleteSelectTouch	24	static
+../Application/LCD/Touch/touch.c:277:6:DeleteAllTouchWithout	24	static

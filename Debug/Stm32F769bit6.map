@@ -1733,6 +1733,297 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0xf2 ./Application/LCD/Screens/SCREEN_ReadPanel.o
  .debug_macro   0x0000000000000000       0xf3 ./Application/LCD/Screens/SCREEN_ReadPanel.o
  .debug_macro   0x0000000000000000       0xe2 ./Application/LCD/Screens/SCREEN_ReadPanel.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/stmpe811.o
+ .text          0x0000000000000000        0x0 ./Application/LCD/Touch/stmpe811.o
+ .data          0x0000000000000000        0x0 ./Application/LCD/Touch/stmpe811.o
+ .bss           0x0000000000000000        0x0 ./Application/LCD/Touch/stmpe811.o
+ .text.stmpe811_IO_DisableAF
+                0x0000000000000000       0x40 ./Application/LCD/Touch/stmpe811.o
+ .text.stmpe811_IO_Start
+                0x0000000000000000       0x4a ./Application/LCD/Touch/stmpe811.o
+ .text.stmpe811_IO_WritePin
+                0x0000000000000000       0x40 ./Application/LCD/Touch/stmpe811.o
+ .text.stmpe811_IO_ReadPin
+                0x0000000000000000       0x2c ./Application/LCD/Touch/stmpe811.o
+ .data.stmpe811_io_drv
+                0x0000000000000000       0x20 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0xac0 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x2ab ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x2e ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x3b ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x22 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x8e ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x51 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x103 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x6a ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x1df ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x1c ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x22 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0xd9 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000     0x12cd ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x11f ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x19 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000    0x204b6 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x6d ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000     0x3749 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x174 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x63 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000     0x1b3f ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x6c4 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x18b ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x115 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x275 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0xa5 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x24f ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x71 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x58 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x236 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x232 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x14e ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x3db ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x12 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x504 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x22c ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x61 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0xa5 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x198 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x6fc ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0xd6 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x12e ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x108 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x35 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x773 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x1d5 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0xa8a ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0xa9 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x5ba ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x44 ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000      0x15b ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x0000000000000000       0x16 ./Application/LCD/Touch/stmpe811.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .group         0x0000000000000000        0xc ./Application/LCD/Touch/touch.o
+ .text          0x0000000000000000        0x0 ./Application/LCD/Touch/touch.o
+ .data          0x0000000000000000        0x0 ./Application/LCD/Touch/touch.o
+ .bss           0x0000000000000000        0x0 ./Application/LCD/Touch/touch.o
+ .bss.touchTemp
+                0x0000000000000000        0x8 ./Application/LCD/Touch/touch.o
+ .bss.Calibration_Done
+                0x0000000000000000        0x1 ./Application/LCD/Touch/touch.o
+ .bss.aPhysX    0x0000000000000000        0x8 ./Application/LCD/Touch/touch.o
+ .bss.aPhysY    0x0000000000000000        0x8 ./Application/LCD/Touch/touch.o
+ .bss.aLogX     0x0000000000000000        0x8 ./Application/LCD/Touch/touch.o
+ .bss.aLogY     0x0000000000000000        0x8 ./Application/LCD/Touch/touch.o
+ .text.IsCalibrationDone
+                0x0000000000000000       0x18 ./Application/LCD/Touch/touch.o
+ .text.clearTouchTemp
+                0x0000000000000000       0x2c ./Application/LCD/Touch/touch.o
+ .text.isTouchTemp
+                0x0000000000000000       0x30 ./Application/LCD/Touch/touch.o
+ .text.SetTouch
+                0x0000000000000000      0x100 ./Application/LCD/Touch/touch.o
+ .text.GetTouchToTemp
+                0x0000000000000000       0xa4 ./Application/LCD/Touch/touch.o
+ .text.DeleteAllTouch
+                0x0000000000000000       0x3c ./Application/LCD/Touch/touch.o
+ .text.DeleteSelectTouch
+                0x0000000000000000       0x58 ./Application/LCD/Touch/touch.o
+ .text.DeleteAllTouchWithout
+                0x0000000000000000       0x58 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0xac0 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x2ab ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x2e ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x3b ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x22 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x8e ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x51 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x103 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x6a ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x1df ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x1c ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x22 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0xd9 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000     0x12cd ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x11f ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x19 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000    0x204b6 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x6d ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000     0x3749 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x174 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x63 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000     0x1b3f ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x6c4 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x18b ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x115 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x275 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0xa5 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x24f ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x71 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x58 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x236 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x232 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x14e ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x3db ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x12 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x504 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x22c ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x61 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0xa5 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x198 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x6fc ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0xd6 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x12e ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x108 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x35 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x773 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x1d5 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0xa8a ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0xa9 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x5ba ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x44 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x15b ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x7c ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x1c ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x61 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x29 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x43 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x34 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x16 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x43 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x34 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x10 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x58 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x8e ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x1c ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x177 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000      0x369 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x10 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x35 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000000000       0x20 ./Application/LCD/Touch/touch.o
  .group         0x0000000000000000        0xc ./Application/Lang/lang.o
  .group         0x0000000000000000        0xc ./Application/Lang/lang.o
  .group         0x0000000000000000        0xc ./Application/Lang/lang.o
@@ -1824,299 +2115,6 @@ Discarded input sections
  .debug_macro   0x0000000000000000      0x4e8 ./Application/cpu_utils.o
  .debug_macro   0x0000000000000000       0xb5 ./Application/cpu_utils.o
  .debug_macro   0x0000000000000000       0xaa ./Application/cpu_utils.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/stmpe811.o
- .text          0x0000000000000000        0x0 ./Application/stmpe811.o
- .data          0x0000000000000000        0x0 ./Application/stmpe811.o
- .bss           0x0000000000000000        0x0 ./Application/stmpe811.o
- .text.stmpe811_IO_DisableAF
-                0x0000000000000000       0x40 ./Application/stmpe811.o
- .text.stmpe811_IO_Start
-                0x0000000000000000       0x4a ./Application/stmpe811.o
- .text.stmpe811_IO_WritePin
-                0x0000000000000000       0x40 ./Application/stmpe811.o
- .text.stmpe811_IO_ReadPin
-                0x0000000000000000       0x2c ./Application/stmpe811.o
- .text.stmpe811_IO_ClearIT
-                0x0000000000000000       0x5e ./Application/stmpe811.o
- .data.stmpe811_io_drv
-                0x0000000000000000       0x20 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0xac0 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x2ab ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x2e ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x3b ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x22 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x8e ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x51 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x103 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x6a ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x1df ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x1c ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x22 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0xd9 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000     0x12cd ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x11f ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x19 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000    0x204b6 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x6d ./Application/stmpe811.o
- .debug_macro   0x0000000000000000     0x3749 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x174 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x63 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000     0x1b3f ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x6c4 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x18b ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x115 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x275 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0xa5 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x24f ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x71 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x58 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x236 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x232 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x14e ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x3db ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x12 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x504 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x22c ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x61 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0xa5 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x198 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x6fc ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0xd6 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x12e ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x108 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x35 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x773 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x1d5 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0xa8a ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0xa9 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x5ba ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x44 ./Application/stmpe811.o
- .debug_macro   0x0000000000000000      0x15b ./Application/stmpe811.o
- .debug_macro   0x0000000000000000       0x16 ./Application/stmpe811.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .group         0x0000000000000000        0xc ./Application/touch.o
- .text          0x0000000000000000        0x0 ./Application/touch.o
- .data          0x0000000000000000        0x0 ./Application/touch.o
- .bss           0x0000000000000000        0x0 ./Application/touch.o
- .bss.touchTemp
-                0x0000000000000000        0x8 ./Application/touch.o
- .bss.Calibration_Done
-                0x0000000000000000        0x1 ./Application/touch.o
- .bss.aPhysX    0x0000000000000000        0x8 ./Application/touch.o
- .bss.aPhysY    0x0000000000000000        0x8 ./Application/touch.o
- .bss.aLogX     0x0000000000000000        0x8 ./Application/touch.o
- .bss.aLogY     0x0000000000000000        0x8 ./Application/touch.o
- .text.IsCalibrationDone
-                0x0000000000000000       0x18 ./Application/touch.o
- .text.clearTouchTemp
-                0x0000000000000000       0x2c ./Application/touch.o
- .text.isTouchTemp
-                0x0000000000000000       0x30 ./Application/touch.o
- .text.SetTouch
-                0x0000000000000000      0x100 ./Application/touch.o
- .text.GetTouchToTemp
-                0x0000000000000000       0xa4 ./Application/touch.o
- .text.DeleteAllTouch
-                0x0000000000000000       0x3c ./Application/touch.o
- .text.DeleteSelectTouch
-                0x0000000000000000       0x58 ./Application/touch.o
- .text.DeleteAllTouchWithout
-                0x0000000000000000       0x58 ./Application/touch.o
- .debug_macro   0x0000000000000000      0xac0 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x2ab ./Application/touch.o
- .debug_macro   0x0000000000000000       0x2e ./Application/touch.o
- .debug_macro   0x0000000000000000       0x3b ./Application/touch.o
- .debug_macro   0x0000000000000000       0x22 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x8e ./Application/touch.o
- .debug_macro   0x0000000000000000       0x51 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x103 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x6a ./Application/touch.o
- .debug_macro   0x0000000000000000      0x1df ./Application/touch.o
- .debug_macro   0x0000000000000000       0x1c ./Application/touch.o
- .debug_macro   0x0000000000000000       0x22 ./Application/touch.o
- .debug_macro   0x0000000000000000       0xd9 ./Application/touch.o
- .debug_macro   0x0000000000000000     0x12cd ./Application/touch.o
- .debug_macro   0x0000000000000000      0x11f ./Application/touch.o
- .debug_macro   0x0000000000000000       0x19 ./Application/touch.o
- .debug_macro   0x0000000000000000    0x204b6 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x6d ./Application/touch.o
- .debug_macro   0x0000000000000000     0x3749 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x174 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x63 ./Application/touch.o
- .debug_macro   0x0000000000000000     0x1b3f ./Application/touch.o
- .debug_macro   0x0000000000000000      0x6c4 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x18b ./Application/touch.o
- .debug_macro   0x0000000000000000      0x115 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x275 ./Application/touch.o
- .debug_macro   0x0000000000000000       0xa5 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x24f ./Application/touch.o
- .debug_macro   0x0000000000000000       0x71 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x58 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x236 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x232 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x14e ./Application/touch.o
- .debug_macro   0x0000000000000000      0x3db ./Application/touch.o
- .debug_macro   0x0000000000000000       0x12 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x504 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x22c ./Application/touch.o
- .debug_macro   0x0000000000000000       0x61 ./Application/touch.o
- .debug_macro   0x0000000000000000       0xa5 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x198 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x6fc ./Application/touch.o
- .debug_macro   0x0000000000000000       0xd6 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x12e ./Application/touch.o
- .debug_macro   0x0000000000000000      0x108 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x35 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x773 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x1d5 ./Application/touch.o
- .debug_macro   0x0000000000000000      0xa8a ./Application/touch.o
- .debug_macro   0x0000000000000000       0xa9 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x5ba ./Application/touch.o
- .debug_macro   0x0000000000000000       0x44 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x15b ./Application/touch.o
- .debug_macro   0x0000000000000000       0x7c ./Application/touch.o
- .debug_macro   0x0000000000000000       0x1c ./Application/touch.o
- .debug_macro   0x0000000000000000       0x61 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x29 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x43 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x34 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x16 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x43 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x34 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x10 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x58 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x8e ./Application/touch.o
- .debug_macro   0x0000000000000000       0x1c ./Application/touch.o
- .debug_macro   0x0000000000000000      0x177 ./Application/touch.o
- .debug_macro   0x0000000000000000      0x369 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x10 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x35 ./Application/touch.o
- .debug_macro   0x0000000000000000       0x20 ./Application/touch.o
  .group         0x0000000000000000        0xc ./Core/Src/dma.o
  .group         0x0000000000000000        0xc ./Core/Src/dma.o
  .group         0x0000000000000000        0xc ./Core/Src/dma.o
@@ -10469,10 +10467,10 @@ LOAD ./Application/LCD/LCD_Common.o
 LOAD ./Application/LCD/LCD_Hardware.o
 LOAD ./Application/LCD/LCD_fonts_images.o
 LOAD ./Application/LCD/Screens/SCREEN_ReadPanel.o
+LOAD ./Application/LCD/Touch/stmpe811.o
+LOAD ./Application/LCD/Touch/touch.o
 LOAD ./Application/Lang/lang.o
 LOAD ./Application/cpu_utils.o
-LOAD ./Application/stmpe811.o
-LOAD ./Application/touch.o
 LOAD ./Core/Src/dma.o
 LOAD ./Core/Src/dma2d.o
 LOAD ./Core/Src/fmc.o
@@ -11266,84 +11264,84 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .text.SCREEN_ReadPanel
                 0x0000000000216090     0x1170 ./Application/LCD/Screens/SCREEN_ReadPanel.o
                 0x0000000000216090                SCREEN_ReadPanel
- .text.SetLang  0x0000000000217200       0x28 ./Application/Lang/lang.o
-                0x0000000000217200                SetLang
- .text.GetSelTxt
-                0x0000000000217228       0xc8 ./Application/Lang/lang.o
-                0x0000000000217228                GetSelTxt
- .text.vApplicationIdleHook
-                0x00000000002172f0       0x20 ./Application/cpu_utils.o
-                0x00000000002172f0                vApplicationIdleHook
- .text.vApplicationTickHook
-                0x0000000000217310       0x6c ./Application/cpu_utils.o
-                0x0000000000217310                vApplicationTickHook
- .text.osGetCPUUsage
-                0x000000000021737c       0x18 ./Application/cpu_utils.o
-                0x000000000021737c                osGetCPUUsage
  .text.IOE_Delay
-                0x0000000000217394       0x16 ./Application/stmpe811.o
- *fill*         0x00000000002173aa        0x2 
+                0x0000000000217200       0x16 ./Application/LCD/Touch/stmpe811.o
+ *fill*         0x0000000000217216        0x2 
  .text.I2Cx_Error
-                0x00000000002173ac       0x20 ./Application/stmpe811.o
+                0x0000000000217218       0x20 ./Application/LCD/Touch/stmpe811.o
  .text.I2Cx_Read
-                0x00000000002173cc       0x58 ./Application/stmpe811.o
+                0x0000000000217238       0x58 ./Application/LCD/Touch/stmpe811.o
  .text.I2Cx_Write
-                0x0000000000217424       0x50 ./Application/stmpe811.o
+                0x0000000000217290       0x50 ./Application/LCD/Touch/stmpe811.o
  .text.IOE_Write
-                0x0000000000217474       0x26 ./Application/stmpe811.o
-                0x0000000000217474                IOE_Write
+                0x00000000002172e0       0x26 ./Application/LCD/Touch/stmpe811.o
+                0x00000000002172e0                IOE_Write
  .text.IOE_Read
-                0x000000000021749a       0x26 ./Application/stmpe811.o
-                0x000000000021749a                IOE_Read
+                0x0000000000217306       0x26 ./Application/LCD/Touch/stmpe811.o
+                0x0000000000217306                IOE_Read
  .text.I2Cx_ReadMultiple
-                0x00000000002174c0       0x54 ./Application/stmpe811.o
+                0x000000000021732c       0x54 ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_IO_EnableAF
-                0x0000000000217514       0x48 ./Application/stmpe811.o
+                0x0000000000217380       0x48 ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_Reset
-                0x000000000021755c       0x3a ./Application/stmpe811.o
+                0x00000000002173c8       0x3a ./Application/LCD/Touch/stmpe811.o
  .text.IOE_Init
-                0x0000000000217596        0xc ./Application/stmpe811.o
+                0x0000000000217402        0xc ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_Init
-                0x00000000002175a2       0x1e ./Application/stmpe811.o
+                0x000000000021740e       0x1e ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_ReadID
-                0x00000000002175c0       0x3e ./Application/stmpe811.o
+                0x000000000021742c       0x3e ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_EnableGlobalIT
-                0x00000000002175fe       0x3c ./Application/stmpe811.o
+                0x000000000021746a       0x3c ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_EnableITSource
-                0x000000000021763a       0x42 ./Application/stmpe811.o
+                0x00000000002174a6       0x42 ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_ClearGlobalIT
-                0x000000000021767c       0x26 ./Application/stmpe811.o
+                0x00000000002174e8       0x26 ./Application/LCD/Touch/stmpe811.o
  .text.IOE_ReadMultiple
-                0x00000000002176a2       0x34 ./Application/stmpe811.o
+                0x000000000021750e       0x34 ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_TS_Start
-                0x00000000002176d6       0xf0 ./Application/stmpe811.o
+                0x0000000000217542       0xf0 ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_TS_DetectTouch
-                0x00000000002177c6       0x70 ./Application/stmpe811.o
+                0x0000000000217632       0x70 ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_TS_GetXY
-                0x0000000000217836       0x72 ./Application/stmpe811.o
+                0x00000000002176a2       0x72 ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_TS_EnableIT
-                0x00000000002178a8       0x24 ./Application/stmpe811.o
+                0x0000000000217714       0x24 ./Application/LCD/Touch/stmpe811.o
  .text.stmpe811_TS_ClearIT
-                0x00000000002178cc       0x1c ./Application/stmpe811.o
+                0x0000000000217738       0x1c ./Application/LCD/Touch/stmpe811.o
  .text.BSP_TS_Init
-                0x00000000002178e8       0x90 ./Application/stmpe811.o
-                0x00000000002178e8                BSP_TS_Init
+                0x0000000000217754       0x90 ./Application/LCD/Touch/stmpe811.o
+                0x0000000000217754                BSP_TS_Init
  .text.BSP_TS_GetState
-                0x0000000000217978      0x158 ./Application/stmpe811.o
-                0x0000000000217978                BSP_TS_GetState
+                0x00000000002177e4      0x158 ./Application/LCD/Touch/stmpe811.o
+                0x00000000002177e4                BSP_TS_GetState
  .text.BSP_TS_ClearIT
-                0x0000000000217ad0       0x20 ./Application/stmpe811.o
-                0x0000000000217ad0                BSP_TS_ClearIT
+                0x000000000021793c       0x20 ./Application/LCD/Touch/stmpe811.o
+                0x000000000021793c                BSP_TS_ClearIT
  .text.Calibration_GetX
-                0x0000000000217af0       0x5c ./Application/touch.o
+                0x000000000021795c       0x5c ./Application/LCD/Touch/touch.o
  .text.Calibration_GetY
-                0x0000000000217b4c       0x5c ./Application/touch.o
+                0x00000000002179b8       0x5c ./Application/LCD/Touch/touch.o
  .text.HAL_GPIO_EXTI_Callback
-                0x0000000000217ba8       0x20 ./Application/touch.o
-                0x0000000000217ba8                HAL_GPIO_EXTI_Callback
+                0x0000000000217a14       0x20 ./Application/LCD/Touch/touch.o
+                0x0000000000217a14                HAL_GPIO_EXTI_Callback
  .text.CheckTouch
-                0x0000000000217bc8      0x154 ./Application/touch.o
-                0x0000000000217bc8                CheckTouch
+                0x0000000000217a34      0x154 ./Application/LCD/Touch/touch.o
+                0x0000000000217a34                CheckTouch
+ .text.SetLang  0x0000000000217b88       0x28 ./Application/Lang/lang.o
+                0x0000000000217b88                SetLang
+ .text.GetSelTxt
+                0x0000000000217bb0       0xc8 ./Application/Lang/lang.o
+                0x0000000000217bb0                GetSelTxt
+ .text.vApplicationIdleHook
+                0x0000000000217c78       0x20 ./Application/cpu_utils.o
+                0x0000000000217c78                vApplicationIdleHook
+ .text.vApplicationTickHook
+                0x0000000000217c98       0x6c ./Application/cpu_utils.o
+                0x0000000000217c98                vApplicationTickHook
+ .text.osGetCPUUsage
+                0x0000000000217d04       0x18 ./Application/cpu_utils.o
+                0x0000000000217d04                osGetCPUUsage
  .text.MX_DMA_Init
                 0x0000000000217d1c       0x74 ./Core/Src/dma.o
                 0x0000000000217d1c                MX_DMA_Init
@@ -11404,92 +11402,91 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .text.SCB_InvalidateDCache
                 0x0000000000218d40       0x78 ./Core/Src/main.o
  .text.HARDWARE_Init
-                0x0000000000218db8       0x4e ./Core/Src/main.o
+                0x0000000000218db8       0x52 ./Core/Src/main.o
                 0x0000000000218db8                HARDWARE_Init
- .text.main     0x0000000000218e06       0x2a ./Core/Src/main.o
-                0x0000000000218e06                main
+ .text.main     0x0000000000218e0a       0x2a ./Core/Src/main.o
+                0x0000000000218e0a                main
  .text.SystemClock_Config
-                0x0000000000218e30       0xe0 ./Core/Src/main.o
-                0x0000000000218e30                SystemClock_Config
+                0x0000000000218e34       0xe0 ./Core/Src/main.o
+                0x0000000000218e34                SystemClock_Config
  .text.MPU_Config
-                0x0000000000218f10       0x8c ./Core/Src/main.o
+                0x0000000000218f14       0x8c ./Core/Src/main.o
  .text.HAL_TIM_PeriodElapsedCallback
-                0x0000000000218f9c       0x24 ./Core/Src/main.o
-                0x0000000000218f9c                HAL_TIM_PeriodElapsedCallback
+                0x0000000000218fa0       0x24 ./Core/Src/main.o
+                0x0000000000218fa0                HAL_TIM_PeriodElapsedCallback
  .text.Error_Handler
-                0x0000000000218fc0        0xa ./Core/Src/main.o
-                0x0000000000218fc0                Error_Handler
- *fill*         0x0000000000218fca        0x2 
+                0x0000000000218fc4        0xa ./Core/Src/main.o
+                0x0000000000218fc4                Error_Handler
+ *fill*         0x0000000000218fce        0x2 
  .text.MX_SDMMC1_SD_Init
-                0x0000000000218fcc       0x40 ./Core/Src/sdmmc.o
-                0x0000000000218fcc                MX_SDMMC1_SD_Init
+                0x0000000000218fd0       0x40 ./Core/Src/sdmmc.o
+                0x0000000000218fd0                MX_SDMMC1_SD_Init
  .text.HAL_SD_MspInit
-                0x000000000021900c      0x220 ./Core/Src/sdmmc.o
-                0x000000000021900c                HAL_SD_MspInit
+                0x0000000000219010      0x220 ./Core/Src/sdmmc.o
+                0x0000000000219010                HAL_SD_MspInit
  .text.HAL_MspInit
-                0x000000000021922c       0x50 ./Core/Src/stm32f7xx_hal_msp.o
-                0x000000000021922c                HAL_MspInit
+                0x0000000000219230       0x50 ./Core/Src/stm32f7xx_hal_msp.o
+                0x0000000000219230                HAL_MspInit
  .text.HAL_InitTick
-                0x000000000021927c       0xf4 ./Core/Src/stm32f7xx_hal_timebase_tim.o
-                0x000000000021927c                HAL_InitTick
+                0x0000000000219280       0xf4 ./Core/Src/stm32f7xx_hal_timebase_tim.o
+                0x0000000000219280                HAL_InitTick
  .text.NMI_Handler
-                0x0000000000219370        0xa ./Core/Src/stm32f7xx_it.o
-                0x0000000000219370                NMI_Handler
+                0x0000000000219374        0xa ./Core/Src/stm32f7xx_it.o
+                0x0000000000219374                NMI_Handler
  .text.HardFault_Handler
-                0x000000000021937a        0xa ./Core/Src/stm32f7xx_it.o
-                0x000000000021937a                HardFault_Handler
+                0x000000000021937e        0xa ./Core/Src/stm32f7xx_it.o
+                0x000000000021937e                HardFault_Handler
  .text.MemManage_Handler
-                0x0000000000219384        0xa ./Core/Src/stm32f7xx_it.o
-                0x0000000000219384                MemManage_Handler
+                0x0000000000219388        0xa ./Core/Src/stm32f7xx_it.o
+                0x0000000000219388                MemManage_Handler
  .text.BusFault_Handler
-                0x000000000021938e        0xa ./Core/Src/stm32f7xx_it.o
-                0x000000000021938e                BusFault_Handler
+                0x0000000000219392        0xa ./Core/Src/stm32f7xx_it.o
+                0x0000000000219392                BusFault_Handler
  .text.UsageFault_Handler
-                0x0000000000219398        0xa ./Core/Src/stm32f7xx_it.o
-                0x0000000000219398                UsageFault_Handler
+                0x000000000021939c        0xa ./Core/Src/stm32f7xx_it.o
+                0x000000000021939c                UsageFault_Handler
  .text.DebugMon_Handler
-                0x00000000002193a2        0xc ./Core/Src/stm32f7xx_it.o
-                0x00000000002193a2                DebugMon_Handler
+                0x00000000002193a6        0xc ./Core/Src/stm32f7xx_it.o
+                0x00000000002193a6                DebugMon_Handler
  .text.EXTI4_IRQHandler
-                0x00000000002193ae        0xe ./Core/Src/stm32f7xx_it.o
-                0x00000000002193ae                EXTI4_IRQHandler
+                0x00000000002193b2        0xe ./Core/Src/stm32f7xx_it.o
+                0x00000000002193b2                EXTI4_IRQHandler
  .text.DMA1_Stream3_IRQHandler
-                0x00000000002193bc       0x14 ./Core/Src/stm32f7xx_it.o
-                0x00000000002193bc                DMA1_Stream3_IRQHandler
+                0x00000000002193c0       0x14 ./Core/Src/stm32f7xx_it.o
+                0x00000000002193c0                DMA1_Stream3_IRQHandler
  .text.I2C1_EV_IRQHandler
-                0x00000000002193d0       0x14 ./Core/Src/stm32f7xx_it.o
-                0x00000000002193d0                I2C1_EV_IRQHandler
+                0x00000000002193d4       0x14 ./Core/Src/stm32f7xx_it.o
+                0x00000000002193d4                I2C1_EV_IRQHandler
  .text.TIM8_TRG_COM_TIM14_IRQHandler
-                0x00000000002193e4       0x14 ./Core/Src/stm32f7xx_it.o
-                0x00000000002193e4                TIM8_TRG_COM_TIM14_IRQHandler
+                0x00000000002193e8       0x14 ./Core/Src/stm32f7xx_it.o
+                0x00000000002193e8                TIM8_TRG_COM_TIM14_IRQHandler
  .text.SDMMC1_IRQHandler
-                0x00000000002193f8       0x14 ./Core/Src/stm32f7xx_it.o
-                0x00000000002193f8                SDMMC1_IRQHandler
+                0x00000000002193fc       0x14 ./Core/Src/stm32f7xx_it.o
+                0x00000000002193fc                SDMMC1_IRQHandler
  .text.DMA2_Stream3_IRQHandler
-                0x000000000021940c       0x14 ./Core/Src/stm32f7xx_it.o
-                0x000000000021940c                DMA2_Stream3_IRQHandler
+                0x0000000000219410       0x14 ./Core/Src/stm32f7xx_it.o
+                0x0000000000219410                DMA2_Stream3_IRQHandler
  .text.DMA2_Stream6_IRQHandler
-                0x0000000000219420       0x14 ./Core/Src/stm32f7xx_it.o
-                0x0000000000219420                DMA2_Stream6_IRQHandler
+                0x0000000000219424       0x14 ./Core/Src/stm32f7xx_it.o
+                0x0000000000219424                DMA2_Stream6_IRQHandler
  .text.UART7_IRQHandler
-                0x0000000000219434       0x14 ./Core/Src/stm32f7xx_it.o
-                0x0000000000219434                UART7_IRQHandler
+                0x0000000000219438       0x14 ./Core/Src/stm32f7xx_it.o
+                0x0000000000219438                UART7_IRQHandler
  .text.DMA2D_IRQHandler
-                0x0000000000219448       0x14 ./Core/Src/stm32f7xx_it.o
-                0x0000000000219448                DMA2D_IRQHandler
+                0x000000000021944c       0x14 ./Core/Src/stm32f7xx_it.o
+                0x000000000021944c                DMA2D_IRQHandler
  .text.SystemInit
-                0x000000000021945c       0x24 ./Core/Src/system_stm32f7xx.o
-                0x000000000021945c                SystemInit
+                0x0000000000219460       0x24 ./Core/Src/system_stm32f7xx.o
+                0x0000000000219460                SystemInit
  .text.MX_TIM5_Init
-                0x0000000000219480       0xb0 ./Core/Src/tim.o
-                0x0000000000219480                MX_TIM5_Init
+                0x0000000000219484       0xb0 ./Core/Src/tim.o
+                0x0000000000219484                MX_TIM5_Init
  .text.HAL_TIM_Base_MspInit
-                0x0000000000219530       0x40 ./Core/Src/tim.o
-                0x0000000000219530                HAL_TIM_Base_MspInit
+                0x0000000000219534       0x40 ./Core/Src/tim.o
+                0x0000000000219534                HAL_TIM_Base_MspInit
  .text.StartMeasureTime_us
-                0x0000000000219570       0x1c ./Core/Src/tim.o
-                0x0000000000219570                StartMeasureTime_us
- *fill*         0x000000000021958c        0x4 
+                0x0000000000219574       0x1c ./Core/Src/tim.o
+                0x0000000000219574                StartMeasureTime_us
  .text.StopMeasureTime_us
                 0x0000000000219590       0x80 ./Core/Src/tim.o
                 0x0000000000219590                StopMeasureTime_us
@@ -12627,7 +12624,7 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  *fill*         0x000000000022a763        0x1 
  .rodata        0x000000000022a764      0x3a6 ./Application/LCD/Screens/SCREEN_ReadPanel.o
  *fill*         0x000000000022ab0a        0x2 
- .rodata        0x000000000022ab0c       0x14 ./Application/touch.o
+ .rodata        0x000000000022ab0c       0x14 ./Application/LCD/Touch/touch.o
  .rodata        0x000000000022ab20       0x31 ./Core/Src/freertos.o
  *fill*         0x000000000022ab51        0x3 
  .rodata        0x000000000022ab54        0x8 ./Core/Src/tim.o
@@ -12734,7 +12731,7 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  *(.data)
  *(.data*)
  .data.stmpe811_ts_drv
-                0x0000000020000000       0x20 ./Application/stmpe811.o
+                0x0000000020000000       0x20 ./Application/LCD/Touch/stmpe811.o
                 0x0000000020000000                stmpe811_ts_drv
  .data.SystemCoreClock
                 0x0000000020000020        0x4 ./Core/Src/system_stm32f7xx.o
@@ -12848,43 +12845,43 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .bss.SCREEN_number
                 0x00000000200105ec        0x4 ./Application/LCD/Screens/SCREEN_ReadPanel.o
                 0x00000000200105ec                SCREEN_number
- .bss.bufTemp   0x00000000200105f0      0x1f4 ./Application/Lang/lang.o
- .bss.Lang      0x00000000200107e4        0x8 ./Application/Lang/lang.o
-                0x00000000200107e4                Lang
- .bss.xIdleHandle
-                0x00000000200107ec        0x4 ./Application/cpu_utils.o
-                0x00000000200107ec                xIdleHandle
- .bss.osCPU_Usage
-                0x00000000200107f0        0x2 ./Application/cpu_utils.o
-                0x00000000200107f0                osCPU_Usage
- *fill*         0x00000000200107f2        0x2 
- .bss.osCPU_TotalIdleTime
-                0x00000000200107f4        0x4 ./Application/cpu_utils.o
-                0x00000000200107f4                osCPU_TotalIdleTime
- .bss.tick.0    0x00000000200107f8        0x4 ./Application/cpu_utils.o
  .bss.ts_driver
-                0x00000000200107fc        0x4 ./Application/stmpe811.o
+                0x00000000200105f0        0x4 ./Application/LCD/Touch/stmpe811.o
  .bss.ts_x_boundary
-                0x0000000020010800        0x2 ./Application/stmpe811.o
+                0x00000000200105f4        0x2 ./Application/LCD/Touch/stmpe811.o
  .bss.ts_y_boundary
-                0x0000000020010802        0x2 ./Application/stmpe811.o
+                0x00000000200105f6        0x2 ./Application/LCD/Touch/stmpe811.o
  .bss.ts_orientation
-                0x0000000020010804        0x1 ./Application/stmpe811.o
- *fill*         0x0000000020010805        0x3 
- .bss.TS_State  0x0000000020010808        0x8 ./Application/stmpe811.o
-                0x0000000020010808                TS_State
- .bss._x.3      0x0000000020010810        0x4 ./Application/stmpe811.o
- .bss._y.2      0x0000000020010814        0x4 ./Application/stmpe811.o
- .bss.x_p.1     0x0000000020010818        0x4 ./Application/stmpe811.o
- .bss.y_p.0     0x000000002001081c        0x4 ./Application/stmpe811.o
- .bss.Touch     0x0000000020010820      0x7d0 ./Application/touch.o
+                0x00000000200105f8        0x1 ./Application/LCD/Touch/stmpe811.o
+ *fill*         0x00000000200105f9        0x3 
+ .bss.TS_State  0x00000000200105fc        0x8 ./Application/LCD/Touch/stmpe811.o
+                0x00000000200105fc                TS_State
+ .bss._x.3      0x0000000020010604        0x4 ./Application/LCD/Touch/stmpe811.o
+ .bss._y.2      0x0000000020010608        0x4 ./Application/LCD/Touch/stmpe811.o
+ .bss.x_p.1     0x000000002001060c        0x4 ./Application/LCD/Touch/stmpe811.o
+ .bss.y_p.0     0x0000000020010610        0x4 ./Application/LCD/Touch/stmpe811.o
+ .bss.Touch     0x0000000020010614      0x7d0 ./Application/LCD/Touch/touch.o
  .bss.touchDetect
-                0x0000000020010ff0        0x1 ./Application/touch.o
- *fill*         0x0000000020010ff1        0x3 
- .bss.A1        0x0000000020010ff4        0x4 ./Application/touch.o
- .bss.A2        0x0000000020010ff8        0x4 ./Application/touch.o
- .bss.B1        0x0000000020010ffc        0x4 ./Application/touch.o
- .bss.B2        0x0000000020011000        0x4 ./Application/touch.o
+                0x0000000020010de4        0x1 ./Application/LCD/Touch/touch.o
+ *fill*         0x0000000020010de5        0x3 
+ .bss.A1        0x0000000020010de8        0x4 ./Application/LCD/Touch/touch.o
+ .bss.A2        0x0000000020010dec        0x4 ./Application/LCD/Touch/touch.o
+ .bss.B1        0x0000000020010df0        0x4 ./Application/LCD/Touch/touch.o
+ .bss.B2        0x0000000020010df4        0x4 ./Application/LCD/Touch/touch.o
+ .bss.bufTemp   0x0000000020010df8      0x1f4 ./Application/Lang/lang.o
+ .bss.Lang      0x0000000020010fec        0x8 ./Application/Lang/lang.o
+                0x0000000020010fec                Lang
+ .bss.xIdleHandle
+                0x0000000020010ff4        0x4 ./Application/cpu_utils.o
+                0x0000000020010ff4                xIdleHandle
+ .bss.osCPU_Usage
+                0x0000000020010ff8        0x2 ./Application/cpu_utils.o
+                0x0000000020010ff8                osCPU_Usage
+ *fill*         0x0000000020010ffa        0x2 
+ .bss.osCPU_TotalIdleTime
+                0x0000000020010ffc        0x4 ./Application/cpu_utils.o
+                0x0000000020010ffc                osCPU_TotalIdleTime
+ .bss.tick.0    0x0000000020011000        0x4 ./Application/cpu_utils.o
  .bss.hdma2d    0x0000000020011004       0x58 ./Core/Src/dma2d.o
                 0x0000000020011004                hdma2d
  .bss.command   0x000000002001105c       0x10 ./Core/Src/fmc.o
@@ -13064,13 +13061,13 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .ARM.attributes
                 0x0000000000000276       0x32 ./Application/LCD/Screens/SCREEN_ReadPanel.o
  .ARM.attributes
-                0x00000000000002a8       0x32 ./Application/Lang/lang.o
+                0x00000000000002a8       0x32 ./Application/LCD/Touch/stmpe811.o
  .ARM.attributes
-                0x00000000000002da       0x32 ./Application/cpu_utils.o
+                0x00000000000002da       0x32 ./Application/LCD/Touch/touch.o
  .ARM.attributes
-                0x000000000000030c       0x32 ./Application/stmpe811.o
+                0x000000000000030c       0x32 ./Application/Lang/lang.o
  .ARM.attributes
-                0x000000000000033e       0x32 ./Application/touch.o
+                0x000000000000033e       0x32 ./Application/cpu_utils.o
  .ARM.attributes
                 0x0000000000000370       0x32 ./Core/Src/dma.o
  .ARM.attributes
@@ -13256,10 +13253,10 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .comment       0x0000000000000043       0x44 ./Application/LCD/LCD_Hardware.o
  .comment       0x0000000000000043       0x44 ./Application/LCD/LCD_fonts_images.o
  .comment       0x0000000000000043       0x44 ./Application/LCD/Screens/SCREEN_ReadPanel.o
+ .comment       0x0000000000000043       0x44 ./Application/LCD/Touch/stmpe811.o
+ .comment       0x0000000000000043       0x44 ./Application/LCD/Touch/touch.o
  .comment       0x0000000000000043       0x44 ./Application/Lang/lang.o
  .comment       0x0000000000000043       0x44 ./Application/cpu_utils.o
- .comment       0x0000000000000043       0x44 ./Application/stmpe811.o
- .comment       0x0000000000000043       0x44 ./Application/touch.o
  .comment       0x0000000000000043       0x44 ./Core/Src/dma.o
  .comment       0x0000000000000043       0x44 ./Core/Src/dma2d.o
  .comment       0x0000000000000043       0x44 ./Core/Src/fmc.o
@@ -13308,7 +13305,7 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .comment       0x0000000000000043       0x44 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
  .comment       0x0000000000000043       0x44 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
 
-.debug_info     0x0000000000000000    0x3aa8a
+.debug_info     0x0000000000000000    0x3aa42
  .debug_info    0x0000000000000000      0x349 ./Application/General_Utilities/debug.o
  .debug_info    0x0000000000000349      0x217 ./Application/General_Utilities/double_float.o
  .debug_info    0x0000000000000560      0x312 ./Application/General_Utilities/errors_service.o
@@ -13321,60 +13318,60 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_info    0x000000000000670c      0xd7b ./Application/LCD/LCD_Hardware.o
  .debug_info    0x0000000000007487     0x4d16 ./Application/LCD/LCD_fonts_images.o
  .debug_info    0x000000000000c19d     0x1abb ./Application/LCD/Screens/SCREEN_ReadPanel.o
- .debug_info    0x000000000000dc58      0x225 ./Application/Lang/lang.o
- .debug_info    0x000000000000de7d      0x1b3 ./Application/cpu_utils.o
- .debug_info    0x000000000000e030     0x1056 ./Application/stmpe811.o
- .debug_info    0x000000000000f086      0x53a ./Application/touch.o
- .debug_info    0x000000000000f5c0      0x592 ./Core/Src/dma.o
- .debug_info    0x000000000000fb52      0x95a ./Core/Src/dma2d.o
- .debug_info    0x00000000000104ac      0xae5 ./Core/Src/fmc.o
- .debug_info    0x0000000000010f91      0x50f ./Core/Src/freertos.o
- .debug_info    0x00000000000114a0      0x81c ./Core/Src/gpio.o
- .debug_info    0x0000000000011cbc      0xf6f ./Core/Src/i2c.o
- .debug_info    0x0000000000012c2b      0xbde ./Core/Src/ltdc.o
- .debug_info    0x0000000000013809     0x1328 ./Core/Src/main.o
- .debug_info    0x0000000000014b31      0xff9 ./Core/Src/sdmmc.o
- .debug_info    0x0000000000015b2a      0x583 ./Core/Src/stm32f7xx_hal_msp.o
- .debug_info    0x00000000000160ad      0xd23 ./Core/Src/stm32f7xx_hal_timebase_tim.o
- .debug_info    0x0000000000016dd0     0x1562 ./Core/Src/stm32f7xx_it.o
- .debug_info    0x0000000000018332      0x6ed ./Core/Src/system_stm32f7xx.o
- .debug_info    0x0000000000018a1f      0xb15 ./Core/Src/tim.o
- .debug_info    0x0000000000019534     0x15c3 ./Core/Src/usart.o
- .debug_info    0x000000000001aaf7      0xac9 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
- .debug_info    0x000000000001b5c0      0xf91 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
- .debug_info    0x000000000001c551      0x8e7 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
- .debug_info    0x000000000001ce38      0xeaa ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
- .debug_info    0x000000000001dce2      0x6f3 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
- .debug_info    0x000000000001e3d5     0x20b3 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
- .debug_info    0x0000000000020488      0x93a ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
- .debug_info    0x0000000000020dc2     0x1022 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
- .debug_info    0x0000000000021de4      0x8cd ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
- .debug_info    0x00000000000226b1      0x937 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
- .debug_info    0x0000000000022fe8      0x6e1 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
- .debug_info    0x00000000000236c9     0x1bd8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
- .debug_info    0x00000000000252a1      0xeaa ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
- .debug_info    0x000000000002614b     0x2ab2 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
- .debug_info    0x0000000000028bfd     0x16bb ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
- .debug_info    0x000000000002a2b8     0x3a6d ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
- .debug_info    0x000000000002dd25      0xb93 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
- .debug_info    0x000000000002e8b8     0x10b0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
- .debug_info    0x000000000002f968      0x53e ./FATFS/App/fatfs.o
- .debug_info    0x000000000002fea6      0xab0 ./FATFS/Target/bsp_driver_sd.o
- .debug_info    0x0000000000030956      0xea6 ./FATFS/Target/sd_diskio.o
- .debug_info    0x00000000000317fc      0x3df ./Middlewares/Third_Party/FatFs/src/diskio.o
- .debug_info    0x0000000000031bdb     0x28e3 ./Middlewares/Third_Party/FatFs/src/ff.o
- .debug_info    0x00000000000344be      0x37f ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
- .debug_info    0x000000000003483d      0x1b9 ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
- .debug_info    0x00000000000349f6      0x51a ./Middlewares/Third_Party/FatFs/src/option/syscall.o
- .debug_info    0x0000000000034f10     0x1b90 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_info    0x0000000000036aa0      0x2af ./Middlewares/Third_Party/FreeRTOS/Source/list.o
- .debug_info    0x0000000000036d4f     0x17bc ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_info    0x000000000003850b     0x1cf2 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_info    0x000000000003a1fd      0x4a7 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
- .debug_info    0x000000000003a6a4      0x3c3 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
- .debug_info    0x000000000003aa67       0x23 ./startup/startup_stm32f769xx.o
+ .debug_info    0x000000000000dc58     0x1022 ./Application/LCD/Touch/stmpe811.o
+ .debug_info    0x000000000000ec7a      0x513 ./Application/LCD/Touch/touch.o
+ .debug_info    0x000000000000f18d      0x225 ./Application/Lang/lang.o
+ .debug_info    0x000000000000f3b2      0x1b3 ./Application/cpu_utils.o
+ .debug_info    0x000000000000f565      0x592 ./Core/Src/dma.o
+ .debug_info    0x000000000000faf7      0x95a ./Core/Src/dma2d.o
+ .debug_info    0x0000000000010451      0xae5 ./Core/Src/fmc.o
+ .debug_info    0x0000000000010f36      0x50f ./Core/Src/freertos.o
+ .debug_info    0x0000000000011445      0x81c ./Core/Src/gpio.o
+ .debug_info    0x0000000000011c61      0xf6f ./Core/Src/i2c.o
+ .debug_info    0x0000000000012bd0      0xbde ./Core/Src/ltdc.o
+ .debug_info    0x00000000000137ae     0x133b ./Core/Src/main.o
+ .debug_info    0x0000000000014ae9      0xff9 ./Core/Src/sdmmc.o
+ .debug_info    0x0000000000015ae2      0x583 ./Core/Src/stm32f7xx_hal_msp.o
+ .debug_info    0x0000000000016065      0xd23 ./Core/Src/stm32f7xx_hal_timebase_tim.o
+ .debug_info    0x0000000000016d88     0x1562 ./Core/Src/stm32f7xx_it.o
+ .debug_info    0x00000000000182ea      0x6ed ./Core/Src/system_stm32f7xx.o
+ .debug_info    0x00000000000189d7      0xb15 ./Core/Src/tim.o
+ .debug_info    0x00000000000194ec     0x15c3 ./Core/Src/usart.o
+ .debug_info    0x000000000001aaaf      0xac9 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
+ .debug_info    0x000000000001b578      0xf91 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
+ .debug_info    0x000000000001c509      0x8e7 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
+ .debug_info    0x000000000001cdf0      0xeaa ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
+ .debug_info    0x000000000001dc9a      0x6f3 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
+ .debug_info    0x000000000001e38d     0x20b3 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
+ .debug_info    0x0000000000020440      0x93a ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
+ .debug_info    0x0000000000020d7a     0x1022 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
+ .debug_info    0x0000000000021d9c      0x8cd ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
+ .debug_info    0x0000000000022669      0x937 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
+ .debug_info    0x0000000000022fa0      0x6e1 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
+ .debug_info    0x0000000000023681     0x1bd8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
+ .debug_info    0x0000000000025259      0xeaa ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
+ .debug_info    0x0000000000026103     0x2ab2 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
+ .debug_info    0x0000000000028bb5     0x16bb ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
+ .debug_info    0x000000000002a270     0x3a6d ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
+ .debug_info    0x000000000002dcdd      0xb93 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
+ .debug_info    0x000000000002e870     0x10b0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
+ .debug_info    0x000000000002f920      0x53e ./FATFS/App/fatfs.o
+ .debug_info    0x000000000002fe5e      0xab0 ./FATFS/Target/bsp_driver_sd.o
+ .debug_info    0x000000000003090e      0xea6 ./FATFS/Target/sd_diskio.o
+ .debug_info    0x00000000000317b4      0x3df ./Middlewares/Third_Party/FatFs/src/diskio.o
+ .debug_info    0x0000000000031b93     0x28e3 ./Middlewares/Third_Party/FatFs/src/ff.o
+ .debug_info    0x0000000000034476      0x37f ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
+ .debug_info    0x00000000000347f5      0x1b9 ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
+ .debug_info    0x00000000000349ae      0x51a ./Middlewares/Third_Party/FatFs/src/option/syscall.o
+ .debug_info    0x0000000000034ec8     0x1b90 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_info    0x0000000000036a58      0x2af ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_info    0x0000000000036d07     0x17bc ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_info    0x00000000000384c3     0x1cf2 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_info    0x000000000003a1b5      0x4a7 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+ .debug_info    0x000000000003a65c      0x3c3 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+ .debug_info    0x000000000003aa1f       0x23 ./startup/startup_stm32f769xx.o
 
-.debug_abbrev   0x0000000000000000     0x890f
+.debug_abbrev   0x0000000000000000     0x8939
  .debug_abbrev  0x0000000000000000      0x1d6 ./Application/General_Utilities/debug.o
  .debug_abbrev  0x00000000000001d6       0xdb ./Application/General_Utilities/double_float.o
  .debug_abbrev  0x00000000000002b1      0x116 ./Application/General_Utilities/errors_service.o
@@ -13387,60 +13384,60 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_abbrev  0x000000000000101b      0x25c ./Application/LCD/LCD_Hardware.o
  .debug_abbrev  0x0000000000001277      0x43d ./Application/LCD/LCD_fonts_images.o
  .debug_abbrev  0x00000000000016b4      0x3dc ./Application/LCD/Screens/SCREEN_ReadPanel.o
- .debug_abbrev  0x0000000000001a90      0x15b ./Application/Lang/lang.o
- .debug_abbrev  0x0000000000001beb       0xe0 ./Application/cpu_utils.o
- .debug_abbrev  0x0000000000001ccb      0x32f ./Application/stmpe811.o
- .debug_abbrev  0x0000000000001ffa      0x240 ./Application/touch.o
- .debug_abbrev  0x000000000000223a      0x11b ./Core/Src/dma.o
- .debug_abbrev  0x0000000000002355      0x1f8 ./Core/Src/dma2d.o
- .debug_abbrev  0x000000000000254d      0x265 ./Core/Src/fmc.o
- .debug_abbrev  0x00000000000027b2      0x201 ./Core/Src/freertos.o
- .debug_abbrev  0x00000000000029b3      0x18d ./Core/Src/gpio.o
- .debug_abbrev  0x0000000000002b40      0x236 ./Core/Src/i2c.o
- .debug_abbrev  0x0000000000002d76      0x1f9 ./Core/Src/ltdc.o
- .debug_abbrev  0x0000000000002f6f      0x349 ./Core/Src/main.o
- .debug_abbrev  0x00000000000032b8      0x22c ./Core/Src/sdmmc.o
- .debug_abbrev  0x00000000000034e4      0x119 ./Core/Src/stm32f7xx_hal_msp.o
- .debug_abbrev  0x00000000000035fd      0x1f4 ./Core/Src/stm32f7xx_hal_timebase_tim.o
- .debug_abbrev  0x00000000000037f1      0x1f2 ./Core/Src/stm32f7xx_it.o
- .debug_abbrev  0x00000000000039e3      0x13b ./Core/Src/system_stm32f7xx.o
- .debug_abbrev  0x0000000000003b1e      0x23e ./Core/Src/tim.o
- .debug_abbrev  0x0000000000003d5c      0x2f8 ./Core/Src/usart.o
- .debug_abbrev  0x0000000000004054      0x213 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
- .debug_abbrev  0x0000000000004267      0x329 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
- .debug_abbrev  0x0000000000004590      0x264 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
- .debug_abbrev  0x00000000000047f4      0x23e ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
- .debug_abbrev  0x0000000000004a32      0x1d4 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
- .debug_abbrev  0x0000000000004c06      0x259 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
- .debug_abbrev  0x0000000000004e5f      0x19c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
- .debug_abbrev  0x0000000000004ffb      0x233 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
- .debug_abbrev  0x000000000000522e      0x1d5 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
- .debug_abbrev  0x0000000000005403      0x2de ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
- .debug_abbrev  0x00000000000056e1      0x1c9 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
- .debug_abbrev  0x00000000000058aa      0x299 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
- .debug_abbrev  0x0000000000005b43      0x239 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
- .debug_abbrev  0x0000000000005d7c      0x278 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
- .debug_abbrev  0x0000000000005ff4      0x283 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
- .debug_abbrev  0x0000000000006277      0x2e6 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
- .debug_abbrev  0x000000000000655d      0x1a5 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
- .debug_abbrev  0x0000000000006702      0x1d8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
- .debug_abbrev  0x00000000000068da      0x17a ./FATFS/App/fatfs.o
- .debug_abbrev  0x0000000000006a54      0x28b ./FATFS/Target/bsp_driver_sd.o
- .debug_abbrev  0x0000000000006cdf      0x385 ./FATFS/Target/sd_diskio.o
- .debug_abbrev  0x0000000000007064      0x181 ./Middlewares/Third_Party/FatFs/src/diskio.o
- .debug_abbrev  0x00000000000071e5      0x2a9 ./Middlewares/Third_Party/FatFs/src/ff.o
- .debug_abbrev  0x000000000000748e      0x19f ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
- .debug_abbrev  0x000000000000762d       0xde ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
- .debug_abbrev  0x000000000000770b      0x1c0 ./Middlewares/Third_Party/FatFs/src/option/syscall.o
- .debug_abbrev  0x00000000000078cb      0x3a7 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_abbrev  0x0000000000007c72       0xf5 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
- .debug_abbrev  0x0000000000007d67      0x3b5 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_abbrev  0x000000000000811c      0x36d ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_abbrev  0x0000000000008489      0x26f ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
- .debug_abbrev  0x00000000000086f8      0x205 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
- .debug_abbrev  0x00000000000088fd       0x12 ./startup/startup_stm32f769xx.o
+ .debug_abbrev  0x0000000000001a90      0x32f ./Application/LCD/Touch/stmpe811.o
+ .debug_abbrev  0x0000000000001dbf      0x253 ./Application/LCD/Touch/touch.o
+ .debug_abbrev  0x0000000000002012      0x15b ./Application/Lang/lang.o
+ .debug_abbrev  0x000000000000216d       0xe0 ./Application/cpu_utils.o
+ .debug_abbrev  0x000000000000224d      0x11b ./Core/Src/dma.o
+ .debug_abbrev  0x0000000000002368      0x1f8 ./Core/Src/dma2d.o
+ .debug_abbrev  0x0000000000002560      0x265 ./Core/Src/fmc.o
+ .debug_abbrev  0x00000000000027c5      0x201 ./Core/Src/freertos.o
+ .debug_abbrev  0x00000000000029c6      0x18d ./Core/Src/gpio.o
+ .debug_abbrev  0x0000000000002b53      0x236 ./Core/Src/i2c.o
+ .debug_abbrev  0x0000000000002d89      0x1f9 ./Core/Src/ltdc.o
+ .debug_abbrev  0x0000000000002f82      0x360 ./Core/Src/main.o
+ .debug_abbrev  0x00000000000032e2      0x22c ./Core/Src/sdmmc.o
+ .debug_abbrev  0x000000000000350e      0x119 ./Core/Src/stm32f7xx_hal_msp.o
+ .debug_abbrev  0x0000000000003627      0x1f4 ./Core/Src/stm32f7xx_hal_timebase_tim.o
+ .debug_abbrev  0x000000000000381b      0x1f2 ./Core/Src/stm32f7xx_it.o
+ .debug_abbrev  0x0000000000003a0d      0x13b ./Core/Src/system_stm32f7xx.o
+ .debug_abbrev  0x0000000000003b48      0x23e ./Core/Src/tim.o
+ .debug_abbrev  0x0000000000003d86      0x2f8 ./Core/Src/usart.o
+ .debug_abbrev  0x000000000000407e      0x213 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
+ .debug_abbrev  0x0000000000004291      0x329 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
+ .debug_abbrev  0x00000000000045ba      0x264 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
+ .debug_abbrev  0x000000000000481e      0x23e ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
+ .debug_abbrev  0x0000000000004a5c      0x1d4 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
+ .debug_abbrev  0x0000000000004c30      0x259 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
+ .debug_abbrev  0x0000000000004e89      0x19c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
+ .debug_abbrev  0x0000000000005025      0x233 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
+ .debug_abbrev  0x0000000000005258      0x1d5 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
+ .debug_abbrev  0x000000000000542d      0x2de ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
+ .debug_abbrev  0x000000000000570b      0x1c9 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
+ .debug_abbrev  0x00000000000058d4      0x299 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
+ .debug_abbrev  0x0000000000005b6d      0x239 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
+ .debug_abbrev  0x0000000000005da6      0x278 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
+ .debug_abbrev  0x000000000000601e      0x283 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
+ .debug_abbrev  0x00000000000062a1      0x2e6 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
+ .debug_abbrev  0x0000000000006587      0x1a5 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
+ .debug_abbrev  0x000000000000672c      0x1d8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
+ .debug_abbrev  0x0000000000006904      0x17a ./FATFS/App/fatfs.o
+ .debug_abbrev  0x0000000000006a7e      0x28b ./FATFS/Target/bsp_driver_sd.o
+ .debug_abbrev  0x0000000000006d09      0x385 ./FATFS/Target/sd_diskio.o
+ .debug_abbrev  0x000000000000708e      0x181 ./Middlewares/Third_Party/FatFs/src/diskio.o
+ .debug_abbrev  0x000000000000720f      0x2a9 ./Middlewares/Third_Party/FatFs/src/ff.o
+ .debug_abbrev  0x00000000000074b8      0x19f ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
+ .debug_abbrev  0x0000000000007657       0xde ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
+ .debug_abbrev  0x0000000000007735      0x1c0 ./Middlewares/Third_Party/FatFs/src/option/syscall.o
+ .debug_abbrev  0x00000000000078f5      0x3a7 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_abbrev  0x0000000000007c9c       0xf5 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_abbrev  0x0000000000007d91      0x3b5 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_abbrev  0x0000000000008146      0x36d ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_abbrev  0x00000000000084b3      0x26f ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+ .debug_abbrev  0x0000000000008722      0x205 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+ .debug_abbrev  0x0000000000008927       0x12 ./startup/startup_stm32f769xx.o
 
-.debug_aranges  0x0000000000000000     0x3150
+.debug_aranges  0x0000000000000000     0x3148
  .debug_aranges
                 0x0000000000000000       0x58 ./Application/General_Utilities/debug.o
  .debug_aranges
@@ -13466,112 +13463,112 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_aranges
                 0x0000000000000a48      0x140 ./Application/LCD/Screens/SCREEN_ReadPanel.o
  .debug_aranges
-                0x0000000000000b88       0x30 ./Application/Lang/lang.o
+                0x0000000000000b88       0xf8 ./Application/LCD/Touch/stmpe811.o
  .debug_aranges
-                0x0000000000000bb8       0x40 ./Application/cpu_utils.o
+                0x0000000000000c80       0x78 ./Application/LCD/Touch/touch.o
  .debug_aranges
-                0x0000000000000bf8      0x100 ./Application/stmpe811.o
+                0x0000000000000cf8       0x30 ./Application/Lang/lang.o
  .debug_aranges
-                0x0000000000000cf8       0x78 ./Application/touch.o
+                0x0000000000000d28       0x40 ./Application/cpu_utils.o
  .debug_aranges
-                0x0000000000000d70       0x20 ./Core/Src/dma.o
+                0x0000000000000d68       0x20 ./Core/Src/dma.o
  .debug_aranges
-                0x0000000000000d90       0x30 ./Core/Src/dma2d.o
+                0x0000000000000d88       0x30 ./Core/Src/dma2d.o
  .debug_aranges
-                0x0000000000000dc0       0x50 ./Core/Src/fmc.o
+                0x0000000000000db8       0x50 ./Core/Src/fmc.o
  .debug_aranges
-                0x0000000000000e10       0x40 ./Core/Src/freertos.o
+                0x0000000000000e08       0x40 ./Core/Src/freertos.o
  .debug_aranges
-                0x0000000000000e50       0x28 ./Core/Src/gpio.o
+                0x0000000000000e48       0x28 ./Core/Src/gpio.o
  .debug_aranges
-                0x0000000000000e78       0x30 ./Core/Src/i2c.o
+                0x0000000000000e70       0x30 ./Core/Src/i2c.o
  .debug_aranges
-                0x0000000000000ea8       0x30 ./Core/Src/ltdc.o
+                0x0000000000000ea0       0x30 ./Core/Src/ltdc.o
  .debug_aranges
-                0x0000000000000ed8       0x68 ./Core/Src/main.o
+                0x0000000000000ed0       0x68 ./Core/Src/main.o
  .debug_aranges
-                0x0000000000000f40       0x30 ./Core/Src/sdmmc.o
+                0x0000000000000f38       0x30 ./Core/Src/sdmmc.o
  .debug_aranges
-                0x0000000000000f70       0x20 ./Core/Src/stm32f7xx_hal_msp.o
+                0x0000000000000f68       0x20 ./Core/Src/stm32f7xx_hal_msp.o
  .debug_aranges
-                0x0000000000000f90       0x30 ./Core/Src/stm32f7xx_hal_timebase_tim.o
+                0x0000000000000f88       0x30 ./Core/Src/stm32f7xx_hal_timebase_tim.o
  .debug_aranges
-                0x0000000000000fc0       0x90 ./Core/Src/stm32f7xx_it.o
+                0x0000000000000fb8       0x90 ./Core/Src/stm32f7xx_it.o
  .debug_aranges
-                0x0000000000001050       0x28 ./Core/Src/system_stm32f7xx.o
+                0x0000000000001048       0x28 ./Core/Src/system_stm32f7xx.o
  .debug_aranges
-                0x0000000000001078       0x40 ./Core/Src/tim.o
+                0x0000000000001070       0x40 ./Core/Src/tim.o
  .debug_aranges
-                0x00000000000010b8       0x68 ./Core/Src/usart.o
+                0x00000000000010b0       0x68 ./Core/Src/usart.o
  .debug_aranges
-                0x0000000000001120      0x110 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
+                0x0000000000001118      0x110 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
  .debug_aranges
-                0x0000000000001230      0x118 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
+                0x0000000000001228      0x118 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
  .debug_aranges
-                0x0000000000001348       0x90 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
+                0x0000000000001340       0x90 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
  .debug_aranges
-                0x00000000000013d8      0x118 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
+                0x00000000000013d0      0x118 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
  .debug_aranges
-                0x00000000000014f0       0x58 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
+                0x00000000000014e8       0x58 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
  .debug_aranges
-                0x0000000000001548      0x2a0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
+                0x0000000000001540      0x2a0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
  .debug_aranges
-                0x00000000000017e8       0x38 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
+                0x00000000000017e0       0x38 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
  .debug_aranges
-                0x0000000000001820      0x158 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
+                0x0000000000001818      0x158 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
  .debug_aranges
-                0x0000000000001978       0x80 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
+                0x0000000000001970       0x80 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
  .debug_aranges
-                0x00000000000019f8       0x88 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
+                0x00000000000019f0       0x88 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
  .debug_aranges
-                0x0000000000001a80       0x50 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
+                0x0000000000001a78       0x50 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
  .debug_aranges
-                0x0000000000001ad0      0x168 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
+                0x0000000000001ac8      0x168 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
  .debug_aranges
-                0x0000000000001c38       0xe8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
+                0x0000000000001c30       0xe8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
  .debug_aranges
-                0x0000000000001d20      0x3e0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
+                0x0000000000001d18      0x3e0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
  .debug_aranges
-                0x0000000000002100      0x180 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
+                0x00000000000020f8      0x180 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
  .debug_aranges
-                0x0000000000002280      0x230 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
+                0x0000000000002278      0x230 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
  .debug_aranges
-                0x00000000000024b0       0xc8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
+                0x00000000000024a8       0xc8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
  .debug_aranges
-                0x0000000000002578      0x188 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
+                0x0000000000002570      0x188 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
  .debug_aranges
-                0x0000000000002700       0x28 ./FATFS/App/fatfs.o
+                0x00000000000026f8       0x28 ./FATFS/App/fatfs.o
  .debug_aranges
-                0x0000000000002728       0x98 ./FATFS/Target/bsp_driver_sd.o
+                0x0000000000002720       0x98 ./FATFS/Target/bsp_driver_sd.o
  .debug_aranges
-                0x00000000000027c0       0x70 ./FATFS/Target/sd_diskio.o
+                0x00000000000027b8       0x70 ./FATFS/Target/sd_diskio.o
  .debug_aranges
-                0x0000000000002830       0x48 ./Middlewares/Third_Party/FatFs/src/diskio.o
+                0x0000000000002828       0x48 ./Middlewares/Third_Party/FatFs/src/diskio.o
  .debug_aranges
-                0x0000000000002878      0x260 ./Middlewares/Third_Party/FatFs/src/ff.o
+                0x0000000000002870      0x260 ./Middlewares/Third_Party/FatFs/src/ff.o
  .debug_aranges
-                0x0000000000002ad8       0x40 ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
+                0x0000000000002ad0       0x40 ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
  .debug_aranges
-                0x0000000000002b18       0x28 ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
+                0x0000000000002b10       0x28 ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
  .debug_aranges
-                0x0000000000002b40       0x48 ./Middlewares/Third_Party/FatFs/src/option/syscall.o
+                0x0000000000002b38       0x48 ./Middlewares/Third_Party/FatFs/src/option/syscall.o
  .debug_aranges
-                0x0000000000002b88      0x1d8 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+                0x0000000000002b80      0x1d8 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
  .debug_aranges
-                0x0000000000002d60       0x40 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+                0x0000000000002d58       0x40 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
  .debug_aranges
-                0x0000000000002da0      0x108 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+                0x0000000000002d98      0x108 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
  .debug_aranges
-                0x0000000000002ea8      0x1b0 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+                0x0000000000002ea0      0x1b0 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
  .debug_aranges
-                0x0000000000003058       0x80 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+                0x0000000000003050       0x80 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
  .debug_aranges
-                0x00000000000030d8       0x50 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+                0x00000000000030d0       0x50 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
  .debug_aranges
-                0x0000000000003128       0x28 ./startup/startup_stm32f769xx.o
+                0x0000000000003120       0x28 ./startup/startup_stm32f769xx.o
 
 .debug_rnglists
-                0x0000000000000000     0x26ae
+                0x0000000000000000     0x26a8
  .debug_rnglists
                 0x0000000000000000       0x3d ./Application/General_Utilities/debug.o
  .debug_rnglists
@@ -13597,109 +13594,109 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_rnglists
                 0x000000000000089f       0xfd ./Application/LCD/Screens/SCREEN_ReadPanel.o
  .debug_rnglists
-                0x000000000000099c       0x20 ./Application/Lang/lang.o
+                0x000000000000099c       0xb8 ./Application/LCD/Touch/stmpe811.o
  .debug_rnglists
-                0x00000000000009bc       0x2b ./Application/cpu_utils.o
+                0x0000000000000a54       0x58 ./Application/LCD/Touch/touch.o
  .debug_rnglists
-                0x00000000000009e7       0xbe ./Application/stmpe811.o
+                0x0000000000000aac       0x20 ./Application/Lang/lang.o
  .debug_rnglists
-                0x0000000000000aa5       0x58 ./Application/touch.o
+                0x0000000000000acc       0x2b ./Application/cpu_utils.o
  .debug_rnglists
-                0x0000000000000afd       0x13 ./Core/Src/dma.o
+                0x0000000000000af7       0x13 ./Core/Src/dma.o
  .debug_rnglists
-                0x0000000000000b10       0x1f ./Core/Src/dma2d.o
+                0x0000000000000b0a       0x1f ./Core/Src/dma2d.o
  .debug_rnglists
-                0x0000000000000b2f       0x3c ./Core/Src/fmc.o
+                0x0000000000000b29       0x3c ./Core/Src/fmc.o
  .debug_rnglists
-                0x0000000000000b6b       0x2b ./Core/Src/freertos.o
+                0x0000000000000b65       0x2b ./Core/Src/freertos.o
  .debug_rnglists
-                0x0000000000000b96       0x1a ./Core/Src/gpio.o
+                0x0000000000000b90       0x1a ./Core/Src/gpio.o
  .debug_rnglists
-                0x0000000000000bb0       0x21 ./Core/Src/i2c.o
+                0x0000000000000baa       0x21 ./Core/Src/i2c.o
  .debug_rnglists
-                0x0000000000000bd1       0x22 ./Core/Src/ltdc.o
+                0x0000000000000bcb       0x22 ./Core/Src/ltdc.o
  .debug_rnglists
-                0x0000000000000bf3       0x4c ./Core/Src/main.o
+                0x0000000000000bed       0x4c ./Core/Src/main.o
  .debug_rnglists
-                0x0000000000000c3f       0x20 ./Core/Src/sdmmc.o
+                0x0000000000000c39       0x20 ./Core/Src/sdmmc.o
  .debug_rnglists
-                0x0000000000000c5f       0x13 ./Core/Src/stm32f7xx_hal_msp.o
+                0x0000000000000c59       0x13 ./Core/Src/stm32f7xx_hal_msp.o
  .debug_rnglists
-                0x0000000000000c72       0x20 ./Core/Src/stm32f7xx_hal_timebase_tim.o
+                0x0000000000000c6c       0x20 ./Core/Src/stm32f7xx_hal_timebase_tim.o
  .debug_rnglists
-                0x0000000000000c92       0x67 ./Core/Src/stm32f7xx_it.o
+                0x0000000000000c8c       0x67 ./Core/Src/stm32f7xx_it.o
  .debug_rnglists
-                0x0000000000000cf9       0x1a ./Core/Src/system_stm32f7xx.o
+                0x0000000000000cf3       0x1a ./Core/Src/system_stm32f7xx.o
  .debug_rnglists
-                0x0000000000000d13       0x2d ./Core/Src/tim.o
+                0x0000000000000d0d       0x2d ./Core/Src/tim.o
  .debug_rnglists
-                0x0000000000000d40       0x4a ./Core/Src/usart.o
+                0x0000000000000d3a       0x4a ./Core/Src/usart.o
  .debug_rnglists
-                0x0000000000000d8a       0xc7 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
+                0x0000000000000d84       0xc7 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
  .debug_rnglists
-                0x0000000000000e51       0xce ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
+                0x0000000000000e4b       0xce ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
  .debug_rnglists
-                0x0000000000000f1f       0x70 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
+                0x0000000000000f19       0x70 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
  .debug_rnglists
-                0x0000000000000f8f       0xdc ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
+                0x0000000000000f89       0xdc ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
  .debug_rnglists
-                0x000000000000106b       0x3f ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
+                0x0000000000001065       0x3f ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
  .debug_rnglists
-                0x00000000000010aa      0x227 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
+                0x00000000000010a4      0x227 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
  .debug_rnglists
-                0x00000000000012d1       0x27 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
+                0x00000000000012cb       0x27 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
  .debug_rnglists
-                0x00000000000012f8      0x10a ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
+                0x00000000000012f2      0x10a ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
  .debug_rnglists
-                0x0000000000001402       0x5f ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
+                0x00000000000013fc       0x5f ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
  .debug_rnglists
-                0x0000000000001461       0x67 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
+                0x000000000000145b       0x67 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
  .debug_rnglists
-                0x00000000000014c8       0x3c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
+                0x00000000000014c2       0x3c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
  .debug_rnglists
-                0x0000000000001504      0x121 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
+                0x00000000000014fe      0x121 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
  .debug_rnglists
-                0x0000000000001625       0xb1 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
+                0x000000000000161f       0xb1 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
  .debug_rnglists
-                0x00000000000016d6      0x328 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
+                0x00000000000016d0      0x328 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
  .debug_rnglists
-                0x00000000000019fe      0x138 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
+                0x00000000000019f8      0x138 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
  .debug_rnglists
-                0x0000000000001b36      0x1e0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
+                0x0000000000001b30      0x1e0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
  .debug_rnglists
-                0x0000000000001d16       0x95 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
+                0x0000000000001d10       0x95 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
  .debug_rnglists
-                0x0000000000001dab      0x125 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
+                0x0000000000001da5      0x125 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
  .debug_rnglists
-                0x0000000000001ed0       0x19 ./FATFS/App/fatfs.o
+                0x0000000000001eca       0x19 ./FATFS/App/fatfs.o
  .debug_rnglists
-                0x0000000000001ee9       0x6d ./FATFS/Target/bsp_driver_sd.o
+                0x0000000000001ee3       0x6d ./FATFS/Target/bsp_driver_sd.o
  .debug_rnglists
-                0x0000000000001f56       0x53 ./FATFS/Target/sd_diskio.o
+                0x0000000000001f50       0x53 ./FATFS/Target/sd_diskio.o
  .debug_rnglists
-                0x0000000000001fa9       0x31 ./Middlewares/Third_Party/FatFs/src/diskio.o
+                0x0000000000001fa3       0x31 ./Middlewares/Third_Party/FatFs/src/diskio.o
  .debug_rnglists
-                0x0000000000001fda      0x1ee ./Middlewares/Third_Party/FatFs/src/ff.o
+                0x0000000000001fd4      0x1ee ./Middlewares/Third_Party/FatFs/src/ff.o
  .debug_rnglists
-                0x00000000000021c8       0x2c ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
+                0x00000000000021c2       0x2c ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
  .debug_rnglists
-                0x00000000000021f4       0x1a ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
+                0x00000000000021ee       0x1a ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
  .debug_rnglists
-                0x000000000000220e       0x31 ./Middlewares/Third_Party/FatFs/src/option/syscall.o
+                0x0000000000002208       0x31 ./Middlewares/Third_Party/FatFs/src/option/syscall.o
  .debug_rnglists
-                0x000000000000223f      0x16a ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+                0x0000000000002239      0x16a ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
  .debug_rnglists
-                0x00000000000023a9       0x2b ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+                0x00000000000023a3       0x2b ./Middlewares/Third_Party/FreeRTOS/Source/list.o
  .debug_rnglists
-                0x00000000000023d4       0xce ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+                0x00000000000023ce       0xce ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
  .debug_rnglists
-                0x00000000000024a2      0x15b ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+                0x000000000000249c      0x15b ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
  .debug_rnglists
-                0x00000000000025fd       0x5d ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+                0x00000000000025f7       0x5d ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
  .debug_rnglists
-                0x000000000000265a       0x3b ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+                0x0000000000002654       0x3b ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
  .debug_rnglists
-                0x0000000000002695       0x19 ./startup/startup_stm32f769xx.o
+                0x000000000000268f       0x19 ./startup/startup_stm32f769xx.o
 
 .debug_macro    0x0000000000000000    0x39aeb
  .debug_macro   0x0000000000000000      0x39e ./Application/General_Utilities/debug.o
@@ -13818,16 +13815,16 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x0000000000030be4      0x4ef ./Application/LCD/Screens/SCREEN_ReadPanel.o
  .debug_macro   0x00000000000310d3       0x16 ./Application/LCD/Screens/SCREEN_ReadPanel.o
  .debug_macro   0x00000000000310e9       0x10 ./Application/LCD/Screens/SCREEN_ReadPanel.o
- .debug_macro   0x00000000000310f9      0x115 ./Application/Lang/lang.o
- .debug_macro   0x000000000003120e       0xe5 ./Application/cpu_utils.o
- .debug_macro   0x00000000000312f3       0xea ./Application/cpu_utils.o
- .debug_macro   0x00000000000313dd      0x4ae ./Application/stmpe811.o
- .debug_macro   0x000000000003188b      0x38c ./Application/touch.o
- .debug_macro   0x0000000000031c17       0x1c ./Application/touch.o
- .debug_macro   0x0000000000031c33       0x10 ./Application/touch.o
- .debug_macro   0x0000000000031c43       0x1c ./Application/touch.o
- .debug_macro   0x0000000000031c5f       0x16 ./Application/touch.o
- .debug_macro   0x0000000000031c75      0x147 ./Application/touch.o
+ .debug_macro   0x00000000000310f9      0x4ae ./Application/LCD/Touch/stmpe811.o
+ .debug_macro   0x00000000000315a7      0x38c ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000031933       0x1c ./Application/LCD/Touch/touch.o
+ .debug_macro   0x000000000003194f       0x10 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x000000000003195f       0x1c ./Application/LCD/Touch/touch.o
+ .debug_macro   0x000000000003197b       0x16 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000031991      0x147 ./Application/LCD/Touch/touch.o
+ .debug_macro   0x0000000000031ad8      0x115 ./Application/Lang/lang.o
+ .debug_macro   0x0000000000031bed       0xe5 ./Application/cpu_utils.o
+ .debug_macro   0x0000000000031cd2       0xea ./Application/cpu_utils.o
  .debug_macro   0x0000000000031dbc      0x25d ./Core/Src/dma.o
  .debug_macro   0x0000000000032019      0x25d ./Core/Src/dma2d.o
  .debug_macro   0x0000000000032276      0x2bb ./Core/Src/fmc.o
@@ -13883,7 +13880,7 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x00000000000397b9      0x184 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
  .debug_macro   0x000000000003993d      0x1ae ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
 
-.debug_line     0x0000000000000000    0x47601
+.debug_line     0x0000000000000000    0x4760e
  .debug_line    0x0000000000000000      0xbb7 ./Application/General_Utilities/debug.o
  .debug_line    0x0000000000000bb7      0x7ed ./Application/General_Utilities/double_float.o
  .debug_line    0x00000000000013a4      0xd4f ./Application/General_Utilities/errors_service.o
@@ -13896,58 +13893,58 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_line    0x000000000000b107      0x984 ./Application/LCD/LCD_Hardware.o
  .debug_line    0x000000000000ba8b     0x4796 ./Application/LCD/LCD_fonts_images.o
  .debug_line    0x0000000000010221     0x29c1 ./Application/LCD/Screens/SCREEN_ReadPanel.o
- .debug_line    0x0000000000012be2      0x64d ./Application/Lang/lang.o
- .debug_line    0x000000000001322f      0x5eb ./Application/cpu_utils.o
- .debug_line    0x000000000001381a      0xcc4 ./Application/stmpe811.o
- .debug_line    0x00000000000144de      0xd9e ./Application/touch.o
- .debug_line    0x000000000001527c      0x83a ./Core/Src/dma.o
- .debug_line    0x0000000000015ab6      0x8a1 ./Core/Src/dma2d.o
- .debug_line    0x0000000000016357      0xb17 ./Core/Src/fmc.o
- .debug_line    0x0000000000016e6e      0xbd7 ./Core/Src/freertos.o
- .debug_line    0x0000000000017a45      0x874 ./Core/Src/gpio.o
- .debug_line    0x00000000000182b9      0x8cd ./Core/Src/i2c.o
- .debug_line    0x0000000000018b86      0xa5a ./Core/Src/ltdc.o
- .debug_line    0x00000000000195e0      0xe47 ./Core/Src/main.o
- .debug_line    0x000000000001a427      0x927 ./Core/Src/sdmmc.o
- .debug_line    0x000000000001ad4e      0x83b ./Core/Src/stm32f7xx_hal_msp.o
- .debug_line    0x000000000001b589      0x8b5 ./Core/Src/stm32f7xx_hal_timebase_tim.o
- .debug_line    0x000000000001be3e      0x9fc ./Core/Src/stm32f7xx_it.o
- .debug_line    0x000000000001c83a      0x8b9 ./Core/Src/system_stm32f7xx.o
- .debug_line    0x000000000001d0f3      0x94d ./Core/Src/tim.o
- .debug_line    0x000000000001da40      0xa61 ./Core/Src/usart.o
- .debug_line    0x000000000001e4a1      0xb7a ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
- .debug_line    0x000000000001f01b      0xdd0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
- .debug_line    0x000000000001fdeb     0x1099 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
- .debug_line    0x0000000000020e84     0x12ff ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
- .debug_line    0x0000000000022183      0xcbe ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
- .debug_line    0x0000000000022e41     0x3821 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
- .debug_line    0x0000000000026662      0x975 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
- .debug_line    0x0000000000026fd7     0x1854 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
- .debug_line    0x000000000002882b      0xab6 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
- .debug_line    0x00000000000292e1      0xfb7 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
- .debug_line    0x000000000002a298      0xf90 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
- .debug_line    0x000000000002b228     0x1f3e ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
- .debug_line    0x000000000002d166      0xf21 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
- .debug_line    0x000000000002e087     0x3dcf ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
- .debug_line    0x0000000000031e56     0x1d31 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
- .debug_line    0x0000000000033b87     0x323a ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
- .debug_line    0x0000000000036dc1      0xbb8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
- .debug_line    0x0000000000037979     0x10b6 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
- .debug_line    0x0000000000038a2f      0xab4 ./FATFS/App/fatfs.o
- .debug_line    0x00000000000394e3      0x9f7 ./FATFS/Target/bsp_driver_sd.o
- .debug_line    0x0000000000039eda      0xf8d ./FATFS/Target/sd_diskio.o
- .debug_line    0x000000000003ae67      0xad7 ./Middlewares/Third_Party/FatFs/src/diskio.o
- .debug_line    0x000000000003b93e     0x4017 ./Middlewares/Third_Party/FatFs/src/ff.o
- .debug_line    0x000000000003f955      0xaf5 ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
- .debug_line    0x000000000004044a      0xb37 ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
- .debug_line    0x0000000000040f81      0xade ./Middlewares/Third_Party/FatFs/src/option/syscall.o
- .debug_line    0x0000000000041a5f     0x1287 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_line    0x0000000000042ce6      0x79a ./Middlewares/Third_Party/FreeRTOS/Source/list.o
- .debug_line    0x0000000000043480     0x1568 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_line    0x00000000000449e8     0x1a20 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_line    0x0000000000046408      0x819 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
- .debug_line    0x0000000000046c21      0x966 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
- .debug_line    0x0000000000047587       0x7a ./startup/startup_stm32f769xx.o
+ .debug_line    0x0000000000012be2      0xcb2 ./Application/LCD/Touch/stmpe811.o
+ .debug_line    0x0000000000013894      0xda8 ./Application/LCD/Touch/touch.o
+ .debug_line    0x000000000001463c      0x64d ./Application/Lang/lang.o
+ .debug_line    0x0000000000014c89      0x5eb ./Application/cpu_utils.o
+ .debug_line    0x0000000000015274      0x83a ./Core/Src/dma.o
+ .debug_line    0x0000000000015aae      0x8a1 ./Core/Src/dma2d.o
+ .debug_line    0x000000000001634f      0xb17 ./Core/Src/fmc.o
+ .debug_line    0x0000000000016e66      0xbd7 ./Core/Src/freertos.o
+ .debug_line    0x0000000000017a3d      0x874 ./Core/Src/gpio.o
+ .debug_line    0x00000000000182b1      0x8cd ./Core/Src/i2c.o
+ .debug_line    0x0000000000018b7e      0xa5a ./Core/Src/ltdc.o
+ .debug_line    0x00000000000195d8      0xe5c ./Core/Src/main.o
+ .debug_line    0x000000000001a434      0x927 ./Core/Src/sdmmc.o
+ .debug_line    0x000000000001ad5b      0x83b ./Core/Src/stm32f7xx_hal_msp.o
+ .debug_line    0x000000000001b596      0x8b5 ./Core/Src/stm32f7xx_hal_timebase_tim.o
+ .debug_line    0x000000000001be4b      0x9fc ./Core/Src/stm32f7xx_it.o
+ .debug_line    0x000000000001c847      0x8b9 ./Core/Src/system_stm32f7xx.o
+ .debug_line    0x000000000001d100      0x94d ./Core/Src/tim.o
+ .debug_line    0x000000000001da4d      0xa61 ./Core/Src/usart.o
+ .debug_line    0x000000000001e4ae      0xb7a ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
+ .debug_line    0x000000000001f028      0xdd0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
+ .debug_line    0x000000000001fdf8     0x1099 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
+ .debug_line    0x0000000000020e91     0x12ff ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
+ .debug_line    0x0000000000022190      0xcbe ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
+ .debug_line    0x0000000000022e4e     0x3821 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
+ .debug_line    0x000000000002666f      0x975 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
+ .debug_line    0x0000000000026fe4     0x1854 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
+ .debug_line    0x0000000000028838      0xab6 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
+ .debug_line    0x00000000000292ee      0xfb7 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
+ .debug_line    0x000000000002a2a5      0xf90 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
+ .debug_line    0x000000000002b235     0x1f3e ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
+ .debug_line    0x000000000002d173      0xf21 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
+ .debug_line    0x000000000002e094     0x3dcf ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
+ .debug_line    0x0000000000031e63     0x1d31 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
+ .debug_line    0x0000000000033b94     0x323a ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
+ .debug_line    0x0000000000036dce      0xbb8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
+ .debug_line    0x0000000000037986     0x10b6 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
+ .debug_line    0x0000000000038a3c      0xab4 ./FATFS/App/fatfs.o
+ .debug_line    0x00000000000394f0      0x9f7 ./FATFS/Target/bsp_driver_sd.o
+ .debug_line    0x0000000000039ee7      0xf8d ./FATFS/Target/sd_diskio.o
+ .debug_line    0x000000000003ae74      0xad7 ./Middlewares/Third_Party/FatFs/src/diskio.o
+ .debug_line    0x000000000003b94b     0x4017 ./Middlewares/Third_Party/FatFs/src/ff.o
+ .debug_line    0x000000000003f962      0xaf5 ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
+ .debug_line    0x0000000000040457      0xb37 ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
+ .debug_line    0x0000000000040f8e      0xade ./Middlewares/Third_Party/FatFs/src/option/syscall.o
+ .debug_line    0x0000000000041a6c     0x1287 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_line    0x0000000000042cf3      0x79a ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_line    0x000000000004348d     0x1568 ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_line    0x00000000000449f5     0x1a20 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_line    0x0000000000046415      0x819 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+ .debug_line    0x0000000000046c2e      0x966 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+ .debug_line    0x0000000000047594       0x7a ./startup/startup_stm32f769xx.o
 
 .debug_str      0x0000000000000000   0x13986e
  .debug_str     0x0000000000000000   0x123311 ./Application/General_Utilities/debug.o
@@ -13974,14 +13971,14 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                                      0x129160 (size before relaxing)
  .debug_str     0x000000000012b26d      0xe14 ./Application/LCD/Screens/SCREEN_ReadPanel.o
                                      0x1292db (size before relaxing)
- .debug_str     0x000000000012c081       0x68 ./Application/Lang/lang.o
+ .debug_str     0x000000000012c081     0x11a8 ./Application/LCD/Touch/stmpe811.o
+                                     0x11eaa0 (size before relaxing)
+ .debug_str     0x000000000012d229      0x7a6 ./Application/LCD/Touch/touch.o
+                                     0x12149d (size before relaxing)
+ .debug_str     0x000000000012d9cf       0x68 ./Application/Lang/lang.o
                                        0x6710 (size before relaxing)
- .debug_str     0x000000000012c0e9       0xfe ./Application/cpu_utils.o
+ .debug_str     0x000000000012da37       0xfe ./Application/cpu_utils.o
                                        0x7eba (size before relaxing)
- .debug_str     0x000000000012c1e7     0x11b2 ./Application/stmpe811.o
-                                     0x11eaaa (size before relaxing)
- .debug_str     0x000000000012d399      0x79c ./Application/touch.o
-                                     0x121493 (size before relaxing)
  .debug_str     0x000000000012db35      0x763 ./Core/Src/dma.o
                                      0x11deb7 (size before relaxing)
  .debug_str     0x000000000012e298       0x8c ./Core/Src/dma2d.o
@@ -13997,7 +13994,7 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_str     0x000000000012eff1       0x7c ./Core/Src/ltdc.o
                                      0x11df0b (size before relaxing)
  .debug_str     0x000000000012f06d      0x696 ./Core/Src/main.o
-                                     0x124ac2 (size before relaxing)
+                                     0x124ad6 (size before relaxing)
  .debug_str     0x000000000012f703      0x243 ./Core/Src/sdmmc.o
                                      0x11e78f (size before relaxing)
  .debug_str     0x000000000012f946       0x2c ./Core/Src/stm32f7xx_hal_msp.o
@@ -14079,7 +14076,7 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_str     0x0000000000139841       0x2d ./startup/startup_stm32f769xx.o
                                          0x53 (size before relaxing)
 
-.debug_frame    0x0000000000000000     0xd6d0
+.debug_frame    0x0000000000000000     0xd6ac
  .debug_frame   0x0000000000000000      0x12c ./Application/General_Utilities/debug.o
  .debug_frame   0x000000000000012c       0x98 ./Application/General_Utilities/double_float.o
  .debug_frame   0x00000000000001c4      0x21c ./Application/General_Utilities/errors_service.o
@@ -14092,85 +14089,85 @@ LOAD C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_frame   0x0000000000001a20      0x10c ./Application/LCD/LCD_Hardware.o
  .debug_frame   0x0000000000001b2c     0x133c ./Application/LCD/LCD_fonts_images.o
  .debug_frame   0x0000000000002e68      0x4f8 ./Application/LCD/Screens/SCREEN_ReadPanel.o
- .debug_frame   0x0000000000003360       0x80 ./Application/Lang/lang.o
- .debug_frame   0x00000000000033e0       0xa4 ./Application/cpu_utils.o
- .debug_frame   0x0000000000003484      0x418 ./Application/stmpe811.o
- .debug_frame   0x000000000000389c      0x1d4 ./Application/touch.o
- .debug_frame   0x0000000000003a70       0x34 ./Core/Src/dma.o
- .debug_frame   0x0000000000003aa4       0x74 ./Core/Src/dma2d.o
- .debug_frame   0x0000000000003b18      0x104 ./Core/Src/fmc.o
- .debug_frame   0x0000000000003c1c       0xc0 ./Core/Src/freertos.o
- .debug_frame   0x0000000000003cdc       0x50 ./Core/Src/gpio.o
- .debug_frame   0x0000000000003d2c       0x78 ./Core/Src/i2c.o
- .debug_frame   0x0000000000003da4       0x80 ./Core/Src/ltdc.o
- .debug_frame   0x0000000000003e24      0x160 ./Core/Src/main.o
- .debug_frame   0x0000000000003f84       0x7c ./Core/Src/sdmmc.o
- .debug_frame   0x0000000000004000       0x34 ./Core/Src/stm32f7xx_hal_msp.o
- .debug_frame   0x0000000000004034       0x74 ./Core/Src/stm32f7xx_hal_timebase_tim.o
- .debug_frame   0x00000000000040a8      0x1b4 ./Core/Src/stm32f7xx_it.o
- .debug_frame   0x000000000000425c       0x58 ./Core/Src/system_stm32f7xx.o
- .debug_frame   0x00000000000042b4       0xc8 ./Core/Src/tim.o
- .debug_frame   0x000000000000437c      0x178 ./Core/Src/usart.o
- .debug_frame   0x00000000000044f4      0x3f4 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
- .debug_frame   0x00000000000048e8      0x498 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
- .debug_frame   0x0000000000004d80      0x250 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
- .debug_frame   0x0000000000004fd0      0x4e0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
- .debug_frame   0x00000000000054b0      0x14c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
- .debug_frame   0x00000000000055fc      0xc34 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
- .debug_frame   0x0000000000006230       0xb0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
- .debug_frame   0x00000000000062e0      0x61c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
- .debug_frame   0x00000000000068fc      0x1c8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
- .debug_frame   0x0000000000006ac4      0x1f8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
- .debug_frame   0x0000000000006cbc      0x118 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
- .debug_frame   0x0000000000006dd4      0x650 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
- .debug_frame   0x0000000000007424      0x3e8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
- .debug_frame   0x000000000000780c     0x121c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
- .debug_frame   0x0000000000008a28      0x6b0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
- .debug_frame   0x00000000000090d8      0xa10 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
- .debug_frame   0x0000000000009ae8      0x37c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
- .debug_frame   0x0000000000009e64      0x6d0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
- .debug_frame   0x000000000000a534       0x4c ./FATFS/App/fatfs.o
- .debug_frame   0x000000000000a580      0x23c ./FATFS/Target/bsp_driver_sd.o
- .debug_frame   0x000000000000a7bc      0x198 ./FATFS/Target/sd_diskio.o
- .debug_frame   0x000000000000a954       0xec ./Middlewares/Third_Party/FatFs/src/diskio.o
- .debug_frame   0x000000000000aa40      0xae8 ./Middlewares/Third_Party/FatFs/src/ff.o
- .debug_frame   0x000000000000b528       0xc8 ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
- .debug_frame   0x000000000000b5f0       0x60 ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
- .debug_frame   0x000000000000b650       0xe8 ./Middlewares/Third_Party/FatFs/src/option/syscall.o
- .debug_frame   0x000000000000b738      0x808 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
- .debug_frame   0x000000000000bf40       0xd8 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
- .debug_frame   0x000000000000c018      0x46c ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
- .debug_frame   0x000000000000c484      0x758 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
- .debug_frame   0x000000000000cbdc      0x1a8 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
- .debug_frame   0x000000000000cd84      0x108 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
- .debug_frame   0x000000000000ce8c       0x38 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-itoa.o)
- .debug_frame   0x000000000000cec4       0x48 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-utoa.o)
- .debug_frame   0x000000000000cf0c      0x144 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-findfp.o)
- .debug_frame   0x000000000000d050       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-memset.o)
- .debug_frame   0x000000000000d070       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-strchr.o)
- .debug_frame   0x000000000000d090       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-strncat.o)
- .debug_frame   0x000000000000d0bc       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-strstr.o)
- .debug_frame   0x000000000000d0e8       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-errno.o)
- .debug_frame   0x000000000000d108       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-init.o)
- .debug_frame   0x000000000000d134       0x28 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-memcpy-stub.o)
- .debug_frame   0x000000000000d15c       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-w_atan2.o)
- .debug_frame   0x000000000000d17c       0x38 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_tan.o)
- .debug_frame   0x000000000000d1b4      0x18c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-pow.o)
- .debug_frame   0x000000000000d340       0x28 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-k_tan.o)
- .debug_frame   0x000000000000d368       0x3c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-e_atan2.o)
- .debug_frame   0x000000000000d3a4       0x34 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-e_rem_pio2.o)
- .debug_frame   0x000000000000d3d8       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_atan.o)
- .debug_frame   0x000000000000d404       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_fabs.o)
- .debug_frame   0x000000000000d424       0xc0 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-math_err.o)
- .debug_frame   0x000000000000d4e4       0x68 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-k_rem_pio2.o)
- .debug_frame   0x000000000000d54c       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_scalbn.o)
- .debug_frame   0x000000000000d56c       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_floor.o)
- .debug_frame   0x000000000000d598       0x4c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_arm_addsubsf3.o)
- .debug_frame   0x000000000000d5e4       0x44 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_aeabi_ldivmod.o)
- .debug_frame   0x000000000000d628       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_aeabi_uldivmod.o)
- .debug_frame   0x000000000000d654       0x28 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_fixsfdi.o)
- .debug_frame   0x000000000000d67c       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_fixunssfdi.o)
- .debug_frame   0x000000000000d69c       0x34 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_udivmoddi4.o)
+ .debug_frame   0x0000000000003360      0x3f4 ./Application/LCD/Touch/stmpe811.o
+ .debug_frame   0x0000000000003754      0x1d4 ./Application/LCD/Touch/touch.o
+ .debug_frame   0x0000000000003928       0x80 ./Application/Lang/lang.o
+ .debug_frame   0x00000000000039a8       0xa4 ./Application/cpu_utils.o
+ .debug_frame   0x0000000000003a4c       0x34 ./Core/Src/dma.o
+ .debug_frame   0x0000000000003a80       0x74 ./Core/Src/dma2d.o
+ .debug_frame   0x0000000000003af4      0x104 ./Core/Src/fmc.o
+ .debug_frame   0x0000000000003bf8       0xc0 ./Core/Src/freertos.o
+ .debug_frame   0x0000000000003cb8       0x50 ./Core/Src/gpio.o
+ .debug_frame   0x0000000000003d08       0x78 ./Core/Src/i2c.o
+ .debug_frame   0x0000000000003d80       0x80 ./Core/Src/ltdc.o
+ .debug_frame   0x0000000000003e00      0x160 ./Core/Src/main.o
+ .debug_frame   0x0000000000003f60       0x7c ./Core/Src/sdmmc.o
+ .debug_frame   0x0000000000003fdc       0x34 ./Core/Src/stm32f7xx_hal_msp.o
+ .debug_frame   0x0000000000004010       0x74 ./Core/Src/stm32f7xx_hal_timebase_tim.o
+ .debug_frame   0x0000000000004084      0x1b4 ./Core/Src/stm32f7xx_it.o
+ .debug_frame   0x0000000000004238       0x58 ./Core/Src/system_stm32f7xx.o
+ .debug_frame   0x0000000000004290       0xc8 ./Core/Src/tim.o
+ .debug_frame   0x0000000000004358      0x178 ./Core/Src/usart.o
+ .debug_frame   0x00000000000044d0      0x3f4 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
+ .debug_frame   0x00000000000048c4      0x498 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
+ .debug_frame   0x0000000000004d5c      0x250 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.o
+ .debug_frame   0x0000000000004fac      0x4e0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma2d.o
+ .debug_frame   0x000000000000548c      0x14c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
+ .debug_frame   0x00000000000055d8      0xc34 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.o
+ .debug_frame   0x000000000000620c       0xb0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c_ex.o
+ .debug_frame   0x00000000000062bc      0x61c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_ltdc.o
+ .debug_frame   0x00000000000068d8      0x1c8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
+ .debug_frame   0x0000000000006aa0      0x1f8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
+ .debug_frame   0x0000000000006c98      0x118 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
+ .debug_frame   0x0000000000006db0      0x650 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.o
+ .debug_frame   0x0000000000007400      0x3e8 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.o
+ .debug_frame   0x00000000000077e8     0x121c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
+ .debug_frame   0x0000000000008a04      0x6b0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
+ .debug_frame   0x00000000000090b4      0xa10 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
+ .debug_frame   0x0000000000009ac4      0x37c ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.o
+ .debug_frame   0x0000000000009e40      0x6d0 ./Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.o
+ .debug_frame   0x000000000000a510       0x4c ./FATFS/App/fatfs.o
+ .debug_frame   0x000000000000a55c      0x23c ./FATFS/Target/bsp_driver_sd.o
+ .debug_frame   0x000000000000a798      0x198 ./FATFS/Target/sd_diskio.o
+ .debug_frame   0x000000000000a930       0xec ./Middlewares/Third_Party/FatFs/src/diskio.o
+ .debug_frame   0x000000000000aa1c      0xae8 ./Middlewares/Third_Party/FatFs/src/ff.o
+ .debug_frame   0x000000000000b504       0xc8 ./Middlewares/Third_Party/FatFs/src/ff_gen_drv.o
+ .debug_frame   0x000000000000b5cc       0x60 ./Middlewares/Third_Party/FatFs/src/option/ccsbcs.o
+ .debug_frame   0x000000000000b62c       0xe8 ./Middlewares/Third_Party/FatFs/src/option/syscall.o
+ .debug_frame   0x000000000000b714      0x808 ./Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.o
+ .debug_frame   0x000000000000bf1c       0xd8 ./Middlewares/Third_Party/FreeRTOS/Source/list.o
+ .debug_frame   0x000000000000bff4      0x46c ./Middlewares/Third_Party/FreeRTOS/Source/queue.o
+ .debug_frame   0x000000000000c460      0x758 ./Middlewares/Third_Party/FreeRTOS/Source/tasks.o
+ .debug_frame   0x000000000000cbb8      0x1a8 ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.o
+ .debug_frame   0x000000000000cd60      0x108 ./Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
+ .debug_frame   0x000000000000ce68       0x38 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-itoa.o)
+ .debug_frame   0x000000000000cea0       0x48 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-utoa.o)
+ .debug_frame   0x000000000000cee8      0x144 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-findfp.o)
+ .debug_frame   0x000000000000d02c       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-memset.o)
+ .debug_frame   0x000000000000d04c       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-strchr.o)
+ .debug_frame   0x000000000000d06c       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-strncat.o)
+ .debug_frame   0x000000000000d098       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-strstr.o)
+ .debug_frame   0x000000000000d0c4       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-errno.o)
+ .debug_frame   0x000000000000d0e4       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-init.o)
+ .debug_frame   0x000000000000d110       0x28 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libc_nano.a(libc_a-memcpy-stub.o)
+ .debug_frame   0x000000000000d138       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-w_atan2.o)
+ .debug_frame   0x000000000000d158       0x38 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_tan.o)
+ .debug_frame   0x000000000000d190      0x18c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-pow.o)
+ .debug_frame   0x000000000000d31c       0x28 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-k_tan.o)
+ .debug_frame   0x000000000000d344       0x3c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-e_atan2.o)
+ .debug_frame   0x000000000000d380       0x34 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-e_rem_pio2.o)
+ .debug_frame   0x000000000000d3b4       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_atan.o)
+ .debug_frame   0x000000000000d3e0       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_fabs.o)
+ .debug_frame   0x000000000000d400       0xc0 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-math_err.o)
+ .debug_frame   0x000000000000d4c0       0x68 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-k_rem_pio2.o)
+ .debug_frame   0x000000000000d528       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_scalbn.o)
+ .debug_frame   0x000000000000d548       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+dp/hard\libm.a(libm_a-s_floor.o)
+ .debug_frame   0x000000000000d574       0x4c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_arm_addsubsf3.o)
+ .debug_frame   0x000000000000d5c0       0x44 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_aeabi_ldivmod.o)
+ .debug_frame   0x000000000000d604       0x2c C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .debug_frame   0x000000000000d630       0x28 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_fixsfdi.o)
+ .debug_frame   0x000000000000d658       0x20 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_fixunssfdi.o)
+ .debug_frame   0x000000000000d678       0x34 C:/ST/STM32CubeIDE_1.14.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+dp/hard\libgcc.a(_udivmoddi4.o)
 
 .debug_line_str
                 0x0000000000000000       0x47

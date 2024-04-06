@@ -12,4 +12,8 @@ typedef struct
 
 extern TS_StateTypeDef  TS_State;
 
+uint8_t BSP_TS_GetState	(TS_StateTypeDef *TS_State);
+void 	  BSP_TS_ClearIT	(void);
+uint8_t BSP_TS_Init		(uint16_t xSize, uint16_t ySize);
+
 #endif

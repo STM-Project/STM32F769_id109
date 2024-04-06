@@ -21,6 +21,7 @@ RM := rm -rf
 -include Drivers/STM32F7xx_HAL_Driver/Src/subdir.mk
 -include Core/Src/subdir.mk
 -include Application/Lang/subdir.mk
+-include Application/LCD/Touch/subdir.mk
 -include Application/LCD/Screens/subdir.mk
 -include Application/LCD/subdir.mk
 -include Application/General_Utilities/subdir.mk

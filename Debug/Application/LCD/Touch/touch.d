@@ -1,4 +1,4 @@
-Application/touch.o: ../Application/touch.c \
+Application/LCD/Touch/touch.o: ../Application/LCD/Touch/touch.c \
  C:/Projekty_id109/Stm32F769bit6/Application/LCD/LCD_BasicGaphics.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
  ../Core/Inc/stm32f7xx_hal_conf.h \
@@ -40,7 +40,7 @@ Application/touch.o: ../Application/touch.c \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h \
  C:/Projekty_id109/Stm32F769bit6/Application/common.h \
  C:/Projekty_id109/Stm32F769bit6/Application/LCD/LCD_Hardware.h \
- ../Application/touch.h ../Application/stmpe811.h \
+ ../Application/LCD/Touch/touch.h ../Application/LCD/Touch/stmpe811.h \
  C:/Projekty_id109/Stm32F769bit6/Application/General_Utilities/debug.h
 C:/Projekty_id109/Stm32F769bit6/Application/LCD/LCD_BasicGaphics.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h:
@@ -83,6 +83,6 @@ C:/Projekty_id109/Stm32F769bit6/Application/LCD/LCD_BasicGaphics.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h:
 C:/Projekty_id109/Stm32F769bit6/Application/common.h:
 C:/Projekty_id109/Stm32F769bit6/Application/LCD/LCD_Hardware.h:
-../Application/touch.h:
-../Application/stmpe811.h:
+../Application/LCD/Touch/touch.h:
+../Application/LCD/Touch/stmpe811.h:
 C:/Projekty_id109/Stm32F769bit6/Application/General_Utilities/debug.h:

@@ -1,9 +1,4 @@
-/*
- * touch.c
- *
- *  Created on: 16.08.2020
- *      Author: Marian
- */
+
 #include <LCD_BasicGaphics.h>
 #include <LCD_Hardware.h>
 #include <string.h>
@@ -12,8 +7,6 @@
 #include "touch.h"
 #include "stmpe811.h"
 #include "debug.h"
-//#include "libjpeg.h"
-//#include "sdram.h"
 
 #define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 200
 
