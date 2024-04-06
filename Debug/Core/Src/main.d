@@ -64,8 +64,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/gpio.h ../Core/Inc/sdmmc.h ../Core/Inc/fmc.h \
  C:/Projekty_id109/Stm32F769bit6/Application/General_Utilities/debug.h \
  ../Core/Inc/dma2d.h ../Core/Inc/ltdc.h ../Core/Inc/tim.h \
- C:/Projekty_id109/Stm32F769bit6/Application/touch.h \
- C:/Projekty_id109/Stm32F769bit6/Application/stmpe811.h
+ C:/Projekty_id109/Stm32F769bit6/Application/LCD/Touch/touch.h \
+ C:/Projekty_id109/Stm32F769bit6/Application/LCD/Touch/stmpe811.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h:
 ../Core/Inc/stm32f7xx_hal_conf.h:
@@ -141,5 +141,5 @@ C:/Projekty_id109/Stm32F769bit6/Application/General_Utilities/debug.h:
 ../Core/Inc/dma2d.h:
 ../Core/Inc/ltdc.h:
 ../Core/Inc/tim.h:
-C:/Projekty_id109/Stm32F769bit6/Application/touch.h:
-C:/Projekty_id109/Stm32F769bit6/Application/stmpe811.h:
+C:/Projekty_id109/Stm32F769bit6/Application/LCD/Touch/touch.h:
+C:/Projekty_id109/Stm32F769bit6/Application/LCD/Touch/stmpe811.h:

@@ -25,6 +25,7 @@ SUBDIRS := \
 Application/General_Utilities \
 Application/LCD \
 Application/LCD/Screens \
+Application/LCD/Touch \
 Application/Lang \
 Application \
 Core/Src \

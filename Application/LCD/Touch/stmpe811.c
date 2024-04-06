@@ -390,24 +390,6 @@ static uint32_t stmpe811_IO_ReadPin(uint16_t DeviceAddr, uint32_t IO_Pin)
   return((uint32_t)(IOE_Read(DeviceAddr, STMPE811_REG_IO_MP_STA) & (uint8_t)IO_Pin));
 }
 
-static void stmpe811_IO_ClearIT(uint16_t DeviceAddr, uint32_t IO_Pin)
-{
-  /* Clear the global IO IT pending bit */
-  stmpe811_ClearGlobalIT(DeviceAddr, STMPE811_GIT_IO);
-  
-  /* Clear the IO IT pending bit(s) */
-  IOE_Write(DeviceAddr, STMPE811_REG_IO_INT_STA, (uint8_t)IO_Pin);  
-  
-  /* Clear the Edge detection pending bit*/
-  IOE_Write(DeviceAddr, STMPE811_REG_IO_ED, (uint8_t)IO_Pin);
-  
-  /* Clear the Rising edge pending bit */
-  IOE_Write(DeviceAddr, STMPE811_REG_IO_RE, (uint8_t)IO_Pin);
-  
-  /* Clear the Falling edge pending bit */
-  IOE_Write(DeviceAddr, STMPE811_REG_IO_FE, (uint8_t)IO_Pin); 
-}
-
 static uint16_t IOE_ReadMultiple(uint8_t Addr, uint8_t Reg, uint8_t *Buffer, uint16_t Length)
 {
 	return I2Cx_ReadMultiple(Addr, Reg, I2C_MEMADD_SIZE_8BIT, Buffer, Length);
@@ -563,7 +545,6 @@ IO_DrvTypeDef stmpe811_io_drv =
   stmpe811_IO_Start,
   stmpe811_IO_WritePin,
   stmpe811_IO_ReadPin,
-  stmpe811_IO_ClearIT,
 };
 
 uint8_t BSP_TS_Init(uint16_t xSize, uint16_t ySize)

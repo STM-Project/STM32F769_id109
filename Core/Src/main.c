@@ -36,6 +36,7 @@
 #include "tim.h"
 #include "touch.h"
 #include "stmpe811.h"
+#include "LCD_Hardware.h"
 
 /* USER CODE END Includes */
 
