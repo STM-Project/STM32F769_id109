@@ -8,6 +8,8 @@
 #include "stmpe811.h"
 #include "debug.h"
 
+#define DBG_ENABLE	 1   //select for any file.c via debug terminal
+
 #define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 200
 
 typedef struct
@@ -171,8 +173,8 @@ int CheckTouch(uint16_t *xPos, uint16_t *yPos)
 	     *xPos=x;
 	     *yPos=y;
 
-	     DbgVar(1,30,"\r\nPos1: x=%d, y=%d ",TS_State.x, TS_State.y);
-	    // DbgSprintf(30,"\r\nPos1: x=%d, y=%d ",TS_State.x, TS_State.y);
+	   DbgVar(DBG_ENABLE,30,"\r\nPos1: x=%d, y=%d ",TS_State.x, TS_State.y);
+
 		for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 		{
 			if((TS_State.x >= Touch[i].x_Start)&&(TS_State.x < Touch[i].x_End) && (TS_State.y >= Touch[i].y_Start)&&(TS_State.y < Touch[i].y_End))
