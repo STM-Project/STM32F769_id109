@@ -21,12 +21,12 @@ typedef struct
 
 static Touch_Struct  Touch[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
 
-static uint8_t touchDetect;
-TS_Temporary  touchTemp;
-
 static uint8_t Calibration_Done = 0;
 static int32_t  A1, A2, B1, B2;
 static int32_t aPhysX[2], aPhysY[2], aLogX[2], aLogY[2];
+
+uint8_t touchDetect;
+TS_Temporary  touchTemp;
 
 //static void WaitForPressedState(uint8_t Pressed)
 //{
@@ -148,12 +148,6 @@ static uint16_t Calibration_GetY(uint32_t y)
 uint8_t IsCalibrationDone(void)
 {
   return (Calibration_Done);
-}
-
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	touchDetect=1;
 }
 
 int CheckTouch(uint16_t *xPos, uint16_t *yPos)

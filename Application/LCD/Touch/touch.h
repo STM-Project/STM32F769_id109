@@ -12,6 +12,7 @@ typedef struct
   uint16_t y_End;
 }TS_Temporary;
 
+extern uint8_t touchDetect;
 extern TS_Temporary  touchTemp;
 
 int 	CheckTouch					(uint16_t *xPos, uint16_t *yPos);

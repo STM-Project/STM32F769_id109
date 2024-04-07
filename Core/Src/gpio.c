@@ -22,6 +22,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
+#include "touch.h"
 
 /* USER CODE END 0 */
 
@@ -80,6 +81,12 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	touchDetect=1;
+}
+
 void LED_toogle(void)
 {
 	HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
