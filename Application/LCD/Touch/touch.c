@@ -187,15 +187,18 @@ int CheckTouch(uint16_t *xPos, uint16_t *yPos)
   return -1;
 }
 
+#define BUF_LCD_TOUCH_SIZE	30
 
 typedef struct
 {
-  uint16_t index;
-  uint16_t x_Start;
-  uint16_t y_Start;
-  uint16_t x_End;
+  uint8_t press;
+  uint8_t ongoing;
+  uint8_t buf_idx;
+  uint16_t bufxy[BUF_LCD_TOUCH_SIZE][BUF_LCD_TOUCH_SIZE];
   uint16_t y_End;
 }Service_lcd_Touch_Struct;
+
+static Service_lcd_Touch_Struct  ServiceTouch
 
 void Service_lcd_touch()
 {
