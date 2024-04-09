@@ -187,6 +187,27 @@ int CheckTouch(uint16_t *xPos, uint16_t *yPos)
   return -1;
 }
 
+
+typedef struct
+{
+  uint16_t index;
+  uint16_t x_Start;
+  uint16_t y_Start;
+  uint16_t x_End;
+  uint16_t y_End;
+}Service_lcd_Touch_Struct;
+
+void Service_lcd_touch()
+{
+
+
+}	
+
+
+
+
+
+
 void clearTouchTemp(void)
 {
 	touchTemp.x_Start=0;
