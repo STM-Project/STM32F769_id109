@@ -157,6 +157,12 @@ uint8_t IsCalibrationDone(void)
 #define BUF_LCD_TOUCH_SIZE	30
 #define SERVICE_TOUCH_PROB_TIME_MS	50
 
+// enum Level {
+//   LOW,
+//   MEDIUM,
+//   HIGH
+// };
+
 typedef struct
 {
   uint8_t press;
@@ -166,7 +172,7 @@ typedef struct
   uint16_t bufy[BUF_LCD_TOUCH_SIZE];
 }Service_lcd_Touch_Struct;
 
-static Service_lcd_Touch_Struct  ServiceTouch;
+static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 
 
 
@@ -210,7 +216,7 @@ void Service_lcd_touch()
 {
 	uint16_t x,y;
 		
-    if(-1!=CheckTouch(&x,&y))
+    if(-1 != CheckTouch(&x,&y))
 	{		
 		if(0 == ServiceTouch.press){
 			ServiceTouch.press = 1;
@@ -229,6 +235,7 @@ void Service_lcd_touch()
 	else
 	{
 		ServiceTouch.press = 0;
+		ServiceTouch.ongoing = 0;
 	}
 
 	HAL_Delay(SERVICE_TOUCH_PROB_TIME_MS);
