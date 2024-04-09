@@ -152,6 +152,24 @@ uint8_t IsCalibrationDone(void)
   return (Calibration_Done);
 }
 
+
+
+#define BUF_LCD_TOUCH_SIZE	30
+#define SERVICE_TOUCH_PROB_TIME_MS	50
+
+typedef struct
+{
+  uint8_t press;
+  uint8_t ongoing;
+  uint8_t buf_idx;
+  uint16_t bufx[BUF_LCD_TOUCH_SIZE];
+  uint16_t bufy[BUF_LCD_TOUCH_SIZE];
+}Service_lcd_Touch_Struct;
+
+static Service_lcd_Touch_Struct  ServiceTouch;
+
+
+
 int CheckTouch(uint16_t *xPos, uint16_t *yPos)
 {
   uint16_t x,y;
@@ -182,28 +200,22 @@ int CheckTouch(uint16_t *xPos, uint16_t *yPos)
 				return (int)Touch[i].index;
 			}
 		}
+		 return -2;
 	 }
   }
   return -1;
 }
 
-#define BUF_LCD_TOUCH_SIZE	30
-#define SERVICE_TOUCH_PROB_TIME_MS	50
-
-typedef struct
-{
-  uint8_t press;
-  uint8_t ongoing;
-  uint8_t buf_idx;
-  uint16_t bufxy[BUF_LCD_TOUCH_SIZE][BUF_LCD_TOUCH_SIZE];
-}Service_lcd_Touch_Struct;
-
-static Service_lcd_Touch_Struct  ServiceTouch;
-
 void Service_lcd_touch()
 {
+	uint16_t x,y,i=0;
+		
+    if(-1!=CheckTouch(&x,&y))
+	{
+		ServiceTouch.bufxy[i] = x;
+		ServiceTouch.bufxy[i] = y;
 
-
+	}	
 }	
 
 
