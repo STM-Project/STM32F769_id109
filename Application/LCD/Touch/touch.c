@@ -198,7 +198,7 @@ typedef struct
   uint16_t y_End;
 }Service_lcd_Touch_Struct;
 
-static Service_lcd_Touch_Struct  ServiceTouch
+static Service_lcd_Touch_Struct  ServiceTouch;
 
 void Service_lcd_touch()
 {
