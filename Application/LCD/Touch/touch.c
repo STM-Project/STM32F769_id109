@@ -161,7 +161,7 @@ typedef struct
 {
   uint8_t press;
   uint8_t ongoing;
-  uint8_t buf_idx;
+  uint8_t idx;
   uint16_t bufx[BUF_LCD_TOUCH_SIZE];
   uint16_t bufy[BUF_LCD_TOUCH_SIZE];
 }Service_lcd_Touch_Struct;
@@ -208,14 +208,30 @@ int CheckTouch(uint16_t *xPos, uint16_t *yPos)
 
 void Service_lcd_touch()
 {
-	uint16_t x,y,i=0;
+	uint16_t x,y;
 		
     if(-1!=CheckTouch(&x,&y))
-	{
-		ServiceTouch.bufxy[i] = x;
-		ServiceTouch.bufxy[i] = y;
+	{		
+		if(0 == ServiceTouch.press){
+			ServiceTouch.press = 1;
+			ServiceTouch.idx = 0;
+		}	
+		
+		if(BUF_LCD_TOUCH_SIZE > ServiceTouch.idx){
+			ServiceTouch.ongoing = 1;
+			ServiceTouch.bufx[ServiceTouch.idx] = x;
+			ServiceTouch.bufy[ServiceTouch.idx++] = y;
+		}
+		else
+			ServiceTouch.ongoing = 0;
 
-	}	
+	}
+	else
+	{
+		ServiceTouch.press = 0;
+	}
+
+	HAL_Delay(SERVICE_TOUCH_PROB_TIME_MS);
 }	
 
 
