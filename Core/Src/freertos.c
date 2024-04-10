@@ -33,6 +33,7 @@
 #include "timer.h"
 #include "SCREEN_ReadPanel.h"
 #include "lang.h"
+#include "TouchLcdTask.h"
 
 /* USER CODE END Includes */
 
@@ -163,12 +164,14 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-int x,y;
+
 	MX_FATFS_Init();
 
 	 SetLang(2,English);
 	 LCD_SetSpacesBetweenFonts();
 	 DEBUG_Send("\r\nStart ");
+
+	 CreateTouchLcdTask();
 
 
 //	StartMeasureTime(0);
@@ -183,7 +186,7 @@ int x,y;
 
 	 SCREEN_ReadPanel();
 	 vTaskDelay(2);
-	 CheckTouch(&x, &y);
+
 
 
 

@@ -134,7 +134,7 @@ static uint16_t Calibration_GetX(uint32_t x)
 	int32_t temp= (((A1 * x) + B1)/1000);
 	//temp-=80;
 	if(temp<0) temp=0;
-	else if(temp>800) temp=800;
+	else if(temp>LCD_GetXSize()) temp=LCD_GetXSize();
 	return (uint16_t)temp;
 }
 
@@ -143,7 +143,7 @@ static uint16_t Calibration_GetY(uint32_t y)
 	int32_t temp= (((A2 * y) + B2)/1000);
 	//temp-=90;
 	if(temp<0) temp=0;
-	else if(temp>480) temp=480;
+	else if(temp>LCD_GetYSize()) temp=LCD_GetYSize();
 	return (uint16_t)temp;
 }
 
@@ -206,7 +206,7 @@ int CheckTouch(uint16_t *xPos, uint16_t *yPos)
 				return (int)Touch[i].index;
 			}
 		}
-		 return -2;
+		return -2;
 	 }
   }
   return -1;
