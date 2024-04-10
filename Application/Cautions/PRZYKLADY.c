@@ -1,3 +1,7 @@
+
+#ifdef PRZYKLADY_
+
+
 //1 ################## -- xQueueHandle -- ###############################
 float archDataVal[100]={0};
 xQueueHandle xDataQueue
@@ -59,10 +63,7 @@ for (int i = 0; i < 16; i++)
 	if(i==7)
 		continue;
 }
-//4 ##################### - 
+//4 ############################################################
 
-for (int i = 0; i < 16; i++)
-{
 
-}
-buf[]
+#endif
