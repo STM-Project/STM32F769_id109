@@ -8,8 +8,6 @@
 #include "stmpe811.h"
 #include "debug.h"
 
-#define DBG_ENABLE	 1   //select for any file.c via debug terminal
-
 #define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 200
 
 typedef struct
@@ -167,27 +165,18 @@ enum TOUCH_TYPE {
 
 typedef struct
 {
-  uint16_t x;
-  uint16_t y;
-}XY_Touch_Struct;
-
-typedef struct
-{
   uint8_t press;
   uint8_t ongoing;
   uint8_t idx;
-  XY_Touch_Struct  xyTouch 
-  // uint16_t bufx[BUF_LCD_TOUCH_SIZE];
-  // uint16_t bufy[BUF_LCD_TOUCH_SIZE];
+  XY_Touch_Struct  pos[BUF_LCD_TOUCH_SIZE];
 }Service_lcd_Touch_Struct;
+
 static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
+static XY_Touch_Struct  pos;
 
 
-
-int CheckTouch(uint16_t *xPos, uint16_t *yPos)
+uint8_t CheckTouch(XY_Touch_Struct *pos)
 {
-  uint16_t x,y;
-
   if(touchDetect)
   {
 	 touchDetect=0;
@@ -196,35 +185,17 @@ int CheckTouch(uint16_t *xPos, uint16_t *yPos)
 	 if(TS_State.TouchDetected)
 	 {
 		 A1=1062; B1=-10224;   A2=1083;  B2=-23229;
-		 x = Calibration_GetX(TS_State.x);
-	     y = Calibration_GetY(TS_State.y);
-
-	     TS_State.x=x;
-	     TS_State.y=y;
-
-	     *xPos=x;
-	     *yPos=y;
-
-	   DbgVar(DBG_ENABLE,30,"\r\nPos1: x=%d, y=%d ",TS_State.x, TS_State.y);
-
-		for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
-		{
-			if((TS_State.x >= Touch[i].x_Start)&&(TS_State.x < Touch[i].x_End) && (TS_State.y >= Touch[i].y_Start)&&(TS_State.y < Touch[i].y_End))
-			{
-				return (int)Touch[i].index;
-			}
-		}
-		return -2;
+		 pos->x = Calibration_GetX(TS_State.x);
+	    pos->y = Calibration_GetY(TS_State.y);
+	    return 1;
 	 }
   }
-  return -1;
+  return 0;
 }
 
 void Service_lcd_touch()
 {
-	uint16_t x,y;
-		
-    if(-1 != CheckTouch(&x,&y))
+    if(CheckTouch(&pos))
 	{		
 		if(0 == ServiceTouch.press){
 			ServiceTouch.press = 1;
@@ -233,8 +204,8 @@ void Service_lcd_touch()
 		
 		if(BUF_LCD_TOUCH_SIZE > ServiceTouch.idx){
 			ServiceTouch.ongoing = 1;
-			ServiceTouch.bufx[ServiceTouch.idx] = x;
-			ServiceTouch.bufy[ServiceTouch.idx++] = y;
+			ServiceTouch.pos[ServiceTouch.idx].x = pos.x;
+			ServiceTouch.pos[ServiceTouch.idx++].x = pos.y;
 		}
 		else
 			ServiceTouch.ongoing = 0;

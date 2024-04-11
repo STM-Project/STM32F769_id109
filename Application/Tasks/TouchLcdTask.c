@@ -15,7 +15,7 @@ xTaskHandle vtaskTouchLcdHandle;
 
 void vtaskTouchLcd(void *pvParameters)
 {
-	uint16_t x,y;
+	XY_Touch_Struct pos;
 	portTickType xLastExecutionTime;
 
 	xLastExecutionTime = xTaskGetTickCount();
@@ -23,7 +23,8 @@ void vtaskTouchLcd(void *pvParameters)
 
 	while(1)
 	{
-		CheckTouch(&x, &y);
+		if(CheckTouch(&pos))
+			DbgVar(1,30,"\r\nPos1: x=%d, y=%d ",pos.x, pos.y);
 
 		vTaskDelayUntil(&xLastExecutionTime, 20);
 	}
