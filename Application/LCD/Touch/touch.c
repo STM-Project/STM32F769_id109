@@ -158,7 +158,7 @@ uint8_t IsCalibrationDone(void)
 #define SERVICE_TOUCH_PROB_TIME_MS	50
 
 enum TOUCH_TYPE {
-  TouichPoint,
+  TouchPoint,
   TouchAndMoveLeft,
   TouchAndMoveRight,
   TouchAndMoveUp,
@@ -167,13 +167,19 @@ enum TOUCH_TYPE {
 
 typedef struct
 {
+  uint16_t x;
+  uint16_t y;
+}XY_Touch_Struct;
+
+typedef struct
+{
   uint8_t press;
   uint8_t ongoing;
   uint8_t idx;
-  uint16_t bufx[BUF_LCD_TOUCH_SIZE];
-  uint16_t bufy[BUF_LCD_TOUCH_SIZE];
+  XY_Touch_Struct  xyTouch 
+  // uint16_t bufx[BUF_LCD_TOUCH_SIZE];
+  // uint16_t bufy[BUF_LCD_TOUCH_SIZE];
 }Service_lcd_Touch_Struct;
-
 static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 
 
@@ -243,13 +249,26 @@ void Service_lcd_touch()
 	HAL_Delay(SERVICE_TOUCH_PROB_TIME_MS);
 }
 
+int CHECK_TouchPiont()
+{
+	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+	{
+		if((TS_State.x >= Touch[i].x_Start)&&(TS_State.x < Touch[i].x_End) && (TS_State.y >= Touch[i].y_Start)&&(TS_State.y < Touch[i].y_End))
+		{
+			return (int)Touch[i].index;
+		}
+	}
+}
+
 void XXXXXXX(uint8_t touchType)
 {
 	switch(touchType)
 	{
-		case TouichPoint:
+		case TouchPoint:
 			break;
-		case 1:
+		case TouchAndMoveLeft:
+			break;
+		default:
 			break;
 	}		
 
