@@ -157,11 +157,13 @@ uint8_t IsCalibrationDone(void)
 #define BUF_LCD_TOUCH_SIZE	30
 #define SERVICE_TOUCH_PROB_TIME_MS	50
 
-// enum Level {
-//   LOW,
-//   MEDIUM,
-//   HIGH
-// };
+enum TOUCH_TYPE {
+  TouichPoint,
+  TouchAndMoveLeft,
+  TouchAndMoveRight,
+  TouchAndMoveUp,
+  TouchAndMoveDown
+};
 
 typedef struct
 {
@@ -239,7 +241,20 @@ void Service_lcd_touch()
 	}
 
 	HAL_Delay(SERVICE_TOUCH_PROB_TIME_MS);
-}	
+}
+
+void XXXXXXX(uint8_t touchType)
+{
+	switch(touchType)
+	{
+		case TouichPoint:
+			break;
+		case 1:
+			break;
+	}		
+
+
+}
 
 
 
