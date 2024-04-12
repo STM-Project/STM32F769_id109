@@ -220,30 +220,47 @@ void Service_lcd_touch()
 	HAL_Delay(SERVICE_TOUCH_PROB_TIME_MS);
 }
 
-int CHECK_TouchPiont()
+int CHECK_TouchPiont(void)
 {
 	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 	{
-		if((TS_State.x >= Touch[i].x_Start)&&(TS_State.x < Touch[i].x_End) && (TS_State.y >= Touch[i].y_Start)&&(TS_State.y < Touch[i].y_End))
+		if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
+			(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
 		{
 			return (int)Touch[i].index;
 		}
 	}
+	return -1;
+}
+
+int CHECK_TouchAndMoveLeft(void)  //mozna zrobic tab[][] i ustalic wzor trajektorii
+{
+	if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
+	{
+		for(int i=0; i<BUF_LCD_TOUCH_SIZE; ++i)
+		{
+			if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
+				return 1;
+		}	
+	}
+	return -1;
 }
 
 void XXXXXXX(uint8_t touchType)
 {
+	int state;
 	switch(touchType)
 	{
 		case TouchPoint:
+			state = CHECK_TouchPiont();
 			break;
 		case TouchAndMoveLeft:
+			state = CHECK_TouchAndMoveLeft();
 			break;
 		default:
 			break;
 	}		
-
-
+	return state;
 }
 
 
