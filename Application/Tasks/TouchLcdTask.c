@@ -11,6 +11,8 @@
 #include "touch.h"
 #include "debug.h"
 
+#define SERVICE_TOUCH_PROB_TIME_MS	50
+
 xTaskHandle vtaskTouchLcdHandle;
 
 void vtaskTouchLcd(void *pvParameters)
@@ -26,7 +28,7 @@ void vtaskTouchLcd(void *pvParameters)
 		if(CheckTouch(&pos))
 			DbgVar(1,30,"\r\nPos1: x=%d, y=%d ",pos.x, pos.y);
 
-		vTaskDelayUntil(&xLastExecutionTime, 20);
+		vTaskDelayUntil(&xLastExecutionTime, SERVICE_TOUCH_PROB_TIME_MS);
 	}
 }
 
