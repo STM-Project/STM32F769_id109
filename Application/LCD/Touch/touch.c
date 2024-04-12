@@ -237,9 +237,9 @@ int CHECK_TouchAndMoveLeft(void)  //mozna zrobic tab[][] i ustalic wzor trajekto
 {
 	if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
 	{
-		for(int i=0; i<BUF_LCD_TOUCH_SIZE; ++i)
+		for(int i=1; i<BUF_LCD_TOUCH_SIZE; ++i)
 		{
-			if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
+			if( ServiceTouch.pos[i].x > LCD_GetXSize()-LCD_GetXSize()/5 )
 				return 1;
 		}	
 	}
