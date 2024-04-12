@@ -251,13 +251,11 @@ int LCD_Touch_service(uint8_t touchType)
 				state = CHECK_TouchAndMoveLeft();
 				break;
 			default:
-				if(BUF_LCD_TOUCH_SIZE <= ServiceTouch.idx)
-					ServiceTouch.idx = 0;
 				state = -1;
 				break;
 		}
 		
-		if(-1 != state)
+		if( (-1 != state) || ((-1 == state) && (BUF_LCD_TOUCH_SIZE <= ServiceTouch.idx)) ) // -1 nie rozpoznano schematu dodtyku ENUM dac !!!!
 			ServiceTouch.idx = 0;
 	}	
 	
