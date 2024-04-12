@@ -153,7 +153,7 @@ uint8_t IsCalibrationDone(void)
 
 
 #define BUF_LCD_TOUCH_SIZE	30
-#define SERVICE_TOUCH_PROB_TIME_MS	50
+
 
 enum TOUCH_TYPE {
   TouchPoint,
@@ -216,8 +216,6 @@ void Service_lcd_touch()
 		ServiceTouch.press = 0;
 		ServiceTouch.ongoing = 0;
 	}
-
-	HAL_Delay(SERVICE_TOUCH_PROB_TIME_MS);
 }
 
 int CHECK_TouchPiont(void)
