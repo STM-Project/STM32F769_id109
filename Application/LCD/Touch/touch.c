@@ -155,13 +155,7 @@ uint8_t IsCalibrationDone(void)
 #define BUF_LCD_TOUCH_SIZE	30
 
 
-enum TOUCH_TYPE {
-  TouchPoint,
-  TouchAndMoveLeft,
-  TouchAndMoveRight,
-  TouchAndMoveUp,
-  TouchAndMoveDown
-};
+
 
 typedef struct
 {
@@ -175,7 +169,7 @@ static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 
 
 
-uint8_t CheckTouch(XY_Touch_Struct *pos)
+static uint8_t CheckTouch(XY_Touch_Struct *pos)
 {
   if(touchDetect)
   {
@@ -204,7 +198,6 @@ static int CHECK_TouchPiont(void)
 			{
 				return (int)Touch[i].index;
 			}
-		}
 	}	
 	return -1;
 }
@@ -222,9 +215,10 @@ static int CHECK_TouchAndMoveLeft(void)
 	return -1;
 }
 
-void LCD_Touch_service(uint8_t touchType)
+int LCD_Touch_service(uint8_t touchType)
 {
-    XY_Touch_Struct  pos;
+    int state = -1;
+	XY_Touch_Struct  pos;
 	
 	if(CheckTouch(&pos))
 	{		
@@ -240,7 +234,6 @@ void LCD_Touch_service(uint8_t touchType)
 		}
 		else
 			ServiceTouch.ongoing = 0;
-
 	}
 	else
 	{
@@ -248,22 +241,24 @@ void LCD_Touch_service(uint8_t touchType)
 		ServiceTouch.ongoing = 0;
 	}
 
-	int state;
-	switch(touchType)
+	if(0 < ServiceTouch.idx)
 	{
-		case TouchPoint:
-			state = CHECK_TouchPiont();
-			break;
-		case TouchAndMoveLeft:
-			state = CHECK_TouchAndMoveLeft();
-			break;
-		default:
-			state = -1;
-			break;
-	}
-
-	if(-1 != state)
-		ServiceTouch.idx = 0;
+		switch(touchType)
+		{
+			case TouchPoint:
+				state = CHECK_TouchPiont();
+				break;
+			case TouchAndMoveLeft:
+				state = CHECK_TouchAndMoveLeft();
+				break;
+			default:
+				state = -1;
+				break;
+		}
+		
+		if(-1 != state)
+			ServiceTouch.idx = 0;
+	}	
 	
 	return state;
 }
