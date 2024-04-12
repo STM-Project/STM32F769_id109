@@ -9,7 +9,7 @@
 #include "debug.h"
 
 #define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 200
-#define BUF_LCD_TOUCH_SIZE	30
+#define BUF_LCD_TOUCH_SIZE	20
 
 typedef struct
 {
