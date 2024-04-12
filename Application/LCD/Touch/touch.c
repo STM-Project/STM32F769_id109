@@ -195,14 +195,17 @@ uint8_t CheckTouch(XY_Touch_Struct *pos)
 
 static int CHECK_TouchPiont(void)
 {
-	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+	if(0 == ServiceTouch.press)
 	{
-		if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
-			(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
+		for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 		{
-			return (int)Touch[i].index;
+			if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
+				(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
+			{
+				return (int)Touch[i].index;
+			}
 		}
-	}
+	}	
 	return -1;
 }
 
@@ -219,7 +222,7 @@ static int CHECK_TouchAndMoveLeft(void)
 	return -1;
 }
 
-void LCDtouch_service(uint8_t touchType)
+void LCD_Touch_service(uint8_t touchType)
 {
     XY_Touch_Struct  pos;
 	
@@ -257,7 +260,11 @@ void LCDtouch_service(uint8_t touchType)
 		default:
 			state = -1;
 			break;
-	}		
+	}
+
+	if(-1 != state)
+		ServiceTouch.idx = 0;
+	
 	return state;
 }
 
