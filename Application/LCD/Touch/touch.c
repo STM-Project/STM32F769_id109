@@ -200,8 +200,8 @@ static int CHECK_TouchPiont(void)
 
 static int CHECK_TouchAndMoveLeft(void)
 {
-	if(0 == ServiceTouch.press)
-	{
+	//if(0 == ServiceTouch.press)
+	//{
 		if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
 		{
 			for(int i=1; i<BUF_LCD_TOUCH_SIZE; ++i)
@@ -210,7 +210,7 @@ static int CHECK_TouchAndMoveLeft(void)
 					return 1;
 			}	
 		}
-	}	
+	//}	
 	return -1;
 }
 
@@ -251,6 +251,8 @@ int LCD_Touch_service(uint8_t touchType)
 				state = CHECK_TouchAndMoveLeft();
 				break;
 			default:
+				if(BUF_LCD_TOUCH_SIZE <= ServiceTouch.idx)
+					ServiceTouch.idx = 0;
 				state = -1;
 				break;
 		}
