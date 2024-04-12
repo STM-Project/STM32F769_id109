@@ -11,6 +11,11 @@
 #define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 200
 #define BUF_LCD_TOUCH_SIZE	100
 
+enum Touch_Recognize{
+	Touch_NOT_Recognize = -1,
+	Touch_Recognize = 1
+};
+
 typedef struct
 {
   uint8_t press;
