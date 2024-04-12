@@ -172,7 +172,7 @@ typedef struct
 }Service_lcd_Touch_Struct;
 
 static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
-static XY_Touch_Struct  pos;
+
 
 
 uint8_t CheckTouch(XY_Touch_Struct *pos)
@@ -193,9 +193,37 @@ uint8_t CheckTouch(XY_Touch_Struct *pos)
   return 0;
 }
 
-void Service_lcd_touch()
+static int CHECK_TouchPiont(void)
 {
-    if(CheckTouch(&pos))
+	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+	{
+		if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
+			(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
+		{
+			return (int)Touch[i].index;
+		}
+	}
+	return -1;
+}
+
+static int CHECK_TouchAndMoveLeft(void)
+{
+	if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
+	{
+		for(int i=1; i<BUF_LCD_TOUCH_SIZE; ++i)
+		{
+			if( ServiceTouch.pos[i].x > LCD_GetXSize()-LCD_GetXSize()/5 )
+				return 1;
+		}	
+	}
+	return -1;
+}
+
+void LCDtouch_service(uint8_t touchType)
+{
+    XY_Touch_Struct  pos;
+	
+	if(CheckTouch(&pos))
 	{		
 		if(0 == ServiceTouch.press){
 			ServiceTouch.press = 1;
@@ -216,36 +244,7 @@ void Service_lcd_touch()
 		ServiceTouch.press = 0;
 		ServiceTouch.ongoing = 0;
 	}
-}
 
-int CHECK_TouchPiont(void)
-{
-	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
-	{
-		if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
-			(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
-		{
-			return (int)Touch[i].index;
-		}
-	}
-	return -1;
-}
-
-int CHECK_TouchAndMoveLeft(void)  //mozna zrobic tab[][] i ustalic wzor trajektorii
-{
-	if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
-	{
-		for(int i=1; i<BUF_LCD_TOUCH_SIZE; ++i)
-		{
-			if( ServiceTouch.pos[i].x > LCD_GetXSize()-LCD_GetXSize()/5 )
-				return 1;
-		}	
-	}
-	return -1;
-}
-
-void XXXXXXX(uint8_t touchType)
-{
 	int state;
 	switch(touchType)
 	{
@@ -256,10 +255,15 @@ void XXXXXXX(uint8_t touchType)
 			state = CHECK_TouchAndMoveLeft();
 			break;
 		default:
+			state = -1;
 			break;
 	}		
 	return state;
 }
+
+
+
+
 
 
 
