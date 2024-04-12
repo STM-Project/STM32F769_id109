@@ -200,14 +200,17 @@ static int CHECK_TouchPiont(void)
 
 static int CHECK_TouchAndMoveLeft(void)
 {
-	if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
+	if(0 == ServiceTouch.press)
 	{
-		for(int i=1; i<BUF_LCD_TOUCH_SIZE; ++i)
+		if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
 		{
-			if( ServiceTouch.pos[i].x > LCD_GetXSize()-LCD_GetXSize()/5 )
-				return 1;
-		}	
-	}
+			for(int i=1; i<BUF_LCD_TOUCH_SIZE; ++i)
+			{
+				if( ServiceTouch.pos[i].x > LCD_GetXSize()-LCD_GetXSize()/5 )
+					return 1;
+			}	
+		}
+	}	
 	return -1;
 }
 
