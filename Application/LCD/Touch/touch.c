@@ -9,6 +9,15 @@
 #include "debug.h"
 
 #define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 200
+#define BUF_LCD_TOUCH_SIZE	30
+
+typedef struct
+{
+  uint8_t press;
+  uint8_t ongoing;
+  uint8_t idx;
+  XY_Touch_Struct  pos[BUF_LCD_TOUCH_SIZE];
+}Service_lcd_Touch_Struct;
 
 typedef struct
 {
@@ -19,6 +28,7 @@ typedef struct
   uint16_t y_End;
 }Touch_Struct;
 
+static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 static Touch_Struct  Touch[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
 
 static uint8_t Calibration_Done = 0;
@@ -152,20 +162,6 @@ uint8_t IsCalibrationDone(void)
 
 
 
-#define BUF_LCD_TOUCH_SIZE	30
-
-
-
-
-typedef struct
-{
-  uint8_t press;
-  uint8_t ongoing;
-  uint8_t idx;
-  XY_Touch_Struct  pos[BUF_LCD_TOUCH_SIZE];
-}Service_lcd_Touch_Struct;
-
-static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 
 
 
@@ -180,8 +176,8 @@ static uint8_t CheckTouch(XY_Touch_Struct *pos)
 	 {
 		 A1=1062; B1=-10224;   A2=1083;  B2=-23229;
 		 pos->x = Calibration_GetX(TS_State.x);
-	    pos->y = Calibration_GetY(TS_State.y);
-	    return 1;
+	     pos->y = Calibration_GetY(TS_State.y);
+	     return 1;
 	 }
   }
   return 0;
