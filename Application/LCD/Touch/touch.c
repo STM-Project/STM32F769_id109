@@ -8,13 +8,7 @@
 #include "stmpe811.h"
 #include "debug.h"
 
-#define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 200
 #define BUF_LCD_TOUCH_SIZE	100
-
-enum Touch_Recognize{
-	Touch_NOT_Recognize = -1,
-	Touch_Recognize = 1
-};
 
 typedef struct
 {
@@ -169,6 +163,16 @@ uint8_t IsCalibrationDone(void)
 
 
 
+static int GetNrTouch(uint16_t touchParam)
+{
+	int i;
+	for(i = 0; i < MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+	{
+		if(Touch[i].index == touchParam)
+			return i;
+	}
+	return -1;
+}
 
 static uint8_t CheckTouch(XY_Touch_Struct *pos)
 {
@@ -188,26 +192,30 @@ static uint8_t CheckTouch(XY_Touch_Struct *pos)
   return 0;
 }
 
-static int CHECK_TouchPiont(void)
+static uint16_t CHECK_TouchPiont(uint16_t param)
 {
-	if(0 == ServiceTouch.press)
+	if(0 < ServiceTouch.idx)
 	{
-		for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+		if(0 == ServiceTouch.press)
 		{
-			if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
-				(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
+			int nr = GetNrTouch(param);
+			if(-1 != nr)
 			{
-				return (int)Touch[i].index;
+				if((ServiceTouch.pos[0].x >= Touch[nr].x_Start)&&(ServiceTouch.pos[0].x < Touch[nr].x_End) &&
+					(ServiceTouch.pos[0].y >= Touch[nr].y_Start)&&(ServiceTouch.pos[0].y < Touch[nr].y_End))
+				{
+					return 1;
+				}
 			}
 		}
 	}
-	return -1;
+	return 0;
 }
 
-static int CHECK_TouchAndMoveLeft(void)
+static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)
 {
-	//if(0 == ServiceTouch.press)
-	//{
+	if(2 < ServiceTouch.idx)
+	{
 		if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
 		{
 			for(int i=1; i<ServiceTouch.idx; ++i)
@@ -216,19 +224,17 @@ static int CHECK_TouchAndMoveLeft(void)
 					return 1;
 			}
 		}
-	//}
-	return -1;
+	}
+	return 0;
 }
 
-int LCD_Touch_service(uint8_t touchType)
+uint16_t LCD_Touch_service(uint16_t touchType, uint16_t param)
 {
-    int state = -1;
-	XY_Touch_Struct  pos;
+   int touchRecognize = 0;
+	XY_Touch_Struct pos;
 
 	if(CheckTouch(&pos))
 	{
-		//DbgVar(1,30,"\r\nPos1: x=%d, y=%d ",pos.x, pos.y);
-
 		if(0 == ServiceTouch.press){
 			ServiceTouch.press = 1;
 			ServiceTouch.idx = 0;
@@ -253,31 +259,38 @@ int LCD_Touch_service(uint8_t touchType)
 		switch(touchType)
 		{
 			case TouchPoint:
-				state = CHECK_TouchPiont();
+				touchRecognize = CHECK_TouchPiont(param);
 				break;
-			case TouchAndMoveLeft:
-				state = CHECK_TouchAndMoveLeft();
+			case TouchMove:
+				touchRecognize = CHECK_TouchAndMoveLeft(param);
 				break;
 			default:
-				state = -1;
+				touchRecognize = 0;
 				break;
 		}
 
-		if( (-1 != state) || ((-1 == state) && (BUF_LCD_TOUCH_SIZE <= ServiceTouch.idx)) ) // -1 nie rozpoznano schematu dodtyku ENUM dac !!!!
+
+//		if( (touchType > 0) && (touchType <= MAX_OPEN_TOUCH_SIMULTANEOUSLY) )
+//			touchRecognize = CHECK_TouchPiont();
+//		else
+//		{
+//			switch(touchType)
+//			{
+//				case TouchAndMoveLeft:
+//					touchRecognize = CHECK_TouchAndMoveLeft();
+//					break;
+//				default:
+//					touchRecognize = 0;
+//					break;
+//			}
+//		}
+
+		if( (0 != touchRecognize) ||
+			((0 == touchRecognize) && (0 == ServiceTouch.ongoing)) )
 			ServiceTouch.idx = 0;
 	}
-
-	return state;
+	return touchRecognize;
 }
-
-
-
-
-
-
-
-
-
 
 void clearTouchTemp(void)
 {

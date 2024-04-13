@@ -4,12 +4,11 @@
 
 #include "stm32f7xx_hal.h"
 
-enum TOUCH_TYPE {
+#define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 200
+
+enum TOUCH_TYPE{
   TouchPoint,
-  TouchAndMoveLeft,
-  TouchAndMoveRight,
-  TouchAndMoveUp,
-  TouchAndMoveDown
+  TouchMove
 };
 
 typedef struct
@@ -29,7 +28,7 @@ typedef struct
 extern uint8_t touchDetect;
 extern TS_Temporary  touchTemp;
 
-int 		LCD_Touch_service			(uint8_t touchType);
+uint16_t	LCD_Touch_service			(uint16_t touchType, uint16_t param);
 void 		DeleteAllTouch				(void);
 int 		GetTouchToTemp				(uint16_t idx);
 void 		DeleteSelectTouch			(uint16_t idx);
