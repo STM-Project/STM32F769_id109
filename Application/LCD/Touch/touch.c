@@ -199,7 +199,8 @@ static int CHECK_TouchPiont(void)
 			{
 				return (int)Touch[i].index;
 			}
-	}	
+		}
+	}
 	return -1;
 }
 
@@ -209,13 +210,13 @@ static int CHECK_TouchAndMoveLeft(void)
 	//{
 		if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
 		{
-			for(int i=1; i<BUF_LCD_TOUCH_SIZE; ++i)
+			for(int i=1; i<ServiceTouch.idx; ++i)
 			{
-				if( ServiceTouch.pos[i].x > LCD_GetXSize()-LCD_GetXSize()/5 )
+				if( ServiceTouch.pos[i].x < LCD_GetXSize()/5 )
 					return 1;
-			}	
+			}
 		}
-	//}	
+	//}
 	return -1;
 }
 
@@ -223,18 +224,20 @@ int LCD_Touch_service(uint8_t touchType)
 {
     int state = -1;
 	XY_Touch_Struct  pos;
-	
+
 	if(CheckTouch(&pos))
-	{		
+	{
+		//DbgVar(1,30,"\r\nPos1: x=%d, y=%d ",pos.x, pos.y);
+
 		if(0 == ServiceTouch.press){
 			ServiceTouch.press = 1;
 			ServiceTouch.idx = 0;
-		}	
-		
+		}
+
 		if(BUF_LCD_TOUCH_SIZE > ServiceTouch.idx){
 			ServiceTouch.ongoing = 1;
 			ServiceTouch.pos[ServiceTouch.idx].x = pos.x;
-			ServiceTouch.pos[ServiceTouch.idx++].x = pos.y;
+			ServiceTouch.pos[ServiceTouch.idx++].y = pos.y;
 		}
 		else
 			ServiceTouch.ongoing = 0;
@@ -259,11 +262,11 @@ int LCD_Touch_service(uint8_t touchType)
 				state = -1;
 				break;
 		}
-		
+
 		if( (-1 != state) || ((-1 == state) && (BUF_LCD_TOUCH_SIZE <= ServiceTouch.idx)) ) // -1 nie rozpoznano schematu dodtyku ENUM dac !!!!
 			ServiceTouch.idx = 0;
-	}	
-	
+	}
+
 	return state;
 }
 

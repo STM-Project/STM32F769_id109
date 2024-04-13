@@ -29,7 +29,7 @@ typedef struct
 extern uint8_t touchDetect;
 extern TS_Temporary  touchTemp;
 
-int 	LCD_Touch_service					(uint8_t touchType);
+int 		LCD_Touch_service			(uint8_t touchType);
 void 		DeleteAllTouch				(void);
 int 		GetTouchToTemp				(uint16_t idx);
 void 		DeleteSelectTouch			(uint16_t idx);

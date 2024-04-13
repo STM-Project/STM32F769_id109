@@ -25,9 +25,9 @@ void vtaskTouchLcd(void *pvParameters)
 
 	while(1)
 	{
-		if(LCD_Touch_service(TouchAndMoveLeft))
+		if(1==LCD_Touch_service(TouchAndMoveLeft))
 			Dbg(1,"\r\nTouchAndMoveLeft");
-		//DbgVar(1,30,"\r\nPos1: x=%d, y=%d ",pos.x, pos.y);
+
 	
 			
 		vTaskDelayUntil(&xLastExecutionTime, SERVICE_TOUCH_PROB_TIME_MS);
