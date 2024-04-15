@@ -194,24 +194,22 @@ static uint8_t CheckTouch(XY_Touch_Struct *pos)
 
 static uint16_t CHECK_TouchPiont(uint16_t param)
 {
-	if(0 < ServiceTouch.idx)
+	if(0 == ServiceTouch.press)
 	{
-		if(0 == ServiceTouch.press)
-		{
 			
-			for(i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+		for(i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+		{
+			if(0 < Touch[i].index)
 			{
-				if(0 < Touch[i].index)
+				if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
+					(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
 				{
-					if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
-						(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
-					{
-						return Touch[i].index;
-					}
+					return Touch[i].index;
 				}
-				else
-					break;
 			}
+			else
+				break;
+		}
 			
 			
 			
@@ -224,7 +222,6 @@ static uint16_t CHECK_TouchPiont(uint16_t param)
 			// 		return 1;
 			// 	}
 			// }
-		}
 	}
 	return 0;
 }
