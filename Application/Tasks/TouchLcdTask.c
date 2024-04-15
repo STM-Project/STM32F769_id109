@@ -24,6 +24,7 @@ enum new_touch{
 void vtaskTouchLcd(void *pvParameters)
 {
 	portTickType xLastExecutionTime;
+	uint16_t state;
 
 	touchTemp.x_Start= 400;
 	touchTemp.y_Start= 240;
@@ -48,9 +49,23 @@ void vtaskTouchLcd(void *pvParameters)
 
 	while(1)
 	{
+		state = LCD_Touch_service(TouchPoint,Point_1);
+		switch(state)
+		{
+			case Point_1:
+				Dbg(1,"\r\nTouchPoint_1");
+				break;
+			case Point_2:
+				Dbg(1,"\r\nTouchPoint_2");
+				break;
+			case Point_3:
+				Dbg(1,"\r\nTouchPoint_3");
+				break;			
+		}		
+		
 
-		if(LCD_Touch_service(TouchPoint,Point_1))
-			Dbg(1,"\r\nTouchPoint_1");
+		// if(LCD_Touch_service(TouchPoint,Point_1))
+		// 	Dbg(1,"\r\nTouchPoint_1");
 
 //		if(LCD_Touch_service(TouchPoint,Point_1))
 //			Dbg(1,"\r\nTouchPoint_1");
