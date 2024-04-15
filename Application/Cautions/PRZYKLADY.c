@@ -69,5 +69,15 @@ typedef void MESSAGE_FUNCTION(void);
 static MESSAGE_FUNCTION *ackFun=NULL;
 CreateConfirmMessage(const char * pText, GUI_COLOR bkColor, GUI_COLOR textColor, MESSAGE_FUNCTION *accept,MESSAGE_FUNCTION *cancel)
 
+//5 #################################################################################################################
+EventBits_t sendUSBEvent(EventBits_t event)
+{
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+//	if(NULL == USBGroup)
+//		USBGroup = xEventGroupCreate();
+	return xEventGroupSetBitsFromISR(USBGroup, event, &xHigherPriorityTaskWoken);
+}
+
+
 
 #endif
