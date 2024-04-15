@@ -1,5 +1,5 @@
 
-#ifndef PRZYKLADY_
+#ifdef PRZYKLADY_
 
 
 //1 ################## -- xQueueHandle -- ###############################

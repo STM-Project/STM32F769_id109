@@ -197,7 +197,7 @@ static uint16_t CHECK_TouchPiont(uint16_t param)
 	if(0 == ServiceTouch.press)
 	{
 			
-		for(i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+		for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 		{
 			if(0 < Touch[i].index)
 			{
@@ -210,18 +210,6 @@ static uint16_t CHECK_TouchPiont(uint16_t param)
 			else
 				break;
 		}
-			
-			
-			
-			// int nr = GetNrTouch(param);
-			// if(-1 != nr)
-			// {
-			// 	if((ServiceTouch.pos[0].x >= Touch[nr].x_Start)&&(ServiceTouch.pos[0].x < Touch[nr].x_End) &&
-			// 		(ServiceTouch.pos[0].y >= Touch[nr].y_Start)&&(ServiceTouch.pos[0].y < Touch[nr].y_End))
-			// 	{
-			// 		return 1;
-			// 	}
-			// }
 	}
 	return 0;
 }
@@ -235,7 +223,7 @@ static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)
 			for(int i=1; i<ServiceTouch.idx; ++i)
 			{
 				if( ServiceTouch.pos[i].x < LCD_GetXSize()/5 )
-					return 1;
+					return 10000;
 			}
 		}
 	}
@@ -255,17 +243,17 @@ uint16_t LCD_Touch_service(uint16_t touchType, uint16_t param)
 		}
 
 		if(BUF_LCD_TOUCH_SIZE > ServiceTouch.idx){
-			ServiceTouch.ongoing = 1;
+			//ServiceTouch.ongoing = 1;
 			ServiceTouch.pos[ServiceTouch.idx].x = pos.x;
 			ServiceTouch.pos[ServiceTouch.idx++].y = pos.y;
 		}
 		else
-			ServiceTouch.ongoing = 0;
+			ServiceTouch.idx = 0;  //ServiceTouch.ongoing = 0;
 	}
 	else
 	{
 		ServiceTouch.press = 0;
-		ServiceTouch.ongoing = 0;
+		//ServiceTouch.ongoing = 0;
 	}
 
 	if(0 < ServiceTouch.idx)
@@ -274,6 +262,8 @@ uint16_t LCD_Touch_service(uint16_t touchType, uint16_t param)
 		{
 			case TouchPoint:
 				touchRecognize = CHECK_TouchPiont(param);
+				if(0==touchRecognize)
+					touchRecognize = CHECK_TouchAndMoveLeft(param);
 				break;
 			case TouchMove:
 				touchRecognize = CHECK_TouchAndMoveLeft(param);
@@ -299,8 +289,8 @@ uint16_t LCD_Touch_service(uint16_t touchType, uint16_t param)
 //			}
 //		}
 
-		if( (0 != touchRecognize) ||
-			((0 == touchRecognize) && (0 == ServiceTouch.ongoing)) )
+		if( (0 != touchRecognize)/* ||
+			((0 == touchRecognize) && (0 == ServiceTouch.ongoing))*/ )
 			ServiceTouch.idx = 0;
 	}
 	return touchRecognize;
