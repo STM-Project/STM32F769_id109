@@ -1,5 +1,5 @@
 
-#ifdef PRZYKLADY_
+#ifndef PRZYKLADY_
 
 
 //1 ################## -- xQueueHandle -- ###############################
@@ -64,6 +64,10 @@ for (int i = 0; i < 16; i++)
 		continue;
 }
 //4 ############################################################
+
+typedef void MESSAGE_FUNCTION(void);
+static MESSAGE_FUNCTION *ackFun=NULL;
+CreateConfirmMessage(const char * pText, GUI_COLOR bkColor, GUI_COLOR textColor, MESSAGE_FUNCTION *accept,MESSAGE_FUNCTION *cancel)
 
 
 #endif
