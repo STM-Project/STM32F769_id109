@@ -244,7 +244,7 @@ static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)
 
 uint16_t LCD_Touch_service(uint16_t touchType, uint16_t param)
 {
-   int touchRecognize = 0;
+   uint16_t touchRecognize = 0;
 	XY_Touch_Struct pos;
 
 	if(CheckTouch(&pos))
