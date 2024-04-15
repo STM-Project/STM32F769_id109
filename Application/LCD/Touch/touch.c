@@ -198,15 +198,32 @@ static uint16_t CHECK_TouchPiont(uint16_t param)
 	{
 		if(0 == ServiceTouch.press)
 		{
-			int nr = GetNrTouch(param);
-			if(-1 != nr)
+			
+			for(i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 			{
-				if((ServiceTouch.pos[0].x >= Touch[nr].x_Start)&&(ServiceTouch.pos[0].x < Touch[nr].x_End) &&
-					(ServiceTouch.pos[0].y >= Touch[nr].y_Start)&&(ServiceTouch.pos[0].y < Touch[nr].y_End))
+				if(0 < Touch[i].index)
 				{
-					return 1;
+					if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
+						(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
+					{
+						return Touch[i].index;
+					}
 				}
+				else
+					break;
 			}
+			
+			
+			
+			// int nr = GetNrTouch(param);
+			// if(-1 != nr)
+			// {
+			// 	if((ServiceTouch.pos[0].x >= Touch[nr].x_Start)&&(ServiceTouch.pos[0].x < Touch[nr].x_End) &&
+			// 		(ServiceTouch.pos[0].y >= Touch[nr].y_Start)&&(ServiceTouch.pos[0].y < Touch[nr].y_End))
+			// 	{
+			// 		return 1;
+			// 	}
+			// }
 		}
 	}
 	return 0;
