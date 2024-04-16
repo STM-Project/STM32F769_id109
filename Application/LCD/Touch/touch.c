@@ -21,14 +21,21 @@ typedef struct
 typedef struct
 {
   uint16_t index;
-  uint16_t x_Start;
+  uint16_t x_Start;  //dac posStart[]
   uint16_t y_Start;
   uint16_t x_End;
   uint16_t y_End;
 }Touch_Struct;
 
+typedef struct
+{
+  uint16_t index;
+  XY_Touch_Struct  pos[BUF_LCD_TOUCH_SIZE];
+}Move_Struct;
+
 static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 static Touch_Struct  Touch[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
+static Move_Struct  	Move[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
 
 static uint8_t Calibration_Done = 0;
 static int32_t  A1, A2, B1, B2;
@@ -214,7 +221,7 @@ static uint16_t CHECK_TouchPiont(uint16_t param)
 	return 0;
 }
 
-static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)
+static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)  //Zrobic ze !!!! jak nie ma touch/move dla press=0 to kasuj dx=0
 {
 	if(2 < ServiceTouch.idx)
 	{
