@@ -78,6 +78,14 @@ EventBits_t sendUSBEvent(EventBits_t event)
 	return xEventGroupSetBitsFromISR(USBGroup, event, &xHigherPriorityTaskWoken);
 }
 
-
+//6 #################################################################################################################
+void FRAM_ReadMultiple(uint16_t Reg, uint8_t *pBuffer, uint16_t Length)
+{
+	if(pdTRUE == xSemaphoreTake(xSemaphoreFRAM,100))
+	{
+		FRAM_I2C_ReadBuffer(Reg, pBuffer, Length);
+		xSemaphoreGive(xSemaphoreFRAM);
+	}
+}
 
 #endif
