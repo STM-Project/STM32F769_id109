@@ -221,7 +221,7 @@ static uint16_t CHECK_TouchPiont(uint16_t param)
 	return 0;
 }
 
-static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)  //Zrobic ze !!!! jak nie ma touch/move dla press=0 to kasuj dx=0
+static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)  //Zrobic ze !!!! jak nie ma touch/move dla press=0 to kasuj dx=0  jezeli nigdzie nie ma touch przy press=0 to idx=0
 {
 	if(2 < ServiceTouch.idx)
 	{
