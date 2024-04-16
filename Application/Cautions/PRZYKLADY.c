@@ -69,6 +69,25 @@ typedef void MESSAGE_FUNCTION(void);
 static MESSAGE_FUNCTION *ackFun=NULL;
 CreateConfirmMessage(const char * pText, GUI_COLOR bkColor, GUI_COLOR textColor, MESSAGE_FUNCTION *accept,MESSAGE_FUNCTION *cancel)
 
+lub:
+
+typedef void CONFIRM_FUNCTION(void);
+
+static CONFIRM_FUNCTION *confirmFunction;
+void CreateSetConfirm(CONFIRM_FUNCTION *function)
+{
+	confirmFunction = function;
+		.......
+	confirmFunction();
+}
+
+i gdzies w kodzie:  CreateSetConfirm(CreateMenuWindow);
+
+void CreateMenuWindow(void)
+{
+	....
+}
+
 //5 #################################################################################################################
 EventBits_t sendUSBEvent(EventBits_t event)
 {
