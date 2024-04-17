@@ -106,5 +106,8 @@ void FRAM_ReadMultiple(uint16_t Reg, uint8_t *pBuffer, uint16_t Length)
 		xSemaphoreGive(xSemaphoreFRAM);
 	}
 }
+//7 #################################################################################################################
+
+popatrz na screenSaver.c
 
 #endif
