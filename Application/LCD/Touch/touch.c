@@ -40,7 +40,7 @@ static int32_t  A1, A2, B1, B2;
 static int32_t aPhysX[2], aPhysY[2], aLogX[2], aLogY[2];
 
 uint8_t touchDetect;
-TS_Temporary  touchTemp;
+XY_Touch_Struct  touchTemp;
 
 //static void WaitForPressedState(uint8_t Pressed)
 //{
