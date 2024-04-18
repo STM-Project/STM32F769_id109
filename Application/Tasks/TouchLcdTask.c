@@ -26,22 +26,22 @@ void vtaskTouchLcd(void *pvParameters)
 	portTickType xLastExecutionTime;
 	uint16_t state;
 
-	touchTemp.x_Start= 0;
-	touchTemp.y_Start= 0;
-	touchTemp.x_End= touchTemp.x_Start+200;
-	touchTemp.y_End= touchTemp.y_Start+150;
+	touchTemp.pos[0].x= 0;
+	touchTemp.pos[0].y= 0;
+	touchTemp.pos[1].x= touchTemp.pos[0].x+200;
+	touchTemp.pos[1].y= touchTemp.pos[0].y+150;
 	SetTouch(Point_1);
 
-	touchTemp.x_Start= 0;
-	touchTemp.y_Start= 300;
-	touchTemp.x_End= touchTemp.x_Start+200;
-	touchTemp.y_End= touchTemp.y_Start+180;
+	touchTemp.pos[0].x= 0;
+	touchTemp.pos[0].y= 300;
+	touchTemp.pos[1].x= touchTemp.pos[0].x+200;
+	touchTemp.pos[1].y= touchTemp.pos[0].y+180;
 	SetTouch(Point_2);
 
-	touchTemp.x_Start= 600;
-	touchTemp.y_Start= 0;
-	touchTemp.x_End= touchTemp.x_Start+200;
-	touchTemp.y_End= touchTemp.y_Start+150;
+	touchTemp.pos[0].x= 600;
+	touchTemp.pos[0].y= 0;
+	touchTemp.pos[1].x= touchTemp.pos[0].x+200;
+	touchTemp.pos[1].y= touchTemp.pos[0].y+150;
 	SetTouch(Point_3);
 
 	xLastExecutionTime = xTaskGetTickCount();
