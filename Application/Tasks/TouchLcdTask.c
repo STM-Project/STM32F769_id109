@@ -16,9 +16,10 @@
 xTaskHandle vtaskTouchLcdHandle;
 
 enum new_touch{
-	Point_1 = 5000,
+	Point_1 = 1,
 	Point_2,
-	Point_3
+	Point_3,
+	MoveLeftX
 };
 
 void vtaskTouchLcd(void *pvParameters)
@@ -26,30 +27,34 @@ void vtaskTouchLcd(void *pvParameters)
 	portTickType xLastExecutionTime;
 	uint16_t state;
 
-	touchTemp.pos[0].x= 0;
-	touchTemp.pos[0].y= 0;
-	touchTemp.pos[1].x= touchTemp.pos[0].x+200;
-	touchTemp.pos[1].y= touchTemp.pos[0].y+150;
-	SetTouch(Point_1);
+	touchTemp[0].x= 0;
+	touchTemp[0].y= 0;
+	touchTemp[1].x= touchTemp[0].x+200;
+	touchTemp[1].y= touchTemp[0].y+150;
+	SetTouch(ID_TOUCH_POINT,Point_1);
 
-	touchTemp.pos[0].x= 0;
-	touchTemp.pos[0].y= 300;
-	touchTemp.pos[1].x= touchTemp.pos[0].x+200;
-	touchTemp.pos[1].y= touchTemp.pos[0].y+180;
-	SetTouch(Point_2);
+	touchTemp[0].x= 0;
+	touchTemp[0].y= 300;
+	touchTemp[1].x= touchTemp[0].x+200;
+	touchTemp[1].y= touchTemp[0].y+180;
+	SetTouch(ID_TOUCH_POINT,Point_2);
 
-	touchTemp.pos[0].x= 600;
-	touchTemp.pos[0].y= 0;
-	touchTemp.pos[1].x= touchTemp.pos[0].x+200;
-	touchTemp.pos[1].y= touchTemp.pos[0].y+150;
-	SetTouch(Point_3);
+	touchTemp[0].x= 600;
+	touchTemp[0].y= 0;
+	touchTemp[1].x= touchTemp[0].x+200;
+	touchTemp[1].y= touchTemp[0].y+150;
+	SetTouch(ID_TOUCH_POINT,Point_3);
+
+	touchTemp[0].x= LCD_GetXSize()-LCD_GetXSize()/5;
+	touchTemp[1].x= LCD_GetXSize()/5;
+	SetTouch(ID_TOUCH_MOVE,MoveLeftX);
 
 	xLastExecutionTime = xTaskGetTickCount();
 	vTaskDelayUntil(&xLastExecutionTime, 100);
 
 	while(1)
 	{
-		state = LCD_Touch_service(TouchPoint,0);
+		state = LCD_Touch_service();
 		switch(state)
 		{
 			case Point_1:
@@ -61,7 +66,7 @@ void vtaskTouchLcd(void *pvParameters)
 			case Point_3:
 				Dbg(1,"\r\nTouchPoint_3");
 				break;
-			case 10000:
+			case MoveLeftX:
 				Dbg(1,"\r\nTouchMove");
 				break;
 		}		

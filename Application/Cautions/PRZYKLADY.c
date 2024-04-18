@@ -109,7 +109,8 @@ void FRAM_ReadMultiple(uint16_t Reg, uint8_t *pBuffer, uint16_t Length)
 //7 #################################################################################################################
 SDRAM MODBUS_TCP_REGISTER ModbusTCPregisters[MAX_MODBUS_TCP_REGISTERS]={0};  // zapis ten NIE inicjalizuje zerami  !!!!
       MODBUS_TCP_REGISTER ModbusTCPregisters[MAX_MODBUS_TCP_REGISTERS]={0};  // zapis ten rzeczywiscie inicjalizuje zerami 
-
+//8 #################################################################################################################
 popatrz na screenSaver.c
+//9 #################################################################################################################
 
 #endif

@@ -4,11 +4,12 @@
 
 #include "stm32f7xx_hal.h"
 
-#define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 200
+#define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 100
+#define MAX_NUMBER_PIONTS_TOUCH	 2
 
 enum TOUCH_TYPE{
-  TouchPoint,
-  TouchMove
+  ID_TOUCH_POINT,
+  ID_TOUCH_MOVE
 };
 
 typedef struct
@@ -18,14 +19,14 @@ typedef struct
 }XY_Touch_Struct;
 
 extern uint8_t touchDetect;
-extern XY_Touch_Struct  touchTemp;
+extern XY_Touch_Struct  touchTemp[MAX_NUMBER_PIONTS_TOUCH];
 
-uint16_t	LCD_Touch_service			(uint16_t touchType, uint16_t param);
+uint16_t	LCD_Touch_service			(void);
 void 		DeleteAllTouch				(void);
 int 		GetTouchToTemp				(uint16_t idx);
 void 		DeleteSelectTouch			(uint16_t idx);
 void 		DeleteAllTouchWithout	(uint16_t idx);
-int 		SetTouch						(uint16_t idx);
+int 		SetTouch						(uint16_t id, uint16_t idx);
 void 		Touchscreen_Calibration	(void);
 
 #endif

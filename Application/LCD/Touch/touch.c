@@ -9,38 +9,31 @@
 #include "debug.h"
 
 #define BUF_LCD_TOUCH_SIZE	100
-#define MAX_NUMBER_PIONTS_TOUCH	 2
 
 typedef struct
 {
   uint8_t press;
-  uint8_t ongoing;
   uint8_t idx;
   XY_Touch_Struct  pos[BUF_LCD_TOUCH_SIZE];
 }Service_lcd_Touch_Struct;
 
 typedef struct
 {
+  uint16_t id;
   uint16_t index;
   XY_Touch_Struct  pos[MAX_NUMBER_PIONTS_TOUCH];
 }Touch_Struct;
 
-typedef struct
-{
-  uint16_t index;
-  XY_Touch_Struct  pos[BUF_LCD_TOUCH_SIZE];
-}Move_Struct;
 
 static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 static Touch_Struct  Touch[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
-static Move_Struct  	Move[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
 
 static uint8_t Calibration_Done = 0;
 static int32_t  A1, A2, B1, B2;
 static int32_t aPhysX[2], aPhysY[2], aLogX[2], aLogY[2];
 
 uint8_t touchDetect;
-XY_Touch_Struct  touchTemp;
+XY_Touch_Struct  touchTemp[MAX_NUMBER_PIONTS_TOUCH];
 
 //static void WaitForPressedState(uint8_t Pressed)
 //{
@@ -197,25 +190,46 @@ static uint8_t CheckTouch(XY_Touch_Struct *pos)
   return 0;
 }
 
-static uint16_t CHECK_TouchPiont(uint16_t param)
+static uint16_t CHECK_Touch(void)
 {
-	if(0 == ServiceTouch.press)
+
+	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 	{
-			
-		for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+		if(0 < Touch[i].index)
 		{
-			if(0 < Touch[i].index)
+			switch(Touch[i].id)
 			{
-				if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x)&&(ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
-					(ServiceTouch.pos[0].y >= Touch[i].pos[0].y)&&(ServiceTouch.pos[0].y < Touch[i].pos[1].y))
-				{
-					return Touch[i].index;
-				}
+				case ID_TOUCH_POINT:
+					if(0 == ServiceTouch.press)
+					{
+						if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x)&&(ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
+							(ServiceTouch.pos[0].y >= Touch[i].pos[0].y)&&(ServiceTouch.pos[0].y < Touch[i].pos[1].y))
+						{
+							return Touch[i].index;
+						}
+					}
+					break;
+
+				case ID_TOUCH_MOVE:
+					if(2 < ServiceTouch.idx)
+					{
+						if( ServiceTouch.pos[0].x > Touch[i].pos[0].x)
+						{
+							for(int j=1; j<ServiceTouch.idx; ++j)
+							{
+								if( ServiceTouch.pos[j].x < Touch[i].pos[1].x)
+									return Touch[i].index;
+							}
+						}
+					}
+					break;
+
+				default:
+					break;
 			}
-			else
-				break;
 		}
 	}
+
 	return 0;
 }
 
@@ -223,11 +237,11 @@ static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)  //Zrobic ze !!!! jak nie
 {
 	if(2 < ServiceTouch.idx)
 	{
-		if( ServiceTouch.pos[0].x > LCD_GetXSize()-LCD_GetXSize()/5 )
+		if( ServiceTouch.pos[0].x > /* Touch[i].pos[0].x */LCD_GetXSize()-LCD_GetXSize()/5 )
 		{
 			for(int i=1; i<ServiceTouch.idx; ++i)
 			{
-				if( ServiceTouch.pos[i].x < LCD_GetXSize()/5 )
+				if( ServiceTouch.pos[i].x <  /* Touch[i].pos[1].x */LCD_GetXSize()/5 )
 					return 10000;
 			}
 		}
@@ -235,7 +249,7 @@ static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)  //Zrobic ze !!!! jak nie
 	return 0;
 }
 
-uint16_t LCD_Touch_service(uint16_t touchType, uint16_t param)
+uint16_t LCD_Touch_service(void)
 {
    uint16_t touchRecognize = 0;
 	XY_Touch_Struct pos;
@@ -248,54 +262,30 @@ uint16_t LCD_Touch_service(uint16_t touchType, uint16_t param)
 		}
 
 		if(BUF_LCD_TOUCH_SIZE > ServiceTouch.idx){
-			//ServiceTouch.ongoing = 1;
 			ServiceTouch.pos[ServiceTouch.idx].x = pos.x;
 			ServiceTouch.pos[ServiceTouch.idx++].y = pos.y;
 		}
 		else
-			ServiceTouch.idx = 0;  //ServiceTouch.ongoing = 0;
+			ServiceTouch.idx = 0;
 	}
 	else
 	{
 		ServiceTouch.press = 0;
-		//ServiceTouch.ongoing = 0;
 	}
 
 	if(0 < ServiceTouch.idx)
 	{
-		switch(touchType)
-		{
-			case TouchPoint:
-				touchRecognize = CHECK_TouchPiont(param);
-				if(0==touchRecognize)
-					touchRecognize = CHECK_TouchAndMoveLeft(param);
-				break;
-			case TouchMove:
-				touchRecognize = CHECK_TouchAndMoveLeft(param);
-				break;
-			default:
-				touchRecognize = 0;
-				break;
-		}
 
 
-//		if( (touchType > 0) && (touchType <= MAX_OPEN_TOUCH_SIMULTANEOUSLY) )
-//			touchRecognize = CHECK_TouchPiont();
-//		else
-//		{
-//			switch(touchType)
-//			{
-//				case TouchAndMoveLeft:
-//					touchRecognize = CHECK_TouchAndMoveLeft();
-//					break;
-//				default:
-//					touchRecognize = 0;
-//					break;
-//			}
-//		}
+		touchRecognize = CHECK_Touch();
 
-		if( (0 != touchRecognize)/* ||
-			((0 == touchRecognize) && (0 == ServiceTouch.ongoing))*/ )
+
+
+
+		if( 0 != touchRecognize )
+			ServiceTouch.idx = 0;
+
+		if((0 == ServiceTouch.press) && (0 == touchRecognize))
 			ServiceTouch.idx = 0;
 	}
 	return touchRecognize;
@@ -303,21 +293,21 @@ uint16_t LCD_Touch_service(uint16_t touchType, uint16_t param)
 
 void clearTouchTemp(void)
 {
-	touchTemp.pos[0].x=0;
-	touchTemp.pos[0].y=0;
-	touchTemp.pos[1].x=0;
-	touchTemp.pos[1].y=0;
+	touchTemp[0].x=0;
+	touchTemp[0].y=0;
+	touchTemp[1].x=0;
+	touchTemp[1].y=0;
 }
 
 int isTouchTemp(void)
 {
-	if((touchTemp.pos[0].x != touchTemp.pos[1].x)&&(touchTemp.pos[0].y != touchTemp.pos[1].y))
+	if((touchTemp[0].x != touchTemp[1].x)/*&&(touchTemp[0].y != touchTemp[1].y)*/)
 		return 1;
 	else
 		return 0;
 }
 
-int SetTouch(uint16_t idx)
+int SetTouch(uint16_t id, uint16_t idx)
 {
   int i;
   if(1==isTouchTemp())
@@ -334,11 +324,12 @@ int SetTouch(uint16_t idx)
 	{
 	  if(Touch[i].index==0)
 	  {
+		 Touch[i].id=id;
 		 Touch[i].index=idx;
-		 Touch[i].pos[0].x= touchTemp.pos[0].x;
-		 Touch[i].pos[1].x= touchTemp.pos[1].x;
-		 Touch[i].pos[0].y= touchTemp.pos[0].y;
-		 Touch[i].pos[1].y= touchTemp.pos[1].y;
+		 Touch[i].pos[0].x= touchTemp[0].x;
+		 Touch[i].pos[1].x= touchTemp[1].x;
+		 Touch[i].pos[0].y= touchTemp[0].y;
+		 Touch[i].pos[1].y= touchTemp[1].y;
 		 clearTouchTemp();
 		 return i;
 	  }
@@ -355,10 +346,10 @@ int GetTouchToTemp(uint16_t idx)
 	{
 		if(Touch[i].index==idx)
 		{
-			touchTemp.pos[0].x= Touch[i].pos[0].x;
-			touchTemp.pos[0].y= Touch[i].pos[0].y;
-			touchTemp.pos[1].x= Touch[i].pos[1].x;
-			touchTemp.pos[1].y= Touch[i].pos[1].y;
+			touchTemp[0].x= Touch[i].pos[0].x;
+			touchTemp[0].y= Touch[i].pos[0].y;
+			touchTemp[1].x= Touch[i].pos[1].x;
+			touchTemp[1].y= Touch[i].pos[1].y;
 			return 1;
 		}
 	}
