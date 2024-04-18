@@ -9,6 +9,7 @@
 #include "debug.h"
 
 #define BUF_LCD_TOUCH_SIZE	100
+#define MAX_NUMBER_PIONTS_TOUCH	 2
 
 typedef struct
 {
@@ -21,10 +22,7 @@ typedef struct
 typedef struct
 {
   uint16_t index;
-  uint16_t x_Start;  //dac posStart[]
-  uint16_t y_Start;
-  uint16_t x_End;
-  uint16_t y_End;
+  XY_Touch_Struct  pos[MAX_NUMBER_PIONTS_TOUCH];
 }Touch_Struct;
 
 typedef struct
@@ -208,8 +206,8 @@ static uint16_t CHECK_TouchPiont(uint16_t param)
 		{
 			if(0 < Touch[i].index)
 			{
-				if((ServiceTouch.pos[0].x >= Touch[i].x_Start)&&(ServiceTouch.pos[0].x < Touch[i].x_End) &&
-					(ServiceTouch.pos[0].y >= Touch[i].y_Start)&&(ServiceTouch.pos[0].y < Touch[i].y_End))
+				if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x)&&(ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
+					(ServiceTouch.pos[0].y >= Touch[i].pos[0].y)&&(ServiceTouch.pos[0].y < Touch[i].pos[1].y))
 				{
 					return Touch[i].index;
 				}
@@ -305,15 +303,15 @@ uint16_t LCD_Touch_service(uint16_t touchType, uint16_t param)
 
 void clearTouchTemp(void)
 {
-	touchTemp.x_Start=0;
-	touchTemp.y_Start=0;
-	touchTemp.x_End=0;
-	touchTemp.y_End=0;
+	touchTemp.pos[0].x=0;
+	touchTemp.pos[0].y=0;
+	touchTemp.pos[1].x=0;
+	touchTemp.pos[1].y=0;
 }
 
 int isTouchTemp(void)
 {
-	if((touchTemp.x_Start != touchTemp.x_End)&&(touchTemp.y_Start != touchTemp.y_End))
+	if((touchTemp.pos[0].x != touchTemp.pos[1].x)&&(touchTemp.pos[0].y != touchTemp.pos[1].y))
 		return 1;
 	else
 		return 0;
@@ -337,10 +335,10 @@ int SetTouch(uint16_t idx)
 	  if(Touch[i].index==0)
 	  {
 		 Touch[i].index=idx;
-		 Touch[i].x_Start= touchTemp.x_Start;
-		 Touch[i].x_End= touchTemp.x_End;
-		 Touch[i].y_Start= touchTemp.y_Start;
-		 Touch[i].y_End= touchTemp.y_End;
+		 Touch[i].pos[0].x= touchTemp.pos[0].x;
+		 Touch[i].pos[1].x= touchTemp.pos[1].x;
+		 Touch[i].pos[0].y= touchTemp.pos[0].y;
+		 Touch[i].pos[1].y= touchTemp.pos[1].y;
 		 clearTouchTemp();
 		 return i;
 	  }
@@ -357,10 +355,10 @@ int GetTouchToTemp(uint16_t idx)
 	{
 		if(Touch[i].index==idx)
 		{
-			touchTemp.x_Start= Touch[i].x_Start;
-			touchTemp.y_Start= Touch[i].y_Start;
-			touchTemp.x_End= Touch[i].x_End;
-			touchTemp.y_End= Touch[i].y_End;
+			touchTemp.pos[0].x= Touch[i].pos[0].x;
+			touchTemp.pos[0].y= Touch[i].pos[0].y;
+			touchTemp.pos[1].x= Touch[i].pos[1].x;
+			touchTemp.pos[1].y= Touch[i].pos[1].y;
 			return 1;
 		}
 	}
