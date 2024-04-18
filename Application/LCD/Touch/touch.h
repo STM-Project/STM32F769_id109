@@ -17,16 +17,8 @@ typedef struct
   uint16_t y;
 }XY_Touch_Struct;
 
-typedef struct
-{
-  uint16_t x_Start;
-  uint16_t y_Start;
-  uint16_t x_End;
-  uint16_t y_End;
-}TS_Temporary;
-
 extern uint8_t touchDetect;
-extern TS_Temporary  touchTemp;
+extern XY_Touch_Struct  touchTemp;
 
 uint16_t	LCD_Touch_service			(uint16_t touchType, uint16_t param);
 void 		DeleteAllTouch				(void);
