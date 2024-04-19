@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include "touch.h"
 #include "debug.h"
+#include "LCD_Hardware.h"
 
 #define SERVICE_TOUCH_PROB_TIME_MS	20
 
@@ -19,7 +20,10 @@ enum new_touch{
 	Point_1 = 1,
 	Point_2,
 	Point_3,
-	MoveLeftX
+	Move_1,
+	Move_2,
+	Move_3,
+	Move_4
 };
 
 void vtaskTouchLcd(void *pvParameters)
@@ -31,23 +35,35 @@ void vtaskTouchLcd(void *pvParameters)
 	touchTemp[0].y= 0;
 	touchTemp[1].x= touchTemp[0].x+200;
 	touchTemp[1].y= touchTemp[0].y+150;
-	SetTouch(ID_TOUCH_POINT,Point_1);
+	SetTouch(ID_TOUCH_POINT,Point_1,release);
 
 	touchTemp[0].x= 0;
 	touchTemp[0].y= 300;
 	touchTemp[1].x= touchTemp[0].x+200;
 	touchTemp[1].y= touchTemp[0].y+180;
-	SetTouch(ID_TOUCH_POINT,Point_2);
+	SetTouch(ID_TOUCH_POINT,Point_2,press);
 
 	touchTemp[0].x= 600;
 	touchTemp[0].y= 0;
 	touchTemp[1].x= touchTemp[0].x+200;
 	touchTemp[1].y= touchTemp[0].y+150;
-	SetTouch(ID_TOUCH_POINT,Point_3);
+	SetTouch(ID_TOUCH_POINT,Point_3,release);
 
 	touchTemp[0].x= LCD_GetXSize()-LCD_GetXSize()/5;
 	touchTemp[1].x= LCD_GetXSize()/5;
-	SetTouch(ID_TOUCH_MOVE,MoveLeftX);
+	SetTouch(ID_TOUCH_MOVE_LEFT,Move_1,press);
+
+	touchTemp[0].x= LCD_GetXSize()/5;
+	touchTemp[1].x= LCD_GetXSize()-LCD_GetXSize()/5;
+	SetTouch(ID_TOUCH_MOVE_RIGHT,Move_2,press);
+
+	touchTemp[0].y= LCD_GetYSize()-LCD_GetYSize()/5;
+	touchTemp[1].y= LCD_GetYSize()/5;
+	SetTouch(ID_TOUCH_MOVE_UP,Move_3,press);
+
+	touchTemp[0].y= LCD_GetYSize()/5;
+	touchTemp[1].y= LCD_GetYSize()-LCD_GetYSize()/5;
+	SetTouch(ID_TOUCH_MOVE_DOWN,Move_4,release);
 
 	xLastExecutionTime = xTaskGetTickCount();
 	vTaskDelayUntil(&xLastExecutionTime, 100);
@@ -66,8 +82,17 @@ void vtaskTouchLcd(void *pvParameters)
 			case Point_3:
 				Dbg(1,"\r\nTouchPoint_3");
 				break;
-			case MoveLeftX:
-				Dbg(1,"\r\nTouchMove");
+			case Move_1:
+				Dbg(1,"\r\nTouchMove_1");
+				break;
+			case Move_2:
+				Dbg(1,"\r\nTouchMove_2");
+				break;
+			case Move_3:
+				Dbg(1,"\r\nTouchMove_3");
+				break;
+			case Move_4:
+				Dbg(1,"\r\nTouchMove_4");
 				break;
 		}		
 

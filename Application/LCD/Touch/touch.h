@@ -9,7 +9,15 @@
 
 enum TOUCH_TYPE{
   ID_TOUCH_POINT,
-  ID_TOUCH_MOVE
+  ID_TOUCH_MOVE_LEFT,
+  ID_TOUCH_MOVE_RIGHT,
+  ID_TOUCH_MOVE_UP,
+  ID_TOUCH_MOVE_DOWN
+};
+
+enum TOUCH_PRESS_RELEASE{
+  release,
+  press
 };
 
 typedef struct
@@ -26,7 +34,7 @@ void 		DeleteAllTouch				(void);
 int 		GetTouchToTemp				(uint16_t idx);
 void 		DeleteSelectTouch			(uint16_t idx);
 void 		DeleteAllTouchWithout	(uint16_t idx);
-int 		SetTouch						(uint16_t id, uint16_t idx);
+int 		SetTouch						(uint16_t id, uint16_t idx, uint8_t press);
 void 		Touchscreen_Calibration	(void);
 
 #endif
