@@ -195,6 +195,17 @@ static uint16_t CHECK_Touch(void)
 					}
 					break;
 
+				case ID_TOUCH_GET_ANY_POINT:
+					if(ServiceTouch.press == press)
+					{
+						if((ServiceTouch.pos[ServiceTouch.idx-1].x >= Touch[i].pos[0].x)&&(ServiceTouch.pos[ServiceTouch.idx-1].x < Touch[i].pos[1].x) &&
+							(ServiceTouch.pos[ServiceTouch.idx-1].y >= Touch[i].pos[0].y)&&(ServiceTouch.pos[ServiceTouch.idx-1].y < Touch[i].pos[1].y))
+						{
+							return Touch[i].index;
+						}
+					}
+					break;
+
 				case ID_TOUCH_MOVE_LEFT:
 					if(ServiceTouch.press == Touch[i].press)
 					{
@@ -279,15 +290,15 @@ static uint16_t CHECK_Touch(void)
 	return 0;
 }
 
-uint16_t LCD_Touch_service(void)
+uint16_t LCD_Touch_service(XY_Touch_Struct *posXY)
 {
    uint16_t touchRecognize = 0;
 	XY_Touch_Struct pos = {0};
 
 	if(CheckTouch(&pos))
 	{
-		if(0 == ServiceTouch.press){
-			ServiceTouch.press = 1;
+		if(release == ServiceTouch.press){
+			ServiceTouch.press = press;
 			ServiceTouch.idx = 0;
 		}
 
@@ -299,15 +310,19 @@ uint16_t LCD_Touch_service(void)
 			ServiceTouch.idx = 0;
 	}
 	else
-		ServiceTouch.press = 0;
+		ServiceTouch.press = release;
 
 	if(0 < ServiceTouch.idx)
 	{
 		touchRecognize = CHECK_Touch();
 
-		if( 0 != touchRecognize || ((0 == ServiceTouch.press) && (0 == touchRecognize)) )
+		if( 0 != touchRecognize || ((release == ServiceTouch.press) && (0 == touchRecognize)) )
 			ServiceTouch.idx = 0;
 	}
+
+	posXY->x = pos.x;
+	posXY->y = pos.y;
+
 	return touchRecognize;
 }
 

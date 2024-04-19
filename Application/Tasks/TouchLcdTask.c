@@ -23,13 +23,17 @@ enum new_touch{
 	Move_1,
 	Move_2,
 	Move_3,
-	Move_4
+	Move_4,
+	AnyPress
 };
 
 void vtaskTouchLcd(void *pvParameters)
 {
 	portTickType xLastExecutionTime;
 	uint16_t state;
+	XY_Touch_Struct pos;
+
+	DeleteAllTouch();
 
 	touchTemp[0].x= 0;
 	touchTemp[0].y= 0;
@@ -73,12 +77,18 @@ void vtaskTouchLcd(void *pvParameters)
 	touchTemp[1].x= 650;
 	SetTouch(ID_TOUCH_MOVE_DOWN,Move_4,release);
 
+	touchTemp[0].x= 200;
+	touchTemp[1].x= 300;
+	touchTemp[0].y= 380;
+	touchTemp[1].y= 480;
+	SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,neverMind);
+
 	xLastExecutionTime = xTaskGetTickCount();
 	vTaskDelayUntil(&xLastExecutionTime, 100);
 
 	while(1)
 	{
-		state = LCD_Touch_service();
+		state = LCD_Touch_service(&pos);
 		switch(state)
 		{
 			case Point_1:
@@ -101,6 +111,9 @@ void vtaskTouchLcd(void *pvParameters)
 				break;
 			case Move_4:
 				Dbg(1,"\r\nTouchMove_4");
+				break;
+			case AnyPress:
+				DbgVar(1,40,"\r\nAny Press: x= %03d y= %03d", pos.x, pos.y);
 				break;
 		}		
 

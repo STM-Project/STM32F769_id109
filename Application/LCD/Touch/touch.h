@@ -12,12 +12,15 @@ enum TOUCH_TYPE{
   ID_TOUCH_MOVE_LEFT,
   ID_TOUCH_MOVE_RIGHT,
   ID_TOUCH_MOVE_UP,
-  ID_TOUCH_MOVE_DOWN
+  ID_TOUCH_MOVE_DOWN,
+  ID_TOUCH_GET_ANY_POINT
 };
 
 enum TOUCH_PRESS_RELEASE{
   release,
-  press
+  press,
+  pressRelease,
+  neverMind
 };
 
 typedef struct
@@ -29,7 +32,7 @@ typedef struct
 extern uint8_t touchDetect;
 extern XY_Touch_Struct  touchTemp[MAX_NUMBER_PIONTS_TOUCH];
 
-uint16_t	LCD_Touch_service			(void);
+uint16_t	LCD_Touch_service			(XY_Touch_Struct *posXY);
 void 		DeleteAllTouch				(void);
 int 		GetTouchToTemp				(uint16_t idx);
 void 		DeleteSelectTouch			(uint16_t idx);
