@@ -192,7 +192,6 @@ static uint8_t CheckTouch(XY_Touch_Struct *pos)
 
 static uint16_t CHECK_Touch(void)
 {
-
 	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 	{
 		if(0 < Touch[i].index)
@@ -200,14 +199,14 @@ static uint16_t CHECK_Touch(void)
 			switch(Touch[i].id)
 			{
 				case ID_TOUCH_POINT:
-					if(0 == ServiceTouch.press)
-					{
+					//if(0 == ServiceTouch.press)
+					//{
 						if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x)&&(ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
 							(ServiceTouch.pos[0].y >= Touch[i].pos[0].y)&&(ServiceTouch.pos[0].y < Touch[i].pos[1].y))
 						{
 							return Touch[i].index;
 						}
-					}
+					//}
 					break;
 
 				case ID_TOUCH_MOVE:
@@ -226,23 +225,6 @@ static uint16_t CHECK_Touch(void)
 
 				default:
 					break;
-			}
-		}
-	}
-
-	return 0;
-}
-
-static uint16_t CHECK_TouchAndMoveLeft(uint16_t param)  //Zrobic ze !!!! jak nie ma touch/move dla press=0 to kasuj dx=0  jezeli nigdzie nie ma touch przy press=0 to idx=0
-{
-	if(2 < ServiceTouch.idx)
-	{
-		if( ServiceTouch.pos[0].x > /* Touch[i].pos[0].x */LCD_GetXSize()-LCD_GetXSize()/5 )
-		{
-			for(int i=1; i<ServiceTouch.idx; ++i)
-			{
-				if( ServiceTouch.pos[i].x <  /* Touch[i].pos[1].x */LCD_GetXSize()/5 )
-					return 10000;
 			}
 		}
 	}
@@ -269,23 +251,13 @@ uint16_t LCD_Touch_service(void)
 			ServiceTouch.idx = 0;
 	}
 	else
-	{
 		ServiceTouch.press = 0;
-	}
 
 	if(0 < ServiceTouch.idx)
 	{
-
-
 		touchRecognize = CHECK_Touch();
 
-
-
-
-		if( 0 != touchRecognize )
-			ServiceTouch.idx = 0;
-
-		if((0 == ServiceTouch.press) && (0 == touchRecognize))
+		if( 0 != touchRecognize || ((0 == ServiceTouch.press) && (0 == touchRecognize)) )
 			ServiceTouch.idx = 0;
 	}
 	return touchRecognize;
