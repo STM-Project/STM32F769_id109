@@ -4,6 +4,7 @@
  *  Created on: Apr 10, 2024
  *      Author: maraf
  */
+#include "TouchLcdTask.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include <string.h>

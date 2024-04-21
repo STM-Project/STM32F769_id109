@@ -8,6 +8,6 @@
 #ifndef TASKS_TOUCHLCDTASK_H_
 #define TASKS_TOUCHLCDTASK_H_
 
-
+void CreateTouchLcdTask(void);
 
 #endif /* TASKS_TOUCHLCDTASK_H_ */
