@@ -40,7 +40,7 @@ void vtaskTouchLcd(void *pvParameters)
 	touchTemp[0].y= 0;
 	touchTemp[1].x= touchTemp[0].x+200;
 	touchTemp[1].y= touchTemp[0].y+150;
-	SetTouch(ID_TOUCH_POINT,Point_1,release);
+	SetTouch(ID_TOUCH_POINT,Point_1,press);
 
 	touchTemp[0].x= 0;
 	touchTemp[0].y= 300;

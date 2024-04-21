@@ -206,6 +206,17 @@ static uint16_t CHECK_Touch(void)
 					}
 					break;
 
+				case ID_TOUCH_GET_ANY_POINT_WIDTH_WAIT:
+					if(ServiceTouch.press == press)
+					{
+						if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x)&&(ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
+							(ServiceTouch.pos[0].y >= Touch[i].pos[0].y)&&(ServiceTouch.pos[0].y < Touch[i].pos[1].y))
+						{
+							return Touch[i].index;
+						}
+					}
+					break;
+
 				case ID_TOUCH_MOVE_LEFT:
 					if(ServiceTouch.press == Touch[i].press)
 					{
