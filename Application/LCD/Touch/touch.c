@@ -8,7 +8,9 @@
 #include "stmpe811.h"
 #include "debug.h"
 
-#define BUF_LCD_TOUCH_SIZE	100
+#define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 80
+#define BUF_LCD_TOUCH_SIZE		100
+#define MAX_NUMBER_PIONTS_TOUCH	 2
 
 typedef struct
 {
@@ -21,20 +23,23 @@ typedef struct
 {
   uint16_t id;
   uint16_t index;
-  uint8_t press;
+  uint8_t param;
+  uint8_t flags1;
+  uint8_t flags2;
   XY_Touch_Struct  pos[MAX_NUMBER_PIONTS_TOUCH];
 }Touch_Struct;
 
 
 static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 static Touch_Struct  Touch[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
+XY_Touch_Struct  touchTemp[MAX_NUMBER_PIONTS_TOUCH] = {0};
 
 static uint8_t Calibration_Done = 0;
 static int32_t  A1, A2, B1, B2;
 static int32_t aPhysX[2], aPhysY[2], aLogX[2], aLogY[2];
 
 uint8_t touchDetect;
-XY_Touch_Struct  touchTemp[MAX_NUMBER_PIONTS_TOUCH] = {0};
+
 
 //static void WaitForPressedState(uint8_t Pressed)
 //{
@@ -185,40 +190,75 @@ static uint16_t CHECK_Touch(void)
 			switch(Touch[i].id)
 			{
 				case ID_TOUCH_POINT:
-					if(ServiceTouch.press == Touch[i].press)
+					if(ServiceTouch.press == Touch[i].param)
 					{
-						if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x)&&(ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
-							(ServiceTouch.pos[0].y >= Touch[i].pos[0].y)&&(ServiceTouch.pos[0].y < Touch[i].pos[1].y))
+						if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
+							(ServiceTouch.pos[0].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[0].y < Touch[i].pos[1].y))
 						{
-							return Touch[i].index;
+							if(press == Touch[i].param)
+							{
+								if(Touch[i].flags1 == 0){
+									Touch[i].flags1 = 1;
+									return Touch[i].index;
+								}
+							}
+							else
+								return Touch[i].index;
 						}
 					}
+					else Touch[i].flags1 = 0;
 					break;
 
 				case ID_TOUCH_GET_ANY_POINT:
 					if(ServiceTouch.press == press)
 					{
-						if((ServiceTouch.pos[ServiceTouch.idx-1].x >= Touch[i].pos[0].x)&&(ServiceTouch.pos[ServiceTouch.idx-1].x < Touch[i].pos[1].x) &&
-							(ServiceTouch.pos[ServiceTouch.idx-1].y >= Touch[i].pos[0].y)&&(ServiceTouch.pos[ServiceTouch.idx-1].y < Touch[i].pos[1].y))
+						if((ServiceTouch.pos[ServiceTouch.idx-1].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[ServiceTouch.idx-1].x < Touch[i].pos[1].x) &&
+							(ServiceTouch.pos[ServiceTouch.idx-1].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[ServiceTouch.idx-1].y < Touch[i].pos[1].y))
 						{
-							return Touch[i].index;
+							if(0 == (ServiceTouch.idx % Touch[i].param))
+								return Touch[i].index;
 						}
 					}
 					break;
 
-				case ID_TOUCH_GET_ANY_POINT_WIDTH_WAIT:
+				case ID_TOUCH_GET_ANY_POINT_WITH_WAIT:
 					if(ServiceTouch.press == press)
 					{
-						if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x)&&(ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
-							(ServiceTouch.pos[0].y >= Touch[i].pos[0].y)&&(ServiceTouch.pos[0].y < Touch[i].pos[1].y))
+						if((ServiceTouch.pos[ServiceTouch.idx-1].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[ServiceTouch.idx-1].x < Touch[i].pos[1].x) &&
+							(ServiceTouch.pos[ServiceTouch.idx-1].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[ServiceTouch.idx-1].y < Touch[i].pos[1].y))
 						{
-							return Touch[i].index;
+							switch(Touch[i].flags1)
+							{
+								case 0:
+									Touch[i].flags1 = 1;
+									return Touch[i].index;
+
+								case 1:
+									if(ServiceTouch.idx > 35)
+										Touch[i].flags1 = 2;
+									break;
+
+								case 2:
+									if(0 == (ServiceTouch.idx % Touch[i].param)){
+										Touch[i].flags2++;
+										if(Touch[i].flags2 > 80)
+											Touch[i].flags1 = 3;
+										return Touch[i].index;
+									}
+									break;
+
+								case 3:
+									if(0 == (ServiceTouch.idx % Touch[i].param/2))
+										return Touch[i].index;
+									break;
+							}
 						}
 					}
+					//else{ Touch[i].flags1 = 0; Touch[i].flags2 = 0;  }
 					break;
 
 				case ID_TOUCH_MOVE_LEFT:
-					if(ServiceTouch.press == Touch[i].press)
+					if(ServiceTouch.press == Touch[i].param)
 					{
 						if(2 < ServiceTouch.idx)
 						{
@@ -237,7 +277,7 @@ static uint16_t CHECK_Touch(void)
 					break;
 
 				case ID_TOUCH_MOVE_RIGHT:
-					if(ServiceTouch.press == Touch[i].press)
+					if(ServiceTouch.press == Touch[i].param)
 					{
 						if(2 < ServiceTouch.idx)
 						{
@@ -256,7 +296,7 @@ static uint16_t CHECK_Touch(void)
 					break;
 
 				case ID_TOUCH_MOVE_UP:
-					if(ServiceTouch.press == Touch[i].press)
+					if(ServiceTouch.press == Touch[i].param)
 					{
 						if(2 < ServiceTouch.idx)
 						{
@@ -275,7 +315,7 @@ static uint16_t CHECK_Touch(void)
 					break;
 
 				case ID_TOUCH_MOVE_DOWN:
-					if(ServiceTouch.press == Touch[i].press)
+					if(ServiceTouch.press == Touch[i].param)
 					{
 						if(2 < ServiceTouch.idx)
 						{
@@ -311,6 +351,10 @@ uint16_t LCD_Touch_service(XY_Touch_Struct *posXY)
 		if(release == ServiceTouch.press){
 			ServiceTouch.press = press;
 			ServiceTouch.idx = 0;
+			for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i){
+				Touch[i].flags1 = 0;
+				Touch[i].flags2 = 0;
+			}
 		}
 
 		if(BUF_LCD_TOUCH_SIZE > ServiceTouch.idx){
@@ -353,7 +397,7 @@ int isTouchTemp(void)
 		return 0;
 }
 
-int SetTouch(uint16_t ID, uint16_t idx, uint8_t press)
+int SetTouch(uint16_t ID, uint16_t idx, uint8_t param)
 {
   if(isTouchTemp())
   {
@@ -371,7 +415,9 @@ int SetTouch(uint16_t ID, uint16_t idx, uint8_t press)
 		  {
 			  Touch[i].id = ID;
 			  Touch[i].index = idx;
-			  Touch[i].press = press;
+			  Touch[i].param = param;
+			  Touch[i].flags1 = 0;
+			  Touch[i].flags2 = 0;
 
 			  for(int j=0; j<MAX_NUMBER_PIONTS_TOUCH; ++j)
 				  Touch[i].pos[j] = touchTemp[j];

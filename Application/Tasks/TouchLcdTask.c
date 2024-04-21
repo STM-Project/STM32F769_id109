@@ -14,6 +14,7 @@
 #include "LCD_Hardware.h"
 
 #define SERVICE_TOUCH_PROB_TIME_MS	20
+#define TOUCH_GET_PER_X_PROBE		3
 
 xTaskHandle vtaskTouchLcdHandle;
 
@@ -25,7 +26,8 @@ enum new_touch{
 	Move_2,
 	Move_3,
 	Move_4,
-	AnyPress
+	AnyPress,
+	AnyPressWithWait
 };
 
 void vtaskTouchLcd(void *pvParameters)
@@ -82,7 +84,8 @@ void vtaskTouchLcd(void *pvParameters)
 	touchTemp[1].x= 300;
 	touchTemp[0].y= 380;
 	touchTemp[1].y= 480;
-	SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,neverMind);
+	//SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,TOUCH_GET_PER_X_PROBE);
+	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);
 
 	xLastExecutionTime = xTaskGetTickCount();
 	vTaskDelayUntil(&xLastExecutionTime, 100);
@@ -115,6 +118,9 @@ void vtaskTouchLcd(void *pvParameters)
 				break;
 			case AnyPress:
 				DbgVar(1,40,"\r\nAny Press: x= %03d y= %03d", pos.x, pos.y);
+				break;
+			case AnyPressWithWait:
+				DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
 				break;
 		}		
 
