@@ -342,9 +342,8 @@ static uint16_t CHECK_Touch(void)
 	return 0;
 }
 
-uint16_t LCD_Touch_service(XY_Touch_Struct *posXY)
+void LCD_Touch_Service(void)
 {
-   uint16_t touchRecognize = 0;
 	XY_Touch_Struct pos = {0};
 
 	if(CheckTouch(&pos))
@@ -367,6 +366,12 @@ uint16_t LCD_Touch_service(XY_Touch_Struct *posXY)
 	}
 	else
 		ServiceTouch.press = release;
+}
+
+uint16_t LCD_Touch_Get(XY_Touch_Struct *posXY)
+{
+	uint16_t touchRecognize = 0;
+	XY_Touch_Struct pos = {0};
 
 	if(0 < ServiceTouch.idx)
 	{
@@ -376,8 +381,8 @@ uint16_t LCD_Touch_service(XY_Touch_Struct *posXY)
 			ServiceTouch.idx = 0;
 	}
 
-	posXY->x = pos.x;
-	posXY->y = pos.y;
+	posXY->x = ServiceTouch.pos[ServiceTouch.idx].x;
+	posXY->y = ServiceTouch.pos[ServiceTouch.idx].y;
 
 	return touchRecognize;
 }

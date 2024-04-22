@@ -34,6 +34,9 @@
 #include "SCREEN_ReadPanel.h"
 #include "lang.h"
 #include "TouchLcdTask.h"
+#include "touch.h"
+#include "debug.h"
+#include "LCD_Hardware.h"
 
 /* USER CODE END Includes */
 
@@ -157,13 +160,29 @@ void MX_FREERTOS_Init(void) {
   * @param  argument: Not used
   * @retval None
   */
-
-
 #include "tim.h"
+
+#define TOUCH_GET_PER_X_PROBE		3
+
+enum new_touch{
+	Point_1 = 1,
+	Point_2,
+	Point_3,
+	Move_1,
+	Move_2,
+	Move_3,
+	Move_4,
+	AnyPress,
+	AnyPressWithWait
+};
+
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+
+	uint16_t state;
+	XY_Touch_Struct pos;
 
 	MX_FATFS_Init();
 
@@ -172,6 +191,61 @@ void StartDefaultTask(void const * argument)
 	 DEBUG_Send("\r\nStart ");
 
 	 CreateTouchLcdTask();
+
+
+
+	 DeleteAllTouch();
+
+	 	touchTemp[0].x= 0;
+	 	touchTemp[0].y= 0;
+	 	touchTemp[1].x= touchTemp[0].x+200;
+	 	touchTemp[1].y= touchTemp[0].y+150;
+	 	SetTouch(ID_TOUCH_POINT,Point_1,press);
+
+	 	touchTemp[0].x= 0;
+	 	touchTemp[0].y= 300;
+	 	touchTemp[1].x= touchTemp[0].x+200;
+	 	touchTemp[1].y= touchTemp[0].y+180;
+	 	SetTouch(ID_TOUCH_POINT,Point_2,release);
+
+	 	touchTemp[0].x= 600;
+	 	touchTemp[0].y= 0;
+	 	touchTemp[1].x= touchTemp[0].x+200;
+	 	touchTemp[1].y= touchTemp[0].y+150;
+	 	SetTouch(ID_TOUCH_POINT,Point_3,release);
+
+	 	touchTemp[0].x= LCD_GetXSize()-LCD_GetXSize()/5;
+	 	touchTemp[1].x= LCD_GetXSize()/5;
+	 	touchTemp[0].y= 150;
+	 	touchTemp[1].y= 300;
+	 	SetTouch(ID_TOUCH_MOVE_LEFT,Move_1,press);
+
+	 	touchTemp[0].x= LCD_GetXSize()/5;
+	 	touchTemp[1].x= LCD_GetXSize()-LCD_GetXSize()/5;
+	 	touchTemp[0].y= 150;
+	 	touchTemp[1].y= 300;
+	 	SetTouch(ID_TOUCH_MOVE_RIGHT,Move_2,release);
+
+	 	touchTemp[0].y= LCD_GetYSize()-LCD_GetYSize()/5;
+	 	touchTemp[1].y= LCD_GetYSize()/5;
+	 	touchTemp[0].x= 300;
+	 	touchTemp[1].x= 450;
+	 	SetTouch(ID_TOUCH_MOVE_UP,Move_3,press);
+
+	 	touchTemp[0].y= LCD_GetYSize()/5;
+	 	touchTemp[1].y= LCD_GetYSize()-LCD_GetYSize()/5;
+	 	touchTemp[0].x= 500;
+	 	touchTemp[1].x= 650;
+	 	SetTouch(ID_TOUCH_MOVE_DOWN,Move_4,release);
+
+	 	touchTemp[0].x= 200;
+	 	touchTemp[1].x= 300;
+	 	touchTemp[0].y= 380;
+	 	touchTemp[1].y= 480;
+	 	//SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,TOUCH_GET_PER_X_PROBE);
+	 	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);
+
+
 
 
 //	StartMeasureTime(0);
@@ -185,7 +259,43 @@ void StartDefaultTask(void const * argument)
   {
 
 	 SCREEN_ReadPanel();
-	 vTaskDelay(2);
+
+
+	 	 	state = LCD_Touch_Get(&pos);
+	 		switch(state)
+	 		{
+	 			case Point_1:
+	 				Dbg(1,"\r\nTouchPoint_1");
+	 				break;
+	 			case Point_2:
+	 				Dbg(1,"\r\nTouchPoint_2");
+	 				break;
+	 			case Point_3:
+	 				Dbg(1,"\r\nTouchPoint_3");
+	 				break;
+	 			case Move_1:
+	 				Dbg(1,"\r\nTouchMove_1");
+	 				break;
+	 			case Move_2:
+	 				Dbg(1,"\r\nTouchMove_2");
+	 				break;
+	 			case Move_3:
+	 				Dbg(1,"\r\nTouchMove_3");
+	 				break;
+	 			case Move_4:
+	 				Dbg(1,"\r\nTouchMove_4");
+	 				break;
+	 			case AnyPress:
+	 				DbgVar(1,40,"\r\nAny Press: x= %03d y= %03d", pos.x, pos.y);
+	 				break;
+	 			case AnyPressWithWait:
+	 				DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
+	 				break;
+	 		}
+
+
+
+	 vTaskDelay(20);
 
 
 
