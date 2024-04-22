@@ -4,6 +4,8 @@
 
 #include "stm32f7xx_hal.h"
 
+#define SERVICE_TOUCH_PROB_TIME_MS	20
+
 enum TOUCH_TYPE{
   ID_TOUCH_POINT,
   ID_TOUCH_MOVE_LEFT,

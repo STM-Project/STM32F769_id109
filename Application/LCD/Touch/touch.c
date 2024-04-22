@@ -12,6 +12,9 @@
 #define BUF_LCD_TOUCH_SIZE		100
 #define MAX_NUMBER_PIONTS_TOUCH	 2
 
+#define TIME_700_MS_TO_NUMBER_PROBE	  	(700 / SERVICE_TOUCH_PROB_TIME_MS)
+#define TIME_5000_MS_TO_NUMBER_PROBE	(5000 / SERVICE_TOUCH_PROB_TIME_MS / Touch[i].param)
+
 typedef struct
 {
   uint8_t press;
@@ -206,7 +209,6 @@ static uint16_t CHECK_Touch(void)
 								return Touch[i].index;
 						}
 					}
-					else Touch[i].flags1 = 0;
 					break;
 
 				case ID_TOUCH_GET_ANY_POINT:
@@ -234,14 +236,14 @@ static uint16_t CHECK_Touch(void)
 									return Touch[i].index;
 
 								case 1:
-									if(ServiceTouch.idx > 35)
+									if(ServiceTouch.idx > TIME_700_MS_TO_NUMBER_PROBE)
 										Touch[i].flags1 = 2;
 									break;
 
 								case 2:
 									if(0 == (ServiceTouch.idx % Touch[i].param)){
 										Touch[i].flags2++;
-										if(Touch[i].flags2 > 80)
+										if(Touch[i].flags2 > TIME_5000_MS_TO_NUMBER_PROBE)
 											Touch[i].flags1 = 3;
 										return Touch[i].index;
 									}
@@ -254,7 +256,6 @@ static uint16_t CHECK_Touch(void)
 							}
 						}
 					}
-					//else{ Touch[i].flags1 = 0; Touch[i].flags2 = 0;  }
 					break;
 
 				case ID_TOUCH_MOVE_LEFT:

@@ -13,7 +13,6 @@
 #include "debug.h"
 #include "LCD_Hardware.h"
 
-#define SERVICE_TOUCH_PROB_TIME_MS	20
 #define TOUCH_GET_PER_X_PROBE		3
 
 xTaskHandle vtaskTouchLcdHandle;
