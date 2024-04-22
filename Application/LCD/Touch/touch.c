@@ -371,12 +371,10 @@ void LCD_Touch_Service(void)
 uint16_t LCD_Touch_Get(XY_Touch_Struct *posXY)
 {
 	uint16_t touchRecognize = 0;
-	XY_Touch_Struct pos = {0};
 
 	if(0 < ServiceTouch.idx)
 	{
 		touchRecognize = CHECK_Touch();
-
 		if( 0 != touchRecognize || ((release == ServiceTouch.press) && (0 == touchRecognize)) )
 			ServiceTouch.idx = 0;
 	}
