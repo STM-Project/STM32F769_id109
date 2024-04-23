@@ -112,5 +112,20 @@ SDRAM MODBUS_TCP_REGISTER ModbusTCPregisters[MAX_MODBUS_TCP_REGISTERS]={0};  // 
 //8 #################################################################################################################
 popatrz na screenSaver.c
 //9 #################################################################################################################
+enum MODBUS_FUNCTION
+{
+	FUNCTION_NONE,
+	READ_HOLDING_REG = 0x03,
 
+};
+
+typedef enum {
+	OK,
+	IO_DISABLED,
+	OVERRANGE,
+}INPUT_STATE;
+
+moze byc samo ENUM albo TYPEDEF ENUM by pozniej definiowac np:   static void IO_SetValue(WM_HWIN hItem,INPUT_STATE state, double value, const char resolution)
+
+	
 #endif
