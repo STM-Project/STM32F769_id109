@@ -125,7 +125,7 @@ typedef enum {
 	OVERRANGE,
 }INPUT_STATE;
 
-moze byc samo ENUM albo TYPEDEF ENUM by pozniej definiowac np:   static void IO_SetValue(WM_HWIN hItem,INPUT_STATE state, double value, const char resolution)
+moze byc samo ENUM albo TYPEDEF ENUM by pozniej definiowac np:   static void IO_SetValue(WM_HWIN hItem,INPUT_STATE state, double value, const char resolution)  albo:  INPUT_STATE newState = OK;
 
 	
 #endif
