@@ -139,6 +139,13 @@
 
 typedef enum
 {
+   TS_OK       = 0x00,
+   TS_ERROR    = 0x01,
+   TS_TIMEOUT  = 0x02
+}TS_StatusTypeDef;
+
+typedef enum
+{
   IO_PIN_RESET = 0,
   IO_PIN_SET
 }IO_PinState;
