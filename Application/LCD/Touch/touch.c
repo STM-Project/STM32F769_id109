@@ -38,13 +38,15 @@ static Touch_Struct  Touch[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
 XY_Touch_Struct  touchTemp[MAX_NUMBER_PIONTS_TOUCH] = {0};
 
 static uint8_t Calibration_Done = 0;
-static int32_t  A1, A2, B1, B2;
-static int32_t aPhysX[2], aPhysY[2], aLogX[2], aLogY[2];
+static int32_t  A1, A2;
+static int32_t  B1, B2;
+static int32_t aPhysX[2], aPhysY[2];
+static int32_t aLogX[2], aLogY[2];
 
 uint8_t touchDetect;
 
 
-static void WaitForPressedState(uint8_t Pressed)
+void WaitForPressedState(uint8_t Pressed)
 {
   TS_StateTypeDef  State;
 
@@ -61,7 +63,8 @@ static void WaitForPressedState(uint8_t Pressed)
         if (State.TouchDetected != Pressed)
         {
           break;
-        } else if ((HAL_GetTick() - 100) > TimeStart)
+        }
+        else if ((HAL_GetTick() - 100) > TimeStart)
         {
           return;
         }
@@ -78,7 +81,7 @@ static void WaitForPressedState(uint8_t Pressed)
   * @param  pPhysY : Physical Y position
   * @retval None
   */
-static void GetPhysValues(int32_t LogX, int32_t LogY, int32_t * pPhysX, int32_t * pPhysY)
+static void GetPhysValues_(int32_t LogX, int32_t LogY, int32_t * pPhysX, int32_t * pPhysY)
 {
   /* Draw the ring */
   BSP_LCD_FillCircle(LogX, LogY, 25);
@@ -97,7 +100,19 @@ static void GetPhysValues(int32_t LogX, int32_t LogY, int32_t * pPhysX, int32_t 
   BSP_LCD_FillCircle(LogX, LogY, 25);
 }
 
-void Touchscreen_Calibration(void)
+void SetLogXY_1(int32_t x, int32_t y)
+{
+   aLogX[0] = x;
+   aLogY[0] = y;
+}
+
+void SetLogXY_2(int32_t x, int32_t y)
+{
+   aLogX[1] = x;
+   aLogY[1] = y;
+}
+
+void Touchscreen_Calibration__(void)
 {
   uint8_t status = 0;
   uint8_t i = 0;
@@ -106,15 +121,15 @@ void Touchscreen_Calibration(void)
 
   status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 
-  if (status != TS_OK)
-  {
-	  Dbg(1,"\r\nERROR touch ");
-  }
+//  if (status != TS_OK)
+//  {
+//	  Dbg(1,"\r\nERROR touch ");
+//  }
 
   while (1)
   {
-    if (status == TS_OK)
-    {
+    //if (status == TS_OK)
+    //{
       aLogX[0] = 45;
       aLogY[0] = 45;
       aLogX[1] = LCD_GetXSize() - 45;
@@ -140,7 +155,7 @@ void Touchscreen_Calibration(void)
     }
 
     HAL_Delay(5);
-  }
+ // }
 }
 
 static uint16_t Calibration_GetX(uint32_t x)

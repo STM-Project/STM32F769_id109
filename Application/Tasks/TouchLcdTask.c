@@ -31,3 +31,8 @@ void CreateTouchLcdTask(void)
 {
 	xTaskCreate(vtaskTouchLcd, "vtaskTouchLcd", 1000, NULL, (unsigned portBASE_TYPE ) 5, &vtaskTouchLcdHandle);
 }
+
+void DeleteTouchLcdTask(void)
+{
+	vTaskDelete(vtaskTouchLcd);
+}

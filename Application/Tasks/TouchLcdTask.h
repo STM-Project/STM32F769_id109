@@ -9,5 +9,6 @@
 #define TASKS_TOUCHLCDTASK_H_
 
 void CreateTouchLcdTask(void);
+void DeleteTouchLcdTask(void);
 
 #endif /* TASKS_TOUCHLCDTASK_H_ */
