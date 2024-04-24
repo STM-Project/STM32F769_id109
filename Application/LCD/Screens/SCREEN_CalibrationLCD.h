@@ -8,6 +8,6 @@
 #ifndef LCD_SCREENS_SCREEN_CALIBRATIONLCD_H_
 #define LCD_SCREENS_SCREEN_CALIBRATIONLCD_H_
 
-
+void Touchscreen_Calibration(void);
 
 #endif /* LCD_SCREENS_SCREEN_CALIBRATIONLCD_H_ */

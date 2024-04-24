@@ -34,5 +34,5 @@ void CreateTouchLcdTask(void)
 
 void DeleteTouchLcdTask(void)
 {
-	vTaskDelete(vtaskTouchLcd);
+	vTaskDelete(vtaskTouchLcdHandle);
 }

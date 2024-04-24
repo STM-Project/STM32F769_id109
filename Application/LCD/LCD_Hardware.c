@@ -107,6 +107,19 @@ void BSP_LCD_DrawHLine(uint16_t Xpos, uint16_t Ypos, uint16_t Length)
   LL_FillBuffer(ActiveLayer, (uint32_t *)Xaddress, Length, 1, 0, color);
 }
 
+void BSP_LCD_DrawPixel(uint16_t Xpos, uint16_t Ypos, uint32_t RGB_Code)
+{
+  /* Write data value to all SDRAM memory */
+  if(hltdc.LayerCfg[ActiveLayer].PixelFormat == LTDC_PIXEL_FORMAT_RGB565)
+  { /* RGB565 format */
+    *(__IO uint16_t*) (hltdc.LayerCfg[ActiveLayer].FBStartAdress + (2*(Ypos*LCD_GetXSize() + Xpos))) = (uint16_t)RGB_Code;
+  }
+  else
+  { /* ARGB8888 format */
+    *(__IO uint32_t*) (hltdc.LayerCfg[ActiveLayer].FBStartAdress + (3*(Ypos*LCD_GetXSize() + Xpos))) = RGB_Code;
+  }
+}
+
 void BSP_LCD_DrawCircle(uint16_t Xpos, uint16_t Ypos, uint16_t Radius)
 {
   int32_t   decision;    /* Decision Variable */

@@ -13,12 +13,14 @@
 #include "touch.h"
 #include "stmpe811.h"
 #include "debug.h"
+#include "TouchLcdTask.h"
+#include "LCD_Common.h"
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys)
 {
   /* Draw the ring */
-  BSP_LCD_FillCircle(log.x, log.y, 25);
-  BSP_LCD_FillCircle(log.x, log.y, 10);
+  //BSP_LCD_FillCircle(log.x, log.y, 25);
+ // BSP_LCD_FillCircle(log.x, log.y, 10);
   HAL_Delay(1000);
 
   /* Wait until touch is pressed */
@@ -30,7 +32,7 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys)
 
   /* Wait until touch is released */
   WaitForPressedState(0);
-  BSP_LCD_FillCircle(log.x, log.y, 25);
+  //BSP_LCD_FillCircle(log.x, log.y, 25);
 }
 
 void Touchscreen_Calibration(void)
@@ -39,7 +41,10 @@ void Touchscreen_Calibration(void)
 	XY_Touch_Struct pos[2] = { {45, 45}, {LCD_GetXSize()-45, LCD_GetYSize()-45} };
 	XY_Touch_Struct phys[2];
 
-	BSP_LCD_Clear(0xFF000000);
+	DeleteTouchLcdTask();
+
+	//BSP_LCD_Clear(0xFF000000);
+	LCD_Clear(BLACK);
 
 	status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 
@@ -49,36 +54,26 @@ void Touchscreen_Calibration(void)
 	}
 	else
 	{
-		while (1)
-		{
-	      SetLogXY_1(pos[0].x, pos[0].y);
-	      SetLogXY_2(pos[1].x, pos[1].y);
 
+	      SetLogXY(pos);
 
 	      for (int i = 0; i < 2; i++)
 	      {
 	      	GetPhysValues(pos[i], &phys[i]);
 	      }
 
-	      BSP_LCD_FillCircle(pos[0].x, pos[0].y, 25);
-	      BSP_LCD_FillCircle(pos[0].x, pos[0].y, 10);
-	      HAL_Delay(1000);
+	      SetPhysXY(phys);
 
-	      WaitForPressedState(press);
+	      CalcutaleCoeffCalibration();
 
-	      BSP_TS_GetState(&TS_State);
+	      CalibrationWasDone();
 
-	      phys[0].x = TS_State.x;
-	      phys[0].y = TS_State.y;
+	      DisplayCoeffCalibration();
 
-	      WaitForPressedState(release);
-	      BSP_LCD_FillCircle(pos[0].x, pos[0].y, 25);
+	      HAL_Delay(2000);
+
+	      CreateTouchLcdTask();
 
 
-
-		}
 	}
-
-
-
 }

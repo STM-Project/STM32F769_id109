@@ -21,6 +21,8 @@
 #include "ff.h"
 #include "lang.h"
 #include "cpu_utils.h"
+#include "cpu_utils.h"
+#include "SCREEN_CalibrationLCD.h"
 
 extern const char LANG_ReadPanel_StringType[];
 
@@ -723,10 +725,10 @@ void NOWY_1(void)  //dac mozliwosc zablokowania Dbg definem!!!
 	lenStr=LCD_StrChangeColorRot(Rotate_0,fontID_7,       LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "123ABCabc", fullHight, 0,GRAY,MYBLUE,254,1);
 	LCD_Frame(0,LCD_GetXSize(),LCD_GetYSize(),LCD_Xpos(lenStr,GetPos,-1),LCD_Ypos(lenStr,GetPos,-1), lenStr.inPixel+2,lenStr.height+2,WHITE,0,0);
 
-	lenStr=LCD_StrRotWin(Rotate_0,120,fontID_7,       LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafa³ Markielowski Agnieszaka Markielowska", fullHight, 0,bkColor,1,ConstWidth,0);
+	lenStr=LCD_StrRotWin(Rotate_0,120,fontID_7,       LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafaï¿½ Markielowski Agnieszaka Markielowska", fullHight, 0,bkColor,1,ConstWidth,0);
 	LCD_Frame(0,LCD_GetXSize(),LCD_GetYSize(),LCD_Xpos(lenStr,GetPos,-1),LCD_Ypos(lenStr,GetPos,-1), lenStr.inPixel+2,lenStr.height+2,WHITE,0,0);
 
-	lenStr=LCD_StrChangeColorRotWin(Rotate_0,120,fontID_7,       LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafa³ Markielowski Agnieszaka Markielowska", fullHight, 0,DARKRED,MAGENTA,244,ConstWidth,0);
+	lenStr=LCD_StrChangeColorRotWin(Rotate_0,120,fontID_7,       LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafaï¿½ Markielowski Agnieszaka Markielowska", fullHight, 0,DARKRED,MAGENTA,244,ConstWidth,0);
 	LCD_Frame(0,LCD_GetXSize(),LCD_GetYSize(),LCD_Xpos(lenStr,GetPos,-1),LCD_Ypos(lenStr,GetPos,-1), lenStr.inPixel+2,lenStr.height+2,WHITE,0,0);
 
 
@@ -737,10 +739,10 @@ void NOWY_1(void)  //dac mozliwosc zablokowania Dbg definem!!!
 	lenStr=LCD_StrChangeColorRot(Rotate_90,fontID_7, LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "123ABCabc", fullHight, 0,GRAY,MYBLUE,254,1);
 	LCD_Frame(0,LCD_GetXSize(),LCD_GetYSize(),		 LCD_Xpos(lenStr,GetPos,-1),LCD_Ypos(lenStr,GetPos,-1), lenStr.inPixel+2,lenStr.height+2,WHITE,0,0);
 
-	lenStr=LCD_StrRotWin(Rotate_90,70,fontID_7,       LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafa³ Markielowski Agnieszaka Markielowska", fullHight, 0,bkColor,1,1,0);
+	lenStr=LCD_StrRotWin(Rotate_90,70,fontID_7,       LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafaï¿½ Markielowski Agnieszaka Markielowska", fullHight, 0,bkColor,1,1,0);
 	LCD_Frame(0,LCD_GetXSize(),LCD_GetYSize(),		  LCD_Xpos(lenStr,GetPos,-1),LCD_Ypos(lenStr,GetPos,-1), lenStr.inPixel+2,lenStr.height+2,WHITE,0,0);
 
-	lenStr=LCD_StrChangeColorRotWin(Rotate_90,70,fontID_7,LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafa³ Markielowski Agnieszaka Markielowska", fullHight, 0,DARKRED,MAGENTA,244,1,0);
+	lenStr=LCD_StrChangeColorRotWin(Rotate_90,70,fontID_7,LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafaï¿½ Markielowski Agnieszaka Markielowska", fullHight, 0,DARKRED,MAGENTA,244,1,0);
 	LCD_Frame(0,LCD_GetXSize(),LCD_GetYSize(),				LCD_Xpos(lenStr,GetPos,-1),LCD_Ypos(lenStr,GetPos,-1), lenStr.inPixel+2,lenStr.height+2,WHITE,0,0);
 
 
@@ -751,7 +753,7 @@ void NOWY_1(void)  //dac mozliwosc zablokowania Dbg definem!!!
 	lenStr=LCD_StrChangeColorRot(Rotate_180,fontID_7, LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "123ABCabc", fullHight, 0,GRAY,MYBLUE,254,1);
 	LCD_Frame(0,LCD_GetXSize(),LCD_GetYSize(),		 LCD_Xpos(lenStr,GetPos,-1),LCD_Ypos(lenStr,GetPos,-1), lenStr.inPixel+2,lenStr.height+2,WHITE,0,0);
 
-	lenStr=LCD_StrRotWin(Rotate_180,80,fontID_7,       LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafa³ Markielowski Agnieszaka Markielowska", fullHight, 0,bkColor,1,1,0);
+	lenStr=LCD_StrRotWin(Rotate_180,80,fontID_7,       LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Rafaï¿½ Markielowski Agnieszaka Markielowska", fullHight, 0,bkColor,1,1,0);
 	LCD_Frame(0,LCD_GetXSize(),LCD_GetYSize(),		  LCD_Xpos(lenStr,GetPos,-1),LCD_Ypos(lenStr,GetPos,-1), lenStr.inPixel+2,lenStr.height+2,WHITE,0,0);
 
 	lenStr=LCD_StrChangeColorRotWin(Rotate_180,80,fontID_7,LCD_Xpos(lenStr,IncPos,5),LCD_Ypos(lenStr,GetPos,0), "Raf", fullHight, 0,DARKRED,MAGENTA,244,1,0);
@@ -901,18 +903,18 @@ void NOWY_3(void)  //dac mozliwosc zablokowania Dbg definem!!!
 	lenStr=LCD_StrMovH(fontVar_2,Rotate_90,0,109,   fontID_6, 0,0,"BBB1111111111222222222222222 33333333333333333333B",fullHight,0,DARKBLUE,1,1);
 	lenStr=LCD_StrMovH(fontVar_3,Rotate_180,0,109,   fontID_6, 50,0,"CCCC11111111111222222222222222 33333333333333333333C",fullHight,0,DARKBLUE,1,1);
 
-	lenStr=LCD_StrChangeColorMovH(fontVar_4,Rotate_0,0,80,fontID_7, 100,50,"Zeszyty i ksi¹¿ki to podrêczniki do szko³y dla ñÑoÓA_XY",fullHight,0,DARKYELLOW,DARKRED,254,0);
-	lenStr=LCD_StrChangeColorMovH(fontVar_5,Rotate_90,0,80,fontID_7, 400,0,"Zeszyty i ksi¹¿ki to podrêczniki do szko³y dla ñÑoÓA_XY",fullHight,0,DARKYELLOW,DARKRED,254,0);
-	lenStr=LCD_StrChangeColorMovH(fontVar_6,Rotate_180,0,80,fontID_7, 435,0,"Zeszyty i ksi¹¿ki to podrêczniki do szko³y dla ñÑoÓA_XY",fullHight,0,DARKYELLOW,DARKRED,254,0);
+	lenStr=LCD_StrChangeColorMovH(fontVar_4,Rotate_0,0,80,fontID_7, 100,50,"Zeszyty i ksiï¿½ï¿½ki to podrï¿½czniki do szkoï¿½y dla ï¿½ï¿½oï¿½A_XY",fullHight,0,DARKYELLOW,DARKRED,254,0);
+	lenStr=LCD_StrChangeColorMovH(fontVar_5,Rotate_90,0,80,fontID_7, 400,0,"Zeszyty i ksiï¿½ï¿½ki to podrï¿½czniki do szkoï¿½y dla ï¿½ï¿½oï¿½A_XY",fullHight,0,DARKYELLOW,DARKRED,254,0);
+	lenStr=LCD_StrChangeColorMovH(fontVar_6,Rotate_180,0,80,fontID_7, 435,0,"Zeszyty i ksiï¿½ï¿½ki to podrï¿½czniki do szkoï¿½y dla ï¿½ï¿½oï¿½A_XY",fullHight,0,DARKYELLOW,DARKRED,254,0);
 
 
-	lenStr=LCD_StrChangeColorMovV(fontVar_7,Rotate_0,0,100,50,fontID_7,100,100,"Rafa³ Markielowski jest ww p omieszczeniu gospodarczym lubi krasnale www doku na drzewie takie jego bojowe zadanie  SEX _XY",fullHight,0,LIGHTGRAY,DARKBLUE,249,0);
+	lenStr=LCD_StrChangeColorMovV(fontVar_7,Rotate_0,0,100,50,fontID_7,100,100,"Rafaï¿½ Markielowski jest ww p omieszczeniu gospodarczym lubi krasnale www doku na drzewie takie jego bojowe zadanie  SEX _XY",fullHight,0,LIGHTGRAY,DARKBLUE,249,0);
 	lenStr=LCD_StrMovV           (fontVar_8,Rotate_0,0,100,50,fontID_6,210,100,"1234567890 abcdefghijklnn opqrstuvw ABCDEFGHIJKLMNOPQRTSUVWXYZ iiiiiiiiiiiijjjjjjjjjjjjSSSSSSSSSSEEEEEEEEEERRRRRRRRRA _XY",fullHight,0,MYGRAY,1,0);
 
-	lenStr=LCD_StrChangeColorMovV(fontVar_9,Rotate_90,0,100,50,fontID_7,0,160,"Rafa³ Markielowski jest ww p omieszczeniu gospodarczym lubi krasnale www doku na drzewie takie jego bojowe zadanie  SEX _XY",fullHight,0,LIGHTGRAY,DARKBLUE,249,0);
+	lenStr=LCD_StrChangeColorMovV(fontVar_9,Rotate_90,0,100,50,fontID_7,0,160,"Rafaï¿½ Markielowski jest ww p omieszczeniu gospodarczym lubi krasnale www doku na drzewie takie jego bojowe zadanie  SEX _XY",fullHight,0,LIGHTGRAY,DARKBLUE,249,0);
 	lenStr=LCD_StrMovV           (fontVar_10,Rotate_90,0,100,50,fontID_6,110,160,"1234567890 abcdefghijklnn opqrstuvw ABCDEFGHIJKLMNOPQRTSUVWXYZ iiiiiiiiiiiijjjjjjjjjjjjSSSSSSSSSSEEEEEEEEEERRRRRRRRRA _XY",fullHight,0,MYGRAY,1,0);
 
-	lenStr=LCD_StrChangeColorMovV(fontVar_11,Rotate_180,0,100,50,fontID_7,220,160,"Rafa³ Markielowski jest ww p omieszczeniu gospodarczym lubi krasnale www doku na drzewie takie jego bojowe zadanie  SEX _XY",fullHight,0,LIGHTGRAY,DARKBLUE,249,0);
+	lenStr=LCD_StrChangeColorMovV(fontVar_11,Rotate_180,0,100,50,fontID_7,220,160,"Rafaï¿½ Markielowski jest ww p omieszczeniu gospodarczym lubi krasnale www doku na drzewie takie jego bojowe zadanie  SEX _XY",fullHight,0,LIGHTGRAY,DARKBLUE,249,0);
 	lenStr=LCD_StrMovV           (fontVar_12,Rotate_180,0,100,50,fontID_6,330,160,"1234567890 abcdefghijklnn opqrstuvw ABCDEFGHIJKLMNOPQRTSUVWXYZ iiiiiiiiiiiijjjjjjjjjjjjSSSSSSSSSSEEEEEEEEEERRRRRRRRRA _XY",fullHight,0,MYGRAY,1,0);
 
 
@@ -1085,7 +1087,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 
 
-//Zrobic kr¹z¹cy cykl znaczku na okregu w zaleznosci od keyboarda !!!!!!!!!!!!
+//Zrobic krï¿½zï¿½cy cykl znaczku na okregu w zaleznosci od keyboarda !!!!!!!!!!!!
 
 
 
@@ -1120,6 +1122,10 @@ void SCREEN_ReadPanel(void)
 			break;
 		case 4:
 			SCREEN_Test_Circle();
+			startScreen=1;
+			break;
+		case 5:
+			Touchscreen_Calibration();
 			startScreen=1;
 			break;
 		}
@@ -1190,14 +1196,14 @@ void SCREEN_ReadPanel(void)
 			if(LCD_IsRefreshScreenTimeout(refresh_6,500)) LCD_StrChangeColorRotVarIndirect(fontVar_6,INT2STR(++test[5]));
 
 			     if(DEBUG_RcvStr("1")) LCD_StrRotVarIndirect(fontVar_7,"abAb");
-			else if(DEBUG_RcvStr("2")) LCD_StrRotVarIndirect(fontVar_7,"Rafa³ Markielówski hhhhX");
+			else if(DEBUG_RcvStr("2")) LCD_StrRotVarIndirect(fontVar_7,"Rafaï¿½ Markielï¿½wski hhhhX");
 			else if(DEBUG_RcvStr("3")){ LCD_OffsStrVar_x(fontVar_7,10);  LCD_StrRotVarIndirect(fontVar_7,"XY");  }
 			else if(DEBUG_RcvStr("4")){ LCD_OffsStrVar_x(fontVar_7,-10); LCD_StrRotVarIndirect(fontVar_7,"XY");  }
 			else if(DEBUG_RcvStr("5")){ LCD_OffsStrVar_y(fontVar_7,10);  LCD_StrRotVarIndirect(fontVar_7,"SD");  }
 			else if(DEBUG_RcvStr("6")){ LCD_OffsStrVar_y(fontVar_7,-10); LCD_StrRotVarIndirect(fontVar_7,"SD");  }
 
 			else if(DEBUG_RcvStr("a")) LCD_StrChangeColorRotVarIndirect(fontVar_8,"abAb");
-			else if(DEBUG_RcvStr("b")) LCD_StrChangeColorRotVarIndirect(fontVar_8,"Rafa³ Markielówski hhhhX");
+			else if(DEBUG_RcvStr("b")) LCD_StrChangeColorRotVarIndirect(fontVar_8,"Rafaï¿½ Markielï¿½wski hhhhX");
 			else if(DEBUG_RcvStr("c")){ LCD_OffsStrVar_x(fontVar_8,10);  LCD_StrChangeColorRotVarIndirect(fontVar_8,"XY");  }
 			else if(DEBUG_RcvStr("d")){ LCD_OffsStrVar_x(fontVar_8,-10); LCD_StrChangeColorRotVarIndirect(fontVar_8,"XY");  }
 			else if(DEBUG_RcvStr("e")){ LCD_OffsStrVar_y(fontVar_8,10);  LCD_StrChangeColorRotVarIndirect(fontVar_8,"SD");  }
@@ -1289,7 +1295,7 @@ void SCREEN_ReadPanel(void)
 
 
 
-	if(DEBUG_RcvStr("=")){ startScreen=0; INCR_WRAP(SCREEN_number,1,0,4); }
+	if(DEBUG_RcvStr("=")){ startScreen=0; INCR_WRAP(SCREEN_number,1,0,5); }
 	if(DEBUG_RcvStr("n")) LCD_DisplayStrMovBuffState();
 
 

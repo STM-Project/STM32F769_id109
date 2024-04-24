@@ -56,21 +56,23 @@ void WaitForPressedState(uint8_t Pressed)
     HAL_Delay(10);
     if (State.TouchDetected == Pressed)
     {
-      uint16_t TimeStart = HAL_GetTick();
-      do {
-        BSP_TS_GetState(&State);
-        HAL_Delay(10);
-        if (State.TouchDetected != Pressed)
-        {
-          break;
-        }
-        else if ((HAL_GetTick() - 100) > TimeStart)
-        {
-          return;
-        }
-      } while (1);
+   	 uint16_t TimeStart = HAL_GetTick();
+   	 do {
+   		 	 BSP_TS_GetState(&State);
+   		 	 HAL_Delay(10);
+   		 	 if (State.TouchDetected != Pressed)
+   		 	 {
+   		 		 break;
+   		 	 }
+   		 	 else if ((HAL_GetTick() - 100) > TimeStart)
+   		 	 {
+   		 		 return;
+   		 	 }
+   	 	 }
+   	 	 while (1);
     }
-  } while (1);
+  }
+  while (1);
 }
 
 /**
@@ -81,82 +83,102 @@ void WaitForPressedState(uint8_t Pressed)
   * @param  pPhysY : Physical Y position
   * @retval None
   */
-static void GetPhysValues_(int32_t LogX, int32_t LogY, int32_t * pPhysX, int32_t * pPhysY)
+//static void GetPhysValues_(int32_t LogX, int32_t LogY, int32_t * pPhysX, int32_t * pPhysY)
+//{
+//  /* Draw the ring */
+//  BSP_LCD_FillCircle(LogX, LogY, 25);
+//  BSP_LCD_FillCircle(LogX, LogY, 10);
+//  HAL_Delay(1000);
+//
+//  /* Wait until touch is pressed */
+//  WaitForPressedState(1);
+//
+//  BSP_TS_GetState(&TS_State);
+//  *pPhysX = TS_State.x;
+//  *pPhysY = TS_State.y;
+//
+//  /* Wait until touch is released */
+//  WaitForPressedState(0);
+//  BSP_LCD_FillCircle(LogX, LogY, 25);
+//}
+
+void SetLogXY(XY_Touch_Struct *pos)
 {
-  /* Draw the ring */
-  BSP_LCD_FillCircle(LogX, LogY, 25);
-  BSP_LCD_FillCircle(LogX, LogY, 10);
-  HAL_Delay(1000);
-
-  /* Wait until touch is pressed */
-  WaitForPressedState(1);
-
-  BSP_TS_GetState(&TS_State);
-  *pPhysX = TS_State.x;
-  *pPhysY = TS_State.y;
-
-  /* Wait until touch is released */
-  WaitForPressedState(0);
-  BSP_LCD_FillCircle(LogX, LogY, 25);
+   aLogX[0] = pos->x;
+   aLogY[0] = pos->y;
+   pos++;
+   aLogX[1] = pos->x;
+   aLogY[1] = pos->y;
 }
 
-void SetLogXY_1(int32_t x, int32_t y)
+void SetPhysXY(XY_Touch_Struct *pos)
 {
-   aLogX[0] = x;
-   aLogY[0] = y;
+	aPhysX[0] = pos->x;
+	aPhysY[0] = pos->y;
+   pos++;
+   aPhysX[1] = pos->x;
+   aPhysY[1] = pos->y;
 }
 
-void SetLogXY_2(int32_t x, int32_t y)
+void CalcutaleCoeffCalibration(void)
 {
-   aLogX[1] = x;
-   aLogY[1] = y;
+	A1 = (1000 * ( aLogX[1] - aLogX[0]))/ ( aPhysX[1] - aPhysX[0]);
+	B1 = (1000 * aLogX[0]) - A1 * aPhysX[0];
+
+	A2 = (1000 * ( aLogY[1] - aLogY[0]))/ ( aPhysY[1] - aPhysY[0]);
+	B2 = (1000 * aLogY[0]) - A2 * aPhysY[0];
 }
 
-void Touchscreen_Calibration__(void)
+void DisplayCoeffCalibration(void)
 {
-  uint8_t status = 0;
-  uint8_t i = 0;
+	 DbgVar(1,250,"\r\nCoeff Calibration: A1=%d B1=%d   A2=%d B2=%d ",A1,B1,A2,B2);
+}
 
-  BSP_LCD_Clear(0xFF000000);
-
-  status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
-
+//void Touchscreen_Calibration__(void)
+//{
+//  uint8_t status = 0;
+//  uint8_t i = 0;
+//
+//  BSP_LCD_Clear(0xFF000000);
+//
+//  status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
+//
 //  if (status != TS_OK)
 //  {
 //	  Dbg(1,"\r\nERROR touch ");
 //  }
-
-  while (1)
-  {
-    //if (status == TS_OK)
-    //{
-      aLogX[0] = 45;
-      aLogY[0] = 45;
-      aLogX[1] = LCD_GetXSize() - 45;
-      aLogY[1] = LCD_GetYSize() - 45;
-
-      for (i = 0; i < 2; i++)
-      {
-        GetPhysValues(aLogX[i], aLogY[i], &aPhysX[i], &aPhysY[i]);
-      }
-      A1 = (1000 * ( aLogX[1] - aLogX[0]))/ ( aPhysX[1] - aPhysX[0]);
-      B1 = (1000 * aLogX[0]) - A1 * aPhysX[0];
-
-      A2 = (1000 * ( aLogY[1] - aLogY[0]))/ ( aPhysY[1] - aPhysY[0]);
-      B2 = (1000 * aLogY[0]) - A2 * aPhysY[0];
-
-      Calibration_Done = 1;
-
-      DbgVar(1,250,"\r\nCalibracja: %d %d   %d %d ",A1,B1,A2,B2);
-      //alibracja: 1072 -33256   1133 -46773
-      //Calibracja: A1=1070; B1=-29900;   A2=1130;  B2=-43140;
-      HAL_Delay(1000);
-      return;
-    }
-
-    HAL_Delay(5);
- // }
-}
+//
+//  while (1)
+//  {
+//    if (status == TS_OK)
+//    {
+//      aLogX[0] = 45;
+//      aLogY[0] = 45;
+//      aLogX[1] = LCD_GetXSize() - 45;
+//      aLogY[1] = LCD_GetYSize() - 45;
+//
+//      for (i = 0; i < 2; i++)
+//      {
+//        GetPhysValues(aLogX[i], aLogY[i], &aPhysX[i], &aPhysY[i]);
+//      }
+//      A1 = (1000 * ( aLogX[1] - aLogX[0]))/ ( aPhysX[1] - aPhysX[0]);
+//      B1 = (1000 * aLogX[0]) - A1 * aPhysX[0];
+//
+//      A2 = (1000 * ( aLogY[1] - aLogY[0]))/ ( aPhysY[1] - aPhysY[0]);
+//      B2 = (1000 * aLogY[0]) - A2 * aPhysY[0];
+//
+//      Calibration_Done = 1;
+//
+//      DbgVar(1,250,"\r\nCalibracja: %d %d   %d %d ",A1,B1,A2,B2);
+//      alibracja: 1072 -33256   1133 -46773
+//      Calibracja: A1=1070; B1=-29900;   A2=1130;  B2=-43140;
+//      HAL_Delay(1000);
+//      return;
+//    }
+//
+//    HAL_Delay(5);
+//  }
+//}
 
 static uint16_t Calibration_GetX(uint32_t x)
 {
@@ -179,6 +201,11 @@ static uint16_t Calibration_GetY(uint32_t y)
 uint8_t IsCalibrationDone(void)
 {
   return (Calibration_Done);
+}
+
+uint8_t CalibrationWasDone(void)
+{
+	Calibration_Done = 1;
 }
 
 static uint8_t CheckTouch(XY_Touch_Struct *pos)
