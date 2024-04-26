@@ -41,7 +41,7 @@ void 		DeleteAllTouchWithout	(uint16_t idx);
 int 		SetTouch						(uint16_t id, uint16_t idx, uint8_t param);
 void SetLogXY(XY_Touch_Struct *pos);
 void SetPhysXY(XY_Touch_Struct *pos);
-void WaitForPressedState(uint8_t Pressed);
+void WaitForTouchState(uint8_t Pressed);
 void CalcutaleCoeffCalibration(void);
 uint8_t IsCalibrationDone(void);
 uint8_t CalibrationWasDone(void);

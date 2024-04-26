@@ -46,7 +46,7 @@ static int32_t aLogX[2], aLogY[2];
 uint8_t touchDetect;
 
 
-void WaitForPressedState(uint8_t Pressed)
+void WaitForTouchState(uint8_t Pressed)
 {
   TS_StateTypeDef  State;
 

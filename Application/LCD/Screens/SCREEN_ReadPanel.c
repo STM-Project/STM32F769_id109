@@ -958,7 +958,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	void __Show_FrameAndCircle_Indirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold)
 	{
 		int widthCalculated=LCD_CalculateCircleWidth(width);
-		LCD_ClearIndirect(3333,widthCalculated,widthCalculated,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
+		LCD_ClearPartScreen(3333,widthCalculated,widthCalculated,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
 		LCD_ShapeWindow	         (LCD_Circle,3333,widthCalculated,widthCalculated, 0,0, width,          width,          SetColorBoldFrame(_FrameColor(),bold), _FillColor(),_BkColor());
 		LCD_ShapeWindowIndirect(x,y,LCD_Frame, 3333,widthCalculated,widthCalculated, 0,0, widthCalculated,widthCalculated,                  _FrameColor(),       _BkColor(),  _BkColor());
@@ -966,7 +966,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 	void __Show_Circle_Indirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold)
 	{
-		LCD_ClearIndirect(0,width,width,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
+		LCD_ClearPartScreen(0,width,width,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
 		LCD_ShapeIndirect(x,y,LCD_Circle, width,width, SetColorBoldFrame(_FrameColor(),bold), _FillColor(), _BkColor());
 	}
@@ -1042,6 +1042,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 
 	LCD_Shape(480-LCD_GetYSize(),0,LCD_Circle, Circle.width,Circle.width, SetColorBoldFrame(WHITE/*_FrameColor()*/,Circle.bold), TRANSPARENT/* _FillColor()*/, _BkColor());
+	LCD_Shape(200,200,LCD_Circle, 50,50, SetColorBoldFrame(WHITE/*_FrameColor()*/,Circle.bold), TRANSPARENT/* _FillColor()*/, _BkColor());
 	//LCD_Shape(480-LCD_GetYSize()+6,6,LCD_Circle, Circle.width-5,Circle.width-5, _FrameColor(),  TRANSPARENT/*_FillColor()*/, MYRED);
 
 	//LCD_Shape(480-LCD_GetYSize(),0,LCD_Circle, SetParamWidthCircle(Degree_Circle,Circle.width),Circle.width, SetColorBoldFrame(RED,Circle.bold), _FillColor(), _BkColor());
@@ -1083,7 +1084,10 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	// __Show_FrameAndCircle_Indirect(120,180, 54, 1);
 
 	// __Show_FrameAndCircle_Indirect(480-LCD_GetYSize(),0, Circle.width, Circle.bold);
-	 //__Show_Circle_Indirect(480-LCD_GetYSize(),0, Circle.width, Circle.bold);
+	 __Show_Circle_Indirect(LCD_GetXSize()-50,200, 50, 0);
+
+	 LCD_ShapeIndirect(400,350,LCD_Circle, 50,50, SetColorBoldFrame(WHITE,0), RED, MYGRAY);
+
 
 
 

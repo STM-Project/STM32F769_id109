@@ -2507,7 +2507,7 @@ void LCD_ShapeWindowIndirect(uint32_t xPos,uint32_t yPos,figureShape pShape,uint
 void LCD_Clear(uint32_t color){
 	LCD_ShapeWindow(LCD_Rectangle,0,LCD_X,LCD_Y, 0,0, LCD_X, LCD_Y, color,color,color);
 }
-void LCD_ClearIndirect(uint32_t posBuff, uint32_t BkpSizeX, uint32_t BkpSizeY, uint32_t color){
+void LCD_ClearPartScreen(uint32_t posBuff, uint32_t BkpSizeX, uint32_t BkpSizeY, uint32_t color){
 	LCD_ShapeWindow(LCD_Rectangle,posBuff,BkpSizeX,BkpSizeY, 0,0, BkpSizeX, BkpSizeY, color,color,color);
 }
 uint32_t SetColorBoldFrame(uint32_t frameColor, uint8_t thickness){
