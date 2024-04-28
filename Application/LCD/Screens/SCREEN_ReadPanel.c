@@ -1041,8 +1041,8 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	//LCD_Shape(480-LCD_GetYSize()+10,10,LCD_Circle, Circle.width-20,Circle.width-20, _FrameColor(),  _FillColor(), MYGRAY);
 
 
-	LCD_Shape(480-LCD_GetYSize(),0,LCD_Circle, Circle.width,Circle.width, SetColorBoldFrame(WHITE/*_FrameColor()*/,Circle.bold), TRANSPARENT/* _FillColor()*/, _BkColor());
-	LCD_Shape(200,200,LCD_Circle, 50,50, SetColorBoldFrame(WHITE/*_FrameColor()*/,Circle.bold), TRANSPARENT/* _FillColor()*/, _BkColor());
+	LCD_Shape(480-LCD_GetYSize(),0,LCD_Circle, Circle.width,Circle.width, SetColorBoldFrame(WHITE/*_FrameColor()*/,Circle.bold), /*TRANSPARENT*/ _FillColor(), _BkColor());  //dla tRANSPARENT nie dziala bold na >niz 0 !!!!
+	//LCD_Shape(200,200,LCD_Circle, 50,50, SetColorBoldFrame(WHITE/*_FrameColor()*/,Circle.bold), TRANSPARENT/* _FillColor()*/, _BkColor());
 	//LCD_Shape(480-LCD_GetYSize()+6,6,LCD_Circle, Circle.width-5,Circle.width-5, _FrameColor(),  TRANSPARENT/*_FillColor()*/, MYRED);
 
 	//LCD_Shape(480-LCD_GetYSize(),0,LCD_Circle, SetParamWidthCircle(Degree_Circle,Circle.width),Circle.width, SetColorBoldFrame(RED,Circle.bold), _FillColor(), _BkColor());

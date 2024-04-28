@@ -12,6 +12,7 @@
 #include "TouchLcdTask.h"
 #include "LCD_Common.h"
 #include "debug.h"
+#include "tim.h"
 
 #define DEBUG_ON	1
 #define DEBUG_TEXT_1		"\r\nERROR touch "
@@ -21,16 +22,22 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys)
 
 	void __ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
 	{
+		#define  wskBuffLcd	0
 		int widthCalculated=LCD_CalculateCircleWidth(width);
 //		LCD_ClearPartScreen(0,widthCalculated,widthCalculated,bkColor);
 //		LCD_ShapeIndirect(x,	y,	LCD_Circle, 	width,width, SetColorBoldFrame(frameColor,bold), fillColor, bkColor);
 
-		LCD_ShapeWindow	         (LCD_Circle,0,widthCalculated,widthCalculated, 0,0, width,          width,     SetColorBoldFrame(frameColor,bold), fillColor, bkColor);
-		LCD_ShapeWindowIndirect(x,y,LCD_Circle, 0,widthCalculated,widthCalculated, 14,14, 24,24,                  SetColorBoldFrame(frameColor,bold), fillColor, fillColor);
+		LCD_ShapeWindow	         (LCD_Circle,wskBuffLcd,widthCalculated,widthCalculated, 0,0, width,          width,     SetColorBoldFrame(frameColor,bold), fillColor, bkColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Circle, wskBuffLcd,widthCalculated,widthCalculated, 14,14, 24,24,                  SetColorBoldFrame(frameColor,bold), /*fillColor*/TRANSPARENT, fillColor);
 	}
 
   /* Draw the ring */
+
+	LCD_SetCircleAA(0,0); //max  1,1 -> off AA
+	StartMeasureTime_us();
 	__ShowCircleIndirect(log.x, 	 log.y, 	  50, 0, WHITE, ORANGE, BLACK);
+	StopMeasureTime_us("\r\nCZASS: ");
+
 //	__ShowCircleIndirect(log.x+14, log.y+14, 24, 0, WHITE, ORANGE, ORANGE);
 
 

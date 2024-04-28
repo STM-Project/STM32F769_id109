@@ -109,7 +109,7 @@ void StartMeasureTime_us(void)
 	HAL_TIM_Base_Start(&htim5);
 }
 
-uint32_t StopMeasureTime_us(char *nameTime)
+uint32_t StopMeasureTime_us(char *nameTime)  //przenies w osobny plik np TIMER.c a do HAL_TIM_Base_Stop odwolac sie jako MX_... w tim.c
 {
 	register uint32_t counterTicks =__HAL_TIM_GET_COUNTER(&htim5);
 	float counterClock = 2*HAL_RCC_GetPCLK1Freq();
