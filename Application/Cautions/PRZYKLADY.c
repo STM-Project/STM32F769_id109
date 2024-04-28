@@ -1,5 +1,6 @@
 
 #ifdef PRZYKLADY_
+//https://www.geeksforgeeks.org/x-macros-in-c/
 
 
 //1 ################## -- xQueueHandle -- ###############################

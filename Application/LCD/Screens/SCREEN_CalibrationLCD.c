@@ -12,50 +12,42 @@
 #include "TouchLcdTask.h"
 #include "LCD_Common.h"
 #include "debug.h"
-#include "tim.h"
 
 #define DEBUG_ON	1
-#define DEBUG_TEXT_1		"\r\nERROR touch "
+#define DEBUG_TEXT_1		"\r\nERROR touch "  //!! tłumaczenia setLang
+
+#define BK_COLOR	BLACK  //!!!! Parametry oglone stron dac w jakiejs strukturze by moc latwo je zieniac !!!
+
+#define CIRCLE_NUMBER	3
+#define CIRCLE_WIDTH		50
+#define CIRCLE_1_POS		50, 50
+#define CIRCLE_2_POS		LCD_GetXSize()-100, LCD_GetYSize()-100
+
+#define ALA \
+	X("CIRCLE_1_POS", 50, 50, 1) \
+	X("CIRCLE_2_POS", LCD_GetXSize()-100, LCD_GetYSize()-100, 2) \
+	X("CIRCLE_3_POS", 300, 300, 3)
+
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys)
 {
-
 	void __ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
 	{
 		#define  wskBuffLcd	0
-		int widthCalculated=LCD_CalculateCircleWidth(width);
-//		LCD_ClearPartScreen(0,widthCalculated,widthCalculated,bkColor);
-//		LCD_ShapeIndirect(x,	y,	LCD_Circle, 	width,width, SetColorBoldFrame(frameColor,bold), fillColor, bkColor);
+		int widthCalculated = LCD_CalculateCircleWidth(width);
 
-		LCD_ShapeWindow	         (LCD_Circle,wskBuffLcd,widthCalculated,widthCalculated, 0,0, width,          width,     SetColorBoldFrame(frameColor,bold), fillColor, bkColor);
-		LCD_ShapeWindowIndirect(x,y,LCD_Circle, wskBuffLcd,widthCalculated,widthCalculated, 14,14, 24,24,                  SetColorBoldFrame(frameColor,bold), /*fillColor*/TRANSPARENT, fillColor);
+		LCD_ShapeWindow	         (LCD_Circle,wskBuffLcd,widthCalculated,widthCalculated, 0,0, width, width, SetColorBoldFrame(frameColor,bold), fillColor, bkColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Circle, wskBuffLcd,widthCalculated,widthCalculated, 14,14, 24,24, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
 	}
 
-  /* Draw the ring */
+	__ShowCircleIndirect(log.x, log.y, CIRCLE_WIDTH, 0, WHITE, ORANGE, BLACK);
 
-	LCD_SetCircleAA(0,0); //max  1,1 -> off AA
-	StartMeasureTime_us();
-	__ShowCircleIndirect(log.x, 	 log.y, 	  50, 0, WHITE, ORANGE, BLACK);
-	StopMeasureTime_us("\r\nCZASS: ");
-
-//	__ShowCircleIndirect(log.x+14, log.y+14, 24, 0, WHITE, ORANGE, ORANGE);
-
-
-//	LCD_ShapeIndirect(log.x,	log.y,	LCD_Circle, 	100,100, SetColorBoldFrame(WHITE,0), ORANGE, BLACK);
-//
-//	LCD_ClearPartScreen(0,LCD_CalculateCircleWidth(75),LCD_CalculateCircleWidth(75),ORANGE);
-//	LCD_ShapeIndirect(log.x+13,	log.y+13,	LCD_Circle, 	75,75, SetColorBoldFrame(WHITE,0), ORANGE, ORANGE);
-
-	//__Show_FrameAndCircle_Indirect(log.x+13,log.y+13, 24, 0);
-
-  /* Wait until touch is pressed */
   WaitForTouchState(press);
 
   BSP_TS_GetState(&TS_State);
   phys->x = TS_State.x;
   phys->y = TS_State.y;
 
-  /* Wait until touch is released */
   WaitForTouchState(release);
 
   LCD_ShapeIndirect(log.x,log.y,LCD_Circle, 50,50, SetColorBoldFrame(WHITE,0), RED, BLACK);
@@ -64,10 +56,33 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys)
 void Touchscreen_Calibration(void)
 {
 	uint8_t status = 0;
-	XY_Touch_Struct pos[2] = { {50, 50}, {LCD_GetXSize()-100, LCD_GetYSize()-100} };
-	XY_Touch_Struct phys[2];
+
+
+	XY_Touch_Struct pos[] = {
+		#define X(a,b,c,d) {b,c},
+			ALA
+		#undef X
+	};
+
+	int sizeMACRO = sizeof(pos)/sizeof(&pos[0]);
+
+
+
+//		XY_Touch_Struct pos[CIRCLE_NUMBER] = {
+//				{CIRCLE_1_POS},
+//				{CIRCLE_2_POS} };
+
+
+
+
+
+	XY_Touch_Struct phys[CIRCLE_NUMBER] = {0};
 
 	DeleteTouchLcdTask();
+
+	//SCREEN_ResetAllParameters();
+	LCD_SetCircleAA(RATIO_AA_VALUE_MAX,RATIO_AA_VALUE_MAX);
+
 	LCD_Clear(RGB2INT(0,0,0));  LCD_Show();
 
 	status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
@@ -78,7 +93,7 @@ void Touchscreen_Calibration(void)
 	{
 	   SetLogXY(pos);
 
-	   for (int i = 0; i < 2; i++)
+	   for (int i = 0; i < CIRCLE_NUMBER; i++)
 	   {
 	      	GetPhysValues(pos[i], &phys[i]);
 	   }
