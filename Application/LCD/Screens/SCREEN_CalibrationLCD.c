@@ -73,6 +73,19 @@ void Touchscreen_Calibration(void)
 //				{CIRCLE_2_POS} };
 
 
+//DbgVar(1,300,"\r\nAAAAAAAA: %s %s %s %d %s",__TIME__, __DATE__, __FILE__, __LINE__,
+
+	 char bufff[][40]={
+		#define X(a,b,c,d) a,
+			 	 ALA
+		#undef X
+	 };
+
+
+	 DbgVar(1,300,"\r\nAAAAAAAA: %s %s %s",bufff[0], bufff[1], bufff[2]);
+
+
+
 
 
 
