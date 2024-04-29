@@ -8,6 +8,7 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+#define getName(var)  #var
 #define ABS(X)  ((X) > 0 ? (X) : -(X))
 #define TOOGLE(x)  x=1-x
 #define INCR(x,step,max)  ((x+step>max) ? (x=max) : (x+=step))
