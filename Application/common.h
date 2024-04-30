@@ -8,6 +8,10 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+#define GET_DATE_COMPILATION  __DATE__
+#define GET_TIME_COMPILATION  __TIME__
+#define GET_CODE_FILE  __FILE__
+#define GET_CODE_LINE  __LINE__
 #define getName(var)  #var
 #define ABS(X)  ((X) > 0 ? (X) : -(X))
 #define TOOGLE(x)  x=1-x
