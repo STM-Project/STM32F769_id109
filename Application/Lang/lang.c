@@ -28,7 +28,7 @@ void SetLang(int howMuch, int what)
 	Lang.what=what;
 }
 
-char* GetSelTxt(int nrBuff, const char* txt, int line)  //GetSelTxt(int nrBuff, int *sizeSelTxt, const char* txt, int line)
+char* GetSelTxt(int nrBuff, const char* txt, int line)
 {
 	int i, j;
 	const char *ptr=txt;
