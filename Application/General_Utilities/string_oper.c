@@ -71,22 +71,25 @@ char* Int2Str(int value, char freeSign, int maxDigits, int plusMinus)  // przero
 
 		   	if(Sign_none!=plusMinus)
 		   	{
-			   	if((freeSign==' '))
-			   		strBuff[idx++]=freeSign;
+			   	if(Space==freeSign)
+			   		strBuff[idx++]=Space;
 			   	else
 			   	{
 			   		if(1==_IsSign())
 			   			strBuff[idx++]=sign;
 			   		else
-			   			strBuff[idx++]=' ';
+			   			strBuff[idx++]=Space;
 			   	}
 		   	}
 
-		   	j=maxDigits-k;
-		   	memset(&strBuff[idx],freeSign,j);
-		   	idx+=j;
+		   	if(None!=freeSign)
+		   	{
+			   	j=maxDigits-k;
+			   	memset(&strBuff[idx],freeSign,j);
+			   	idx+=j;
+		   	}
 
-		   	if(freeSign==' ')
+		   	if(Space==freeSign)
 		   	{
 		   		if(1==_IsSign())
 		   			strBuff[idx-1]=sign;
@@ -104,7 +107,7 @@ char* Int2Str(int value, char freeSign, int maxDigits, int plusMinus)  // przero
 		   		if(1==_IsSign())
 		   			strBuff[idx++]=sign;
 		   		else
-		   			strBuff[idx++]=' ';
+		   			strBuff[idx++]=Space;
 		   	}
 		   }
 			itoa(absolutValue,&strBuff[idx],10);
@@ -174,22 +177,25 @@ char* Float2Str(float value, char freeSign, int maxDigits, int plusMinus, int de
 
 		   	if(Sign_none!=plusMinus)
 		   	{
-			   	if((freeSign==' '))
-			   		strBuff[idx++]=freeSign;
+		   		if(Space==freeSign)
+			   		strBuff[idx++]=Space;
 			   	else
 			   	{
 			   		if(1==_IsSign())
 			   			strBuff[idx++]=sign;
 			   		else
-			   			strBuff[idx++]=' ';
+			   			strBuff[idx++]=Space;
 			   	}
 		   	}
 
-		   	j=maxDigits-k;
-		   	memset(&strBuff[idx],freeSign,j);
-		   	idx+=j;
+		   	if(None!=freeSign)
+		   	{
+			   	j=maxDigits-k;
+			   	memset(&strBuff[idx],freeSign,j);
+			   	idx+=j;
+		   	}
 
-		   	if(freeSign==' ')
+		   	if(Space==freeSign)
 		   	{
 		   		if(1==_IsSign())
 		   			strBuff[idx-1]=sign;
@@ -207,7 +213,7 @@ char* Float2Str(float value, char freeSign, int maxDigits, int plusMinus, int de
 		   		if(1==_IsSign())
 		   			strBuff[idx++]=sign;
 		   		else
-		   			strBuff[idx++]=' ';
+		   			strBuff[idx++]=Space;
 		   	}
 		   }
 			float2stri(&strBuff[idx], absolutValue,dec_digits);

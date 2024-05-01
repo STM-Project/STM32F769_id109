@@ -12,8 +12,14 @@ typedef enum{
 	Sign_plusMinus,
 	Sign_minus,
 	Sign_plus,
-	Sign_none,
+	Sign_none
 }Int2Str_plusminus;
+
+typedef enum{
+	None,
+	Space = ' ',
+	Zero = '0'
+}Int2Str_freeSign;
 
 char* Int2Str(int value, char freeSign, int maxDigits, int plusMinus);
 char* Float2Str(float value, char freeSign, int maxDigits, int plusMinus, int dec_digits);

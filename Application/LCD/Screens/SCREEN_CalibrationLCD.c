@@ -17,18 +17,20 @@
 #include "tim.h"
 
 #define DEBUG_ON	1
-#define DEBUG_Text_1  "error_touch"
+#define DEBUG_Text_1  "error_touch"  //odrazu tlumacvznie uruchomic
 #define DEBUG_Text_2  "error_calculation_coeff"
 
 #define BK_COLOR	MYGRAY //Zmienna do zapisu
 
 #define CIRCLE_MACRO \
-	X("CIRCLE 1", 48, 50, 50) \
-	X("CIRCLE 2", 48, LCD_GetXSize()-100, LCD_GetYSize()-100) \
-	X("CIRCLE 3 ALA", 148, 300, 140)\
-	X("CIRCLE 4 ALA", 76, 0, 400)\
-	X("CIRCLE 5 ALA", 84, 300, 370)\
-	X("CIRCLE 6 ALA", 108, 650, 1)
+	/*	 Name		 width	x	  y */ \
+	X("Circle 1",  48,  50,  50) \
+	X("Circle 1",  48,  50,  50) \
+	X("Circle 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-100) \
+	X("Circle 3", 148, 300, 140) \
+	X("Circle 4",  76,   0, 300) \
+	X("Circle 5",  84, 170, 300) \
+	X("Circle 6", 108, 650,   1)
 
 static void ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
 {
@@ -39,9 +41,10 @@ static void ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t b
 	LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,widthCalculated,widthCalculated, width/4+1,width/4+1, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
 }
 
-static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t width)
+static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t width, char *name)
 {
 	ShowCircleIndirect(log.x, log.y, width, 0, WHITE, ORANGE, BK_COLOR);
+	LCD_StrChangeColorIndirect(fontID_2, log.x, log.y+width+2, StrAll(6,name," (",Int2Str(log.x,None,3,Sign_none),",",Int2Str(log.y,None,3,Sign_none),")"), fullHight, 0, BK_COLOR, ORANGE,252, 0);
 
   WaitForTouchState(press);
 
@@ -79,36 +82,39 @@ void Touchscreen_Calibration(void)
 
 	XY_Touch_Struct phys[CIRCLES_NUMBER] = {0};
 
-	DbgVar(DEBUG_ON,300,"\r\n\r\n%s\r\n%s\r\n%s\r\n\r\n",circlesNames[0], circlesNames[1], circlesNames[2]);
 	DeleteTouchLcdTask();
 
 	LCD_AllRefreshScreenClear();
 	LCD_ResetStrMovBuffPos();
 	LCD_DeleteAllFontAndImages();
 
-	LCD_LoadFont_DarkgrayWhite(FONT_28, Arial, fontID_1);
+	LCD_LoadFont_DarkgrayWhite(FONT_16, Arial, fontID_1);
+	LCD_LoadFont_DarkgrayGreen(FONT_12, Arial, fontID_2);
 
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
 	LCD_Clear(BK_COLOR);  LCD_Show();
-	lenStr=LCD_StrIndirect(fontID_1, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), "Calibration LCD", 	 fullHight,0,BK_COLOR,1,1);
+	lenStr=LCD_StrIndirect(fontID_1, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), "Calibration LCD", fullHight,0,BK_COLOR,0,0);
+	lenStr=LCD_StrIndirect(fontID_1, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,10), "Calibration LCD", fullHight,5,BK_COLOR,0,0);
+
+	Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,0));
+	Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,1));
+	Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,2));
 
 	uint8_t status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 
 	if(status)
-		Dbg(DEBUG_ON, TEXT_TO_PRINT(DEBUG_Text_1));
+		Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,0));
 	else
 	{
 	   SetLogXY(pos);
 
 	   for (int i = 0; i < CIRCLES_NUMBER; i++)
-	   {
-	      	GetPhysValues(pos[i], &phys[i], width[i]);
-	   }
+	      GetPhysValues(pos[i], &phys[i], width[i], circlesNames[i]);
 
 	   SetPhysXY(phys);
 
 	   if(CalcutaleCoeffCalibration())
-	   	Dbg(DEBUG_ON, TEXT_TO_PRINT(DEBUG_Text_2));
+	   	Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_2,0));
 	   else{
 		   CalibrationWasDone();
 		   DisplayCoeffCalibration();
