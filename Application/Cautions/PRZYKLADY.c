@@ -1,7 +1,7 @@
 
 #ifdef PRZYKLADY_
 //https://www.geeksforgeeks.org/x-macros-in-c/
-
+Nie dawaj duzych funkcji wewnatrz funkcji bo trzepie obrazem
 
 //1 ################## -- xQueueHandle -- ###############################
 float archDataVal[100]={0};

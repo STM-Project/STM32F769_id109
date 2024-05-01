@@ -42,7 +42,7 @@ int 		SetTouch						(uint16_t id, uint16_t idx, uint8_t param);
 void SetLogXY(XY_Touch_Struct *pos);
 void SetPhysXY(XY_Touch_Struct *pos);
 void WaitForTouchState(uint8_t Pressed);
-void CalcutaleCoeffCalibration(void);
+int CalcutaleCoeffCalibration(void);
 uint8_t IsCalibrationDone(void);
 uint8_t CalibrationWasDone(void);
 void DisplayCoeffCalibration(void);

@@ -35,6 +35,8 @@ extern "C" {
 extern TIM_HandleTypeDef htim5;
 
 /* USER CODE BEGIN Private defines */
+#define MEASURE_TIME_START			StartMeasureTime_us()
+#define MEASURE_TIME_STOP(str)	StopMeasureTime_us(str)
 
 /* USER CODE END Private defines */
 

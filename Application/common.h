@@ -9,11 +9,14 @@
 #define COMMON_H_
 #include "string_oper.h"
 
+#define EXAMPLE(x)  TEST_##x
+
 #define GET_DATE_COMPILATION  __DATE__
 #define GET_TIME_COMPILATION  __TIME__
 #define GET_CODE_FILE  __FILE__
 #define GET_CODE_LINE  __LINE__
 #define GET_CODE_PLACE 	StrAll(4,"\r\n", GET_CODE_FILE, ":", GET_CODE_LINE)
+#define TEXT_TO_PRINT(message) 	StrAll(6,"\r\n", GET_CODE_FILE, ":", Int2Str(GET_CODE_LINE,' ',5,Sign_none), " ", message)
 #define getName(var)  #var
 #define ABS(X)  ((X) > 0 ? (X) : -(X))
 #define TOOGLE(x)  x=1-x
@@ -33,6 +36,8 @@
 
 #define MIDDLE(startPos,widthBk,width)	startPos+(widthBk-width)/2
 #define IS_RANGE(x,min,max) (x>=min)&&(x<=max)
+
+#define STRUCT_TAB_SIZE(_struct) (sizeof(_struct) / sizeof(&_struct[0]))
 
 #define SDRAM __attribute__ ((section(".sdram")))
 

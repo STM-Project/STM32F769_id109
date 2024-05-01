@@ -120,13 +120,19 @@ void SetPhysXY(XY_Touch_Struct *pos)
    aPhysY[1] = pos->y;
 }
 
-void CalcutaleCoeffCalibration(void)
+int CalcutaleCoeffCalibration(void)
 {
-	A1 = (1000 * ( aLogX[1] - aLogX[0]))/ ( aPhysX[1] - aPhysX[0]);
-	B1 = (1000 * aLogX[0]) - A1 * aPhysX[0];
+	if(aPhysX[0] != aPhysX[1] && aPhysY[0] != aPhysY[1])
+	{
+		A1 = (1000 * ( aLogX[1] - aLogX[0]))/ ( aPhysX[1] - aPhysX[0]);
+		B1 = (1000 * aLogX[0]) - A1 * aPhysX[0];
 
-	A2 = (1000 * ( aLogY[1] - aLogY[0]))/ ( aPhysY[1] - aPhysY[0]);
-	B2 = (1000 * aLogY[0]) - A2 * aPhysY[0];
+		A2 = (1000 * ( aLogY[1] - aLogY[0]))/ ( aPhysY[1] - aPhysY[0]);
+		B2 = (1000 * aLogY[0]) - A2 * aPhysY[0];
+		return 0;
+	}
+	else
+		return 1;
 }
 
 void DisplayCoeffCalibration(void)
