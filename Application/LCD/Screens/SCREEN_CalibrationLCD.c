@@ -46,15 +46,35 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t wi
    	return x+width/2;
    }
 
-	StructTxtPxlLen lenStr={0};
+	StructTxtPxlLen lenStr={0}/*, lenStrTemp={0}*/;
 	char *ptr=NULL;
+	int16_t xPos=0;
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
 	ShowCircleIndirect(log.x, log.y, width, 0, WHITE, ORANGE, BK_COLOR);
 	lenStr=LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, BK_COLOR,DARKGREEN,254,NoConstWidth);
 
 	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(log.y,width),None,3,Sign_none),")");
-	lenStr=LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,ORANGE,254,NoConstWidth);
+	xPos = LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth);
+	CorrectPosIfOutRange(&xPos);
+
+
+
+
+	ptr = StrAll(2,"(",Int2Str(_CenterOfCircle(log.x,width),None,3,Sign_none));
+	lenStr=LCD_StrChangeColorIndirect(fontID_2, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,ORANGE,254,NoConstWidth);
+	//lenStrTemp = lenStr;
+	xPos = xPos+lenStr.inPixel;
+	CorrectPosIfOutRange(&xPos);
+
+	ptr = StrAll(3,",",Int2Str(_CenterOfCircle(log.y,width),None,3,Sign_none),")");
+	lenStr=LCD_StrChangeColorIndirect(fontID_2, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, BK_COLOR,ORANGE,254,NoConstWidth);
+
+//	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(log.y,width),None,3,Sign_none),")");
+//	lenStr=LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,ORANGE,254,NoConstWidth);
+
+
+
 
 	WaitForTouchState(press);
 
@@ -66,9 +86,23 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t wi
 
 	ShowCircleIndirect(log.x, log.y, width, 0, WHITE, RED, BK_COLOR);
 
+
+
+	ptr = StrAll(2,"(",Int2Str(_CenterOfCircle(phys->x,width),None,3,Sign_none));
+	xPos = xPos - LCD_GetWholeStrPxlWidth(fontID_2,ptr,0,NoConstWidth);
+	CorrectPosIfOutRange(&xPos);
+
 	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(phys->y,width),None,3,Sign_none),")");
-	LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,DARKYELLOW,254,NoConstWidth);
+	LCD_StrChangeColorIndirect(fontID_2, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,DARKYELLOW,254,NoConstWidth);
+
+
+//	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(phys->y,width),None,3,Sign_none),")");
+//	LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,DARKYELLOW,254,NoConstWidth);
+
+
+
 }
+
 
 void Touchscreen_Calibration(void)
 {

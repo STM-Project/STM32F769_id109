@@ -78,4 +78,6 @@ int LCD_IsRefreshScreenTimeout(int nrRefresh, int timeout);
 uint32_t GetTransitionColor(uint32_t colorFrom, uint32_t colorTo, float transCoeff);
 float GetTransitionCoeff(uint32_t colorFrom, uint32_t colorTo, uint32_t colorTrans);
 
+void CorrectPosIfOutRange(int16_t *pos);
+
 #endif /* LCD_LCD_COMMON_H_ */

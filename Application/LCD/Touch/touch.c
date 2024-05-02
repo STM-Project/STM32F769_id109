@@ -150,7 +150,8 @@ static uint8_t CheckTouch(XY_Touch_Struct *pos)
 
 	 if(TS_State.TouchDetected)
 	 {
-		 A1=1062; B1=-10224;   A2=1083;  B2=-23229;
+		 //A1=1062; B1=-10224;   A2=1083;  B2=-23229;
+		 A1=1067; B1=-46030;   A2=1111;  B2=-65544;
 		 pos->x = Calibration_GetX(TS_State.x);
 	     pos->y = Calibration_GetY(TS_State.y);
 	     return 1;

@@ -10,6 +10,7 @@
 #include "task.h"
 #include "LCD_Common.h"
 #include "common.h"
+#include "LCD_Hardware.h"
 
 #define MAX_ELEMENTS_REFRESH_IN_SCREEN	40
 
@@ -88,4 +89,12 @@ float GetTransitionCoeff(uint32_t colorFrom, uint32_t colorTo, uint32_t colorTra
 	if(B_delta>0) average += (float)ABS(B_tr-B_1)/B_delta;
 
 	return (average/div);
+}
+
+void CorrectPosIfOutRange(int16_t *pos)
+{
+	if(*pos<0)
+		*pos=0;
+	else if(*pos>LCD_GetXSize())
+		*pos=LCD_GetXSize();
 }
