@@ -24,12 +24,11 @@
 
 #define CIRCLE_MACRO \
 	/*	 Name		 width	x	  y */ \
-	X("Circle 1",  48,  50,  50) \
-	X("Circle 1",  48,  50,  50) \
-	X("Circle 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-100) \
+	X("Circle 1 AAAAAA",  48,  50,  50) \
+	X("C 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-150) \
 	X("Circle 3", 148, 300, 140) \
-	X("Circle 4",  76,   0, 300) \
-	X("Circle 5",  84, 170, 300) \
+	X("d 4",  76,   0, 300) \
+	X("Circle Markielowski 5",  84, 170, 300) \
 	X("Circle 6", 108, 650,   1)
 
 static void ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
@@ -43,18 +42,32 @@ static void ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t b
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t width, char *name)
 {
+   uint16_t _CenterOfCircle(uint16_t x, uint16_t width){
+   	return x+width/2;
+   }
+
+	StructTxtPxlLen lenStr={0};
+	char *ptr=NULL;
+
+	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
 	ShowCircleIndirect(log.x, log.y, width, 0, WHITE, ORANGE, BK_COLOR);
-	LCD_StrChangeColorIndirect(fontID_2, log.x, log.y+width+2, StrAll(6,name," (",Int2Str(log.x,None,3,Sign_none),",",Int2Str(log.y,None,3,Sign_none),")"), fullHight, 0, BK_COLOR, ORANGE,252, 0);
+	lenStr=LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, BK_COLOR,DARKGREEN,254,NoConstWidth);
 
-  WaitForTouchState(press);
+	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(log.y,width),None,3,Sign_none),")");
+	lenStr=LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,ORANGE,254,NoConstWidth);
 
-  BSP_TS_GetState(&TS_State);
-  phys->x = TS_State.x;
-  phys->y = TS_State.y;
+	WaitForTouchState(press);
 
-  WaitForTouchState(release);
+	BSP_TS_GetState(&TS_State);
+	phys->x = TS_State.x;
+	phys->y = TS_State.y;
 
-  ShowCircleIndirect(log.x, log.y, width, 0, WHITE, RED, BK_COLOR);
+	WaitForTouchState(release);
+
+	ShowCircleIndirect(log.x, log.y, width, 0, WHITE, RED, BK_COLOR);
+
+	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(phys->y,width),None,3,Sign_none),")");
+	LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,DARKYELLOW,254,NoConstWidth);
 }
 
 void Touchscreen_Calibration(void)
@@ -88,17 +101,13 @@ void Touchscreen_Calibration(void)
 	LCD_ResetStrMovBuffPos();
 	LCD_DeleteAllFontAndImages();
 
-	LCD_LoadFont_DarkgrayWhite(FONT_16, Arial, fontID_1);
-	LCD_LoadFont_DarkgrayGreen(FONT_12, Arial, fontID_2);
+	LCD_LoadFont_DarkgrayWhite(FONT_16, Arial, fontID_1);  //definy dla fontID_2 zeby lepiej rozumiec ktore
+	LCD_LoadFont_DarkgrayGreen(FONT_12_bold, Arial, fontID_2);
 
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
 	LCD_Clear(BK_COLOR);  LCD_Show();
-	lenStr=LCD_StrIndirect(fontID_1, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), "Calibration LCD", fullHight,0,BK_COLOR,0,0);
+	lenStr=LCD_StrIndirect(fontID_1, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), "Cali,brat,ion LCD", fullHight,0,BK_COLOR,0,0);
 	lenStr=LCD_StrIndirect(fontID_1, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,10), "Calibration LCD", fullHight,5,BK_COLOR,0,0);
-
-	Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,0));
-	Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,1));
-	Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,2));
 
 	uint8_t status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 

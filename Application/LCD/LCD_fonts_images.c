@@ -141,7 +141,7 @@ static uint32_t CounterBusyBytesForFontsImages=0;
 
 //####################### -- My Settings -- #######################################################################
 
-static int MyRealizeSpaceCorrect(char *txt, int id)
+static int MyRealizeSpaceCorrect(char *txt, int id) //jako osobna funkcja w kazdym screen ustawiana a pozniej wymazywana !!!
 {
 //		if((FONT_20==FontID[id].size)&&(Times_New_Roman==FontID[id].style))
 //		{
@@ -2857,26 +2857,29 @@ uint16_t LCD_Ymiddle(int cmd, uint32_t val)
 	{
 	case SetPos:
 		startPosY= val;
-		heightY= (val>>16)-startPosY;
+		heightY= (val>>16);
 		return startPosY;
 	case GetPos:
 	default:
 		return MIDDLE(startPosY,heightY,LCD_GetFontHeight(val));
 	}
 }
-uint16_t LCD_Xmiddle(int cmd, uint32_t val, char *txt, int space, int constWidth)
+uint16_t LCD_Xmiddle(int cmd, uint32_t param, char *txt, int space, int constWidth)
 {
 	static uint16_t startPosX=0, widthX=0;
 	int len;
 	switch(cmd)
 	{
 	case SetPos:
-		startPosX= val;
-		widthX= (val>>16)-startPosX;
+		startPosX= param;
+		widthX= (param>>16);
 		return startPosX;
 	case GetPos:
 	default:
-		len=LCD_GetWholeStrPxlWidth(val,txt,space,constWidth);
+		len=LCD_GetWholeStrPxlWidth(param,txt,space,constWidth);
 		return MIDDLE(startPosX,widthX,(len>widthX?widthX:len));
 	}
+}
+uint32_t SetPosAndWidth(uint16_t pos, uint16_t width){
+	return ((uint32_t)pos&0x0000FFFF)|width<<16;
 }

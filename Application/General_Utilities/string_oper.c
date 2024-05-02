@@ -18,7 +18,7 @@ static char strBuff[SIZE_STRBUFF]={0};
 static char strBuffOut[SIZE_STRBUFF_OUT]={0};
 static int idx=0;
 
-char* Int2Str(int value, char freeSign, int maxDigits, int plusMinus)  // przerobic zeby freeSign 3 opcja bez spacji i zer  -> nie utrzymanie miejsc
+char* Int2Str(int value, char freeSign, int maxDigits, int plusMinus)
 {
 	int i=10,k=1,j,idx_copy;
 	int absolutValue;
