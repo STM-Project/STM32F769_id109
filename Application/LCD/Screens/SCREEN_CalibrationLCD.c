@@ -16,11 +16,30 @@
 #include "debug.h"
 #include "tim.h"
 
+typedef enum{
+	STR_ID_Title 		= fontID_1,
+	STR_ID_NameCircle = fontID_2,
+	STR_ID_PosLog 		= fontID_2,
+	STR_ID_PosPhys 	= fontID_2
+}LCD_STR_ID;
+
+typedef enum{
+	BK_color 			= MYGRAY,
+	FRAME_color 		= WHITE,
+	FILL_color 			= ORANGE,
+	FILL_pressColor 	= RED,
+}CIRCLE_COLOR;
+
+typedef enum{
+	TITLE_color  	= YELLOW,
+	NAME_color 		= DARKGREEN,
+	POS_LOG_color 	= ORANGE,
+	POS_PHYS_color = DARKYELLOW,
+}STR_COLOR;
+
 #define DEBUG_ON	1
 #define DEBUG_Text_1  "error_touch"  //odrazu tlumacvznie uruchomic
 #define DEBUG_Text_2  "error_calculation_coeff"
-
-#define BK_COLOR	MYGRAY //Zmienna do zapisu
 
 #define CIRCLE_MACRO \
 	/*	 Name		 width	x	  y */ \
@@ -42,39 +61,31 @@ static void ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t b
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t width, char *name)
 {
-   uint16_t _CenterOfCircle(uint16_t x, uint16_t width){
-   	return x+width/2;
-   }
+	#define DISPLAY_COMMA_UNDER_COMMA_
 
-	StructTxtPxlLen lenStr={0}/*, lenStrTemp={0}*/;
-	char *ptr=NULL;
+	StructTxtPxlLen lenStr={0};
 	int16_t xPos=0;
+	char *ptr=NULL;
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
-	ShowCircleIndirect(log.x, log.y, width, 0, WHITE, ORANGE, BK_COLOR);
-	lenStr=LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, BK_COLOR,DARKGREEN,254,NoConstWidth);
+	ShowCircleIndirect(log.x, log.y, width, 0, FRAME_color, FILL_color, BK_color);
+	lenStr=LCD_StrChangeColorIndirect(STR_ID_NameCircle, LCD_Xmiddle(GetPos,STR_ID_NameCircle,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, BK_color,NAME_color,254,NoConstWidth);
 
-	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(log.y,width),None,3,Sign_none),")");
-	xPos = LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth);
+	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
+	xPos = LCD_Xmiddle(GetPos,STR_ID_PosLog,ptr,0,NoConstWidth);
 	CorrectPosIfOutRange(&xPos);
 
-
-
-
-	ptr = StrAll(2,"(",Int2Str(_CenterOfCircle(log.x,width),None,3,Sign_none));
-	lenStr=LCD_StrChangeColorIndirect(fontID_2, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,ORANGE,254,NoConstWidth);
-	//lenStrTemp = lenStr;
-	xPos = xPos+lenStr.inPixel;
+	#ifdef DISPLAY_COMMA_UNDER_COMMA_
+	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none));
+	lenStr=LCD_StrChangeColorIndirect(STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_color,POS_LOG_color,254,NoConstWidth);
+	xPos = xPos + lenStr.inPixel;
 	CorrectPosIfOutRange(&xPos);
 
-	ptr = StrAll(3,",",Int2Str(_CenterOfCircle(log.y,width),None,3,Sign_none),")");
-	lenStr=LCD_StrChangeColorIndirect(fontID_2, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, BK_COLOR,ORANGE,254,NoConstWidth);
-
-//	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(log.y,width),None,3,Sign_none),")");
-//	lenStr=LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,ORANGE,254,NoConstWidth);
-
-
-
+	ptr = StrAll(3,",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
+	lenStr=LCD_StrChangeColorIndirect(STR_ID_PosLog, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, BK_color,POS_LOG_color,254,NoConstWidth);
+	#else
+	lenStr=LCD_StrChangeColorIndirect(STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_color,POS_LOG_color,254,NoConstWidth);
+	#endif
 
 	WaitForTouchState(press);
 
@@ -84,25 +95,20 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t wi
 
 	WaitForTouchState(release);
 
-	ShowCircleIndirect(log.x, log.y, width, 0, WHITE, RED, BK_COLOR);
+	ShowCircleIndirect(log.x, log.y, width, 0, FRAME_color, FILL_pressColor, BK_color);
 
-
-
-	ptr = StrAll(2,"(",Int2Str(_CenterOfCircle(phys->x,width),None,3,Sign_none));
-	xPos = xPos - LCD_GetWholeStrPxlWidth(fontID_2,ptr,0,NoConstWidth);
+	#ifdef DISPLAY_COMMA_UNDER_COMMA_
+	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none));
+	xPos = xPos - LCD_GetWholeStrPxlWidth(STR_ID_PosPhys,ptr,0,NoConstWidth);
 	CorrectPosIfOutRange(&xPos);
 
-	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(phys->y,width),None,3,Sign_none),")");
-	LCD_StrChangeColorIndirect(fontID_2, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,DARKYELLOW,254,NoConstWidth);
-
-
-//	ptr = StrAll(5,"(",Int2Str(_CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(_CenterOfCircle(phys->y,width),None,3,Sign_none),")");
-//	LCD_StrChangeColorIndirect(fontID_2, LCD_Xmiddle(GetPos,fontID_2,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_COLOR,DARKYELLOW,254,NoConstWidth);
-
-
-
+	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(phys->y,width),None,3,Sign_none),")");
+	LCD_StrChangeColorIndirect(STR_ID_PosPhys, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_color,POS_PHYS_color,254,NoConstWidth);
+	#else
+	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(phys->y,width),None,3,Sign_none),")");
+	LCD_StrChangeColorIndirect(STR_ID_PosPhys, LCD_Xmiddle(GetPos,STR_ID_PosPhys,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_color,POS_PHYS_color,254,NoConstWidth);
+	#endif
 }
-
 
 void Touchscreen_Calibration(void)
 {
@@ -135,13 +141,14 @@ void Touchscreen_Calibration(void)
 	LCD_ResetStrMovBuffPos();
 	LCD_DeleteAllFontAndImages();
 
-	LCD_LoadFont_DarkgrayWhite(FONT_16, Arial, fontID_1);  //definy dla fontID_2 zeby lepiej rozumiec ktore
-	LCD_LoadFont_DarkgrayGreen(FONT_12_bold, Arial, fontID_2);
+	LCD_LoadFont_DarkgrayGreen(FONT_16, Arial, STR_ID_Title);
+	LCD_LoadFont_DarkgrayGreen(FONT_12_bold, Arial, STR_ID_NameCircle);
 
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
-	LCD_Clear(BK_COLOR);  LCD_Show();
-	lenStr=LCD_StrIndirect(fontID_1, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), "Cali,brat,ion LCD", fullHight,0,BK_COLOR,0,0);
-	lenStr=LCD_StrIndirect(fontID_1, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,10), "Calibration LCD", fullHight,5,BK_COLOR,0,0);
+	LCD_Clear(BK_color);  LCD_Show();
+
+	lenStr=LCD_StrChangeColorIndirect(STR_ID_Title, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), "Cali,brat,ion LCD", fullHight,0,BK_color,TITLE_color,255,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(STR_ID_Title, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,10), "Cali,brat,ion LCD", fullHight,5,BK_color,TITLE_color,255,NoConstWidth);
 
 	uint8_t status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 

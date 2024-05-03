@@ -3286,6 +3286,9 @@ uint16_t LCD_GetCircleDegree(uint8_t degNr){
 uint32_t SetParamWidthCircle(uint16_t param, uint32_t width){
 	return (width&0xFFFF)|param<<16;
 }
+uint16_t CenterOfCircle(uint16_t xy, uint16_t width){
+	return xy+width/2;
+}
 void LCD_SetCircleLine(uint8_t lineNr, uint8_t val){
 	Circle.lineBuff[lineNr]=val;
 }
