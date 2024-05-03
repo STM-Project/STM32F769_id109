@@ -17,13 +17,6 @@
 #include "tim.h"
 
 typedef enum{
-	STR_ID_Title 		= fontID_1,
-	STR_ID_NameCircle = fontID_2,
-	STR_ID_PosLog 		= fontID_2,
-	STR_ID_PosPhys 	= fontID_2
-}LCD_STR_ID;
-
-typedef enum{
 	BK_color 			= MYGRAY,
 	FRAME_color 		= WHITE,
 	FILL_color 			= ORANGE,
@@ -37,38 +30,48 @@ typedef enum{
 	POS_PHYS_color = DARKYELLOW,
 }STR_COLOR;
 
+typedef enum{
+	STR_ID_Title 		= fontID_1,
+	STR_ID_NameCircle = fontID_2,
+	STR_ID_PosLog 		= fontID_2,
+	STR_ID_PosPhys 	= fontID_2
+}LCD_STR_ID;
+
 #define DEBUG_ON	1
 #define DEBUG_Text_1  "error_touch"  //odrazu tlumacvznie uruchomic
 #define DEBUG_Text_2  "error_calculation_coeff"
 
+#define TITLE_1  "Calibration LCD"  //odrazu tlumacvznie uruchomic
+#define TITLE_2  "Calibration LCDA"
+
 #define CIRCLE_MACRO \
 	/*	 Name		 width	x	  y */ \
-	X("Circle 1 AAAAAA",  48,  50,  50) \
-	X("C 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-150) \
+	X("Circle 1",  48,  50,  50) \
+	X("Circle 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-150) \
 	X("Circle 3", 148, 300, 140) \
-	X("d 4",  76,   0, 300) \
-	X("Circle Markielowski 5",  84, 170, 300) \
+	X("Circle 4",  76,   0, 300) \
+	X("Circle 5",  84, 170, 300) \
 	X("Circle 6", 108, 650,   1)
-
-static void ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
-{
-	int widthCalculated = LCD_CalculateCircleWidth(width);
-
-	LCD_ShapeWindow	         (LCD_Rectangle,0,widthCalculated,widthCalculated, 0,        0,     	  width,  width,   SetColorBoldFrame(bkColor,0), 		 bkColor,  	  bkColor);
-	LCD_ShapeWindow	         (LCD_Circle,	0,widthCalculated,widthCalculated, 0,        0,     	  width,  width,   SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
-	LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,widthCalculated,widthCalculated, width/4+1,width/4+1, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
-}
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t width, char *name)
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
+
+	void __ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
+	{
+		int widthCalculated = LCD_CalculateCircleWidth(width);
+
+		LCD_ShapeWindow	         (LCD_Rectangle,0,widthCalculated,widthCalculated, 0,        0,     	  width,  width,   SetColorBoldFrame(bkColor,0), 		 bkColor,  	  bkColor);
+		LCD_ShapeWindow	         (LCD_Circle,	0,widthCalculated,widthCalculated, 0,        0,     	  width,  width,   SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,widthCalculated,widthCalculated, width/4+1,width/4+1, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
+	}
 
 	StructTxtPxlLen lenStr={0};
 	int16_t xPos=0;
 	char *ptr=NULL;
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
-	ShowCircleIndirect(log.x, log.y, width, 0, FRAME_color, FILL_color, BK_color);
+	__ShowCircleIndirect(log.x, log.y, width, 0, FRAME_color, FILL_color, BK_color);
 	lenStr=LCD_StrChangeColorIndirect(STR_ID_NameCircle, LCD_Xmiddle(GetPos,STR_ID_NameCircle,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, BK_color,NAME_color,254,NoConstWidth);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
@@ -95,7 +98,7 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t wi
 
 	WaitForTouchState(release);
 
-	ShowCircleIndirect(log.x, log.y, width, 0, FRAME_color, FILL_pressColor, BK_color);
+	__ShowCircleIndirect(log.x, log.y, width, 0, FRAME_color, FILL_pressColor, BK_color);
 
 	#ifdef DISPLAY_COMMA_UNDER_COMMA_
 	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none));
@@ -113,7 +116,7 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t wi
 void Touchscreen_Calibration(void)
 {
 	#define CIRCLES_NUMBER  STRUCT_TAB_SIZE(pos)
-	StructTxtPxlLen lenStr;
+	StructTxtPxlLen lenStr={0};
 
 	char *circlesNames[]={
 		#define X(a,b,c,d) a,
@@ -147,8 +150,8 @@ void Touchscreen_Calibration(void)
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
 	LCD_Clear(BK_color);  LCD_Show();
 
-	lenStr=LCD_StrChangeColorIndirect(STR_ID_Title, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), "Cali,brat,ion LCD", fullHight,0,BK_color,TITLE_color,255,NoConstWidth);
-	lenStr=LCD_StrChangeColorIndirect(STR_ID_Title, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,10), "Cali,brat,ion LCD", fullHight,5,BK_color,TITLE_color,255,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(STR_ID_Title, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), TITLE_1, fullHight,0,BK_color,TITLE_color,255,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(STR_ID_Title, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,0), TITLE_2, fullHight,0,BK_color,TITLE_color,255,NoConstWidth);
 
 	uint8_t status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 

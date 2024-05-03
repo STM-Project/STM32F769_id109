@@ -188,13 +188,15 @@ void StartDefaultTask(void const * argument)
 
 	 SetLang(2,English);
 	 LCD_SetSpacesBetweenFonts();
-	 DEBUG_Send("\r\nStart ");
+	 Dbg(1,"\r\nStart ");
+
+	 DeleteAllTouch();
 
 	 CreateTouchLcdTask();
 
 
 
-	 DeleteAllTouch();
+
 
 //	 	touchTemp[0].x= 0;
 //	 	touchTemp[0].y= 0;

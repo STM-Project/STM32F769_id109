@@ -686,7 +686,6 @@ static uint8_t _DrawArrayBuffLeftDown_AA___(uint32_t posBuff, uint8_t *pFill, ui
 static uint8_t _DrawArrayBuffLeftUp_AA___(uint32_t posBuff, uint8_t *pFill, uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf)
 {
 	int j=buf[0], i=buf[1], p=2, i_prev;
-	uint8_t thershold;
 
 	if(0==direction)
 	{
@@ -745,7 +744,6 @@ static uint8_t _DrawArrayBuffLeftUp_AA___(uint32_t posBuff, uint8_t *pFill, uint
 static uint8_t _DrawArrayBuffRightUp_AA___(uint32_t posBuff, uint8_t *pFill, uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf)
 {
 	int j=buf[0], i=buf[1], p=2, i_prev;
-	uint8_t thershold;
 
 	if(0==direction)
 	{

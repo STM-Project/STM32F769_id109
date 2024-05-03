@@ -1,7 +1,7 @@
 
 #ifdef PRZYKLADY_
 //https://www.geeksforgeeks.org/x-macros-in-c/
-Nie dawaj duzych funkcji wewnatrz funkcji bo trzepie obrazem
+Nie dawaj duzych funkcji wewnatrz funkcji bo trzepie obrazem  -FALSZ !!!!
 #line 10
 
 //1 ################## -- xQueueHandle -- ###############################

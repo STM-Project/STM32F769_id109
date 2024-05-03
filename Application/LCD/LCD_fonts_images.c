@@ -34,7 +34,7 @@
 static const char CharsTab_full[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-.,:;[]{}<>'~*()&#^=_$%\xB0@|?!\xA5\xB9\xC6\xE6\xCA\xEA\xA3\xB3\xD1\xF1\xD3\xF3\x8C\x9C\x8F\x9F\xAF\xBF/1234567890";
 static const char CharsTab_digits[]="+-1234567890.";
 
-extern uint32_t pLcd[LCD_BUFF_XSIZE*LCD_BUFF_YSIZE];
+extern uint32_t pLcd[];
 
 static uint32_t buffChangeColorIN[MAX_SIZE_CHANGECOLOR_BUFF]={0};
 static uint32_t buffChangeColorOUT[MAX_SIZE_CHANGECOLOR_BUFF]={0};
