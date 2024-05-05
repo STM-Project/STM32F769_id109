@@ -47,31 +47,27 @@ uint8_t touchDetect;
 
 void WaitForTouchState(uint8_t Pressed)
 {
-  TS_StateTypeDef  State;
-
-  do
-  {
-    BSP_TS_GetState(&State);
-    HAL_Delay(10);
-    if (State.TouchDetected == Pressed)
-    {
-   	 uint16_t TimeStart = HAL_GetTick();
-   	 do {
-   		 	 BSP_TS_GetState(&State);
-   		 	 HAL_Delay(10);
-   		 	 if (State.TouchDetected != Pressed)
-   		 	 {
-   		 		 break;
-   		 	 }
-   		 	 else if ((HAL_GetTick() - 100) > TimeStart)
-   		 	 {
-   		 		 return;
-   		 	 }
-   	 	 }
-   	 	 while (1);
-    }
-  }
-  while (1);
+	int i=0;
+	TS_StateTypeDef  State;
+	do{
+	   BSP_TS_GetState(&State);
+	   HAL_Delay(10);
+	   if (State.TouchDetected == Pressed)
+	   {
+	   	i=0;
+	   	do {
+	   		BSP_TS_GetState(&State);
+	   		HAL_Delay(10);
+	   		if (State.TouchDetected != Pressed)
+	   			break;
+	   		else if (i > 0)
+	   			return;
+	   		i++;
+	   	 }
+	   	 while (1);
+	   }
+	}
+	while (1);
 }
 
 void SetLogXY(XY_Touch_Struct *pos)
@@ -115,18 +111,24 @@ void DisplayCoeffCalibration(void)
 static uint16_t Calibration_GetX(uint32_t x)
 {
 	int32_t temp= (((A1 * x) + B1)/1000);
-	//temp-=80;
-	if(temp<0) temp=0;
-	else if(temp>LCD_GetXSize()) temp=LCD_GetXSize();
+
+	if(temp<0)
+		temp=0;
+	else if(temp>LCD_GetXSize())
+		temp=LCD_GetXSize();
+
 	return (uint16_t)temp;
 }
 
 static uint16_t Calibration_GetY(uint32_t y)
 {
 	int32_t temp= (((A2 * y) + B2)/1000);
-	//temp-=90;
-	if(temp<0) temp=0;
-	else if(temp>LCD_GetYSize()) temp=LCD_GetYSize();
+
+	if(temp<0)
+		temp=0;
+	else if(temp>LCD_GetYSize())
+		temp=LCD_GetYSize();
+
 	return (uint16_t)temp;
 }
 
@@ -135,7 +137,7 @@ uint8_t IsCalibrationDone(void)
   return (Calibration_Done);
 }
 
-uint8_t CalibrationWasDone(void)
+void CalibrationWasDone(void)
 {
 	Calibration_Done = 1;
 }

@@ -45,60 +45,57 @@ typedef enum{
 #define TITLE_2  "Calibration LCDA"
 
 #define CIRCLE_MACRO \
-	/*	 Name		 width	x	   y */ \
-	X("Circle 1",  50,   0,   0) \
-	X("Circle 2",  51, 100,   0) \
-	X("Circle 3",  52, 200,   0) \
-	X("Circle 4",  53, 300,   0) \
-	X("Circle 5",  54, 400,   0) \
-	X("Circle 6",  55, 500,   0) \
-	X("Circle 7",  56, 600,   0) \
-	X("Circle 8",  57, 700,   0) \
-	X("Circle 9",  58,   0,  70) \
-	X("Circle 10", 59, 100,  70) \
-	X("Circle 11", 60, 200,  70) \
-	X("Circle 12", 61, 300,  70) \
-	X("Circle 13", 62, 400,  70) \
-	X("Circle 14", 63, 500,  70) \
-	X("Circle 15", 64, 600,  70) \
-	X("Circle 16", 65, 700,  70) \
-	X("Circle 17", 66,   0,  170) \
-	X("Circle 18", 67, 100,  170) \
-	X("Circle 19", 68, 200,  170) \
-	X("Circle 20", 69, 300,  170) \
-	X("Circle 21", 70, 400,  170) \
-	X("Circle 22", 71, 500,  170) \
-	X("Circle 23", 72, 600,  170) \
-	X("Circle 24", 73, 700,  170) \
-	X("Circle 25", 74,   0,  270) \
-	X("Circle 26", 75, 100,  270) \
-	X("Circle 27", 76, 200,  270) \
-	X("Circle 28", 77, 300,  270) \
-	X("Circle 29", 78, 400,  270) \
-	X("Circle 30", 79, 500,  270) \
-	X("Circle 31", 80, 600,  270) \
-	X("Circle 32", 81, 700,  270)
+	/*	 Name		 width	x	  y */ \
+		X("Circle 1",  50,   0,   0) \
+		X("Circle 2",  51, 100,   0) \
+		X("Circle 3",  52, 200,   0) \
+		X("Circle 4",  53, 300,   0) \
+		X("Circle 5",  54, 400,   0) \
+		X("Circle 6",  55, 500,   0) \
+		X("Circle 7",  56, 600,   0) \
+		X("Circle 8",  57, 700,   0) \
+		X("Circle 9",  58,   0,  70) \
+		X("Circle 10", 59, 100,  70) \
+		X("Circle 11", 60, 200,  70) \
+		X("Circle 12", 61, 300,  70) \
+		X("Circle 13", 62, 400,  70) \
+		X("Circle 14", 63, 500,  70) \
+		X("Circle 15", 64, 600,  70) \
+		X("Circle 16", 65, 700,  70) \
+		X("Circle 17", 66,   0,  170) \
+		X("Circle 18", 67, 100,  170) \
+		X("Circle 19", 68, 200,  170) \
+		X("Circle 20", 69, 300,  170) \
+		X("Circle 21", 70, 400,  170) \
+		X("Circle 22", 71, 500,  170) \
+		X("Circle 23", 72, 600,  170) \
+		X("Circle 24", 73, 700,  170) \
+		X("Circle 25", 74,   0,  270) \
+		X("Circle 26", 75, 100,  270) \
+		X("Circle 27", 76, 200,  270) \
+		X("Circle 28", 77, 300,  270) \
+		X("Circle 29", 78, 400,  270) \
+		X("Circle 30", 79, 500,  270) \
+		X("Circle 31", 80, 600,  270) \
+		X("Circle 32", 81, 700,  270)
 
-static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint8_t width, char *name)
+static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
 
 	uint16_t __ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
 	{
-		int widthCalculated=0 ,i=0;
-
-		while( ((widthCalculated = LCD_CalculateCircleWidth(width)) < width) && (i<30) ){
-			width++;	i++;
-		}
-		LCD_ShapeWindow	         (LCD_Rectangle,0,widthCalculated,widthCalculated, 0,        0,     	  width,  width,   SetColorBoldFrame(bkColor,0), 		 bkColor,  	  bkColor);
-		LCD_ShapeWindow	         (LCD_Circle,	0,widthCalculated,widthCalculated, 0,        0,     	  width,  width,   SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
-		LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,widthCalculated,widthCalculated, width/4+1,width/4+1, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
+		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(bkColor,0), 		  bkColor,  	bkColor);
+		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,width,width, width/4+1,width/4+1, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
 		return width;
 	}
 
 	StructTxtPxlLen lenStr={0};
 	int16_t xPos=0;
 	char *ptr=NULL;
+
+	width = CorrectCirclesWidth(width);
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
 	width = __ShowCircleIndirect(log.x, log.y, width, 0, FRAME_color, FILL_color, BK_color);
@@ -160,7 +157,7 @@ void Touchscreen_Calibration(void)
 		#undef X
 	};
 
-	uint8_t width[] = {
+	uint16_t width[] = {
 		#define X(a,b,c,d) b,
 			CIRCLE_MACRO
 		#undef X

@@ -44,7 +44,7 @@ void SetPhysXY(XY_Touch_Struct *pos);
 void WaitForTouchState(uint8_t Pressed);
 int CalcutaleCoeffCalibration(void);
 uint8_t IsCalibrationDone(void);
-uint8_t CalibrationWasDone(void);
+void CalibrationWasDone(void);
 void DisplayCoeffCalibration(void);
 
 #endif
