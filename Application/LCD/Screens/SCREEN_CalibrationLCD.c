@@ -16,30 +16,70 @@
 #include "debug.h"
 #include "tim.h"
 
+
+// zdefiniuj fajne kolory dla X MACRO !!:)  //C/C++/Editor/Syntax Coloring/ -> Preprocessor/Others
+//STR_ID_Title  nie moze byc w structurze !!!!
+#define SCREEN_CALIBRATION_SET_PARAMETERS \
+	/*	 Name				 	param */ \
+	X(FONT_SIZE_Title, 	 FONT_16) \
+	X(FONT_SIZE_Name, 	 FONT_12_bold) \
+	X(FONT_SIZE_Pos,		 FONT_12_bold) \
+	\
+	X(FONT_STYLE_Title, 	 Arial) \
+	X(FONT_STYLE_Name, 	 Arial) \
+	X(FONT_STYLE_Pos, 	 Arial) \
+	\
+	X(STR_ID_Title,		 fontID_1) \
+	X(STR_ID_NameCircle,  fontID_2) \
+	X(STR_ID_PosLog, 		 fontID_2) \
+	X(STR_ID_PosPhys, 	 fontID_2) \
+	\
+	X(BK_SCREEN_color, 			 MYGRAY) \
+	X(CIRCLE_FRAME_color, 		 WHITE) \
+	X(CIRCLE_FILL_color, 		 ORANGE) \
+	X(CIRCLE_FILL_pressColor, 	 RED) \
+	X(TITLE_color,  	 YELLOW) \
+	X(NAME_color, 		 DARKGREEN) \
+	X(POS_LOG_color, 	 ORANGE) \
+	X(POS_PHYS_color,  DARKYELLOW)
+
 typedef enum{
-	FONT_SIZE_Title 	= FONT_16,
-	FONT_SIZE_Name 	= FONT_12_bold,
-	FONT_SIZE_Pos 		= FONT_12_bold,
+	#define X(a,b) a = b,
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
+}aaa(enum);
 
-	FONT_STYLE_Title 	= Arial,
-	FONT_STYLE_Name 	= Arial,
-	FONT_STYLE_Pos 	= Arial,
+struct NAZWA{
+	#define X(a,b) int a;
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
+}aaa(struct);
 
-	STR_ID_Title 		= fontID_1,
-	STR_ID_NameCircle = fontID_2,
-	STR_ID_PosLog 		= fontID_2,
-	STR_ID_PosPhys 	= fontID_2,
 
-	BK_SCREEN_color 			= MYGRAY,
-	CIRCLE_FRAME_color 		= WHITE,
-	CIRCLE_FILL_color 		= ORANGE,
-	CIRCLE_FILL_pressColor 	= RED,
+// typedef enum{
+// 	FONT_SIZE_Title 	= FONT_16,
+// 	FONT_SIZE_Name 	= FONT_12_bold,
+// 	FONT_SIZE_Pos 		= FONT_12_bold,
 
-	TITLE_color  	= YELLOW,
-	NAME_color 		= DARKGREEN,
-	POS_LOG_color 	= ORANGE,
-	POS_PHYS_color = DARKYELLOW,
-}SCREEN_CALIBRATION;
+// 	FONT_STYLE_Title 	= Arial,
+// 	FONT_STYLE_Name 	= Arial,
+// 	FONT_STYLE_Pos 	= Arial,
+
+// 	STR_ID_Title 		= fontID_1,
+// 	STR_ID_NameCircle = fontID_2,
+// 	STR_ID_PosLog 		= fontID_2,
+// 	STR_ID_PosPhys 	= fontID_2,
+
+// 	BK_SCREEN_color 			= MYGRAY,
+// 	CIRCLE_FRAME_color 		= WHITE,
+// 	CIRCLE_FILL_color 		= ORANGE,
+// 	CIRCLE_FILL_pressColor 	= RED,
+
+// 	TITLE_color  	= YELLOW,
+// 	NAME_color 		= DARKGREEN,
+// 	POS_LOG_color 	= ORANGE,
+// 	POS_PHYS_color = DARKYELLOW,
+// }SCREEN_CALIBRATION;
 
 //sprawdz polskie znaki
 const char LANG_ScreenCalibration[]="\
