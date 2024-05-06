@@ -8,10 +8,11 @@
 #ifndef LCD_SCREENS_SCREEN_CALIBRATIONLCD_H_
 #define LCD_SCREENS_SCREEN_CALIBRATIONLCD_H_
 
-#define aaa(str) SCREEN_Calibration_##str
+#include "stm32f7xx_hal.h"
 
-extern struct NAZWA aaa(struct);  //w varioable.c odnies sie do tego tu miejsca poprzez *ptr
+#define FILE_NAME(extand) SCREEN_Calibration_##extand
 
 void Touchscreen_Calibration(void);
+int* FILE_NAME(function)(void);
 
 #endif /* LCD_SCREENS_SCREEN_CALIBRATIONLCD_H_ */
