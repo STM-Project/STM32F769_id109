@@ -175,7 +175,7 @@ enum new_touch{
 	AnyPress,
 	AnyPressWithWait
 };
-
+#include "SCREEN_CalibrationLCD.h"
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
@@ -193,7 +193,6 @@ void StartDefaultTask(void const * argument)
 	 DeleteAllTouch();
 
 	 CreateTouchLcdTask();
-
 
 
 
@@ -292,6 +291,8 @@ void StartDefaultTask(void const * argument)
 	 				break;
 	 			case AnyPressWithWait:
 	 				DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
+	 				 int *pp = SCREEN_Calibration_function();
+	 					 DbgVar(1,100,"\r\n\r\n  %d  %d  %d ",*(pp+14), *(pp+15), *(pp+16));
 	 				break;
 	 		}
 

@@ -10,9 +10,7 @@
 
 #include "stm32f7xx_hal.h"
 
-#define FILE_NAME(extand) SCREEN_Calibration_##extand
-
 void Touchscreen_Calibration(void);
-int* FILE_NAME(function)(void);
+int* SCREEN_Calibration_function(void);
 
 #endif /* LCD_SCREENS_SCREEN_CALIBRATIONLCD_H_ */

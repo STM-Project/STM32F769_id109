@@ -16,6 +16,8 @@
 #include "debug.h"
 #include "tim.h"
 
+#define FILE_NAME(extand) SCREEN_Calibration_##extand
+
 // zdefiniuj fajne kolory dla X MACRO !!:)  //C/C++/Editor/Syntax Coloring/ -> Preprocessor/Others
 //STR_ID_Title  nie moze byc w structurze !!!!
 #define SCREEN_CALIBRATION_SET_PARAMETERS \
@@ -36,7 +38,7 @@
 	X(BK_SCREEN_color, 			 MYGRAY) \
 	X(CIRCLE_FRAME_color, 		 WHITE) \
 	X(CIRCLE_FILL_color, 		 ORANGE) \
-	X(CIRCLE_FILL_pressColor, 	 RED) \
+	X(CIRCLE_FILL_pressColor, 	 DARKCYAN) \
 	X(TITLE_color,  	 YELLOW) \
 	X(NAME_color, 		 DARKGREEN) \
 	X(POS_LOG_color, 	 ORANGE) \
@@ -137,17 +139,17 @@ Circle,Kolo,\
 		X("31", 80, 600,  270) \
 		X("32", 81, 700,  270)
 
+static uint16_t ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
+{
+	LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(bkColor,0), 		  bkColor,  	bkColor);
+	LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
+	LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,width,width, width/4+1,width/4+1, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
+	return width;
+}
+
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
-
-	uint16_t __ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
-	{
-		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(bkColor,0), 		  bkColor,  	bkColor);
-		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
-		LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,width,width, width/4+1,width/4+1, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
-		return width;
-	}
 
 	StructTxtPxlLen lenStr={0};
 	int16_t xPos=0;
@@ -156,7 +158,7 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 	width = CorrectCirclesWidth(width);
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
-	width = __ShowCircleIndirect(log.x, log.y, width, 0, CIRCLE_FRAME_color, CIRCLE_FILL_color, BK_SCREEN_color);
+	width = ShowCircleIndirect(log.x, log.y, width, 0, CIRCLE_FRAME_color, CIRCLE_FILL_color, BK_SCREEN_color);
 	lenStr=LCD_StrChangeColorIndirect(STR_ID_NameCircle, LCD_Xmiddle(GetPos,STR_ID_NameCircle,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, BK_SCREEN_color,NAME_color,254,NoConstWidth);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
@@ -183,7 +185,7 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 	WaitForTouchState(release);
 
-	width = __ShowCircleIndirect(log.x, log.y, width, 0, CIRCLE_FRAME_color, CIRCLE_FILL_pressColor, BK_SCREEN_color);
+	width = ShowCircleIndirect(log.x, log.y, width, 0, CIRCLE_FRAME_color, CIRCLE_FILL_pressColor, BK_SCREEN_color);
 
 	#ifdef DISPLAY_COMMA_UNDER_COMMA_
 	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none));
@@ -222,8 +224,10 @@ void Touchscreen_Calibration(void)
 	};
 
 	XY_Touch_Struct phys[CIRCLES_NUMBER] = {0};
+	FILE_NAME(var).NAME_color = 25643;
 
-	DbgVar(1,100,"%d",FILE_NAME(var).NAME_color);
+	//int *pp = SCREEN_Calibration_function();
+	//DbgVar(1,100,"%d  %d  %d  %d  %d",SCREEN_Calibration_var.NAME_color, FILE_NAME(var).NAME_color, *(pp+14), *(pp+15), *(pp+16));
 
 	DeleteTouchLcdTask();
 
