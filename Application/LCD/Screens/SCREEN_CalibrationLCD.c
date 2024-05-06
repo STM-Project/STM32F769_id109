@@ -16,7 +16,6 @@
 #include "debug.h"
 #include "tim.h"
 
-
 // zdefiniuj fajne kolory dla X MACRO !!:)  //C/C++/Editor/Syntax Coloring/ -> Preprocessor/Others
 //STR_ID_Title  nie moze byc w structurze !!!!
 #define SCREEN_CALIBRATION_SET_PARAMETERS \
@@ -47,13 +46,22 @@ typedef enum{
 	#define X(a,b) a = b,
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
-}aaa(enum);
+}FILE_NAME(enum);
 
-struct NAZWA{
+typedef struct{
 	#define X(a,b) int a;
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
-}aaa(struct);
+}FILE_NAME(struct);
+
+FILE_NAME(struct) FILE_NAME(var);
+
+
+
+int* FILE_NAME(function)(void)
+{
+	return (int*)(&FILE_NAME(var));
+}
 
 
 // typedef enum{
@@ -214,6 +222,8 @@ void Touchscreen_Calibration(void)
 	};
 
 	XY_Touch_Struct phys[CIRCLES_NUMBER] = {0};
+
+	DbgVar(1,100,"%d",FILE_NAME(var).NAME_color);
 
 	DeleteTouchLcdTask();
 
