@@ -6,6 +6,8 @@
  */
 
 #include "SCREEN_ReadPanel.h"
+#include "FreeRTOS.h"
+#include "task.h"
 #include "LCD_BasicGaphics.h"
 #include "LCD_fonts_images.h"
 #include "string_oper.h"
@@ -23,6 +25,23 @@
 #include "cpu_utils.h"
 #include "cpu_utils.h"
 #include "SCREEN_CalibrationLCD.h"
+#include "touch.h"
+
+#define TOUCH_GET_PER_X_PROBE		3
+
+enum new_touch{
+	Point_1 = 1,
+	Point_2,
+	Point_3,
+	Move_1,
+	Move_2,
+	Move_3,
+	Move_4,
+	AnyPress,
+	AnyPressWithWait
+};
+
+xTaskHandle vtask_ScreensSelectLCD_Handle;
 
 extern const char LANG_ReadPanel_StringType[];
 
@@ -1308,4 +1327,105 @@ void SCREEN_ReadPanel(void)
 //	StartMeasureTime_us();
 //	LCD_Znak_XX(0,LCD_X,LCD_Y, 240,136, 30,15, LIGHTGRAY,WHITE,WHITE);
 //	StopMeasureTime_us("\r\nLCD_Znak_XX:");
+
+void vtask_ScreensSelectLCD(void *pvParameters)
+{
+	uint16_t state;
+	XY_Touch_Struct pos;
+
+	//	 	touchTemp[0].x= 0;
+	//	 	touchTemp[0].y= 0;
+	//	 	touchTemp[1].x= touchTemp[0].x+200;
+	//	 	touchTemp[1].y= touchTemp[0].y+150;
+	//	 	SetTouch(ID_TOUCH_POINT,Point_1,press);
+	//
+	//	 	touchTemp[0].x= 0;
+	//	 	touchTemp[0].y= 300;
+	//	 	touchTemp[1].x= touchTemp[0].x+200;
+	//	 	touchTemp[1].y= touchTemp[0].y+180;
+	//	 	SetTouch(ID_TOUCH_POINT,Point_2,release);
+	//
+	//	 	touchTemp[0].x= 600;
+	//	 	touchTemp[0].y= 0;
+	//	 	touchTemp[1].x= touchTemp[0].x+200;
+	//	 	touchTemp[1].y= touchTemp[0].y+150;
+	//	 	SetTouch(ID_TOUCH_POINT,Point_3,release);
+	//
+	//	 	touchTemp[0].x= LCD_GetXSize()-LCD_GetXSize()/5;
+	//	 	touchTemp[1].x= LCD_GetXSize()/5;
+	//	 	touchTemp[0].y= 150;
+	//	 	touchTemp[1].y= 300;
+	//	 	SetTouch(ID_TOUCH_MOVE_LEFT,Move_1,press);
+	//
+	//	 	touchTemp[0].x= LCD_GetXSize()/5;
+	//	 	touchTemp[1].x= LCD_GetXSize()-LCD_GetXSize()/5;
+	//	 	touchTemp[0].y= 150;
+	//	 	touchTemp[1].y= 300;
+	//	 	SetTouch(ID_TOUCH_MOVE_RIGHT,Move_2,release);
+	//
+	//	 	touchTemp[0].y= LCD_GetYSize()-LCD_GetYSize()/5;
+	//	 	touchTemp[1].y= LCD_GetYSize()/5;
+	//	 	touchTemp[0].x= 300;
+	//	 	touchTemp[1].x= 450;
+	//	 	SetTouch(ID_TOUCH_MOVE_UP,Move_3,press);
+	//
+	//	 	touchTemp[0].y= LCD_GetYSize()/5;
+	//	 	touchTemp[1].y= LCD_GetYSize()-LCD_GetYSize()/5;
+	//	 	touchTemp[0].x= 500;
+	//	 	touchTemp[1].x= 650;
+	//	 	SetTouch(ID_TOUCH_MOVE_DOWN,Move_4,release);
+
+		 	touchTemp[0].x= 0;
+		 	touchTemp[1].x= 800;
+		 	touchTemp[0].y= 0;
+		 	touchTemp[1].y= 480;
+		 	//SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,TOUCH_GET_PER_X_PROBE);
+		 	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);
+
+	while(1)
+	{
+		SCREEN_ReadPanel();
+
+		state = LCD_Touch_Get(&pos);
+		switch(state)
+		{
+			case Point_1:
+				Dbg(1,"\r\nTouchPoint_1");
+				break;
+			case Point_2:
+				Dbg(1,"\r\nTouchPoint_2");
+				break;
+			case Point_3:
+				Dbg(1,"\r\nTouchPoint_3");
+				break;
+			case Move_1:
+				Dbg(1,"\r\nTouchMove_1");
+				break;
+			case Move_2:
+				Dbg(1,"\r\nTouchMove_2");
+				break;
+			case Move_3:
+				Dbg(1,"\r\nTouchMove_3");
+				break;
+			case Move_4:
+				Dbg(1,"\r\nTouchMove_4");
+				break;
+			case AnyPress:
+				DbgVar(1,40,"\r\nAny Press: x= %03d y= %03d", pos.x, pos.y);
+				break;
+			case AnyPressWithWait:
+				DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
+				int *pp = SCREEN_Calibration_function();
+				DbgVar(1,100,"\r\n\r\n  %d  %d  %d ",*(pp+14), *(pp+15), *(pp+16));
+				break;
+		}
+
+		vTaskDelay(20);
+	}
+}
+
+void Create_ScreensSelectLCD_Task(void)
+{
+	xTaskCreate(vtask_ScreensSelectLCD, "vtask_ScreensSelectLCD", 2048, NULL, (unsigned portBASE_TYPE ) 1, &vtask_ScreensSelectLCD_Handle);
+}
 
