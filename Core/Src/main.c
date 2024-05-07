@@ -1,3 +1,4 @@
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -20,7 +21,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-#include "fatfs.h"
 #include "usart.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -30,13 +30,9 @@
 #include "gpio.h"
 #include "sdmmc.h"
 #include "fmc.h"
-#include "debug.h"
 #include "dma2d.h"
 #include "ltdc.h"
 #include "tim.h"
-#include "touch.h"
-#include "stmpe811.h"
-#include "LCD_Hardware.h"
 
 /* USER CODE END Includes */
 
@@ -77,7 +73,7 @@ void HARDWARE_Init(void)
 
 	MX_GPIO_Init();
 	MX_DMA_Init();
-	DEBUG_Init();
+	MX_UART7_Init();
 	MX_SDMMC1_SD_Init();
 
 	MX_FMC_Init();
@@ -88,9 +84,6 @@ void HARDWARE_Init(void)
 	MX_DMA2D_Init();
 
 	MX_TIM5_Init();
-
-	BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
-
 }
 
 /* USER CODE END 0 */
