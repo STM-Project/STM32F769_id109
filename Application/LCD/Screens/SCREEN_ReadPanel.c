@@ -1119,7 +1119,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 }
 
 
-int SCREEN_number=5;  //LOAD IMAGE !!!!!
+int SCREEN_number=0;  //LOAD IMAGE !!!!!
 
 void SCREEN_ReadPanel(void)
 {
@@ -1330,6 +1330,8 @@ void SCREEN_ReadPanel(void)
 
 void vtask_ScreensSelectLCD(void *pvParameters)
 {
+
+
 	uint16_t state;
 	XY_Touch_Struct pos;
 
@@ -1384,48 +1386,50 @@ void vtask_ScreensSelectLCD(void *pvParameters)
 
 	while(1)
 	{
-		SCREEN_ReadPanel();
 
-		state = LCD_Touch_Get(&pos);
-		switch(state)
-		{
-			case Point_1:
-				Dbg(1,"\r\nTouchPoint_1");
-				break;
-			case Point_2:
-				Dbg(1,"\r\nTouchPoint_2");
-				break;
-			case Point_3:
-				Dbg(1,"\r\nTouchPoint_3");
-				break;
-			case Move_1:
-				Dbg(1,"\r\nTouchMove_1");
-				break;
-			case Move_2:
-				Dbg(1,"\r\nTouchMove_2");
-				break;
-			case Move_3:
-				Dbg(1,"\r\nTouchMove_3");
-				break;
-			case Move_4:
-				Dbg(1,"\r\nTouchMove_4");
-				break;
-			case AnyPress:
-				DbgVar(1,40,"\r\nAny Press: x= %03d y= %03d", pos.x, pos.y);
-				break;
-			case AnyPressWithWait:
-				DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
-				int *pp = SCREEN_Calibration_function();
-				DbgVar(1,100,"\r\n\r\n  %d  %d  %d ",*(pp+14), *(pp+15), *(pp+16));
-				break;
-		}
+			SCREEN_ReadPanel();
 
-		vTaskDelay(20);
+					state = LCD_Touch_Get(&pos);
+					switch(state)
+					{
+						case Point_1:
+							Dbg(1,"\r\nTouchPoint_1");
+							break;
+						case Point_2:
+							Dbg(1,"\r\nTouchPoint_2");
+							break;
+						case Point_3:
+							Dbg(1,"\r\nTouchPoint_3");
+							break;
+						case Move_1:
+							Dbg(1,"\r\nTouchMove_1");
+							break;
+						case Move_2:
+							Dbg(1,"\r\nTouchMove_2");
+							break;
+						case Move_3:
+							Dbg(1,"\r\nTouchMove_3");
+							break;
+						case Move_4:
+							Dbg(1,"\r\nTouchMove_4");
+							break;
+						case AnyPress:
+							DbgVar(1,40,"\r\nAny Press: x= %03d y= %03d", pos.x, pos.y);
+							break;
+						case AnyPressWithWait:
+							DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
+							int *pp = SCREEN_Calibration_function();
+							DbgVar(1,100,"\r\n\r\n  %d  %d  %d ",*(pp+14), *(pp+15), *(pp+16));
+							break;
+					}
+
+					vTaskDelay(20);
+
 	}
 }
 
 void Create_ScreensSelectLCD_Task(void)
 {
-	xTaskCreate(vtask_ScreensSelectLCD, "vtask_ScreensSelectLCD", 2048, NULL, (unsigned portBASE_TYPE ) 1, &vtask_ScreensSelectLCD_Handle);
+	xTaskCreate(vtask_ScreensSelectLCD, (char* )"vtask_ScreensSelectLCD", 1024, NULL, (unsigned portBASE_TYPE ) 1, &vtask_ScreensSelectLCD_Handle);
 }
 
