@@ -11,11 +11,13 @@
 #include <stdio.h>
 #include "touch.h"
 
-xTaskHandle vtaskTouchLcdHandle;
+xTaskHandle vtask_TouchLcd_Handle;
 
-void vtaskTouchLcd(void *pvParameters)
+void vtask_TouchLcd(void *pvParameters)
 {
 	portTickType xLastExecutionTime;
+
+	DeleteAllTouch();
 
 	xLastExecutionTime = xTaskGetTickCount();
 	vTaskDelayUntil(&xLastExecutionTime, 100);
@@ -27,12 +29,12 @@ void vtaskTouchLcd(void *pvParameters)
 	}
 }
 
-void CreateTouchLcdTask(void)
+void Create_TouchLcd_Task(void)
 {
-	xTaskCreate(vtaskTouchLcd, "vtaskTouchLcd", 1000, NULL, (unsigned portBASE_TYPE ) 5, &vtaskTouchLcdHandle);
+	xTaskCreate(vtask_TouchLcd, "vtask_TouchLcd", 1024, NULL, (unsigned portBASE_TYPE ) 2, &vtask_TouchLcd_Handle);
 }
 
-void DeleteTouchLcdTask(void)
+void Delete_TouchLcd_Task(void)
 {
-	vTaskDelete(vtaskTouchLcdHandle);
+	vTaskDelete(vtask_TouchLcd_Handle);
 }
