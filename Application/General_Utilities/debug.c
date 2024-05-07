@@ -19,7 +19,6 @@ static char ALIGN_32BYTES(dbgRecvBuffer[RECV_BUFF_SIZE]);
 
 void DEBUG_Init(void)
 {
-	MX_UART7_Init();
 	memset(dbgRecvBuffer,0,RECV_BUFF_SIZE);
 	DEBUG_ReceiveStart((uint8_t*)dbgRecvBuffer, RECV_BUFF_SIZE);
 }
