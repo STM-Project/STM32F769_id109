@@ -8,6 +8,6 @@
 #ifndef LCD_SCREENS_SCREEN_READPANEL_H_
 #define LCD_SCREENS_SCREEN_READPANEL_H_
 
-void SCREEN_ReadPanel(void);
+void Create_ScreensSelectLCD_Task(void);
 
 #endif /* LCD_SCREENS_SCREEN_READPANEL_H_ */
