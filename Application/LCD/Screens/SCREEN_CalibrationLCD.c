@@ -106,6 +106,38 @@ Circle,Kolo,\
 
 #define CIRCLE_MACRO \
 	/*	 Name		 width	x	  y */ \
+		X("1",  50,   0,   0) \
+		X("2",  51, 100,   0) \
+		X("3",  52, 200,   0) \
+		X("4",  53, 300,   0) \
+		X("5",  54, 400,   0) \
+		X("6",  55, 500,   0) \
+		X("7",  56, 600,   0) \
+		X("8",  57, 700,   0) \
+		X("9",  58,   0,  70) \
+		X("10", 59, 100,  70) \
+		X("11", 60, 200,  70) \
+		X("12", 61, 300,  70) \
+		X("13", 62, 400,  70) \
+		X("14", 63, 500,  70) \
+		X("15", 64, 600,  70) \
+		X("16", 65, 700,  70) \
+		X("17", 66,   0,  170) \
+		X("18", 67, 100,  170) \
+		X("19", 68, 200,  170) \
+		X("20", 69, 300,  170) \
+		X("21", 70, 400,  170) \
+		X("22", 71, 500,  170) \
+		X("23", 72, 600,  170) \
+		X("24", 73, 700,  170) \
+		X("25", 74,   0,  270) \
+		X("26", 75, 100,  270) \
+		X("27", 76, 200,  270) \
+		X("28", 77, 300,  270) \
+		X("29", 78, 400,  270) \
+		X("30", 79, 500,  270) \
+		X("31", 80, 600,  270) \
+		X("32", 81, 700,  270) \
 		X("Circle 1 AAAAAA",  48,  50,  50) \
 		X("C 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-150) \
 		X("Circle 3", 148, 300, 140) \
@@ -113,50 +145,34 @@ Circle,Kolo,\
 		X("Circle Markielowski 5",  84, 170, 300) \
 		X("Circle 6", 108, 650,   1)
 
-//		X("1",  50,   0,   0) \
-//		X("2",  51, 100,   0) \
-//		X("3",  52, 200,   0) \
-//		X("4",  53, 300,   0) \
-//		X("5",  54, 400,   0) \
-//		X("6",  55, 500,   0) \
-//		X("7",  56, 600,   0) \
-//		X("8",  57, 700,   0) \
-//		X("9",  58,   0,  70) \
-//		X("10", 59, 100,  70) \
-//		X("11", 60, 200,  70) \
-//		X("12", 61, 300,  70) \
-//		X("13", 62, 400,  70) \
-//		X("14", 63, 500,  70) \
-//		X("15", 64, 600,  70) \
-//		X("16", 65, 700,  70) \
-//		X("17", 66,   0,  170) \
-//		X("18", 67, 100,  170) \
-//		X("19", 68, 200,  170) \
-//		X("20", 69, 300,  170) \
-//		X("21", 70, 400,  170) \
-//		X("22", 71, 500,  170) \
-//		X("23", 72, 600,  170) \
-//		X("24", 73, 700,  170) \
-//		X("25", 74,   0,  270) \
-//		X("26", 75, 100,  270) \
-//		X("27", 76, 200,  270) \
-//		X("28", 77, 300,  270) \
-//		X("29", 78, 400,  270) \
-//		X("30", 79, 500,  270) \
-//		X("31", 80, 600,  270) \
-//		X("32", 81, 700,  270)
-
 
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
 
+	#define CIRCLE_WITH_FRAME_1
+	//#define AAA_	CIRCLE_WITH_FRAME_2
+	//#define AAA_	CIRCLE_WITHOUT_FRAME
+
 	uint16_t ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
 	{
+#if CIRCLE_WITH_FRAME_1
+		int widthCalculated=LCD_CalculateCircleWidth(width);
+		LCD_ShapeWindow	     		(LCD_Rectangle,0,widthCalculated,widthCalculated, 0,        0,     	   widthCalculated,  widthCalculated,  SetColorBoldFrame(bkColor,0), 		bkColor,  	bkColor);
+		LCD_ShapeWindow	     		(LCD_Circle,	0,widthCalculated,widthCalculated, 0,        0,     	   width,  				width,   			SetColorBoldFrame(frameColor,bold), fillColor,  bkColor);
+		LCD_ShapeWindow		  		(LCD_Circle,	0,widthCalculated,widthCalculated, width/4,width/4+1, 	width/2,				width/2, 			SetColorBoldFrame(frameColor,bold), TRANSPARENT,fillColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,widthCalculated,widthCalculated, 0,			0, 			widthCalculated,	widthCalculated, 							WHITE, 				bkColor, 	bkColor);
+#elif CIRCLE_WITH_FRAME_2
+		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        	0,     	   width,  width,   	SetColorBoldFrame(bkColor,0), 		bkColor,  	 bkColor);
+		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        	0,     	   width,  width,   	SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
+		LCD_ShapeWindow				(LCD_Circle,	0,width,width, width/4+1,	width/4+1, 	width/2,width/2, 	SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,width,width, 0,				0, 			width,	width, 	WHITE, 										bkColor, 	 bkColor);
+#else
 		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(bkColor,0), 		  bkColor,  	bkColor);
 		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
 		LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,width,width, width/4+1,width/4+1, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
+#endif
 		return width;
 	}
 
@@ -164,7 +180,8 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 	int16_t xPos=0;
 	char *ptr=NULL;
 
-	width = CorrectCirclesWidth(width);
+	if(AAA_==1 || AAA_==2){
+	width = CorrectCirclesWidth(width);  }
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
 	width = ShowCircleIndirect(log.x, log.y, width, 0, CIRCLE_FRAME_color, CIRCLE_FILL_color, BK_SCREEN_color);
@@ -174,7 +191,7 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 	xPos = LCD_Xmiddle(GetPos,STR_ID_PosLog,ptr,0,NoConstWidth);
 	CorrectPosIfOutRange(&xPos);
 
-	#ifdef DISPLAY_COMMA_UNDER_COMMA_
+#ifdef DISPLAY_COMMA_UNDER_COMMA_
 	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none));
 	lenStr=LCD_StrChangeColorIndirect(STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_SCREEN_color,POS_LOG_color,254,NoConstWidth);
 	xPos = xPos + lenStr.inPixel;
@@ -182,9 +199,9 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 	ptr = StrAll(3,",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
 	lenStr=LCD_StrChangeColorIndirect(STR_ID_PosLog, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, BK_SCREEN_color,POS_LOG_color,254,NoConstWidth);
-	#else
+#else
 	lenStr=LCD_StrChangeColorIndirect(STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_SCREEN_color,POS_LOG_color,254,NoConstWidth);
-	#endif
+#endif
 
 	WaitForTouchState(press);
 
@@ -196,17 +213,17 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 	width = ShowCircleIndirect(log.x, log.y, width, 0, CIRCLE_FRAME_color, CIRCLE_FILL_pressColor, BK_SCREEN_color);
 
-	#ifdef DISPLAY_COMMA_UNDER_COMMA_
+#ifdef DISPLAY_COMMA_UNDER_COMMA_
 	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none));
 	xPos = xPos - LCD_GetWholeStrPxlWidth(STR_ID_PosPhys,ptr,0,NoConstWidth);
 	CorrectPosIfOutRange(&xPos);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(phys->y,width),None,3,Sign_none),")");
 	LCD_StrChangeColorIndirect(STR_ID_PosPhys, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_SCREEN_color,POS_PHYS_color,254,NoConstWidth);
-	#else
+#else
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(phys->y,width),None,3,Sign_none),")");
 	LCD_StrChangeColorIndirect(STR_ID_PosPhys, LCD_Xmiddle(GetPos,STR_ID_PosPhys,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_SCREEN_color,POS_PHYS_color,254,NoConstWidth);
-	#endif
+#endif
 }
 
 void Touchscreen_Calibration(void)
