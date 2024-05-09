@@ -16,80 +16,65 @@
 #include "debug.h"
 #include "tim.h"
 
-#define FILE_NAME(extand) SCREEN_Calibration_##extand
+#define FILE_NAME(extend) SCREEN_Calibration_##extend
 
 // zdefiniuj fajne kolory dla X MACRO !!:)  //C/C++/Editor/Syntax Coloring/ -> Preprocessor/Others
 //STR_ID_Title  nie moze byc w structurze !!!!
 #define SCREEN_CALIBRATION_SET_PARAMETERS \
-	/*	 Name				 	param */ \
-	X(FONT_SIZE_Title, 	 FONT_16) \
-	X(FONT_SIZE_Name, 	 FONT_12_bold) \
-	X(FONT_SIZE_Pos,		 FONT_12_bold) \
+	/* size 		name				default value */ \
+	X(0, FONT_SIZE_Title, 	 FONT_16) \
+	X(1, FONT_SIZE_Name, 	 FONT_12_bold) \
+	X(2, FONT_SIZE_Pos,		 FONT_12_bold) \
 	\
-	X(FONT_STYLE_Title, 	 Arial) \
-	X(FONT_STYLE_Name, 	 Arial) \
-	X(FONT_STYLE_Pos, 	 Arial) \
+	X(3, FONT_STYLE_Title, 	 Arial) \
+	X(4, FONT_STYLE_Name, 	 Arial) \
+	X(5, FONT_STYLE_Pos, 	 Arial) \
 	\
-	X(STR_ID_Title,		 fontID_1) \
-	X(STR_ID_NameCircle,  fontID_2) \
-	X(STR_ID_PosLog, 		 fontID_2) \
-	X(STR_ID_PosPhys, 	 fontID_2) \
+	X(6, STR_ID_Title,		 fontID_1) \
+	X(7, STR_ID_NameCircle,  fontID_2) \
+	X(8, STR_ID_PosLog, 		 fontID_2) \
+	X(9, STR_ID_PosPhys, 	 fontID_2) \
 	\
-	X(BK_SCREEN_color, 			 MYGRAY) \
-	X(CIRCLE_FRAME_color, 		 WHITE) \
-	X(CIRCLE_FILL_color, 		 ORANGE) \
-	X(CIRCLE_FILL_pressColor, 	 DARKCYAN) \
-	X(TITLE_color,  	 YELLOW) \
-	X(NAME_color, 		 DARKGREEN) \
-	X(POS_LOG_color, 	 ORANGE) \
-	X(POS_PHYS_color,  DARKYELLOW)
+	X(10, BK_SCREEN_color, 			 MYGRAY) \
+	X(11, CIRCLE_FRAME_color, 		 WHITE) \
+	X(12, CIRCLE_FILL_color, 		 ORANGE) \
+	X(13, CIRCLE_FILL_pressColor, 	 DARKCYAN) \
+	X(14, TITLE_color,  	 YELLOW) \
+	X(15, NAME_color, 		 DARKGREEN) \
+	X(16, POS_LOG_color, 	 ORANGE) \
+	X(17, POS_PHYS_color,  DARKYELLOW)
 
 typedef enum{
-	#define X(a,b) a = b,
+	#define X(a,b,c) b,
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 }FILE_NAME(enum);
 
 typedef struct{
-	#define X(a,b) int a;
+	#define X(a,b,c) int b;
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 }FILE_NAME(struct);
+static FILE_NAME(struct) var;
 
-FILE_NAME(struct) FILE_NAME(var);
-
-
-
-int* FILE_NAME(function)(void)
+int* FILE_NAME(funcGet)(int offs)
 {
-	return (int*)(&FILE_NAME(var));
+	return (int*)((int*)(&var) + offs);
 }
 
+void FILE_NAME(funcSet)(int offs, int val)
+{
+	*( (int*)((int*)(&var) + offs) ) = val;
+}
 
-// typedef enum{
-// 	FONT_SIZE_Title 	= FONT_16,
-// 	FONT_SIZE_Name 	= FONT_12_bold,
-// 	FONT_SIZE_Pos 		= FONT_12_bold,
-
-// 	FONT_STYLE_Title 	= Arial,
-// 	FONT_STYLE_Name 	= Arial,
-// 	FONT_STYLE_Pos 	= Arial,
-
-// 	STR_ID_Title 		= fontID_1,
-// 	STR_ID_NameCircle = fontID_2,
-// 	STR_ID_PosLog 		= fontID_2,
-// 	STR_ID_PosPhys 	= fontID_2,
-
-// 	BK_SCREEN_color 			= MYGRAY,
-// 	CIRCLE_FRAME_color 		= WHITE,
-// 	CIRCLE_FILL_color 		= ORANGE,
-// 	CIRCLE_FILL_pressColor 	= RED,
-
-// 	TITLE_color  	= YELLOW,
-// 	NAME_color 		= DARKGREEN,
-// 	POS_LOG_color 	= ORANGE,
-// 	POS_PHYS_color = DARKYELLOW,
-// }SCREEN_CALIBRATION;
+void FILE_NAME(debug)(void)
+{
+	Dbg(1,"\r\ntypedef struct{\r\n");
+	#define X(a,b,c) DbgVar(1,200,"	%s %s = %s\r\n",getName(a),getName(b),getName(c));
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
+	DbgVar(1,200,"}%s;\r\n",getName(FILE_NAME(struct)));
+}
 
 //sprawdz polskie znaki
 const char LANG_ScreenCalibration[]="\
@@ -150,10 +135,10 @@ Circle,Kolo,\
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
-	/*Select only one*/
-	#define CIRCLE_WITH_FRAME_1
+	/*Select only one CIRCLE...*/
+	//#define CIRCLE_WITH_FRAME_1
 	//#define CIRCLE_WITH_FRAME_2
-	//#define CIRCLE_WITHOUT_FRAME
+	#define CIRCLE_WITHOUT_FRAME
 
 	uint16_t ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
 	{
@@ -180,28 +165,28 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 	int16_t xPos=0;
 	char *ptr=NULL;
 
-#if defined(CIRCLE_WITH_FRAME_2) || defined(CIRCLE_WITHOUT_FRAME)
+#if !defined(CIRCLE_WITH_FRAME_1)
 	width = CorrectCirclesWidth(width);  
 #endif	
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
-	width = ShowCircleIndirect(log.x, log.y, width, 0, CIRCLE_FRAME_color, CIRCLE_FILL_color, BK_SCREEN_color);
-	lenStr=LCD_StrChangeColorIndirect(STR_ID_NameCircle, LCD_Xmiddle(GetPos,STR_ID_NameCircle,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, BK_SCREEN_color,NAME_color,254,NoConstWidth);
+	width = ShowCircleIndirect(log.x, log.y, width, 0, var.CIRCLE_FRAME_color, var.CIRCLE_FILL_color, var.BK_SCREEN_color);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_NameCircle, LCD_Xmiddle(GetPos,var.STR_ID_NameCircle,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, var.BK_SCREEN_color,var.NAME_color,254,NoConstWidth);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
-	xPos = LCD_Xmiddle(GetPos,STR_ID_PosLog,ptr,0,NoConstWidth);
+	xPos = LCD_Xmiddle(GetPos,var.STR_ID_PosLog,ptr,0,NoConstWidth);
 	CorrectPosIfOutRange(&xPos);
 
 #ifdef DISPLAY_COMMA_UNDER_COMMA_
 	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none));
-	lenStr=LCD_StrChangeColorIndirect(STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_SCREEN_color,POS_LOG_color,254,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_LOG_color,254,NoConstWidth);
 	xPos = xPos + lenStr.inPixel;
 	CorrectPosIfOutRange(&xPos);
 
 	ptr = StrAll(3,",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
-	lenStr=LCD_StrChangeColorIndirect(STR_ID_PosLog, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, BK_SCREEN_color,POS_LOG_color,254,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_PosLog, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_LOG_color,254,NoConstWidth);
 #else
-	lenStr=LCD_StrChangeColorIndirect(STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_SCREEN_color,POS_LOG_color,254,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_LOG_color,254,NoConstWidth);
 #endif
 
 	WaitForTouchState(press);
@@ -212,18 +197,18 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 	WaitForTouchState(release);
 
-	width = ShowCircleIndirect(log.x, log.y, width, 0, CIRCLE_FRAME_color, CIRCLE_FILL_pressColor, BK_SCREEN_color);
+	width = ShowCircleIndirect(log.x, log.y, width, 0, var.CIRCLE_FRAME_color, var.CIRCLE_FILL_pressColor, var.BK_SCREEN_color);
 
 #ifdef DISPLAY_COMMA_UNDER_COMMA_
 	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none));
-	xPos = xPos - LCD_GetWholeStrPxlWidth(STR_ID_PosPhys,ptr,0,NoConstWidth);
+	xPos = xPos - LCD_GetWholeStrPxlWidth(var.STR_ID_PosPhys,ptr,0,NoConstWidth);
 	CorrectPosIfOutRange(&xPos);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(phys->y,width),None,3,Sign_none),")");
-	LCD_StrChangeColorIndirect(STR_ID_PosPhys, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_SCREEN_color,POS_PHYS_color,254,NoConstWidth);
+	LCD_StrChangeColorIndirect(var.STR_ID_PosPhys, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_PHYS_color,254,NoConstWidth);
 #else
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(phys->y,width),None,3,Sign_none),")");
-	LCD_StrChangeColorIndirect(STR_ID_PosPhys, LCD_Xmiddle(GetPos,STR_ID_PosPhys,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, BK_SCREEN_color,POS_PHYS_color,254,NoConstWidth);
+	LCD_StrChangeColorIndirect(var.STR_ID_PosPhys, LCD_Xmiddle(GetPos,var.STR_ID_PosPhys,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_PHYS_color,254,NoConstWidth);
 #endif
 }
 
@@ -251,10 +236,17 @@ void Touchscreen_Calibration(void)
 	};
 
 	XY_Touch_Struct phys[CIRCLES_NUMBER] = {0};
-	FILE_NAME(var).NAME_color = 25643;
 
-	//int *pp = SCREEN_Calibration_function();
-	//DbgVar(1,100,"%d  %d  %d  %d  %d",SCREEN_Calibration_var.NAME_color, FILE_NAME(var).NAME_color, *(pp+14), *(pp+15), *(pp+16));
+	#define X(a,b,c) FILE_NAME(funcSet)(b,c);
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
+
+	//var.NAME_color = 25643;
+	//SCREEN_Calibration_funcSet(15, MYGRAY);
+
+
+	int *pp = SCREEN_Calibration_funcGet(FONT_STYLE_Name);
+	DbgVar(1,100,"%d  %d  %d  %d  %d  %d", var.NAME_color, *(pp+0), *(pp+1), *(pp+2), sizeof(FILE_NAME(struct)), sizeof(var));
 
 	Delete_TouchLcd_Task();
 
@@ -262,14 +254,14 @@ void Touchscreen_Calibration(void)
 	LCD_ResetStrMovBuffPos();
 	LCD_DeleteAllFontAndImages();
 
-	LCD_LoadFont_DarkgrayGreen(FONT_SIZE_Title, FONT_STYLE_Title, STR_ID_Title);
-	LCD_LoadFont_DarkgrayGreen(FONT_SIZE_Name, FONT_STYLE_Title, STR_ID_NameCircle);
+	LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.STR_ID_Title);
+	LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_Name, var.FONT_STYLE_Title, var.STR_ID_NameCircle);
 
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
-	LCD_Clear(BK_SCREEN_color);  LCD_Show();
+	LCD_Clear(var.BK_SCREEN_color);  LCD_Show();
 
-	lenStr=LCD_StrChangeColorIndirect(STR_ID_Title, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), TITLE_1, fullHight,0,BK_SCREEN_color,TITLE_color,255,NoConstWidth);
-	lenStr=LCD_StrChangeColorIndirect(STR_ID_Title, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,0), TITLE_2, fullHight,0,BK_SCREEN_color,TITLE_color,255,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_Title, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), TITLE_1, fullHight,0,var.BK_SCREEN_color,var.TITLE_color,255,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_Title, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,0), TITLE_2, fullHight,0,var.BK_SCREEN_color,var.TITLE_color,255,NoConstWidth);
 
 	uint8_t status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 
