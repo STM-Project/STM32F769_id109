@@ -150,20 +150,20 @@ Circle,Kolo,\
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
-
+	/*Select only one*/
 	#define CIRCLE_WITH_FRAME_1
-	//#define AAA_	CIRCLE_WITH_FRAME_2
-	//#define AAA_	CIRCLE_WITHOUT_FRAME
+	//#define CIRCLE_WITH_FRAME_2
+	//#define CIRCLE_WITHOUT_FRAME
 
 	uint16_t ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
 	{
-#if CIRCLE_WITH_FRAME_1
+#if defined(CIRCLE_WITH_FRAME_1)
 		int widthCalculated=LCD_CalculateCircleWidth(width);
 		LCD_ShapeWindow	     		(LCD_Rectangle,0,widthCalculated,widthCalculated, 0,        0,     	   widthCalculated,  widthCalculated,  SetColorBoldFrame(bkColor,0), 		bkColor,  	bkColor);
 		LCD_ShapeWindow	     		(LCD_Circle,	0,widthCalculated,widthCalculated, 0,        0,     	   width,  				width,   			SetColorBoldFrame(frameColor,bold), fillColor,  bkColor);
 		LCD_ShapeWindow		  		(LCD_Circle,	0,widthCalculated,widthCalculated, width/4,width/4+1, 	width/2,				width/2, 			SetColorBoldFrame(frameColor,bold), TRANSPARENT,fillColor);
 		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,widthCalculated,widthCalculated, 0,			0, 			widthCalculated,	widthCalculated, 							WHITE, 				bkColor, 	bkColor);
-#elif CIRCLE_WITH_FRAME_2
+#elif defined(CIRCLE_WITH_FRAME_2)
 		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        	0,     	   width,  width,   	SetColorBoldFrame(bkColor,0), 		bkColor,  	 bkColor);
 		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        	0,     	   width,  width,   	SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
 		LCD_ShapeWindow				(LCD_Circle,	0,width,width, width/4+1,	width/4+1, 	width/2,width/2, 	SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
@@ -180,8 +180,9 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 	int16_t xPos=0;
 	char *ptr=NULL;
 
-	if(AAA_==1 || AAA_==2){
-	width = CorrectCirclesWidth(width);  }
+#if defined(CIRCLE_WITH_FRAME_2) || defined(CIRCLE_WITHOUT_FRAME)
+	width = CorrectCirclesWidth(width);  
+#endif	
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
 	width = ShowCircleIndirect(log.x, log.y, width, 0, CIRCLE_FRAME_color, CIRCLE_FILL_color, BK_SCREEN_color);
