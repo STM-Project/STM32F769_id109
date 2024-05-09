@@ -1418,8 +1418,9 @@ void vtask_ScreensSelectLCD(void *pvParameters)
 							break;
 						case AnyPressWithWait:
 							DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
-							int *pp = SCREEN_Calibration_function();
-							DbgVar(1,100,"\r\n\r\n  %d  %d  %d ",*(pp+14), *(pp+15), *(pp+16));
+							int *pp = SCREEN_Calibration_funcGet(14);
+							DbgVar(1,100,"\r\n\r\n  %d  %d  %d \r\n",*(pp+0), *(pp+1), *(pp+2));
+							SCREEN_Calibration_debug();
 							break;
 					}
 
