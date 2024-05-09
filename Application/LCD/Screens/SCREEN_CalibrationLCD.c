@@ -40,9 +40,13 @@
 	X(12, CIRCLE_FILL_color, 		 ORANGE) \
 	X(13, CIRCLE_FILL_pressColor, 	 DARKCYAN) \
 	X(14, TITLE_color,  	 YELLOW) \
+	\
 	X(15, NAME_color, 		 DARKGREEN) \
 	X(16, POS_LOG_color, 	 ORANGE) \
-	X(17, POS_PHYS_color,  DARKYELLOW)
+	X(17, POS_PHYS_color,  DARKYELLOW) \
+	X(18, MAXVAL_NAME,  255)	\
+	X(19, MAXVAL_LOG,  242)	\
+	X(20, MAXVAL_PHYS,  255)
 
 typedef enum{
 	#define X(a,b,c) b,
@@ -70,14 +74,14 @@ void FILE_NAME(funcSet)(int offs, int val)
 void FILE_NAME(debug)(void)
 {
 	Dbg(1,"\r\ntypedef struct{\r\n");
-	#define X(a,b,c) DbgVar(1,200,"	%s %s = %s\r\n",getName(a),getName(b),getName(c));
+	#define X(a,b,c) DbgVar(1,200,"   %s	= %s\r\n",getName(b),getName(c));
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 	DbgVar(1,200,"}%s;\r\n",getName(FILE_NAME(struct)));
 }
 
 //sprawdz polskie znaki
-const char LANG_ScreenCalibration[]="\
+const char FILE_NAME(Lang)[]="\
 Calibration LCD,Kalibracja LCD,\
 Circle,Kolo,\ 
 ";  
@@ -147,12 +151,12 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 		LCD_ShapeWindow	     		(LCD_Rectangle,0,widthCalculated,widthCalculated, 0,        0,     	   widthCalculated,  widthCalculated,  SetColorBoldFrame(bkColor,0), 		bkColor,  	bkColor);
 		LCD_ShapeWindow	     		(LCD_Circle,	0,widthCalculated,widthCalculated, 0,        0,     	   width,  				width,   			SetColorBoldFrame(frameColor,bold), fillColor,  bkColor);
 		LCD_ShapeWindow		  		(LCD_Circle,	0,widthCalculated,widthCalculated, width/4,width/4+1, 	width/2,				width/2, 			SetColorBoldFrame(frameColor,bold), TRANSPARENT,fillColor);
-		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,widthCalculated,widthCalculated, 0,			0, 			widthCalculated,	widthCalculated, 							WHITE, 				bkColor, 	bkColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,widthCalculated,widthCalculated, 0,			0, 			widthCalculated,	widthCalculated, 							frameColor, 		bkColor, 	bkColor);
 #elif defined(CIRCLE_WITH_FRAME_2)
 		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        	0,     	   width,  width,   	SetColorBoldFrame(bkColor,0), 		bkColor,  	 bkColor);
 		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        	0,     	   width,  width,   	SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
 		LCD_ShapeWindow				(LCD_Circle,	0,width,width, width/4+1,	width/4+1, 	width/2,width/2, 	SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
-		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,width,width, 0,				0, 			width,	width, 	WHITE, 										bkColor, 	 bkColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,width,width, 0,				0, 			width,	width, 	frameColor, 								bkColor, 	 bkColor);
 #else
 		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(bkColor,0), 		  bkColor,  	bkColor);
 		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
@@ -166,12 +170,12 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 	char *ptr=NULL;
 
 #if !defined(CIRCLE_WITH_FRAME_1)
-	width = CorrectCirclesWidth(width);  
+	width = CorrectCirclesWidth(width);
 #endif	
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
 	width = ShowCircleIndirect(log.x, log.y, width, 0, var.CIRCLE_FRAME_color, var.CIRCLE_FILL_color, var.BK_SCREEN_color);
-	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_NameCircle, LCD_Xmiddle(GetPos,var.STR_ID_NameCircle,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, var.BK_SCREEN_color,var.NAME_color,254,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_NameCircle, LCD_Xmiddle(GetPos,var.STR_ID_NameCircle,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, var.BK_SCREEN_color,var.NAME_color,var.MAXVAL_NAME,NoConstWidth);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
 	xPos = LCD_Xmiddle(GetPos,var.STR_ID_PosLog,ptr,0,NoConstWidth);
@@ -179,14 +183,14 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 #ifdef DISPLAY_COMMA_UNDER_COMMA_
 	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none));
-	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_LOG_color,254,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_LOG_color,var.MAXVAL_LOG,NoConstWidth);
 	xPos = xPos + lenStr.inPixel;
 	CorrectPosIfOutRange(&xPos);
 
 	ptr = StrAll(3,",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
-	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_PosLog, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_LOG_color,254,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_PosLog, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_LOG_color,var.MAXVAL_LOG,NoConstWidth);
 #else
-	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_LOG_color,254,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_LOG_color,var.MAXVAL_LOG,NoConstWidth);
 #endif
 
 	WaitForTouchState(press);
@@ -205,10 +209,10 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 	CorrectPosIfOutRange(&xPos);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(phys->y,width),None,3,Sign_none),")");
-	LCD_StrChangeColorIndirect(var.STR_ID_PosPhys, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_PHYS_color,254,NoConstWidth);
+	LCD_StrChangeColorIndirect(var.STR_ID_PosPhys, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_PHYS_color,var.MAXVAL_PHYS,NoConstWidth);
 #else
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(phys->x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(phys->y,width),None,3,Sign_none),")");
-	LCD_StrChangeColorIndirect(var.STR_ID_PosPhys, LCD_Xmiddle(GetPos,var.STR_ID_PosPhys,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_PHYS_color,254,NoConstWidth);
+	LCD_StrChangeColorIndirect(var.STR_ID_PosPhys, LCD_Xmiddle(GetPos,var.STR_ID_PosPhys,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.BK_SCREEN_color,var.POS_PHYS_color,var.MAXVAL_PHYS,NoConstWidth);
 #endif
 }
 
@@ -243,10 +247,10 @@ void Touchscreen_Calibration(void)
 
 	//var.NAME_color = 25643;
 	//SCREEN_Calibration_funcSet(15, MYGRAY);
-
+	FILE_NAME(debug)();
 
 	int *pp = SCREEN_Calibration_funcGet(FONT_STYLE_Name);
-	DbgVar(1,100,"%d  %d  %d  %d  %d  %d", var.NAME_color, *(pp+0), *(pp+1), *(pp+2), sizeof(FILE_NAME(struct)), sizeof(var));
+	DbgVar(1,100,"%x  %d  %d  %d  %d  %d", var.NAME_color, *(pp+0), *(pp+1), *(pp+2), sizeof(FILE_NAME(struct)), sizeof(var));
 
 	Delete_TouchLcd_Task();
 
@@ -260,8 +264,8 @@ void Touchscreen_Calibration(void)
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
 	LCD_Clear(var.BK_SCREEN_color);  LCD_Show();
 
-	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_Title, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), TITLE_1, fullHight,0,var.BK_SCREEN_color,var.TITLE_color,255,NoConstWidth);
-	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_Title, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,0), TITLE_2, fullHight,0,var.BK_SCREEN_color,var.TITLE_color,255,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_Title, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), TITLE_1, fullHight,0,var.BK_SCREEN_color,var.TITLE_color,var.MAXVAL_NAME,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_Title, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,0), TITLE_2, fullHight,0,var.BK_SCREEN_color,var.TITLE_color,var.MAXVAL_NAME,NoConstWidth);
 
 	uint8_t status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 
