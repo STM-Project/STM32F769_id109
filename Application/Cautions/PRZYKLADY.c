@@ -140,3 +140,26 @@ xTouchpanelTimer = xTimerCreate("TouchPanelTimer", TOUCHPANEL_REFRESH_PERIOD_MS,
 
 
 #endif
+
+//##############################################UNION ##########################################################
+struct WM_MESSAGE {
+  int MsgId;            /* type of message */
+  WM_HWIN hWin;         /* Destination window */
+  WM_HWIN hWinSrc;      /* Source window  */
+  union {
+    const void * p;     /* Message specific data pointer */
+    int v;
+    GUI_COLOR Color;
+    void (* pFunc)(void);
+  } Data;
+};
+REMOTE_GENERAL_SET *pRemoteGeneralSet;
+pRemoteGeneralSet = (REMOTE_GENERAL_SET *) pMsg->Data.p;
+
+userMessage.Data.p = &tempEthSettings;
+WM_SendMessage(userMessage.hWin, &userMessage);
+
+
+
+
+
