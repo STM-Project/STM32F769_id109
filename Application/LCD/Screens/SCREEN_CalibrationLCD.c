@@ -56,44 +56,13 @@ Ko\xB3o,Circle,\
 
 #define CIRCLE_MACRO \
 /*	 Name  width  x	 y */ \
-	X("1",  50,   0,   0) \
-	X("2",  51, 100,   0) \
-	X("3",  52, 200,   0) \
-	X("4",  53, 300,   0) \
-	X("5",  54, 400,   0) \
-	X("6",  55, 500,   0) \
-	X("7",  56, 600,   0) \
-	X("8",  57, 700,   0) \
-	X("9",  58,   0,  70) \
-	X("10", 59, 100,  70) \
-	X("11", 60, 200,  70) \
-	X("12", 61, 300,  70) \
-	X("13", 62, 400,  70) \
-	X("14", 63, 500,  70) \
-	X("15", 64, 600,  70) \
-	X("16", 65, 700,  70) \
-	X("17", 66,   0,  170) \
-	X("18", 67, 100,  170) \
-	X("19", 68, 200,  170) \
-	X("20", 69, 300,  170) \
-	X("21", 70, 400,  170) \
-	X("22", 71, 500,  170) \
-	X("23", 72, 600,  170) \
-	X("24", 73, 700,  170) \
-	X("25", 74,   0,  270) \
-	X("26", 75, 100,  270) \
-	X("27", 76, 200,  270) \
-	X("28", 77, 300,  270) \
-	X("29", 78, 400,  270) \
-	X("30", 79, 500,  270) \
-	X("31", 80, 600,  270) \
-	X("32", 81, 700,  270) \
 	X("Circle 1 AAAAAA",  48,  50,  50) \
 	X("C 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-150) \
 	X("Circle 3", 148, 300, 140) \
 	X("d 4",  76,   0, 300) \
 	X("Circle Markielowski 5",  84, 170, 300) \
-	X("Circle 6", 108, 650,   1)
+	X("Circle 6", 108, 650,   1) \
+	X("Circle 7", 77, 650,   199)
 
 
 #define DEBUG_Text_1  "error_touch"
@@ -268,14 +237,14 @@ void Touchscreen_Calibration(void)
 		Dbg(var.DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,1));
 	else
 	{
-	   SetLogXY(pos);
+	   SetLogXY(pos,CIRCLES_NUMBER);
 
 	   for (int i = 0; i < CIRCLES_NUMBER; i++)
 	      GetPhysValues(pos[i], &phys[i], width[i], circlesNames[i]);
 
-	   SetPhysXY(phys);
+	   SetPhysXY(phys,CIRCLES_NUMBER);
 
-	   if(CalcutaleCoeffCalibration())
+	   if(CalcutaleCoeffCalibration(CIRCLES_NUMBER))  //SPRAWDZIC xLog czy wskazuje na srodek czy na poczatek krawedzi !!!!!! musi na srodek !!!!
 	   	Dbg(var.DEBUG_ON, TEXT2PRINT(DEBUG_Text_2,1));
 	   else{
 		   CalibrationWasDone();
