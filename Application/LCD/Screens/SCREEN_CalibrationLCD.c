@@ -15,38 +15,89 @@
 #include "common.h"
 #include "debug.h"
 #include "tim.h"
+#include "lang.h"
 
 #define FILE_NAME(extend) SCREEN_Calibration_##extend
 
-// zdefiniuj fajne kolory dla X MACRO !!:)  //C/C++/Editor/Syntax Coloring/ -> Preprocessor/Others
-//STR_ID_Title  nie moze byc w structurze !!!!
+const char FILE_NAME(Lang)[]="\
+Kalibracja LCD,Calibration LCD,\
+Ko\xB3o,Circle,\
+";\
+
 #define SCREEN_CALIBRATION_SET_PARAMETERS \
-	/* size 		name				default value */ \
+/*  id 	 name				default value */ \
 	X(0, FONT_SIZE_Title, 	 FONT_16) \
 	X(1, FONT_SIZE_Name, 	 FONT_12_bold) \
 	X(2, FONT_SIZE_Pos,		 FONT_12_bold) \
 	\
 	X(3, FONT_STYLE_Title, 	 Arial) \
 	X(4, FONT_STYLE_Name, 	 Arial) \
-	X(5, FONT_STYLE_Pos, 	 Arial) \
+	X(5, FONT_STYLE_Pos, 	 Comic_Saens_MS) \
 	\
 	X(6, STR_ID_Title,		 fontID_1) \
 	X(7, STR_ID_NameCircle,  fontID_2) \
-	X(8, STR_ID_PosLog, 		 fontID_2) \
+	X(8, STR_ID_PosLog, 		 fontID_3) \
 	X(9, STR_ID_PosPhys, 	 fontID_2) \
 	\
-	X(10, BK_SCREEN_color, 			 MYGRAY) \
-	X(11, CIRCLE_FRAME_color, 		 WHITE) \
-	X(12, CIRCLE_FILL_color, 		 ORANGE) \
-	X(13, CIRCLE_FILL_pressColor, 	 DARKCYAN) \
+	X(10, BK_SCREEN_color, 			 	BLACK) \
+	X(11, CIRCLE_FRAME_color, 		 	WHITE) \
+	X(12, CIRCLE_FILL_color, 		 	ORANGE) \
+	X(13, CIRCLE_FILL_pressColor, 	DARKCYAN) \
 	X(14, TITLE_color,  	 YELLOW) \
 	\
-	X(15, NAME_color, 		 DARKGREEN) \
+	X(15, NAME_color, 		 WHITE) \
 	X(16, POS_LOG_color, 	 ORANGE) \
-	X(17, POS_PHYS_color,  DARKYELLOW) \
-	X(18, MAXVAL_NAME,  255)	\
-	X(19, MAXVAL_LOG,  242)	\
-	X(20, MAXVAL_PHYS,  255)
+	X(17, POS_PHYS_color,  	 DARKYELLOW) \
+	X(18, MAXVAL_NAME,  	255)	\
+	X(19, MAXVAL_LOG,  	255)	\
+	X(20, MAXVAL_PHYS,  	255) \
+	X(21, DEBUG_ON,  	1)
+
+
+#define CIRCLE_MACRO \
+/*	 Name  width  x	 y */ \
+	X("1",  50,   0,   0) \
+	X("2",  51, 100,   0) \
+	X("3",  52, 200,   0) \
+	X("4",  53, 300,   0) \
+	X("5",  54, 400,   0) \
+	X("6",  55, 500,   0) \
+	X("7",  56, 600,   0) \
+	X("8",  57, 700,   0) \
+	X("9",  58,   0,  70) \
+	X("10", 59, 100,  70) \
+	X("11", 60, 200,  70) \
+	X("12", 61, 300,  70) \
+	X("13", 62, 400,  70) \
+	X("14", 63, 500,  70) \
+	X("15", 64, 600,  70) \
+	X("16", 65, 700,  70) \
+	X("17", 66,   0,  170) \
+	X("18", 67, 100,  170) \
+	X("19", 68, 200,  170) \
+	X("20", 69, 300,  170) \
+	X("21", 70, 400,  170) \
+	X("22", 71, 500,  170) \
+	X("23", 72, 600,  170) \
+	X("24", 73, 700,  170) \
+	X("25", 74,   0,  270) \
+	X("26", 75, 100,  270) \
+	X("27", 76, 200,  270) \
+	X("28", 77, 300,  270) \
+	X("29", 78, 400,  270) \
+	X("30", 79, 500,  270) \
+	X("31", 80, 600,  270) \
+	X("32", 81, 700,  270) \
+	X("Circle 1 AAAAAA",  48,  50,  50) \
+	X("C 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-150) \
+	X("Circle 3", 148, 300, 140) \
+	X("d 4",  76,   0, 300) \
+	X("Circle Markielowski 5",  84, 170, 300) \
+	X("Circle 6", 108, 650,   1)
+
+
+#define DEBUG_Text_1  "error_touch"
+#define DEBUG_Text_2  "error_calculation_coeff"
 
 typedef enum{
 	#define X(a,b,c) b,
@@ -59,15 +110,14 @@ typedef struct{
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 }FILE_NAME(struct);
+
 static FILE_NAME(struct) var;
 
-int* FILE_NAME(funcGet)(int offs)
-{
+int* FILE_NAME(funcGet)(int offs){
 	return (int*)((int*)(&var) + offs);
 }
 
-void FILE_NAME(funcSet)(int offs, int val)
-{
+void FILE_NAME(funcSet)(int offs, int val){
 	*( (int*)((int*)(&var) + offs) ) = val;
 }
 
@@ -79,62 +129,6 @@ void FILE_NAME(debug)(void)
 	#undef X
 	DbgVar(1,200,"}%s;\r\n",getName(FILE_NAME(struct)));
 }
-
-//sprawdz polskie znaki
-const char FILE_NAME(Lang)[]="\
-Calibration LCD,Kalibracja LCD,\
-Circle,Kolo,\ 
-";  
-
-#define TITLE_1  "Calibration LCD"  //odrazu tlumacvznie uruchomic
-#define TITLE_2  "Calibration LCDA"
-
-#define DEBUG_ON	1
-#define DEBUG_Text_1  "error_touch"  //odrazu tlumacvznie uruchomic
-#define DEBUG_Text_2  "error_calculation_coeff"
-
-#define CIRCLE_MACRO \
-	/*	 Name		 width	x	  y */ \
-		X("1",  50,   0,   0) \
-		X("2",  51, 100,   0) \
-		X("3",  52, 200,   0) \
-		X("4",  53, 300,   0) \
-		X("5",  54, 400,   0) \
-		X("6",  55, 500,   0) \
-		X("7",  56, 600,   0) \
-		X("8",  57, 700,   0) \
-		X("9",  58,   0,  70) \
-		X("10", 59, 100,  70) \
-		X("11", 60, 200,  70) \
-		X("12", 61, 300,  70) \
-		X("13", 62, 400,  70) \
-		X("14", 63, 500,  70) \
-		X("15", 64, 600,  70) \
-		X("16", 65, 700,  70) \
-		X("17", 66,   0,  170) \
-		X("18", 67, 100,  170) \
-		X("19", 68, 200,  170) \
-		X("20", 69, 300,  170) \
-		X("21", 70, 400,  170) \
-		X("22", 71, 500,  170) \
-		X("23", 72, 600,  170) \
-		X("24", 73, 700,  170) \
-		X("25", 74,   0,  270) \
-		X("26", 75, 100,  270) \
-		X("27", 76, 200,  270) \
-		X("28", 77, 300,  270) \
-		X("29", 78, 400,  270) \
-		X("30", 79, 500,  270) \
-		X("31", 80, 600,  270) \
-		X("32", 81, 700,  270) \
-		X("Circle 1 AAAAAA",  48,  50,  50) \
-		X("C 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-150) \
-		X("Circle 3", 148, 300, 140) \
-		X("d 4",  76,   0, 300) \
-		X("Circle Markielowski 5",  84, 170, 300) \
-		X("Circle 6", 108, 650,   1)
-
-
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
@@ -174,8 +168,9 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 #endif	
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
+	ptr = StrAll(3,GetSelTxt(0,FILE_NAME(Lang),1)," ",name);
 	width = ShowCircleIndirect(log.x, log.y, width, 0, var.CIRCLE_FRAME_color, var.CIRCLE_FILL_color, var.BK_SCREEN_color);
-	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_NameCircle, LCD_Xmiddle(GetPos,var.STR_ID_NameCircle,name,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), name, fullHight, 0, var.BK_SCREEN_color,var.NAME_color,var.MAXVAL_NAME,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_NameCircle, LCD_Xmiddle(GetPos,var.STR_ID_NameCircle,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), ptr, fullHight, 0, var.BK_SCREEN_color,var.NAME_color,var.MAXVAL_NAME,NoConstWidth);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
 	xPos = LCD_Xmiddle(GetPos,var.STR_ID_PosLog,ptr,0,NoConstWidth);
@@ -220,6 +215,7 @@ void Touchscreen_Calibration(void)
 {
 	#define CIRCLES_NUMBER  STRUCT_TAB_SIZE(pos)
 	StructTxtPxlLen lenStr={0};
+	char *ptr=NULL;
 
 	char *circlesNames[]={
 		#define X(a,b,c,d) a,
@@ -245,32 +241,31 @@ void Touchscreen_Calibration(void)
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 
-	//var.NAME_color = 25643;
-	//SCREEN_Calibration_funcSet(15, MYGRAY);
-	FILE_NAME(debug)();
-
-	int *pp = SCREEN_Calibration_funcGet(FONT_STYLE_Name);
-	DbgVar(1,100,"%x  %d  %d  %d  %d  %d", var.NAME_color, *(pp+0), *(pp+1), *(pp+2), sizeof(FILE_NAME(struct)), sizeof(var));
-
 	Delete_TouchLcd_Task();
 
 	LCD_AllRefreshScreenClear();
 	LCD_ResetStrMovBuffPos();
 	LCD_DeleteAllFontAndImages();
 
+	FILE_NAME(debug)();
+
 	LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.STR_ID_Title);
-	LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_Name, var.FONT_STYLE_Title, var.STR_ID_NameCircle);
+	LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_Name, var.FONT_STYLE_Name, var.STR_ID_NameCircle);
+	LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_Pos, var.FONT_STYLE_Pos, var.STR_ID_PosLog);
+
+	DisplayFontsStructState();
 
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
 	LCD_Clear(var.BK_SCREEN_color);  LCD_Show();
 
-	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_Title, LCD_Xpos(lenStr,SetPos,200), LCD_Ypos(lenStr,SetPos,0), TITLE_1, fullHight,0,var.BK_SCREEN_color,var.TITLE_color,var.MAXVAL_NAME,NoConstWidth);
-	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_Title, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,0), TITLE_2, fullHight,0,var.BK_SCREEN_color,var.TITLE_color,var.MAXVAL_NAME,NoConstWidth);
+	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
+	LCD_Xmiddle(SetPos,SetPosAndWidth(0,LCD_X),NULL,0,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.STR_ID_Title, LCD_Xmiddle(GetPos,var.STR_ID_Title,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,0), ptr, fullHight,0,var.BK_SCREEN_color,var.TITLE_color,var.MAXVAL_NAME,NoConstWidth);
 
 	uint8_t status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 
 	if(status)
-		Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,0));
+		Dbg(var.DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,1));
 	else
 	{
 	   SetLogXY(pos);
@@ -281,13 +276,12 @@ void Touchscreen_Calibration(void)
 	   SetPhysXY(phys);
 
 	   if(CalcutaleCoeffCalibration())
-	   	Dbg(DEBUG_ON, TEXT2PRINT(DEBUG_Text_2,0));
+	   	Dbg(var.DEBUG_ON, TEXT2PRINT(DEBUG_Text_2,1));
 	   else{
 		   CalibrationWasDone();
 		   DisplayCoeffCalibration();
 	   }
 
-	   //HAL_Delay(1000);
 	   Create_TouchLcd_Task();
 	}
 }

@@ -12,6 +12,7 @@
 #include "stm32f7xx_hal.h"
 
 void Touchscreen_Calibration(void);
+
 int* SCREEN_Calibration_funcGet(int offs);
 void SCREEN_Calibration_funcSet(int offs, int val);
 void SCREEN_Calibration_debug(void);

@@ -1119,7 +1119,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 }
 
 
-int SCREEN_number=0;  //LOAD IMAGE !!!!!
+int SCREEN_number=5;  //LOAD IMAGE !!!!!
 
 void SCREEN_ReadPanel(void)
 {

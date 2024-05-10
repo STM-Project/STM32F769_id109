@@ -12,7 +12,7 @@
 #include "double_float.h"
 
 #define SIZE_STRBUFF		200
-#define SIZE_STRBUFF_OUT	100
+#define SIZE_STRBUFF_OUT	150
 
 static char strBuff[SIZE_STRBUFF]={0};
 static char strBuffOut[SIZE_STRBUFF_OUT]={0};

@@ -139,7 +139,7 @@ xTouchpanelTimer = xTimerCreate("TouchPanelTimer", TOUCHPANEL_REFRESH_PERIOD_MS,
 			xTimerStart(xTouchpanelTimer,TOUCHPANEL_REFRESH_PERIOD_MS);
 
 
-#endif
+
 
 //##############################################UNION ##########################################################
 struct WM_MESSAGE {
@@ -160,6 +160,6 @@ userMessage.Data.p = &tempEthSettings;
 WM_SendMessage(userMessage.hWin, &userMessage);
 
 
-
+#endif
 
 
