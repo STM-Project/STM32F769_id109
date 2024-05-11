@@ -11,7 +11,7 @@
 #define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 80
 #define BUF_LCD_TOUCH_SIZE		100
 #define MAX_NUMBER_PIONTS_TOUCH	 2
-#define AB_COEFF_TAB_SIZE	5
+#define AB_COEFF_TAB_SIZE	4
 
 #define TIME_700_MS_TO_NUMBER_PROBE	  	(700 / SERVICE_TOUCH_PROB_TIME_MS)
 #define TIME_5000_MS_TO_NUMBER_PROBE	(5000 / SERVICE_TOUCH_PROB_TIME_MS / Touch[i].param)
@@ -138,7 +138,7 @@ int CalcutaleCoeffCalibration(int maxSize)
 			B2[j] = (1000 * aLogY[i]) - A2[j] * aPhysY[i];
 			j++;
 
-			if(j == AB_COEFF_TAB_SIZE-1)
+			if(j == AB_COEFF_TAB_SIZE)
 				break;
 		}
 		else
