@@ -1128,6 +1128,7 @@ void SCREEN_ReadPanel(void)
 		switch(SCREEN_number)
 		{
 		case 0:
+			SCREEN_Calibration_funcSet(_FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(_FONT_SIZE_Title));
 			NOWY_0();
 			startScreen=1;
 			break;

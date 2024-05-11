@@ -40,17 +40,17 @@ XY_Touch_Struct  touchTemp[MAX_NUMBER_PIONTS_TOUCH] = {0};
 
 static uint8_t Calibration_Done = 0;
 
-static int32_t  A1[AB_COEFF_TAB_SIZE], _A1;
-static int32_t  B1[AB_COEFF_TAB_SIZE], _B1;
+static int32_t  A1[AB_COEFF_TAB_SIZE]={0}, 	_A1 = Coeff_A1;
+static int32_t  B1[AB_COEFF_TAB_SIZE]={0}, 	_B1 = Coeff_B1;
 
-static int32_t  A2[AB_COEFF_TAB_SIZE], _A2;
-static int32_t  B2[AB_COEFF_TAB_SIZE], _B2;
+static int32_t  A2[AB_COEFF_TAB_SIZE]={0}, 	_A2 = Coeff_A2;
+static int32_t  B2[AB_COEFF_TAB_SIZE]={0}, 	_B2 = Coeff_B2;
 
-static int32_t aLogX[2*AB_COEFF_TAB_SIZE];
-static int32_t aLogY[2*AB_COEFF_TAB_SIZE];
+static int32_t aLogX[2*AB_COEFF_TAB_SIZE]={0};
+static int32_t aLogY[2*AB_COEFF_TAB_SIZE]={0};
 
-static int32_t aPhysX[2*AB_COEFF_TAB_SIZE];
-static int32_t aPhysY[2*AB_COEFF_TAB_SIZE];
+static int32_t aPhysX[2*AB_COEFF_TAB_SIZE]={0};
+static int32_t aPhysY[2*AB_COEFF_TAB_SIZE]={0};
 
 uint8_t touchDetect;
 
@@ -138,11 +138,8 @@ int CalcutaleCoeffCalibration(int maxSize)
 			B2[j] = (1000 * aLogY[i]) - A2[j] * aPhysY[i];
 			j++;
 
-			if(j == AB_COEFF_TAB_SIZE-1){
-				_average_AB(j);
-				return 0;
-			}
-
+			if(j == AB_COEFF_TAB_SIZE-1)
+				break;
 		}
 		else
 			return 1;
@@ -205,8 +202,8 @@ static uint8_t CheckTouch(XY_Touch_Struct *pos)
 
 	 if(TS_State.TouchDetected)
 	 {
-		 //A1=1062; B1=-10224;   A2=1083;  B2=-23229;
-		 _A1=1067; _B1=-46030;   _A2=1111;  _B2=-65544;
+		 //_A1=1075; _B1=-24900;   _A2=1124;  _B2=-53012;
+		// _A1=1067; _B1=-46030;   _A2=1111;  _B2=-65544;
 		 pos->x = Calibration_GetX(TS_State.x);
 	     pos->y = Calibration_GetY(TS_State.y);
 	     return 1;
