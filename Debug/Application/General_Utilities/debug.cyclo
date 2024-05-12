@@ -1,8 +1,0 @@
-../Application/General_Utilities/debug.c:20:6:DEBUG_Init	1
-../Application/General_Utilities/debug.c:27:6:Dbg	2
-../Application/General_Utilities/debug.c:33:6:DbgMulti	2
-../Application/General_Utilities/debug.c:43:6:DbgVar	2
-../Application/General_Utilities/debug.c:57:12:DEBUG_IsAnythingReceive	2
-../Application/General_Utilities/debug.c:65:12:DEBUG_IsTxtReceive	2
-../Application/General_Utilities/debug.c:77:6:DEBUG_RxFullBuffService	1
-../Application/General_Utilities/debug.c:85:5:DEBUG_RcvStr	3

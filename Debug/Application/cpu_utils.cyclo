@@ -1,5 +1,0 @@
-../Application/cpu_utils.c:77:6:vApplicationIdleHook	2
-../Application/cpu_utils.c:91:6:vApplicationTickHook	3
-../Application/cpu_utils.c:113:6:StartIdleMonitor	2
-../Application/cpu_utils.c:126:6:EndIdleMonitor	2
-../Application/cpu_utils.c:141:16:osGetCPUUsage	1

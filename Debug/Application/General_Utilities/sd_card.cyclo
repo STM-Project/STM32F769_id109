@@ -1,9 +1,0 @@
-../Application/General_Utilities/sd_card.c:16:6:SDCard_Init	2
-../Application/General_Utilities/sd_card.c:23:5:SDCardFileOpen	2
-../Application/General_Utilities/sd_card.c:31:5:SDCardFileRead	2
-../Application/General_Utilities/sd_card.c:47:5:SDCardFileWrite	2
-../Application/General_Utilities/sd_card.c:63:5:SDCardFileClose	2
-../Application/General_Utilities/sd_card.c:71:5:SDCardFilePosition	2
-../Application/General_Utilities/sd_card.c:80:5:SDCardOpenFileSize	1
-../Application/General_Utilities/sd_card.c:85:5:SDCardFileInfo	2
-../Application/General_Utilities/sd_card.c:96:5:SDCard_FileReadClose	4
