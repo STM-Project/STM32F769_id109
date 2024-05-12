@@ -17,8 +17,7 @@
 #include "tim.h"
 #include "lang.h"
 
-static int XXXX = 0;
-
+static uint64_t SelectBits = 0;
 /*#################### -- Main Setting -- ###############################*/
 
 #define FILE_NAME(extend) SCREEN_Calibration_##extend
@@ -40,24 +39,24 @@ Ko\xB3o,Circle,\
 	X(6, FONT_STYLE_PosLog, 	 Comic_Saens_MS) \
 	X(7, FONT_STYLE_PosPhys, 	 Comic_Saens_MS) \
 	\
-	X(8, STR_ID_Title,		 fontID_1) \
-	X(9, STR_ID_NameCircle,  fontID_2) \
-	X(10, STR_ID_PosLog, 	 fontID_3) \
-	X(11, STR_ID_PosPhys, 	 fontID_4) \
+	X(8, BK_SCREEN_color, 			 	BLACK) \
+	X(9, CIRCLE_FRAME_color, 		 	WHITE) \
+	X(10, CIRCLE_FILL_color, 		 	ORANGE) \
+	X(11, CIRCLE_FILL_pressColor, 	DARKCYAN) \
+	X(12, TITLE_color,  	 YELLOW) \
 	\
-	X(12, BK_SCREEN_color, 			 	BLACK) \
-	X(13, CIRCLE_FRAME_color, 		 	WHITE) \
-	X(14, CIRCLE_FILL_color, 		 	ORANGE) \
-	X(15, CIRCLE_FILL_pressColor, 	DARKCYAN) \
-	X(16, TITLE_color,  	 YELLOW) \
+	X(13, NAME_color, 		 WHITE) \
+	X(14, POS_LOG_color, 	 ORANGE) \
+	X(15, POS_PHYS_color,  	 DARKYELLOW) \
+	X(16, MAXVAL_NAME,  	255)	\
+	X(17, MAXVAL_LOG,  	255)	\
+	X(18, MAXVAL_PHYS,  	255) \
+	X(19, DEBUG_ON,  	1) \
 	\
-	X(17, NAME_color, 		 WHITE) \
-	X(18, POS_LOG_color, 	 ORANGE) \
-	X(19, POS_PHYS_color,  	 DARKYELLOW) \
-	X(20, MAXVAL_NAME,  	255)	\
-	X(21, MAXVAL_LOG,  	255)	\
-	X(22, MAXVAL_PHYS,  	255) \
-	X(23, DEBUG_ON,  	1)
+	X(20, STR_ID_Title,		 fontID_1) \
+	X(21, STR_ID_NameCircle, fontID_2) \
+	X(22, STR_ID_PosLog, 	 fontID_3) \
+	X(23, STR_ID_PosPhys, 	 fontID_4)
 
 /*#################### -- End Main Setting -- ###############################*/
 
@@ -121,18 +120,26 @@ typedef struct{
 
 static FILE_NAME(struct) var;
 
+static void FILE_NAME(funcSet__)(int offs, int val){
+	if(CHECK_bit(SelectBits,offs))
+		return;
+	else
+		*( (int*)((int*)(&var) + offs) ) = val;
+}
+
 int FILE_NAME(funcGet)(int offs){
 	return *( (int*)((int*)(&var) + offs) );
 }
 
 void FILE_NAME(funcSet)(int offs, int val){
 	*( (int*)((int*)(&var) + offs) ) = val;
+	SET_bit(SelectBits,offs);
 }
 
 void FILE_NAME(debug)(void)
 {
 	Dbg(1,"\r\ntypedef struct{\r\n");
-	#define X(a,b,c) DbgVar(1,200,"   %s	= %s\r\n",getName(b),getName(c));
+	#define X(a,b,c) DbgVar(1,200,"%d %s \t\t= %s (%s0x%x)\r\n",a,getName(b),getName(c), CHECK_bit(SelectBits,a)?"change to: ":"", var.b);
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 	DbgVar(1,200,"}%s;\r\n",getName(FILE_NAME(struct)));
@@ -241,11 +248,7 @@ void Touchscreen_Calibration(void)
 		#undef X
 	};
 
-	XY_Touch_Struct posCenter[] = {
-		#define X(a,b,c,d) {c+b/2, d+b/2},
-			CIRCLE_MACRO
-		#undef X
-	};
+	XY_Touch_Struct phys[CIRCLES_NUMBER] = {0};
 
 	uint16_t width[] = {
 		#define X(a,b,c,d) b,
@@ -253,18 +256,9 @@ void Touchscreen_Calibration(void)
 		#undef X
 	};
 
-	XY_Touch_Struct phys[CIRCLES_NUMBER] = {0};
-
-	if(XXXX==0)
-	{
-		XXXX=1;
-
-		#define X(a,b,c) FILE_NAME(funcSet)(b,c);
-			SCREEN_CALIBRATION_SET_PARAMETERS
-		#undef X
-
-		FILE_NAME(debug)();
-	}
+	#define X(a,b,c) FILE_NAME(funcSet__)(b,c);
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
 
 
 	//DbgVar(1,100,"\r\nAAAAAAA: %d %d %d %d ",  var.STR_ID_Title, var.STR_ID_NameCircle, var.STR_ID_PosLog, var.STR_ID_PosPhys);
@@ -287,6 +281,7 @@ void Touchscreen_Calibration(void)
 	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_PosLog,  var.FONT_STYLE_PosLog,  var.STR_ID_PosLog);			if(0<=i) var.STR_ID_PosLog = i;
 	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_PosPhys, var.FONT_STYLE_PosPhys, var.STR_ID_PosPhys);		if(0<=i) var.STR_ID_PosPhys = i;
 
+	FILE_NAME(debug)();
 
 	DisplayFontsStructState();
 
@@ -303,7 +298,7 @@ void Touchscreen_Calibration(void)
 		Dbg(var.DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,1));
 	else
 	{
-	   SetLogXY(posCenter,CIRCLES_NUMBER);
+	   SetLogXY(pos,width,CIRCLES_NUMBER);
 
 	   for (i = 0; i < CIRCLES_NUMBER; i++)
 	      GetPhysValues(pos[i], &phys[i], width[i], circlesNames[i]);

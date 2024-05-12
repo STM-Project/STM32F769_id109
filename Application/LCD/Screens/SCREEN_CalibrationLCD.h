@@ -22,11 +22,6 @@ typedef enum{
 	_FONT_STYLE_PosLog,
 	_FONT_STYLE_PosPhys,
 
-	_STR_ID_Title,  //zastanowic sie bo tu nic nie wskurasz -> usun to chyba
-	_STR_ID_NameCircle,
-	_STR_ID_PosLog,
-	_STR_ID_PosPhys,
-
 	_BK_SCREEN_color,
 	_CIRCLE_FRAME_color,
 	_CIRCLE_FILL_color,

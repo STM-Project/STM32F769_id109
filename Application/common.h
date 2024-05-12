@@ -45,6 +45,10 @@
 
 #define STRUCT_TAB_SIZE(_struct) (sizeof(_struct) / sizeof(&_struct[0]))
 
+#define SET_bit(allBits,bitNr)	allBits |=   1<<bitNr
+#define CLEAR_bit(allBits,bitNr)	allBits &= ~(1<<bitNr)
+#define CHECK_bit(allBits,bitNr) (allBits>>bitNr) & 0x0000000000000001
+
 #define SDRAM __attribute__ ((section(".sdram")))
 
 #define LCD_BUFF_XSIZE		800

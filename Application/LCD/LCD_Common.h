@@ -8,38 +8,42 @@
 #ifndef LCD_LCD_COMMON_H_
 #define LCD_LCD_COMMON_H_
 
-#define BLUE          ((uint32_t)0xFF0000FF)
-#define GREEN         ((uint32_t)0xFF00FF00)
-#define RED           ((uint32_t)0xFFFF0000)
-#define CYAN          ((uint32_t)0xFF00FFFF)
-#define MAGENTA       ((uint32_t)0xFFFF00FF)
-#define YELLOW        ((uint32_t)0xFFFFFF00)
-#define LIGHTBLUE     ((uint32_t)0xFF8080FF)
-#define LIGHTGREEN    ((uint32_t)0xFF80FF80)
-#define LIGHTRED      ((uint32_t)0xFFFF8080)
-#define LIGHTCYAN     ((uint32_t)0xFF80FFFF)
-#define LIGHTMAGENTA  ((uint32_t)0xFFFF80FF)
-#define LIGHTYELLOW   ((uint32_t)0xFFFFFF80)
-#define DARKBLUE      ((uint32_t)0xFF000080)
-#define DARKGREEN     ((uint32_t)0xFF008000)
-#define DARKRED       ((uint32_t)0xFF800000)
-#define DARKCYAN      ((uint32_t)0xFF008080)
-#define DARKMAGENTA   ((uint32_t)0xFF800080)
-#define DARKYELLOW    ((uint32_t)0xFF808000)
-#define WHITE         ((uint32_t)0xFFFFFFFF)
-#define LIGHTGRAY     ((uint32_t)0xFFD0D0D0)
-#define GRAY          ((uint32_t)0xFF808080)
-#define DARKGRAY      ((uint32_t)0xFF404040)
-#define BLACK         ((uint32_t)0xFF000000)
-#define BROWN         ((uint32_t)0xFFA52A2A)
-#define ORANGE        ((uint32_t)0xFFFFA500)
-#define TRANSPARENT   ((uint32_t)0x00000000)
 
-#define MYGRAY    	 ((uint32_t)0xFF404040)
-#define MYBLUE    	 ((uint32_t)0xFF50C8FF)
-#define MYRED    	 	 ((uint32_t)0xffff7878)
-#define MYGREEN    	 ((uint32_t)0xff50FF50)
-#define MYLIGHTGRAY   ((uint32_t)0xFFB0B0B0)
+typedef enum{
+   BLUE          = ((uint32_t)0xFF0000FF),
+ 	GREEN         = ((uint32_t)0xFF00FF00),
+	RED           = ((uint32_t)0xFFFF0000),
+ 	CYAN          = ((uint32_t)0xFF00FFFF),
+ 	MAGENTA       = ((uint32_t)0xFFFF00FF),
+	YELLOW        = ((uint32_t)0xFFFFFF00),
+	LIGHTBLUE     = ((uint32_t)0xFF8080FF),
+	LIGHTGREEN    = ((uint32_t)0xFF80FF80),
+	LIGHTRED      = ((uint32_t)0xFFFF8080),
+	LIGHTCYAN     = ((uint32_t)0xFF80FFFF),
+	LIGHTMAGENTA  = ((uint32_t)0xFFFF80FF),
+	LIGHTYELLOW   = ((uint32_t)0xFFFFFF80),
+	DARKBLUE      = ((uint32_t)0xFF000080),
+	DARKGREEN     = ((uint32_t)0xFF008000),
+	DARKRED       = ((uint32_t)0xFF800000),
+	DARKCYAN      = ((uint32_t)0xFF008080),
+	DARKMAGENTA   = ((uint32_t)0xFF800080),
+	DARKYELLOW    = ((uint32_t)0xFF808000),
+	WHITE         = ((uint32_t)0xFFFFFFFF),
+	LIGHTGRAY     = ((uint32_t)0xFFD0D0D0),
+	GRAY          = ((uint32_t)0xFF808080),
+	DARKGRAY      = ((uint32_t)0xFF404040),
+	BLACK         = ((uint32_t)0xFF000000),
+	BROWN         = ((uint32_t)0xFFA52A2A),
+	ORANGE        = ((uint32_t)0xFFFFA500),
+	TRANSPARENT   = ((uint32_t)0x00000000),
+
+	MYGRAY    	 = ((uint32_t)0xFF404040),
+	MYBLUE    	 = ((uint32_t)0xFF50C8FF),
+	MYRED    	 = ((uint32_t)0xffff7878),
+	MYGREEN    	 = ((uint32_t)0xff50FF50),
+	MYLIGHTGRAY  = ((uint32_t)0xFFB0B0B0)
+
+}COLORS_DEFINITION;;
 
 #define RGB2INT(R,G,B)		(R<<16|G<<8|B)|0xFF000000
 #define R_PART(rgb)		(rgb>>16)&0x000000FF

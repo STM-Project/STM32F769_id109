@@ -46,7 +46,7 @@ int 		GetTouchToTemp				(uint16_t idx);
 void 		DeleteSelectTouch			(uint16_t idx);
 void 		DeleteAllTouchWithout	(uint16_t idx);
 int 		SetTouch						(uint16_t id, uint16_t idx, uint8_t param);
-void SetLogXY(XY_Touch_Struct *pos, int maxSize);
+void SetLogXY(XY_Touch_Struct *pos, uint16_t *width, int maxSize);
 void SetPhysXY(XY_Touch_Struct *pos, int maxSize);
 void WaitForTouchState(uint8_t Pressed);
 int CalcutaleCoeffCalibration(int maxSize);

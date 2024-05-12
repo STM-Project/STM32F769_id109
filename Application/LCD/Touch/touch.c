@@ -79,14 +79,15 @@ void WaitForTouchState(uint8_t Pressed)
 	while (1);
 }
 
-void SetLogXY(XY_Touch_Struct *pos, int maxSize)
+void SetLogXY(XY_Touch_Struct *pos, uint16_t *width, int maxSize)
 {
    for(int i=0; i<maxSize; i++){
-   	aLogX[i] = pos->x;
-      aLogY[i] = pos->y;
+   	aLogX[i] = pos->x + *width/2;
+      aLogY[i] = pos->y + *width/2;
    	if(i == 2*AB_COEFF_TAB_SIZE-1)
    		break;
       pos++;
+      width++;
    }
 }
 
