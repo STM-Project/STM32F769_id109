@@ -1,7 +1,0 @@
-../Drivers/CMSIS/Include/core_cm7.h:2464:22:SCB_InvalidateDCache_by_Addr	2
-../Application/LCD/LCD_Hardware.c:15:10:LCD_GetXSize	1
-../Application/LCD/LCD_Hardware.c:18:10:LCD_GetYSize	1
-../Application/LCD/LCD_Hardware.c:25:12:LCD_GetBytesPerPixel	3
-../Application/LCD/LCD_Hardware.c:39:17:LCD_GetPositionAddress	1
-../Application/LCD/LCD_Hardware.c:43:12:LCD_SetOutputOffset	1
-../Application/LCD/LCD_Hardware.c:49:6:LCD_DisplayBuff	3

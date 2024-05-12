@@ -1,5 +1,0 @@
-../Application/General_Utilities/timer.c:19:6:AllTimeReset	2
-../Application/General_Utilities/timer.c:24:6:TimeReset	2
-../Application/General_Utilities/timer.c:29:5:IsTimeout	3
-../Application/General_Utilities/timer.c:39:6:StartMeasureTime	2
-../Application/General_Utilities/timer.c:44:10:StopMeasureTime	3

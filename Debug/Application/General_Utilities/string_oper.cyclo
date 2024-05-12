@@ -1,6 +1,0 @@
-../Application/General_Utilities/string_oper.c:29:6:_IsSign	6
-../Application/General_Utilities/string_oper.c:21:7:Int2Str	13
-../Application/General_Utilities/string_oper.c:132:6:_IsSign	6
-../Application/General_Utilities/string_oper.c:124:7:Float2Str	13
-../Application/General_Utilities/string_oper.c:227:7:StrAll	3
-../Application/General_Utilities/string_oper.c:254:6:SwapUint16	1
