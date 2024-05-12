@@ -17,7 +17,6 @@
 #include "tim.h"
 #include "lang.h"
 
-static uint64_t SelectBits = 0;
 /*#################### -- Main Setting -- ###############################*/
 
 #define FILE_NAME(extend) SCREEN_Calibration_##extend
@@ -69,38 +68,7 @@ Ko\xB3o,Circle,\
 	X("Circle Markielowski 5",  84, 150, 250) \
 	X("Circle 6", 108, 603,   1) \
 	X("Circle 7", 77, 650,   199) \
-	X("1",  50,   0,   0) \
-			X("2",  51, 100,   0) \
-			X("3",  52, 200,   0) \
-			X("4",  53, 300,   0) \
-			X("5",  54, 400,   0) \
-			X("6",  55, 500,   0) \
-			X("7",  56, 600,   0) \
-			X("8",  57, 700,   0) \
-			X("9",  58,   0,  70) \
-			X("10", 59, 100,  70) \
-			X("11", 60, 200,  70) \
-			X("12", 61, 300,  70) \
-			X("13", 62, 400,  70) \
-			X("14", 63, 500,  70) \
-			X("15", 64, 600,  70) \
-			X("16", 65, 700,  70) \
-			X("17", 66,   0,  170) \
-			X("18", 67, 100,  170) \
-			X("19", 68, 200,  170) \
-			X("20", 69, 300,  170) \
-			X("21", 70, 400,  170) \
-			X("22", 71, 500,  170) \
-			X("23", 72, 600,  170) \
-			X("24", 73, 700,  170) \
-			X("25", 74,   0,  270) \
-			X("26", 75, 100,  270) \
-			X("27", 76, 200,  270) \
-			X("28", 77, 300,  270) \
-			X("29", 78, 400,  270) \
-			X("30", 79, 500,  270) \
-			X("31", 80, 600,  270) \
-			X("32", 81, 700,  270) \
+	X("1",  50,   0,   0)
 
 
 #define DEBUG_Text_1  "error_touch"
@@ -118,7 +86,8 @@ typedef struct{
 	#undef X
 }FILE_NAME(struct);
 
-static FILE_NAME(struct) var;
+static FILE_NAME(struct) var = {0};
+static uint64_t SelectBits = 0;
 
 static void FILE_NAME(funcSet__)(int offs, int val){
 	if(CHECK_bit(SelectBits,offs))
@@ -260,15 +229,27 @@ void Touchscreen_Calibration(void)
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 
+		/*
+		0: black
+		1: red
+		2: green
+		3: yellow
+		4: blue
+		5: magenta
+		6: cyan
+		7: white*/
 
-	//DbgVar(1,100,"\r\nAAAAAAA: %d %d %d %d ",  var.STR_ID_Title, var.STR_ID_NameCircle, var.STR_ID_PosLog, var.STR_ID_PosPhys);
+		Dbg(1,"\x1B\x5B\x32\x4A");  //clear screen
 
-		// i tu funkcja ktor by zmieniala wpisy do struct !!!!!!!!!!!!
 
-	//SCREEN_Calibration_funcSet(FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(FONT_SIZE_Title));  //dla TESTU
+	Dbg(1,"\x1b[1m""\r\nHello World\n""\x1b[0m");   //bold
+	Dbg(1,"\x1b[3m""\r\nHello World\n""\x1b[0m");
+	Dbg(1,"\x1b[4m""\r\nHello World\n""\x1b[0m");  //italic
+	Dbg(1,"\x1b[33m""\r\nHello World\n""\x1b[0m");
 
-	//DbgVar(1,100,"\r\nAAAAAAA: %d %d %d %d ",  var.STR_ID_Title, var.STR_ID_NameCircle, var.STR_ID_PosLog, var.STR_ID_PosPhys);
-
+	Dbg(1,"\x1b[38;2;80;80;80m""\r\nHello World\n""\x1b[0m");
+	Dbg(1,"\x1b[48;2;80;80;80m""\r\nHello World\n""\x1b[0m");  //48 to bk
+	Dbg(1,"\x1b[48;2;255;0;0m""\r\nHello World\n""\x1b[0m");
 
 	Delete_TouchLcd_Task();
 
