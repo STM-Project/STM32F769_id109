@@ -201,6 +201,8 @@ void Touchscreen_Calibration(void)
 {
 	#define CIRCLES_NUMBER  STRUCT_TAB_SIZE(pos)
 
+	char tttt[200];
+
 	StructTxtPxlLen lenStr={0};
 	char *ptr=NULL;
 	int i=0;
@@ -246,6 +248,17 @@ void Touchscreen_Calibration(void)
 	Dbg(1,"\x1b[3m""\r\nHello World\n""\x1b[0m");
 	Dbg(1,"\x1b[4m""\r\nHello World\n""\x1b[0m");  //italic
 	Dbg(1,"\x1b[33m""\r\nHello World\n""\x1b[0m");
+
+
+
+
+	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",30,"Markielowski", "1");  Dbg(1,tttt);
+	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",30,"Markski", "1");  Dbg(1,tttt);
+	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",30,"M", "1");  Dbg(1,tttt);
+	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskigfhg", "1");  Dbg(1,tttt);
+	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskk,ki", "1");  Dbg(1,tttt);
+	sprintf(tttt,"\r\nAAAAAA: %*s",20,"Markieki");  Dbg(1,tttt);
+	sprintf(tttt,"\r\nAAAAAA: %*s",20,"Markielki");  Dbg(1,tttt);
 
 	Dbg(1,"\x1b[38;2;80;80;80m""\r\nHello World\n""\x1b[0m");
 	Dbg(1,"\x1b[48;2;80;80;80m""\r\nHello World\n""\x1b[0m");  //48 to bk
