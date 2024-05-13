@@ -201,7 +201,7 @@ void Touchscreen_Calibration(void)
 {
 	#define CIRCLES_NUMBER  STRUCT_TAB_SIZE(pos)
 
-	char tttt[200];
+	char tttt[200]="KOCHA";
 
 	StructTxtPxlLen lenStr={0};
 	char *ptr=NULL;
@@ -234,8 +234,10 @@ void Touchscreen_Calibration(void)
 	#define Ri		"\x1b[31m"
 	#define iR		"\x1b[0m"
 
-		Dbg(1, "\r\nRafal " "Markielowski " "cos" );
-		Dbg(1, "\r\nRafal " Ri"Markielowski "iR "cos" );
+	Dbg(1, "\r\nRafal "         "Markielowski "         "cos" );
+	Dbg(1, "\r\nRafal "          Ri"Markielowski "iR    "cos" );
+	DbgVar(1,100,"\r\nRafal "       Ri"%s "iR            "%s", tttt, tttt);
+	
 	
 		/*
 		0: black
