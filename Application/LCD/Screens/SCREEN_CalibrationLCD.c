@@ -231,6 +231,9 @@ void Touchscreen_Calibration(void)
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 
+	#define R_		"\x1b[31m"
+	#define _R		"\x1b[0m"
+	
 		/*
 		0: black
 		1: red
