@@ -234,9 +234,43 @@ void Touchscreen_Calibration(void)
 	#define Ri		"\x1b[31m"
 	#define iR		"\x1b[0m"
 
-	Dbg(1, "\r\nRafal "         "Markielowski "         "cos" );
+	#define Bi		"\x1b[34m"
+	#define iB		"\x1b[0m"
+
+#define Yi		"\x1b[36m"
+#define iY		"\x1b[0m"
+
+
+		char bh[100];
+		char* ffffff(char R, char G, char B)
+		{
+			mini_snprintf(bh,100,"\x1b[38;2;%d;%d;%dm",R,G,B );
+			return bh;
+		}
+
+#define C_(_x_)		"\x1b[38;2;80;80;80m"
+#define _X		"\x1b[0m"
+
+		char gg[20]="12345";
+		int se=12345;
+
+
+		Dbg(1,"\x1B\x5B\x32\x4A");  //clear screen
+
+
+		Dbg(1,"\x1b[0m");   //reset zapisu do terminalu w sprawie kolorow  GDYBYM NIE zAKONCZYL KOLOROW TO RESET
+
+
+
+		mini_snprintf(tttt,100,"\r\nKrasnal"  " lubi"  Ri"nic"iR  " %s: "   "%s""%d\r\n"iB,gg,ffffff(250,40,250),se );
+Dbg(1,tttt);
+
+
+char xxxx[200]="KOCHA";
+
+	Dbg(1, "\r\nRafal "         C_(250)"Markielowski "_X         "cos" );
 	Dbg(1, "\r\nRafal "          Ri"Markielowski "iR    "cos" );
-	DbgVar(1,100,"\r\nRafal "       Ri"%s "iR            "%s", tttt, tttt);
+	DbgVar(1,100,"\r\nRafal "       Yi"%s "iY            "%s", xxxx, xxxx);
 	
 	
 		/*
@@ -249,14 +283,16 @@ void Touchscreen_Calibration(void)
 		6: cyan
 		7: white*/
 
-		Dbg(1,"\x1B\x5B\x32\x4A");  //clear screen
+
 
 
 	Dbg(1,"\x1b[1m""\r\nHello World\n""\x1b[0m");   //bold
-	Dbg(1,"\x1b[3m""\r\nHello World\n""\x1b[0m");
+	Dbg(1,"\x1b[3m""\r\nHello World\n""\x1b[0m");  //to nie dziala
 	Dbg(1,"\x1b[4m""\r\nHello World\n""\x1b[0m");  //italic
-	Dbg(1,"\x1b[33m""\r\nHello World\n""\x1b[0m");
 
+	Dbg(1,"\x1b[31m""\r\nHello World\n""\x1b[0m");
+	Dbg(1,"\x1b[32m""\r\nHello World\n""\x1b[0m");
+	Dbg(1,"\x1b[33m""\r\nHello World\n""\x1b[0m");
 
 
 
@@ -271,6 +307,8 @@ void Touchscreen_Calibration(void)
 	Dbg(1,"\x1b[38;2;80;80;80m""\r\nHello World\n""\x1b[0m");
 	Dbg(1,"\x1b[48;2;80;80;80m""\r\nHello World\n""\x1b[0m");  //48 to bk
 	Dbg(1,"\x1b[48;2;255;0;0m""\r\nHello World\n""\x1b[0m");
+
+	Dbg(1, Yi"\r\nRafalAAAAAAAAAAAAAAAAAAA"iY);
 
 	Delete_TouchLcd_Task();
 
