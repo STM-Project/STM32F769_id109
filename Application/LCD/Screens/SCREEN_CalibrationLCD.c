@@ -231,8 +231,11 @@ void Touchscreen_Calibration(void)
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 
-	#define R_		"\x1b[31m"
-	#define _R		"\x1b[0m"
+	#define Ri		"\x1b[31m"
+	#define iR		"\x1b[0m"
+
+		Dbg(1, "\r\nRafal " "Markielowski " "cos" );
+		Dbg(1, "\r\nRafal " Ri"Markielowski "iR "cos" );
 	
 		/*
 		0: black
