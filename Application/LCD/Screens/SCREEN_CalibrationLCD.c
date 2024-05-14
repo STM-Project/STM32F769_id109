@@ -17,6 +17,8 @@
 #include "tim.h"
 #include "lang.h"
 
+#include "mini_printf.h"  //do usuniecia
+
 /*#################### -- Main Setting -- ###############################*/
 
 #define FILE_NAME(extend) SCREEN_Calibration_##extend
@@ -227,7 +229,7 @@ void Touchscreen_Calibration(void)
 
 	#define X(a,b,c) FILE_NAME(funcSet__)(b,c);
 		SCREEN_CALIBRATION_SET_PARAMETERS
-	#undef X
+	#undef X  // zamien wszystko np HAL_Delay na vTaskDelant itd..
 
 
 
@@ -240,19 +242,20 @@ void Touchscreen_Calibration(void)
 		int se = 456789;
 
 
+  char bnnn[200];
 
-
-		DbgVar(1,200,Clr_   \
+  mini_snprintf(bnnn,200,Clr_   \
 				Yel_"\r\nRafal"_X \
 				Col_" Markielowski"_X \
+				Col_"  AAAAA  "_X  \
 				Col_"%s"_X \
 				" i zreszta %s" \
 				Cya_"---"_X  \
 				Red_"%d"_X \
 				"  %s",  \
-				_Col(font,0,140,250),_Col(bkg,0,140,250) , test_1, test_2, se, gg);
+				_Col(font,0,140,250), _Col(bkg,160,70,45),  _Col(bkg,0,140,250),test_1,  test_2,  se,  gg);
 
-
+ Dbg(1,bnnn);
 
 
 		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",30,"Markielowski", "1");
@@ -260,8 +263,8 @@ void Touchscreen_Calibration(void)
 		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",30,"M", "1");
 		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskigfhg", "1");
 		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskk,ki", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s",20,"Markieki");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s",20,"Markielki");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markieki");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markielki");
 
 
 	

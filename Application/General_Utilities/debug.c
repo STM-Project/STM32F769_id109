@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include "debug.h"
 #include "usart.h"
 #include "mini_printf.h"
@@ -55,12 +56,14 @@ void DbgVar(int on, unsigned int buffLen, const char *fmt, ...)
 
 void DbgVar2(int on, unsigned int buffLen, const char *fmt, ...)
 {
+	//char temp[100];
+
 	if(on)
 	{
 		char *temp = (char*)pvPortMalloc(buffLen);
 		va_list va;
 		va_start(va, fmt);
-		sprintf(temp, fmt, va);
+		vsnprintf(temp,buffLen, fmt, va);
 		va_end(va);
 		DEBUG_Send(temp);
 		vPortFree(temp);
@@ -110,10 +113,23 @@ int DEBUG_RcvStr(char *txt)
 
 char* _Col(FONT_BKG_COLOR background, uint8_t red, uint8_t green, uint8_t blue)
 {
-	static char tab[21];
+	static char tab[100]={0};  static int i=0;
+	int i_copy;
+
+	i_copy = i;
+
 	uint8_t fontBkg;
-	switch(background){case font: fontBkg=38; default: fontBkg=48;}
-	mini_snprintf(tab,20,"\x1b[%d;2;%d;%d;%dm",fontBkg,red,green,blue);
-	return tab;
+	switch(background)
+	{
+		case font:
+			fontBkg=38;
+			break;
+		default:
+			fontBkg=48;
+			break;
+	}
+	i += mini_snprintf(&tab[i],20,"\x1b[%d;2;%d;%d;%dm",fontBkg,red,green,blue);
+	tab[i++]=0;
+	return &tab[i_copy];
 }
 
