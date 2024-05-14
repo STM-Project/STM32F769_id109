@@ -53,6 +53,20 @@ void DbgVar(int on, unsigned int buffLen, const char *fmt, ...)
 	}
 }
 
+void DbgVar2(int on, unsigned int buffLen, const char *fmt, ...)
+{
+	if(on)
+	{
+		char *temp = (char*)pvPortMalloc(buffLen);
+		va_list va;
+		va_start(va, fmt);
+		sprintf(temp, fmt, va);
+		va_end(va);
+		DEBUG_Send(temp);
+		vPortFree(temp);
+	}
+}
+
 static int DEBUG_IsAnythingReceive(void)
 {
 	if(dbgRecvBuffer[0]>0)
@@ -92,5 +106,14 @@ int DEBUG_RcvStr(char *txt)
 	}
 	else
 		return 0;
+}
+
+char* _Col(FONT_BKG_COLOR background, uint8_t red, uint8_t green, uint8_t blue)
+{
+	static char tab[21];
+	uint8_t fontBkg;
+	switch(background){case font: fontBkg=38; default: fontBkg=48;}
+	mini_snprintf(tab,20,"\x1b[%d;2;%d;%d;%dm",fontBkg,red,green,blue);
+	return tab;
 }
 
