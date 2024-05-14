@@ -201,8 +201,6 @@ void Touchscreen_Calibration(void)
 {
 	#define CIRCLES_NUMBER  STRUCT_TAB_SIZE(pos)
 
-	char tttt[200]="KOCHA";
-
 	StructTxtPxlLen lenStr={0};
 	char *ptr=NULL;
 	int i=0;
@@ -231,84 +229,43 @@ void Touchscreen_Calibration(void)
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 
-	#define Ri		"\x1b[31m"
-	#define iR		"\x1b[0m"
-
-	#define Bi		"\x1b[34m"
-	#define iB		"\x1b[0m"
-
-#define Yi		"\x1b[36m"
-#define iY		"\x1b[0m"
 
 
-		char bh[100];
-		char* ffffff(char R, char G, char B)
-		{
-			mini_snprintf(bh,100,"\x1b[38;2;%d;%d;%dm",R,G,B );
-			return bh;
-		}
 
-#define C_(_x_)		"\x1b[38;2;80;80;80m"
-#define _X		"\x1b[0m"
+		char test_1[50]="KOCHA";
+		char test_2[50]="nie wiem";
+
 
 		char gg[20]="12345";
-		int se=12345;
-
-
-		Dbg(1,"\x1B\x5B\x32\x4A");  //clear screen
-
-
-		Dbg(1,"\x1b[0m");   //reset zapisu do terminalu w sprawie kolorow  GDYBYM NIE zAKONCZYL KOLOROW TO RESET
+		int se = 456789;
 
 
 
-		mini_snprintf(tttt,100,"\r\nKrasnal"  " lubi"  Ri"nic"iR  " %s: "   "%s""%d\r\n"iB,gg,ffffff(250,40,250),se );
-Dbg(1,tttt);
+
+		DbgVar(1,200,Clr_   \
+				Yel_"\r\nRafal"_X \
+				Col_" Markielowski"_X \
+				Col_"%s"_X \
+				" i zreszta %s" \
+				Cya_"---"_X  \
+				Red_"%d"_X \
+				"  %s",  \
+				_Col(font,0,140,250),_Col(bkg,0,140,250) , test_1, test_2, se, gg);
 
 
-char xxxx[200]="KOCHA";
 
-	Dbg(1, "\r\nRafal "         C_(250)"Markielowski "_X         "cos" );
-	Dbg(1, "\r\nRafal "          Ri"Markielowski "iR    "cos" );
-	DbgVar(1,100,"\r\nRafal "       Yi"%s "iY            "%s", xxxx, xxxx);
+
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",30,"Markielowski", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",30,"Markski", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",30,"M", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskigfhg", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskk,ki", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s",20,"Markieki");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s",20,"Markielki");
+
+
 	
 	
-		/*
-		0: black
-		1: red
-		2: green
-		3: yellow
-		4: blue
-		5: magenta
-		6: cyan
-		7: white*/
-
-
-
-
-	Dbg(1,"\x1b[1m""\r\nHello World\n""\x1b[0m");   //bold
-	Dbg(1,"\x1b[3m""\r\nHello World\n""\x1b[0m");  //to nie dziala
-	Dbg(1,"\x1b[4m""\r\nHello World\n""\x1b[0m");  //italic
-
-	Dbg(1,"\x1b[31m""\r\nHello World\n""\x1b[0m");
-	Dbg(1,"\x1b[32m""\r\nHello World\n""\x1b[0m");
-	Dbg(1,"\x1b[33m""\r\nHello World\n""\x1b[0m");
-
-
-
-	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",30,"Markielowski", "1");  Dbg(1,tttt);
-	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",30,"Markski", "1");  Dbg(1,tttt);
-	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",30,"M", "1");  Dbg(1,tttt);
-	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskigfhg", "1");  Dbg(1,tttt);
-	sprintf(tttt,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskk,ki", "1");  Dbg(1,tttt);
-	sprintf(tttt,"\r\nAAAAAA: %*s",20,"Markieki");  Dbg(1,tttt);
-	sprintf(tttt,"\r\nAAAAAA: %*s",20,"Markielki");  Dbg(1,tttt);
-
-	Dbg(1,"\x1b[38;2;80;80;80m""\r\nHello World\n""\x1b[0m");
-	Dbg(1,"\x1b[48;2;80;80;80m""\r\nHello World\n""\x1b[0m");  //48 to bk
-	Dbg(1,"\x1b[48;2;255;0;0m""\r\nHello World\n""\x1b[0m");
-
-	Dbg(1, Yi"\r\nRafalAAAAAAAAAAAAAAAAAAA"iY);
 
 	Delete_TouchLcd_Task();
 
