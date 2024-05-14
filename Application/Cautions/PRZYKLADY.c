@@ -1,5 +1,6 @@
 
 #ifdef PRZYKLADY_
+ZROBIC AUTOMATYCZNE TESTY PO PRZYGOTOWANY UART FUNKCJE SPRAWDZAJACE CALOSC UKLADU JAK ODCZYTY POPRANOSAC ICH ITD !!!!!!!!!!!!!!!!
 //https://www.geeksforgeeks.org/x-macros-in-c/
 Nie dawaj duzych funkcji wewnatrz funkcji bo trzepie obrazem  -FALSZ !!!!
 #line 10
