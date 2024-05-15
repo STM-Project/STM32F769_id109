@@ -229,7 +229,7 @@ void Touchscreen_Calibration(void)
 
 	#define X(a,b,c) FILE_NAME(funcSet__)(b,c);
 		SCREEN_CALIBRATION_SET_PARAMETERS
-	#undef X  // zamien wszystko np HAL_Delay na vTaskDelant itd..
+	#undef X
 
 
 
@@ -258,13 +258,13 @@ void Touchscreen_Calibration(void)
  Dbg(1,bnnn);
 
 
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",30,"Markielowski", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",30,"Markski", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",30,"M", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskigfhg", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markielowskk,ki", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markieki");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",20,"Markielki");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markielowski", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markski", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"M", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markielowskigfhg", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markielowskk,ki", "1");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markieki");
+		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markielki");
 
 
 	
