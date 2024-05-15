@@ -111,7 +111,7 @@ int DEBUG_RcvStr(char *txt)
 
 char* _Col(FONT_BKG_COLOR background, uint8_t red, uint8_t green, uint8_t blue)
 {
-	#define	SIZE_TAB			100
+	#define	SIZE_TAB			MAX_SIZE_TXT * 10
 	#define	MAX_SIZE_TXT	20
 
 	static char tab[SIZE_TAB]={0};

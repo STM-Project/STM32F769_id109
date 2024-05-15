@@ -24,6 +24,21 @@ typedef enum{
 #define Mag_	"\x1b[35m"
 #define Cya_	"\x1b[36m"
 
+#define CoBl_	"\x1b[38;2;0;0;0m"
+#define CoGr_	"\x1b[38;2;150;150;150m"
+
+#define CoR_	"\x1b[38;2;255;130;110m"
+#define CoG_	"\x1b[38;2;0;205;115m"
+#define CoG2_	"\x1b[38;2;100;255;100m"
+#define CoB_	"\x1b[38;2;50;190;255m"
+
+#define BkR_	"\x1b[48;2;160;70;45m"
+
+#define Bol_	"\x1b[1m"
+#define Ita_	"\x1b[4m"
+#define _X		"\x1b[0m"
+
+/* ---- User Colors Definitions -----*/
 #define Co1_	"\x1b[38;2;255;255;255m"
 #define Co2_	"\x1b[38;2;255;255;255m"
 #define Co3_	"\x1b[38;2;255;255;255m"
@@ -31,10 +46,7 @@ typedef enum{
 #define Bk1_	"\x1b[48;2;255;255;255m"
 #define Bk2_	"\x1b[48;2;255;255;255m"
 #define Bk3_	"\x1b[48;2;255;255;255m"
-
-#define Bol_	"\x1b[1m"
-#define Ita_	"\x1b[4m"
-#define _X		"\x1b[0m"
+/* ----------------------------------*/
 
 #define Col_	"%s"
 char* _Col(FONT_BKG_COLOR background, uint8_t red, uint8_t green, uint8_t blue);

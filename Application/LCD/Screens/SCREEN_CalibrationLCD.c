@@ -17,8 +17,6 @@
 #include "tim.h"
 #include "lang.h"
 
-#include "mini_printf.h"  //do usuniecia
-
 /*#################### -- Main Setting -- ###############################*/
 
 #define FILE_NAME(extend) SCREEN_Calibration_##extend
@@ -109,11 +107,11 @@ void FILE_NAME(funcSet)(int offs, int val){
 
 void FILE_NAME(debug)(void)
 {
-	Dbg(1,"\r\ntypedef struct{\r\n");
-	#define X(a,b,c) DbgVar(1,200,"%d %s \t\t= %s (%s0x%x)\r\n",a,getName(b),getName(c), CHECK_bit(SelectBits,a)?"change to: ":"", var.b);
+	Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);
+	#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(SelectBits,a)?CoR_"change to: "_X:"", var.b);
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
-	DbgVar(1,200,"}%s;\r\n",getName(FILE_NAME(struct)));
+	DbgVar(1,200,CoG2_"}%s;\r\n"_X,getName(FILE_NAME(struct)));
 }
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
@@ -231,45 +229,6 @@ void Touchscreen_Calibration(void)
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 
-
-
-
-		char test_1[50]="KOCHA";
-		char test_2[50]="nie wiem";
-
-
-		char gg[20]="12345";
-		int se = 456789;
-
-
-  char bnnn[200];
-
-  mini_snprintf(bnnn,200,Clr_   \
-				Yel_"\r\nRafal"_X \
-				Col_" Markielowski"_X \
-				Col_"  AAAAA  "_X  \
-				Col_"%s"_X \
-				" i zreszta %s" \
-				Cya_"---"_X  \
-				Red_"%d"_X \
-				"  %s",  \
-				_Col(font,0,140,250), _Col(bkg,160,70,45),  _Col(bkg,0,140,250),test_1,  test_2,  se,  gg);
-
- Dbg(1,bnnn);
-
-
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markielowski", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markski", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"M", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markielowskigfhg", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markielowskk,ki", "1");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markieki");
-		DbgVar2(1,50,"\r\nAAAAAA: %*s : %s  gg",-30,"Markielki");
-
-
-	
-	
-
 	Delete_TouchLcd_Task();
 
 	LCD_AllRefreshScreenClear();
@@ -282,7 +241,6 @@ void Touchscreen_Calibration(void)
 	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_PosPhys, var.FONT_STYLE_PosPhys, var.STR_ID_PosPhys);		if(0<=i) var.STR_ID_PosPhys = i;
 
 	FILE_NAME(debug)();
-
 	DisplayFontsStructState();
 
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
