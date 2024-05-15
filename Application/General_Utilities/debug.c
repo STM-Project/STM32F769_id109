@@ -56,8 +56,6 @@ void DbgVar(int on, unsigned int buffLen, const char *fmt, ...)
 
 void DbgVar2(int on, unsigned int buffLen, const char *fmt, ...)
 {
-	//char temp[100];
-
 	if(on)
 	{
 		char *temp = (char*)pvPortMalloc(buffLen);
@@ -113,14 +111,19 @@ int DEBUG_RcvStr(char *txt)
 
 char* _Col(FONT_BKG_COLOR background, uint8_t red, uint8_t green, uint8_t blue)
 {
-	static char tab[100]={0};  static int i=0;
+	#define	SIZE_TAB			100
+	#define	MAX_SIZE_TXT	20
+
+	static char tab[SIZE_TAB]={0};
+	static int i=0;
+	uint8_t fontBkg;
 	int i_copy;
 
+	if(i + MAX_SIZE_TXT >= SIZE_TAB-1)
+		i=0;
 	i_copy = i;
 
-	uint8_t fontBkg;
-	switch(background)
-	{
+	switch(background){
 		case font:
 			fontBkg=38;
 			break;
@@ -128,7 +131,7 @@ char* _Col(FONT_BKG_COLOR background, uint8_t red, uint8_t green, uint8_t blue)
 			fontBkg=48;
 			break;
 	}
-	i += mini_snprintf(&tab[i],20,"\x1b[%d;2;%d;%d;%dm",fontBkg,red,green,blue);
+	i += mini_snprintf(&tab[i],MAX_SIZE_TXT,"\x1b[%d;2;%d;%d;%dm",fontBkg,red,green,blue);
 	tab[i++]=0;
 	return &tab[i_copy];
 }
