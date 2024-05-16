@@ -26,6 +26,7 @@
 #include "cpu_utils.h"
 #include "SCREEN_CalibrationLCD.h"
 #include "touch.h"
+#include "SCREEN_FontsLCD.h"
 
 #define TOUCH_GET_PER_X_PROBE		3
 
@@ -43,7 +44,6 @@ enum new_touch{
 
 xTaskHandle vtask_ScreensSelectLCD_Handle;
 
-extern const char LANG_ReadPanel_StringType[];
 
 static char bufTemp[50];
 
@@ -54,7 +54,7 @@ static char bufTemp[50];
 
 #define TXT_FONT_COLOR 	StrAll(5,INT2STR(Test.font[0])," ",INT2STR(Test.font[1])," ",INT2STR(Test.font[2]))
 #define TXT_BK_COLOR 	StrAll(5,INT2STR(Test.bk[0]),  " ",INT2STR(Test.bk[1]),  " ",INT2STR(Test.bk[2]))
-#define TXT_FONT_SIZE	StrAll(3,GetSelTxt(0,LANG_ReadPanel_StringType,Test.type),":",LCD_FontSize2Str(bufTemp,Test.size))
+#define TXT_FONT_SIZE	StrAll(3,GetSelTxt(0,"",Test.type),":",LCD_FontSize2Str(bufTemp,Test.size))
 #define TXT_FONT_STYLE	LCD_FontStyle2Str(bufTemp,Test.style)
 #define TXT_COEFF			Int2Str(Test.coeff  ,' ',3,Sign_plusMinus)
 #define TXT_LEN_WIN		Int2Str(Test.lenWin ,' ',3,Sign_none)
@@ -142,7 +142,7 @@ static RGB_BK_FONT Test;
 
 
 
-static int startScreen=0;
+int startScreen=0;
 
 static char* TXT_PosCursor(void){
 	return Test.posCursor>0 ? Int2Str(Test.posCursor-1,' ',3,Sign_none) : StrAll(1,"off");
@@ -1129,9 +1129,9 @@ void SCREEN_ReadPanel(void)
 		{
 		case 0:
 			SCREEN_Calibration_funcSet(_FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(_FONT_SIZE_Title));
-			SCREEN_Calibration_funcSet(_BK_SCREEN_color, GRAY);
+			SCREEN_Calibration_funcSet(_BK_SCREEN_color, MYGRAY);
 			SCREEN_Calibration_funcSet(_NAME_color, RED);
-			SCREEN_Calibration_funcSet(_CIRCLE_FILL_color, BLUE);
+			SCREEN_Calibration_funcSet(_CIRCLE_FILL_color, LIGHTRED);
 			//NOWY_0();
 			SCREEN_Fonts_main();
 			startScreen=1;
@@ -1153,7 +1153,7 @@ void SCREEN_ReadPanel(void)
 			startScreen=1;
 			break;
 		case 5:
-			Touchscreen_Calibration();
+			SCREEN_Calibration_main();
 			startScreen=1;
 			break;
 		}
@@ -1163,51 +1163,7 @@ void SCREEN_ReadPanel(void)
 		switch(SCREEN_number)
 		{
 		case 0:
-				 if(DEBUG_RcvStr("1")) ChangeValRGB('f','R',1);
-			else if(DEBUG_RcvStr("q")) ChangeValRGB('f','R',-1);
-			else if(DEBUG_RcvStr("2")) ChangeValRGB('f','G',1);
-			else if(DEBUG_RcvStr("w")) ChangeValRGB('f','G',-1);
-			else if(DEBUG_RcvStr("3")) ChangeValRGB('f','B',1);
-			else if(DEBUG_RcvStr("e")) ChangeValRGB('f','B',-1);
-
-			else if(DEBUG_RcvStr("a")) ChangeValRGB('b','R',1);
-			else if(DEBUG_RcvStr("z")) ChangeValRGB('b','R',-1);
-			else if(DEBUG_RcvStr("s")) ChangeValRGB('b','G',1);
-			else if(DEBUG_RcvStr("x")) ChangeValRGB('b','G',-1);
-			else if(DEBUG_RcvStr("d")) ChangeValRGB('b','B',1);
-			else if(DEBUG_RcvStr("c")) ChangeValRGB('b','B',-1);
-
-			else if(DEBUG_RcvStr("f")) IncCoeffRGB();
-			else if(DEBUG_RcvStr("v")) DecCoeefRGB();
-
-			else if(DEBUG_RcvStr("g")) IncFontSize();
-			else if(DEBUG_RcvStr("b")) DecFontSize();
-
-			else if(DEBUG_RcvStr(" ")) ChangeFontStyle();
-
-			else if(DEBUG_RcvStr("`")) ReplaceLcdStrType();
-
-			else if(DEBUG_RcvStr("r")) ChangeFontBoldItalNorm();
-
-			else if(DEBUG_RcvStr("t")) Dec_offsWin();
-			else if(DEBUG_RcvStr("y")) Inc_offsWin();
-
-			else if(DEBUG_RcvStr("u")) Dec_lenWin();
-			else if(DEBUG_RcvStr("i")) Inc_lenWin();
-			else if(DEBUG_RcvStr("0")) DisplayFontsWithChangeColorOrNot();
-
-			else if(DEBUG_RcvStr("]")) Inc_PosCursor();
-			else if(DEBUG_RcvStr("[")) Dec_PosCursor();
-			else if(DEBUG_RcvStr("'")) IncDec_SpaceBetweenFont(0);
-			else if(DEBUG_RcvStr("\\")) IncDec_SpaceBetweenFont(1);
-			else if(DEBUG_RcvStr("/")) LCD_DisplayRemeberedSpacesBetweenFonts();
-			else if(DEBUG_RcvStr("o")) LCD_WriteSpacesBetweenFontsOnSDcard();
-			else if(DEBUG_RcvStr("m")) LCD_ResetSpacesBetweenFonts();
-
-
-
-			else if(DEBUG_RcvStr("h")) LCD_StrChangeColorRotVarIndirect(STR_ID_test,"10");
-			else if(DEBUG_RcvStr("j")) LCD_StrChangeColorRotVarIndirect(STR_ID_test,"90");
+			SCREEN_Fonts_debugRcvStr();
 			break;
 
 		case 1:

@@ -8,11 +8,7 @@
 #include <string.h>
 
 //############# -- ReadPanel -- ###################################
-const char LANG_ReadPanel_StringType[]="\
-LCD_StrChangeColor,LCD_StrChangeColor,\
-LCD_Str,LCD_Str,\
-WHITE_BLACK,WHITE_BLACK,\
-";
+
 
 //####################################################################
 
