@@ -5,7 +5,7 @@
  *      Author: maraf
  */
 #include "SCREEN_CalibrationLCD.h"
-#include <LCD_BasicGaphics.h>
+#include "LCD_BasicGaphics.h"
 #include "LCD_fonts_images.h"
 #include <stdio.h>
 #include "touch.h"
@@ -14,29 +14,28 @@
 #include "LCD_Common.h"
 #include "common.h"
 #include "debug.h"
-#include "tim.h"
 #include "lang.h"
 
-/*#################### -- Main Setting -- ###############################*/
+/*----------------- Main Settings ------------------*/
 
 #define FILE_NAME(extend) SCREEN_Calibration_##extend
 
-const char FILE_NAME(Lang)[]="\
+static const char FILE_NAME(Lang)[]="\
 Kalibracja LCD,Calibration LCD,\
 Ko\xB3o,Circle,\
 ";\
 
 #define SCREEN_CALIBRATION_SET_PARAMETERS \
-/*  id 	 name				default value */ \
-	X(0, FONT_SIZE_Title, 	 FONT_16) \
-	X(1, FONT_SIZE_Name, 	 FONT_12_bold) \
-	X(2, FONT_SIZE_PosLog,		 FONT_12_bold) \
-	X(3, FONT_SIZE_PosPhys,		 FONT_12_bold) \
+/*  id 	 name					default value */ \
+	X(0, FONT_SIZE_Title, 	 	FONT_16) \
+	X(1, FONT_SIZE_CircleName, FONT_12_bold) \
+	X(2, FONT_SIZE_PosLog,		FONT_12_bold) \
+	X(3, FONT_SIZE_PosPhys,		FONT_12_bold) \
 	\
-	X(4, FONT_STYLE_Title, 	 Arial) \
-	X(5, FONT_STYLE_Name, 	 Arial) \
-	X(6, FONT_STYLE_PosLog, 	 Comic_Saens_MS) \
-	X(7, FONT_STYLE_PosPhys, 	 Comic_Saens_MS) \
+	X(4, FONT_STYLE_Title, 	 	Arial) \
+	X(5, FONT_STYLE_Name, 	 	Arial) \
+	X(6, FONT_STYLE_PosLog, 	Comic_Saens_MS) \
+	X(7, FONT_STYLE_PosPhys, 	Comic_Saens_MS) \
 	\
 	X(8, BK_SCREEN_color, 			 	BLACK) \
 	X(9, CIRCLE_FRAME_color, 		 	WHITE) \
@@ -57,18 +56,18 @@ Ko\xB3o,Circle,\
 	X(22, STR_ID_PosLog, 	 fontID_3) \
 	X(23, STR_ID_PosPhys, 	 fontID_4)
 
-/*#################### -- End Main Setting -- ###############################*/
+/*------------ End Main Settings -----------------*/
 
 #define CIRCLE_MACRO \
-/*	 Name  width  x	 y */ \
-	X("Circle 1 AAAAAA",  48,  50,  50) \
-	X("C 2",  48,  LCD_GetXSize()-150, LCD_GetYSize()-150) \
-	X("Circle 3", 148, 300, 140) \
-	X("d 4",  76,   0, 300) \
-	X("Circle Markielowski 5",  84, 150, 250) \
-	X("Circle 6", 108, 603,   1) \
-	X("Circle 7", 77, 650,   199) \
-	X("1",  50,   0,   0)
+	/*	 Name  	 width   x	  y  */ \
+	X("Circle 1", 50,  50,  50) \
+	X("Circle 2", 50, 650, 330) \
+	X("Circle 3", 50, 300, 140) \
+	X("Circle 4", 50,   0, 300) \
+	X("Circle 5", 50, 150, 250) \
+	X("Circle 6", 50, 603,   1) \
+	X("Circle 7", 50, 650, 199) \
+	X("Circle 8", 50,   0,   0)
 
 
 #define DEBUG_Text_1  "error_touch"
@@ -96,24 +95,6 @@ static void FILE_NAME(funcSet__)(int offs, int val){
 		*( (int*)((int*)(&var) + offs) ) = val;
 }
 
-int FILE_NAME(funcGet)(int offs){
-	return *( (int*)((int*)(&var) + offs) );
-}
-
-void FILE_NAME(funcSet)(int offs, int val){
-	*( (int*)((int*)(&var) + offs) ) = val;
-	SET_bit(SelectBits,offs);
-}
-
-void FILE_NAME(debug)(void)
-{
-	Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);
-	#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(SelectBits,a)?CoR_"change to: "_X:"", var.b);
-		SCREEN_CALIBRATION_SET_PARAMETERS
-	#undef X
-	DbgVar(1,200,CoG2_"}%s;\r\n"_X,getName(FILE_NAME(struct)));
-}
-
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
@@ -122,7 +103,9 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 	//#define CIRCLE_WITH_FRAME_2
 	#define CIRCLE_WITHOUT_FRAME
 
-//#define XXXX //// o 2 kole rozmiar press !!!
+	StructTxtPxlLen lenStr={0};
+	int16_t xPos=0;
+	char *ptr=NULL;
 
 	uint16_t _ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
 	{
@@ -144,10 +127,6 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 #endif
 		return width;
 	}
-
-	StructTxtPxlLen lenStr={0};
-	int16_t xPos=0;
-	char *ptr=NULL;
 
 #if !defined(CIRCLE_WITH_FRAME_1)
 	width = CorrectCirclesWidth(width);
@@ -197,7 +176,27 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 #endif
 }
 
-void Touchscreen_Calibration(void)
+int FILE_NAME(funcGet)(int offs){
+	return *( (int*)((int*)(&var) + offs) );
+}
+
+void FILE_NAME(funcSet)(int offs, int val){
+	*( (int*)((int*)(&var) + offs) ) = val;
+	SET_bit(SelectBits,offs);
+}
+
+void FILE_NAME(debug)(void)
+{
+	if(var.DEBUG_ON){
+		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);
+		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(SelectBits,a)?CoR_"change to: "_X:"", var.b);
+			SCREEN_CALIBRATION_SET_PARAMETERS
+		#undef X
+		DbgVar(1,200,CoG2_"}%s;\r\n"_X,getName(FILE_NAME(struct)));
+	}
+}
+
+void FILE_NAME(main)(void)
 {
 	#define CIRCLES_NUMBER  STRUCT_TAB_SIZE(pos)
 
@@ -231,14 +230,14 @@ void Touchscreen_Calibration(void)
 
 	Delete_TouchLcd_Task();
 
-	LCD_AllRefreshScreenClear();
+	LCD_AllRefreshScreenClear();  //dac ogpolnie jako SCREEN_ResetAllParameters()
 	LCD_ResetStrMovBuffPos();
 	LCD_DeleteAllFontAndImages();
 
-	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_Title, 	 var.FONT_STYLE_Title, 	 var.STR_ID_Title);			if(0<=i) var.STR_ID_Title = i;
-	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_Name, 	 var.FONT_STYLE_Name, 	 var.STR_ID_NameCircle);	if(0<=i) var.STR_ID_NameCircle = i;
-	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_PosLog,  var.FONT_STYLE_PosLog,  var.STR_ID_PosLog);			if(0<=i) var.STR_ID_PosLog = i;
-	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_PosPhys, var.FONT_STYLE_PosPhys, var.STR_ID_PosPhys);		if(0<=i) var.STR_ID_PosPhys = i;
+	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_Title, 	 	 var.FONT_STYLE_Title, 	 var.STR_ID_Title);			if(0<=i) var.STR_ID_Title = i;
+	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_CircleName, var.FONT_STYLE_Name, 	 var.STR_ID_NameCircle);	if(0<=i) var.STR_ID_NameCircle = i;
+	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_PosLog,  	 var.FONT_STYLE_PosLog,  var.STR_ID_PosLog);			if(0<=i) var.STR_ID_PosLog = i;
+	i=LCD_LoadFont_DarkgrayGreen(var.FONT_SIZE_PosPhys, 	 var.FONT_STYLE_PosPhys, var.STR_ID_PosPhys);		if(0<=i) var.STR_ID_PosPhys = i;
 
 	FILE_NAME(debug)();
 	DisplayFontsStructState();
