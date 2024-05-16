@@ -1132,7 +1132,8 @@ void SCREEN_ReadPanel(void)
 			SCREEN_Calibration_funcSet(_BK_SCREEN_color, GRAY);
 			SCREEN_Calibration_funcSet(_NAME_color, RED);
 			SCREEN_Calibration_funcSet(_CIRCLE_FILL_color, BLUE);
-			NOWY_0();
+			//NOWY_0();
+			SCREEN_Fonts_main();
 			startScreen=1;
 			break;
 		case 1:
