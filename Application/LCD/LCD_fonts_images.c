@@ -1602,15 +1602,6 @@ int LCD_LoadFont_WhiteBlack(int fontSize, int fontStyle, uint32_t fontID){
 int LCD_LoadFont_DarkgrayGreen(int fontSize, int fontStyle, uint32_t fontID){
 	return LCD_LoadFont(fontSize,fontStyle,DARKGRAY,MYGREEN,fontID);
 }
-int LCD_LoadFont_DarkgrayRed(int fontSize, int fontStyle, uint32_t fontID){
-	return LCD_LoadFont(fontSize,fontStyle,DARKGRAY,MYRED,fontID);
-}
-int LCD_LoadFont_DarkgrayBlue(int fontSize, int fontStyle, uint32_t fontID){
-	return LCD_LoadFont(fontSize,fontStyle,DARKGRAY,MYBLUE,fontID);
-}
-int LCD_LoadFont_BrownWhite(int fontSize, int fontStyle, uint32_t fontID){
-	return LCD_LoadFont(fontSize,fontStyle,BROWN,WHITE,fontID);
-}
 int LCD_LoadFont_DarkgrayWhite(int fontSize, int fontStyle, uint32_t fontID){
 	return LCD_LoadFont(fontSize,fontStyle,DARKGRAY,WHITE,fontID);
 }
