@@ -29,20 +29,50 @@ Czcionki LCD,Fonts LCD,\
 	X(1, FONT_SIZE_FontColor, 	 	FONT_12_bold) \
 	X(2, FONT_SIZE_BkColor,			FONT_12_bold) \
 	X(3, FONT_SIZE_FontSize,		FONT_12_bold) \
+	X(3, FONT_SIZE_FontStyle,		FONT_12_bold) \
+	X(3, FONT_SIZE_Fonts,			FONT_12_bold) \
 	\
+	X(4, FONT_STYLE_Title, 	 		Arial) \
+	X(5, FONT_STYLE_FontColor, 	Arial) \
+	X(6, FONT_STYLE_BkColor, 		Comic_Saens_MS) \
+	X(7, FONT_STYLE_FontSize, 		Comic_Saens_MS) \
+	X(7, FONT_STYLE_FontStyle, 	Comic_Saens_MS) \
+	X(7, FONT_STYLE_Fonts, 			Comic_Saens_MS) \
 	\
-	X(20, STR_ID_Title,			fontID_1) \
-	X(20, STR_ID_FontColor,		fontID_2) \
-	X(21, STR_ID_BkColor, 		fontID_2) \
-	X(22, STR_ID_FontSize, 	 	fontID_2)
+	X(8, 	FONT_COLOR_Title,  	 	YELLOW) \
+	X(9, 	FONT_COLOR_FontColor, 	WHITE) \
+	X(10, FONT_COLOR_BkColor, 	 	ORANGE) \
+	X(11, FONT_COLOR_FontSize,  	DARKYELLOW) \
+	X(11, FONT_COLOR_FontStyle,  	DARKYELLOW) \
+	X(11, FONT_COLOR_Fonts,  		DARKYELLOW) \
+	\
+	X(20, FONT_ID_Title,			fontID_1) \
+	X(20, FONT_ID_FontColor,	fontID_2) \
+	X(21, FONT_ID_BkColor, 		fontID_3) \
+	X(22, FONT_ID_FontSize, 	fontID_4) \
+	X(22, FONT_ID_FontStyle,  	fontID_5) \
+	X(22, FONT_ID_Fonts,  		fontID_6) \
+	\
+	X(20, FONT_VAR_Title,			fontVar_1) \
+	X(20, FONT_VAR_FontColor,		fontVar_2) \
+	X(21, FONT_VAR_BkColor, 		fontVar_3) \
+	X(22, FONT_VAR_FontSize, 	 	fontVar_4) \
+	X(22, FONT_VAR_FontStyle,  	fontVar_5) \
+	X(22, FONT_VAR_Fonts,  			fontVar_6)
 
 /*------------ End Main Settings -----------------*/
 
-//typedef enum{
-//	#define X(a,b,c) b,
-//	SCREEN_FONTS_SET_PARAMETERS
-//	#undef X
-//}FILE_NAME(enum);
+typedef enum{
+	#define X(a,b,c) b,
+	SCREEN_FONTS_SET_PARAMETERS
+	#undef X
+}FILE_NAME(enum);
+
+typedef struct{
+	#define X(a,b,c) int b;
+	SCREEN_FONTS_SET_PARAMETERS
+	#undef X
+}FILE_NAME(struct);
 
 static char bufTemp[50];
 
@@ -66,27 +96,19 @@ static char bufTemp[50];
 #define RGB_BK    RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2])
 
 typedef enum{
-	STR_ID_LenWin = fontVar_1,
-	STR_ID_OffsWin,
-	STR_ID_LoadFontTime,
-	STR_ID_BkColor,
-	STR_ID_FontColor,
-	STR_ID_FontSize,
-	STR_ID_FontStyle,
-	STR_ID_Coeff,
-	STR_ID_Speed,
-	STR_ID_PosCursor,
-	STR_ID_Fonts,
-	STR_ID_MovFonts_1,
-	STR_ID_MovFonts_2,
-	STR_ID_MovFonts_3,
-	STR_ID_MovFonts_4,
-	STR_ID_MovFonts_5,
-	STR_ID_MovFonts_6,
-	STR_ID_MovFonts_7,
-	STR_ID_MovFonts_8,
-	STR_ID_test,
-	STR_ID_CPU_usage
+	FONT_VAR_LenWin = fontVar_1,
+	FONT_VAR_OffsWin,
+	FONT_VAR_LoadFontTime,
+	FONT_VAR_BkColor_,
+	FONT_VAR_FontColor_,
+	FONT_VAR_FontSize_,
+	FONT_VAR_FontStyle_,
+	SFONT_VAR_Coeff,
+	FONT_VAR_Speed,
+	FONT_VAR_PosCursor,
+	FONT_VAR_Fonts_,
+	FONT_VAR_test,
+	FONT_VAR_CPU_usage
 
 }LCD_STRID;
 
@@ -156,7 +178,7 @@ static char* TXT_PosCursor(void){
 }
 
 static void ClearCursorField(void){
-	LCD_ShapeIndirect(LCD_GetStrVar_x(STR_ID_Fonts),LCD_GetStrVar_y(STR_ID_Fonts)+LCD_GetFontHeight(fontIDVar)+Test.spaceCoursorY,LCD_Rectangle, lenStr.inPixel,Test.heightCursor, MYGRAY,MYGRAY,MYGRAY);
+	LCD_ShapeIndirect(LCD_GetStrVar_x(FONT_VAR_Fonts_),LCD_GetStrVar_y(FONT_VAR_Fonts_)+LCD_GetFontHeight(fontIDVar)+Test.spaceCoursorY,LCD_Rectangle, lenStr.inPixel,Test.heightCursor, MYGRAY,MYGRAY,MYGRAY);
 }
 
 static void SetCursor(void)  //KURSOR DLA BIG FONT DAC PODWOJNY !!!!!
@@ -183,7 +205,7 @@ static void SetCursor(void)  //KURSOR DLA BIG FONT DAC PODWOJNY !!!!!
 		}
 		if(Test.posCursor>Test.lenWin)
 			Test.posCursor=Test.lenWin;
-		LCD_ShapeIndirect(LCD_GetStrVar_x(STR_ID_Fonts)+LCD_GetStrPxlWidth(fontIDVar,Test.txt,Test.posCursor-1,Test.spaceBetweenFonts,Test.constWidth),LCD_GetStrVar_y(STR_ID_Fonts)+LCD_GetFontHeight(fontIDVar)+Test.spaceCoursorY,LCD_Rectangle, LCD_GetFontWidth(fontIDVar,Test.txt[Test.posCursor-1]),Test.heightCursor, color,color,color);
+		LCD_ShapeIndirect(LCD_GetStrVar_x(FONT_VAR_Fonts_)+LCD_GetStrPxlWidth(fontIDVar,Test.txt,Test.posCursor-1,Test.spaceBetweenFonts,Test.constWidth),LCD_GetStrVar_y(FONT_VAR_Fonts_)+LCD_GetFontHeight(fontIDVar)+Test.spaceCoursorY,LCD_Rectangle, LCD_GetFontWidth(fontIDVar,Test.txt[Test.posCursor-1]),Test.heightCursor, color,color,color);
 	}
 }
 
@@ -192,7 +214,7 @@ static void Data2Refresh(int nr)
 	switch(nr)
 	{
 	case PARAM_SIZE:
-		LCD_StrVarIndirect(STR_ID_FontSize,TXT_FONT_SIZE);
+		LCD_StrVarIndirect(FONT_VAR_FontSize_,TXT_FONT_SIZE);
 		break;
 	case FONTS:
 
@@ -200,76 +222,70 @@ static void Data2Refresh(int nr)
 		{
 		case 0:
 			if(Test.dispChangeColorOrNot==0){
-				LCD_SetStrVar_fontID(STR_ID_Fonts,fontIDVar);
-				LCD_SetStrVar_fontColor(STR_ID_Fonts,RGB_FONT);
-				LCD_SetStrVar_bkColor(STR_ID_Fonts,RGB_BK);
-				LCD_SetStrVar_coeff(STR_ID_Fonts,Test.coeff);
+				LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
+				LCD_SetStrVar_fontColor(FONT_VAR_Fonts_,RGB_FONT);
+				LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,RGB_BK);
+				LCD_SetStrVar_coeff(FONT_VAR_Fonts_,Test.coeff);
 				StartMeasureTime_us();
-				 lenStr=LCD_StrChangeColorVarIndirect(STR_ID_Fonts,Test.txt);
+				 lenStr=LCD_StrChangeColorVarIndirect(FONT_VAR_Fonts_,Test.txt);
 				Test.speed=StopMeasureTime_us("");
 			}
 			else{
-				LCD_SetStrVar_fontID(STR_ID_Fonts,fontIDVar);
-				LCD_SetStrVar_bkColor(STR_ID_Fonts,MYGRAY);
-				LCD_SetStrVar_coeff(STR_ID_Fonts,0);
+				LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
+				LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,MYGRAY);
+				LCD_SetStrVar_coeff(FONT_VAR_Fonts_,0);
 				StartMeasureTime_us();
-				lenStr=LCD_StrVarIndirect(STR_ID_Fonts,Test.txt);
+				lenStr=LCD_StrVarIndirect(FONT_VAR_Fonts_,Test.txt);
 				Test.speed=StopMeasureTime_us("");
 			}
 			break;
 		case 1:
-			LCD_SetStrVar_fontID(STR_ID_Fonts,fontIDVar);
-			LCD_SetStrVar_bkColor(STR_ID_Fonts,RGB_BK);
-			LCD_SetStrVar_coeff(STR_ID_Fonts,Test.coeff);
+			LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
+			LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,RGB_BK);
+			LCD_SetStrVar_coeff(FONT_VAR_Fonts_,Test.coeff);
 			StartMeasureTime_us();
-			lenStr=LCD_StrVarIndirect(STR_ID_Fonts,Test.txt);
+			lenStr=LCD_StrVarIndirect(FONT_VAR_Fonts_,Test.txt);
 		   Test.speed=StopMeasureTime_us("");
 		   break;
 		case 2:
-			LCD_SetStrVar_fontID(STR_ID_Fonts,fontIDVar);
-			LCD_SetStrVar_bkColor(STR_ID_Fonts,WHITE);
-			Test.coeff=0; LCD_SetStrVar_coeff(STR_ID_Fonts,0);
+			LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
+			LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,WHITE);
+			Test.coeff=0; LCD_SetStrVar_coeff(FONT_VAR_Fonts_,0);
 			StartMeasureTime_us();
-			lenStr=LCD_StrVarIndirect(STR_ID_Fonts,Test.txt);
+			lenStr=LCD_StrVarIndirect(FONT_VAR_Fonts_,Test.txt);
 		   Test.speed=StopMeasureTime_us("");
 			break;
 		}
 		break;
 	case PARAM_COLOR_BK:
-		LCD_StrVarIndirect(STR_ID_BkColor,TXT_BK_COLOR);
+		LCD_StrVarIndirect(FONT_VAR_BkColor_,TXT_BK_COLOR);
 		break;
 	case PARAM_COLOR_FONT:
-		LCD_StrVarIndirect(STR_ID_FontColor,TXT_FONT_COLOR);
+		LCD_StrVarIndirect(FONT_VAR_FontColor_,TXT_FONT_COLOR);
 		break;
 	case PARAM_LEN_WINDOW:
-		LCD_StrVarIndirect(STR_ID_LenWin, TXT_LEN_WIN);
+		LCD_StrVarIndirect(FONT_VAR_LenWin, TXT_LEN_WIN);
 		break;
 	case PARAM_OFFS_WINDOW:
-		LCD_StrVarIndirect(STR_ID_OffsWin, TXT_OFFS_WIN);
+		LCD_StrVarIndirect(FONT_VAR_OffsWin, TXT_OFFS_WIN);
 		break;
 	case PARAM_STYLE:
-		LCD_StrVarIndirect(STR_ID_FontStyle,TXT_FONT_STYLE);
+		LCD_StrVarIndirect(FONT_VAR_FontStyle_,TXT_FONT_STYLE);
 		break;
 	case PARAM_COEFF:
-		LCD_StrVarIndirect(STR_ID_Coeff,TXT_COEFF);
+		LCD_StrVarIndirect(SFONT_VAR_Coeff,TXT_COEFF);
 		break;
 	case PARAM_SPEED:
-		LCD_StrVarIndirect(STR_ID_Speed,TXT_SPEED);
+		LCD_StrVarIndirect(FONT_VAR_Speed,TXT_SPEED);
 		break;
 	case PARAM_LOAD_FONT_TIME:
-		LCD_StrVarIndirect(STR_ID_LoadFontTime, TXT_LOAD_FONT_TIME);
+		LCD_StrVarIndirect(FONT_VAR_LoadFontTime, TXT_LOAD_FONT_TIME);
 		break;
 	case PARAM_POS_CURSOR:
-		LCD_StrVarIndirect(STR_ID_PosCursor,TXT_PosCursor());
+		LCD_StrVarIndirect(FONT_VAR_PosCursor,TXT_PosCursor());
 		break;
 	case PARAM_CPU_USAGE:
-		LCD_StrVarIndirect(STR_ID_CPU_usage,TXT_CPU_USAGE);
-		break;
-	case PARAM_MOV_TXT:
-//		if(IsRefreshScreenTimeout(refresh_1,20)){ LCD_StrMovHIndirect(STR_ID_MovFonts_1,1); Data2Refresh(PARAM_CPU_USAGE);  }
-//		if(IsRefreshScreenTimeout(refresh_2,20)) LCD_StrMovHIndirect(STR_ID_MovFonts_2,1);
-	//	if(IsRefreshScreenTimeout(refresh_3,20)) LCD_StrMovHIndirect(STR_ID_MovFonts_3,1);
-		//if(IsRefreshScreenTimeout(refresh_4,20)) LCD_StrMovHIndirect(STR_ID_MovFonts_4,1);
+		LCD_StrVarIndirect(FONT_VAR_CPU_usage,TXT_CPU_USAGE);
 		break;
 	}
 }
@@ -400,7 +416,7 @@ static void ResetRGB(void)
 
 static void LCD_LoadFontVar(uint32_t id)
 {
-	LCD_DeleteFont(fontID_3);
+	LCD_DeleteFont(id);
 	StartMeasureTime(0);
 	switch(Test.type)
 	{
@@ -425,10 +441,10 @@ static void LCD_LoadFontVar(uint32_t id)
 }
 
 static void AdjustMiddle_X(void){
-	LCD_SetStrVar_x(STR_ID_Fonts,LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth));
+	LCD_SetStrVar_x(FONT_VAR_Fonts_,LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth));
 }
 static void AdjustMiddle_Y(void){
-	LCD_SetStrVar_y(STR_ID_Fonts,LCD_Ymiddle(GetPos,fontIDVar));
+	LCD_SetStrVar_y(FONT_VAR_Fonts_,LCD_Ymiddle(GetPos,fontIDVar));
 }
 
 static void ChangeFontStyle(void)
@@ -639,7 +655,7 @@ static void Dec_PosCursor(void){
 }
 
 static void IncDec_SpaceBetweenFont(int incDec){
-	if(((LCD_GetStrVar_x(STR_ID_Fonts)+lenStr.inPixel>=LCD_GetXSize()-1)&&(1==incDec))||
+	if(((LCD_GetStrVar_x(FONT_VAR_Fonts_)+lenStr.inPixel>=LCD_GetXSize()-1)&&(1==incDec))||
 		((0==LCD_GetStrPxlWidth(fontIDVar,Test.txt,Test.posCursor-1,Test.spaceBetweenFonts,Test.constWidth))&&(0==incDec)))
 		return;
 	if(Test.posCursor>1){
@@ -733,41 +749,43 @@ void FILE_NAME(debugRcvStr)(void)
 		LCD_ResetSpacesBetweenFonts();
 
 	else if(DEBUG_RcvStr("h"))
-		LCD_StrChangeColorRotVarIndirect(STR_ID_test, "10");
+		LCD_StrChangeColorRotVarIndirect(FONT_VAR_test, "10");
 	else if(DEBUG_RcvStr("j"))
-		LCD_StrChangeColorRotVarIndirect(STR_ID_test, "90");
+		LCD_StrChangeColorRotVarIndirect(FONT_VAR_test, "90");
 }
 
 void FILE_NAME(main)(void)
 {
-	SCREEN_ResetAllParameters();
+	SCREEN_ResetAllParameters();  //USUN BROWN !!
 	ResetRGB();
 	LCD_Clear(MYGRAY);
+
+
+//	if(Bk_scren==MYGRAY && fontcolor == WHITE)
+//		LCD_LoadFont_DarkgrayWhite(FONT_26, Arial, fontID_1);
+//	else if(Bk_scren==WHITE && fontcolor == BLACK)
+//		LCD_LoadFont_WhiteBlack(FONT_26, Arial, fontID_1);
+
+
 	LCD_LoadFont_DarkgrayWhite(FONT_26, Arial, fontID_1);
 	LCD_LoadFont_DarkgrayWhite(FONT_10, Arial, fontID_2);
-//	LCD_LoadFont_DarkgrayWhite(FONT_12, Arial, fontID_6);
-//	LCD_LoadFont_DarkgrayGreen(FONT_10, Arial, fontID_7);
-//	LCD_LoadFont_DarkgrayGreen(FONT_26, Arial, fontID_15);
-//	LCD_LoadFont_WhiteBlack(FONT_16, Arial, fontID_11);
-//	LCD_LoadFont_WhiteBlack(FONT_11, Arial, fontID_12);
 
 	LCD_LoadFontVar(fontID_3);
 
+	lenStr=LCD_StrVar(FONT_VAR_FontColor_,	 fontID_2, 23, LCD_Ypos(lenStr,SetPos,0), TXT_FONT_COLOR, 	 fullHight,0,MYGRAY,0,1,MYGRAY);
+	lenStr=LCD_StrVar(FONT_VAR_BkColor_,	 fontID_2, 23, LCD_Ypos(lenStr,IncPos,5), TXT_BK_COLOR,   	 fullHight,0,MYGRAY,0,1,MYGRAY);
 
-	lenStr=LCD_StrVar(STR_ID_FontColor,	 fontID_2, 23, LCD_Ypos(lenStr,SetPos,0), TXT_FONT_COLOR, 	 fullHight,0,MYGRAY,0,1,MYGRAY);
-	lenStr=LCD_StrVar(STR_ID_BkColor,	 fontID_2, 23, LCD_Ypos(lenStr,IncPos,5), TXT_BK_COLOR,   	 fullHight,0,MYGRAY,0,1,MYGRAY);
+	lenStr=LCD_StrVar(FONT_VAR_FontSize_,	 fontID_2, LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,5), TXT_FONT_SIZE,      fullHight,0,MYGRAY,0,1,MYGRAY);
+	lenStr=LCD_StrVar(FONT_VAR_FontStyle_,	 fontID_2, LCD_Xpos(lenStr,IncPos,70), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE,     fullHight,0,MYGRAY,0,1,MYGRAY);
 
-	lenStr=LCD_StrVar(STR_ID_FontSize,	 fontID_2, LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,5), TXT_FONT_SIZE,      fullHight,0,MYGRAY,0,1,MYGRAY);
-	lenStr=LCD_StrVar(STR_ID_FontStyle,	 fontID_2, LCD_Xpos(lenStr,IncPos,70), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE,     fullHight,0,MYGRAY,0,1,MYGRAY);
+	LCD_StrVar(	SFONT_VAR_Coeff,		   fontID_2,150,20, TXT_COEFF, 	       fullHight,0,MYGRAY,0,1,MYGRAY);
+	LCD_StrVar(	FONT_VAR_LenWin,		   fontID_2,400, 0, TXT_LEN_WIN,	       halfHight,0,MYGRAY,0,1,MYGRAY);
+	LCD_StrVar(	FONT_VAR_OffsWin,	   fontID_2,400,20, TXT_OFFS_WIN,  	    halfHight,0,MYGRAY,0,1,MYGRAY);
+	LCD_StrVar(	FONT_VAR_LoadFontTime, fontID_2,320,20, TXT_LOAD_FONT_TIME, halfHight,0,MYGRAY,0,1,MYGRAY);
 
-	LCD_StrVar(	STR_ID_Coeff,		   fontID_2,150,20, TXT_COEFF, 	       fullHight,0,MYGRAY,0,1,MYGRAY);
-	LCD_StrVar(	STR_ID_LenWin,		   fontID_2,400, 0, TXT_LEN_WIN,	       halfHight,0,MYGRAY,0,1,MYGRAY);
-	LCD_StrVar(	STR_ID_OffsWin,	   fontID_2,400,20, TXT_OFFS_WIN,  	    halfHight,0,MYGRAY,0,1,MYGRAY);
-	LCD_StrVar(	STR_ID_LoadFontTime, fontID_2,320,20, TXT_LOAD_FONT_TIME, halfHight,0,MYGRAY,0,1,MYGRAY);
+	LCD_StrDescrVar(FONT_VAR_PosCursor,fontID_2,440,40,"T: ",TXT_PosCursor(),halfHight,0,MYGRAY,0,1,MYGRAY);
 
-	LCD_StrDescrVar(STR_ID_PosCursor,fontID_2,440,40,"T: ",TXT_PosCursor(),halfHight,0,MYGRAY,0,1,MYGRAY);
-
-	LCD_StrVar(	STR_ID_CPU_usage, fontID_2,450,0, TXT_CPU_USAGE, halfHight,0,MYGRAY,0,1,MYGRAY);
+	LCD_StrVar(	FONT_VAR_CPU_usage, fontID_2,450,0, TXT_CPU_USAGE, halfHight,0,MYGRAY,0,1,MYGRAY);
 
 
 	 Test.yFontsField=LCD_Ypos(lenStr,IncPos,5);
@@ -776,13 +794,13 @@ void FILE_NAME(main)(void)
 
 	StartMeasureTime_us();    //daj mozliwosc wpisywania dowolnego textu aby korygowac odstepy miedzy kazdymi fontami jakimi sie chce !!!!!!!
 	if(Test.type)
-		lenStr=LCD_StrVar(STR_ID_Fonts,fontIDVar, LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,fontIDVar), Test.txt, fullHight, Test.spaceBetweenFonts,MYGRAY,0,Test.constWidth,MYGRAY);
+		lenStr=LCD_StrVar(FONT_VAR_Fonts_,fontIDVar, LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,fontIDVar), Test.txt, fullHight, Test.spaceBetweenFonts,MYGRAY,0,Test.constWidth,MYGRAY);
 	else
-		lenStr=LCD_StrChangeColorVar(STR_ID_Fonts,fontIDVar, LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,fontIDVar), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,MYGRAY);
+		lenStr=LCD_StrChangeColorVar(FONT_VAR_Fonts_,fontIDVar, LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,fontIDVar), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,MYGRAY);
 	Test.speed=StopMeasureTime_us("");
 
 
-	LCD_StrVar(STR_ID_Speed,fontID_2, 150, 0, TXT_SPEED, fullHight, 0,MYGRAY,0,1,MYGRAY);
+	LCD_StrVar(FONT_VAR_Speed,fontID_2, 150, 0, TXT_SPEED, fullHight, 0,MYGRAY,0,1,MYGRAY);
 
 
 	LCD_Show();
