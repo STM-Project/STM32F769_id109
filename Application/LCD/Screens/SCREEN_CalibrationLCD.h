@@ -13,28 +13,28 @@
 
 typedef enum{
 	_FONT_SIZE_Title,
-	_FONT_SIZE_Name,
+	_FONT_SIZE_CircleName,
 	_FONT_SIZE_PosLog,
 	_FONT_SIZE_PosPhys,
 
 	_FONT_STYLE_Title,
-	_FONT_STYLE_Name,
+	_FONT_STYLE_CircleName,
 	_FONT_STYLE_PosLog,
 	_FONT_STYLE_PosPhys,
 
-	_BK_SCREEN_color,
-	_CIRCLE_FRAME_color,
-	_CIRCLE_FILL_color,
-	_CIRCLE_FILL_pressColor,
+	_FONT_COLOR_Title,
+	_FONT_COLOR_CircleName,
+	_FONT_COLOR_PosLog,
+	_FONT_COLOR_PosPhys,
 
-	_TITLE_color,
-	_NAME_color,
-	_POS_LOG_color,
-	_POS_PHYS_color,
+	_COLOR_BkScreen,
+	_COLOR_CircleFrame,
+	_COLOR_CircleFill,
+	_COLOR_CircleFillPress,
 
-	_MAXVAL_NAME,
-	_MAXVAL_LOG,
-	_MAXVAL_PHYS,
+	_COEFF_COLOR_CircleName,
+	_COEFF_COLOR_PosLog,
+	_COEFF_COLOR_PosPhys,
 
 	_DEBUG_ON
 
