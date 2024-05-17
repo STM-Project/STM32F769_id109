@@ -62,54 +62,14 @@ Ko\xB3o,Circle,\
 
 #define CIRCLE_MACRO \
 	/*	 Name  	 width   x	  y  */ \
-		X("Circle 1", 57,  50,  50) \
-		X("Circle 2", 58, 650, 330) \
-		X("Circle 3", 59, 300, 140) \
-		X("Circle 4", 60,   0, 300) \
-		X("Circle 5", 61, 150, 250) \
-		X("Circle 6", 62, 603,   1) \
-		X("Circle 7", 63, 650, 199) \
-		X("Circle 8", 64,   90,   0) \
-		X("Circle 8", 65,   90,   0) \
-		X("Circle 8", 66,   90,   0) \
-		X("Circle 8", 67,   90,   0) \
-		X("Circle 8", 68,   90,   0) \
-		X("Circle 8", 69,   90,   0) \
-		X("Circle 8", 70,   90,   0) \
-		X("Circle 8", 71,   90,   0) \
-		X("Circle 8", 72,   90,   0) \
-		X("Circle 8", 73,   90,   0) \
-		X("Circle 8", 74,   90,   0) \
-		X("Circle 8", 75,   90,   0) \
-		X("Circle 8", 76,   90,   0) \
-		X("Circle 8", 77,   90,   0) \
-		X("Circle 8", 78,   90,   0) \
-		X("Circle 8", 79,   90,   0) \
-		X("Circle 8", 80,   90,   0) \
-		X("Circle 8", 81,   90,   0) \
-		X("Circle 8", 82,   90,   0) \
-		X("Circle 8", 83,   90,   0) \
-		X("Circle 8", 84,   90,   0) \
-		X("Circle 8", 85,   90,   0) \
-		X("Circle 8", 86,   90,   0) \
-		X("Circle 8", 87,   90,   0) \
-		X("Circle 8", 88,   90,   0) \
-		X("Circle 8", 89,   90,   0) \
-		X("Circle 8", 90,   90,   0) \
-		X("Circle 8", 91,   90,   0) \
-		X("Circle 8", 92,   90,   0) \
-		X("Circle 8", 93,   90,   0) \
-		X("Circle 8", 94,   90,   0) \
-		X("Circle 8", 95,   90,   0) \
-		X("Circle 8", 96,   90,   0) \
-		X("Circle 8", 97,   90,   0) \
-		X("Circle 8", 98,   90,   0) \
-		X("Circle 8", 99,   90,   0) \
-		X("Circle 8", 100,   90,   0) \
-		X("Circle 8", 101,   90,   0) \
-		X("Circle 8", 102,   90,   0) \
-		X("Circle 8", 103,   90,   0) \
-		X("Circle 8", 104,   90,   0) \
+	X("Circle 1", 	50,   50,  50) \
+	X("Circle 2", 	60,  650, 330) \
+	X("Circle 3", 	70,  300, 140) \
+	X("Circle 4", 	80,  	 0, 300) \
+	X("Circle 5", 	90,  150, 250) \
+	X("Circle 6", 100,  603,   1) \
+	X("Circle 7", 110,  650, 199) \
+	X("Circle 8", 120,   90,   0)
 
 
 #define DEBUG_Text_1  "error_touch"
@@ -141,9 +101,8 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
 	/*Select only one CIRCLE...*/
-	//#define CIRCLE_WITH_FRAME_1
-	//#define CIRCLE_WITH_FRAME_2
-	#define CIRCLE_WITHOUT_FRAME
+	#define CIRCLE_WITH_FRAME
+	//#define CIRCLE_WITHOUT_FRAME
 
 	StructTxtPxlLen lenStr={0};
 	int16_t xPos=0;
@@ -151,34 +110,20 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 	uint16_t _ShowCircleIndirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold, uint32_t frameColor, uint32_t fillColor, uint32_t bkColor)
 	{
-#if defined(CIRCLE_WITH_FRAME_1)
-		int widthCalculated=LCD_CalculateCircleWidth(width);
-		LCD_ShapeWindow	     		(LCD_Rectangle,0,widthCalculated,widthCalculated, 0,        0,     	   widthCalculated,  widthCalculated,  SetColorBoldFrame(bkColor,0), 		bkColor,  	bkColor);
-		LCD_ShapeWindow	     		(LCD_Circle,	0,widthCalculated,widthCalculated, 0,        0,     	   width,  				width,   			SetColorBoldFrame(frameColor,bold), fillColor,  bkColor);
-		LCD_ShapeWindow		  		(LCD_Circle,	0,widthCalculated,widthCalculated, width/4+1,width/4+1, 	width/2,				width/2, 			SetColorBoldFrame(frameColor,bold), TRANSPARENT,fillColor);
-		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,widthCalculated,widthCalculated, 0,			0, 			widthCalculated,	widthCalculated, 							frameColor, 		bkColor, 	bkColor);
-#elif defined(CIRCLE_WITH_FRAME_2)
-		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        	0,     	   width,  width,   	SetColorBoldFrame(bkColor,0), 		bkColor,  	 bkColor);
-		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        	0,     	   width,  width,   	SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
-		LCD_ShapeWindow				(LCD_Circle,	0,width,width, width/4+1,	width/4+1, 	width/2,width/2, 	SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
-		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,width,width, 0,				0, 			width,	width, 	frameColor, 								bkColor, 	 bkColor);
+		int pos_Circle = (width-LCD_CalculateCircleWidth(width/2))/2;
+
+		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,         	0,     	  width,  width,    SetColorBoldFrame(bkColor,0), 		  bkColor,  	bkColor);
+		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,         	0,     	  width,  width,    SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
+#if defined(CIRCLE_WITH_FRAME)
+		LCD_ShapeWindow				(LCD_Circle,	0,width,width, pos_Circle, pos_Circle, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,width,width, 0,			   0, 			width,  width,   frameColor, 							  	  bkColor, 	 	bkColor);
 #else
-		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(bkColor,0), 		  bkColor,  	bkColor);
-		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,        0,     	   width,  width,   SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
-
-		int width_delta 	= width - LCD_CalculateCircleWidth(width/2);   //i przetestowac dla poszczegolnych definów !!!!
-		//int pos_Circle 	= (width_delta%2) ? width_delta/2+2 : width_delta/2+3;
-		//int pos_Circle 	= (width_delta%2) ? width_delta/2+2 : width_delta/2+3;
-		int pos_Circle 	= width_delta/2;
-
-		LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,width,width, pos_Circle,pos_Circle, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
+		LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,width,width, pos_Circle, pos_Circle, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
 #endif
 		return width;
 	}
 
-#if !defined(CIRCLE_WITH_FRAME_1)
-	width = CorrectCirclesWidth(width);
-#endif	
+	width = LCD_CalculateCircleWidth(width);
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
 	ptr = StrAll(3,GetSelTxt(0,FILE_NAME(Lang),1)," ",name);
@@ -198,7 +143,7 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 	ptr = StrAll(3,",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
 	lenStr=LCD_StrChangeColorIndirect(var.FONT_ID_PosLog, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, var.COLOR_BkScreen,var.FONT_COLOR_PosLog,var.COEFF_COLOR_PosLog,NoConstWidth);
 #else
-	lenStr=LCD_StrChangeColorIndirect(var.FONT_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.COLOR_BkScreen,var.FONT_COLOR_PosLog,var.MAXVAL_LOG,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(var.FONT_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.COLOR_BkScreen,var.FONT_COLOR_PosLog,var.COEFF_COLOR_PosLog,NoConstWidth);
 #endif
 
 	WaitForTouchState(press);

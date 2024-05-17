@@ -117,7 +117,6 @@ void LCD_SetCircleDegree(uint8_t degNr, uint8_t deg);
 uint16_t LCD_GetCircleDegree(uint8_t degNr);
 uint32_t SetParamWidthCircle(uint16_t param, uint32_t width);
 uint16_t CenterOfCircle(uint16_t xy, uint16_t width);
-uint16_t CorrectCirclesWidth(uint16_t width);
 
 void LCD_SetCircleLine(uint8_t lineNr, uint8_t val);
 void LCD_OffsCircleLine(uint8_t lineNr, int offs);

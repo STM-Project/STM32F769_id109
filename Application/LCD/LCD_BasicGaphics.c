@@ -3287,13 +3287,6 @@ uint32_t SetParamWidthCircle(uint16_t param, uint32_t width){
 uint16_t CenterOfCircle(uint16_t xy, uint16_t width){
 	return xy+width/2;
 }
-uint16_t CorrectCirclesWidth(uint16_t width){
-	int i=0;
-	while( (LCD_CalculateCircleWidth(width) < width) && (i<30) ){
-		width++;	i++;
-	}
-	return width;
-}
 void LCD_SetCircleLine(uint8_t lineNr, uint8_t val){
 	Circle.lineBuff[lineNr]=val;
 }
