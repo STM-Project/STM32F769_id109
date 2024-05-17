@@ -2874,3 +2874,10 @@ uint16_t LCD_Xmiddle(int cmd, uint32_t param, char *txt, int space, int constWid
 uint32_t SetPosAndWidth(uint16_t pos, uint16_t width){
 	return ((uint32_t)pos&0x0000FFFF)|width<<16;
 }
+
+void SCREEN_ResetAllParameters(void)
+{
+	LCD_AllRefreshScreenClear();
+	LCD_ResetStrMovBuffPos();
+	LCD_DeleteAllFontAndImages();
+}

@@ -114,12 +114,12 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 		LCD_ShapeWindow	         (LCD_Rectangle,0,width,width, 0,         	0,     	  width,  width,    SetColorBoldFrame(bkColor,0), 		  bkColor,  	bkColor);
 		LCD_ShapeWindow	         (LCD_Circle,	0,width,width, 0,         	0,     	  width,  width,    SetColorBoldFrame(frameColor,bold), fillColor,   bkColor);
-#if defined(CIRCLE_WITH_FRAME)
+	#if defined(CIRCLE_WITH_FRAME)
 		LCD_ShapeWindow				(LCD_Circle,	0,width,width, pos_Circle, pos_Circle, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
 		LCD_ShapeWindowIndirect(x,y,LCD_Frame,		0,width,width, 0,			   0, 			width,  width,   frameColor, 							  	  bkColor, 	 	bkColor);
-#else
+	#else
 		LCD_ShapeWindowIndirect(x,y,LCD_Circle,	0,width,width, pos_Circle, pos_Circle, width/2,width/2, SetColorBoldFrame(frameColor,bold), TRANSPARENT, fillColor);
-#endif
+	#endif
 		return width;
 	}
 
@@ -181,7 +181,7 @@ void FILE_NAME(funcSet)(int offs, int val){
 void FILE_NAME(debug)(void)
 {
 	if(var.DEBUG_ON){
-		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);
+		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);  //--nazwa --- default -- value--  WYPISAC TAK !!!!
 		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(SelectBits,a)?CoR_"change to: "_X:"", var.b);
 			SCREEN_CALIBRATION_SET_PARAMETERS
 		#undef X
@@ -195,7 +195,6 @@ void FILE_NAME(main)(void)
 
 	StructTxtPxlLen lenStr={0};
 	char *ptr=NULL;
-	int i=0;
 
 	char *circlesNames[]={
 		#define X(a,b,c,d) a,
@@ -223,14 +222,12 @@ void FILE_NAME(main)(void)
 
 	Delete_TouchLcd_Task();
 
-	LCD_AllRefreshScreenClear();  //dac ogpolnie jako SCREEN_ResetAllParameters()
-	LCD_ResetStrMovBuffPos();
-	LCD_DeleteAllFontAndImages();
+	SCREEN_ResetAllParameters();
 
-	i=LCD_LoadFont_ChangeColor(var.FONT_SIZE_Title, 	 	var.FONT_STYLE_Title, 		var.FONT_ID_Title);			if(0<=i) var.FONT_ID_Title = i;
-	i=LCD_LoadFont_ChangeColor(var.FONT_SIZE_CircleName, 	var.FONT_STYLE_CircleName, var.FONT_ID_CircleName);	if(0<=i) var.FONT_ID_CircleName = i;
-	i=LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosLog,  	 	var.FONT_STYLE_PosLog,  	var.FONT_ID_PosLog);			if(0<=i) var.FONT_ID_PosLog = i;
-	i=LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosPhys, 	 	var.FONT_STYLE_PosPhys, 	var.FONT_ID_PosPhys);		if(0<=i) var.FONT_ID_PosPhys = i;
+	var.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_Title, 	 	var.FONT_STYLE_Title, 		var.FONT_ID_Title);			//if(0<=i) var.FONT_ID_Title = i;
+	var.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(var.FONT_SIZE_CircleName, 	var.FONT_STYLE_CircleName, var.FONT_ID_CircleName);	//if(0<=i) var.FONT_ID_CircleName = i;
+	var.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosLog,  	 	var.FONT_STYLE_PosLog,  	var.FONT_ID_PosLog);			//if(0<=i) var.FONT_ID_PosLog = i;
+	var.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosPhys, 	 	var.FONT_STYLE_PosPhys, 	var.FONT_ID_PosPhys);		//if(0<=i) var.FONT_ID_PosPhys = i;
 
 	FILE_NAME(debug)();
 	DisplayFontsStructState();
@@ -250,7 +247,7 @@ void FILE_NAME(main)(void)
 	{
 	   SetLogXY(pos,width,CIRCLES_NUMBER);
 
-	   for (i = 0; i < CIRCLES_NUMBER; i++)
+	   for (int i = 0; i < CIRCLES_NUMBER; i++)
 	      GetPhysValues(pos[i], &phys[i], width[i], circlesNames[i]);
 
 	   SetPhysXY(phys,CIRCLES_NUMBER);

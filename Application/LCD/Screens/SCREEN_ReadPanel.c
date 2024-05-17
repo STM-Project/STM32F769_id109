@@ -23,7 +23,6 @@
 #include "ff.h"
 #include "lang.h"
 #include "cpu_utils.h"
-#include "cpu_utils.h"
 #include "SCREEN_CalibrationLCD.h"
 #include "touch.h"
 #include "SCREEN_FontsLCD.h"
@@ -665,13 +664,6 @@ void vtaskWifi(void *argument)
 
 }
 
-static void SCREEN_ResetAllParameters(void)
-{
-	LCD_AllRefreshScreenClear();
-	LCD_ResetStrMovBuffPos();
-	LCD_DeleteAllFontAndImages();
-}
-
 void NOWY_0(void)
 {
 	SCREEN_ResetAllParameters();
@@ -1119,7 +1111,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 }
 
 
-int SCREEN_number=5;  //LOAD IMAGE !!!!!
+int SCREEN_number=0;  //LOAD IMAGE !!!!!
 
 void SCREEN_ReadPanel(void)
 {
@@ -1129,10 +1121,11 @@ void SCREEN_ReadPanel(void)
 		{
 		case 0:
 			SCREEN_Calibration_funcSet(_FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(_FONT_SIZE_Title));
+			SCREEN_Calibration_funcSet(_FONT_SIZE_PosLog, SCREEN_Calibration_funcGet(_FONT_SIZE_CircleName));
 			SCREEN_Calibration_funcSet(_COLOR_BkScreen, MYGRAY);
 			SCREEN_Calibration_funcSet(_FONT_COLOR_CircleName, RED);
 			SCREEN_Calibration_funcSet(_COLOR_CircleFill, LIGHTRED);
-			SCREEN_Calibration_funcSet(_COEFF_COLOR_PosLog, 120);
+			SCREEN_Calibration_funcSet(_COEFF_COLOR_PosLog, 254);
 			//NOWY_0();
 			SCREEN_Fonts_main();
 			startScreen=1;

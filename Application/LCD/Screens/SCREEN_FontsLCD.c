@@ -7,6 +7,8 @@
 #include "lang.h"
 #include "SCREEN_ReadPanel.h"
 #include "debug.h"
+#include "string_oper.h"
+#include "cpu_utils.h"
 
  //TRZEBA ZMIENIC BO BEZSENSU !!!!!
 const char LANG_ReadPanel_StringType[]="\  
@@ -25,7 +27,7 @@ Czcionki LCD,Fonts LCD,\
 
 #define SCREEN_FONTS_SET_PARAMETERS \
 /*  id 	 name					default value */ \
-	X(0, FONT_SIZE_Title, 	 		FONT_16) \
+	X(0, FONT_SIZE_Title, 	 		FONT_14_bold) \
 	X(1, FONT_SIZE_FontColor, 	 	FONT_12_bold) \
 	X(2, FONT_SIZE_BkColor,			FONT_12_bold) \
 	X(3, FONT_SIZE_FontSize,		FONT_12_bold) \
@@ -39,12 +41,14 @@ Czcionki LCD,Fonts LCD,\
 	X(7, FONT_STYLE_FontStyle, 	Comic_Saens_MS) \
 	X(7, FONT_STYLE_Fonts, 			Comic_Saens_MS) \
 	\
-	X(8, 	FONT_COLOR_Title,  	 	YELLOW) \
-	X(9, 	FONT_COLOR_FontColor, 	WHITE) \
+	X(8, 	FONT_COLOR_Title,  	 	LIGHTRED) \
+	X(9, 	FONT_COLOR_FontColor, 	ORANGE) \
 	X(10, FONT_COLOR_BkColor, 	 	ORANGE) \
 	X(11, FONT_COLOR_FontSize,  	DARKYELLOW) \
 	X(11, FONT_COLOR_FontStyle,  	DARKYELLOW) \
 	X(11, FONT_COLOR_Fonts,  		DARKYELLOW) \
+	\
+	X(11, COLOR_BkScreen,  		BLUE) \
 	\
 	X(20, FONT_ID_Title,			fontID_1) \
 	X(20, FONT_ID_FontColor,	fontID_2) \
@@ -73,6 +77,30 @@ typedef struct{
 	SCREEN_FONTS_SET_PARAMETERS
 	#undef X
 }FILE_NAME(struct);
+
+static FILE_NAME(struct) var = {0};
+static uint64_t SelectBits = 0;
+
+static void FILE_NAME(funcSet__)(int offs, int val){
+	if(CHECK_bit(SelectBits,offs))
+		return;
+	else
+		*( (int*)((int*)(&var) + offs) ) = val;
+}
+
+int FILE_NAME(funcGet)(int offs){
+	return *( (int*)((int*)(&var) + offs) );
+}
+
+void FILE_NAME(funcSet)(int offs, int val){
+	*( (int*)((int*)(&var) + offs) ) = val;
+	SET_bit(SelectBits,offs);
+}
+
+void FILE_NAME(debug)(void)
+{
+
+}
 
 static char bufTemp[50];
 
@@ -164,13 +192,6 @@ static RGB_BK_FONT Test;
 static void FILE_NAME(setTouch)(void)
 {
 
-}
-
-static void SCREEN_ResetAllParameters(void)
-{
-	LCD_AllRefreshScreenClear();
-	LCD_ResetStrMovBuffPos();
-	LCD_DeleteAllFontAndImages();
 }
 
 static char* TXT_PosCursor(void){
@@ -756,15 +777,34 @@ void FILE_NAME(debugRcvStr)(void)
 
 void FILE_NAME(main)(void)
 {
-	SCREEN_ResetAllParameters();  //USUN BROWN !!
+	SCREEN_ResetAllParameters();
 	ResetRGB();
 	LCD_Clear(MYGRAY);
 
+	#define X(a,b,c) FILE_NAME(funcSet__)(b,c);
+		SCREEN_FONTS_SET_PARAMETERS
+	#undef X
 
-//	if(Bk_scren==MYGRAY && fontcolor == WHITE)
-//		LCD_LoadFont_DarkgrayWhite(FONT_26, Arial, fontID_1);
-//	else if(Bk_scren==WHITE && fontcolor == BLACK)
-//		LCD_LoadFont_WhiteBlack(FONT_26, Arial, fontID_1);
+
+	if		 (var.COLOR_BkScreen==MYGRAY && var.FONT_COLOR_Title == WHITE)
+		var.FONT_ID_Title = LCD_LoadFont_DarkgrayWhite (var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.FONT_ID_Title);
+	else if(var.COLOR_BkScreen==MYGRAY  && var.FONT_COLOR_Title == GREEN)
+		var.FONT_ID_Title = LCD_LoadFont_DarkgrayGreen (var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.FONT_ID_Title);
+	else if(var.COLOR_BkScreen==WHITE  && var.FONT_COLOR_Title == BLACK)
+		var.FONT_ID_Title = LCD_LoadFont_WhiteBlack	  (var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.FONT_ID_Title);
+	else
+		var.FONT_ID_Title = LCD_LoadFont_ChangeColor	  (var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.FONT_ID_Title);
+
+
+	if((var.COLOR_BkScreen==MYGRAY && var.FONT_COLOR_Title == WHITE) ||
+		(var.COLOR_BkScreen==MYGRAY  && var.FONT_COLOR_Title == GREEN) ||
+		(var.COLOR_BkScreen==WHITE  && var.FONT_COLOR_Title == BLACK))
+		lenStr=LCD_Str(var.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,var.COLOR_BkScreen,0,0);
+	else
+		lenStr=LCD_StrChangeColor(var.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_Title,245,0);
+
+
+
 
 
 	LCD_LoadFont_DarkgrayWhite(FONT_26, Arial, fontID_1);

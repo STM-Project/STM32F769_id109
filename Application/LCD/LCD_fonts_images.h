@@ -221,4 +221,5 @@ uint16_t LCD_Ymiddle(int cmd, uint32_t val);
 uint16_t LCD_Xmiddle(int cmd, uint32_t val, char *txt, int space, int constWidth);
 uint32_t SetPosAndWidth(uint16_t pos, uint16_t width);
 
+void SCREEN_ResetAllParameters(void);
 #endif /* LCD_LCD_FONTS_IMAGES_H_ */
