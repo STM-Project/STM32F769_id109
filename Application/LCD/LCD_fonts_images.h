@@ -162,9 +162,6 @@ void InfoForImagesFonts(void);
 int LCD_LoadFont(int fontSize, int fontStyle, uint32_t backgroundColor, uint32_t fontColor, uint32_t fontID);
 int LCD_LoadFont_WhiteBlack(int fontSize, int fontStyle, uint32_t fontID);
 int LCD_LoadFont_DarkgrayGreen(int fontSize, int fontStyle, uint32_t fontID);
-int LCD_LoadFont_DarkgrayRed(int fontSize, int fontStyle, uint32_t fontID);
-int LCD_LoadFont_DarkgrayBlue(int fontSize, int fontStyle, uint32_t fontID);
-int LCD_LoadFont_BrownWhite(int fontSize, int fontStyle, uint32_t fontID);
 int LCD_LoadFont_DarkgrayWhite(int fontSize, int fontStyle, uint32_t fontID);
 int LCD_LoadFont_ChangeColor(int fontSize, int fontStyle, uint32_t fontID);
 
