@@ -1129,9 +1129,10 @@ void SCREEN_ReadPanel(void)
 		{
 		case 0:
 			SCREEN_Calibration_funcSet(_FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(_FONT_SIZE_Title));
-			SCREEN_Calibration_funcSet(_BK_SCREEN_color, MYGRAY);
-			SCREEN_Calibration_funcSet(_NAME_color, RED);
-			SCREEN_Calibration_funcSet(_CIRCLE_FILL_color, LIGHTRED);
+			SCREEN_Calibration_funcSet(_COLOR_BkScreen, MYGRAY);
+			SCREEN_Calibration_funcSet(_FONT_COLOR_CircleName, RED);
+			SCREEN_Calibration_funcSet(_COLOR_CircleFill, LIGHTRED);
+			SCREEN_Calibration_funcSet(_COEFF_COLOR_PosLog, 120);
 			//NOWY_0();
 			SCREEN_Fonts_main();
 			startScreen=1;
