@@ -41,14 +41,14 @@ Czcionki LCD,Fonts LCD,\
 	X(7, FONT_STYLE_FontStyle, 	Comic_Saens_MS) \
 	X(7, FONT_STYLE_Fonts, 			Comic_Saens_MS) \
 	\
-	X(8, 	FONT_COLOR_Title,  	 	LIGHTRED) \
+	X(8, 	FONT_COLOR_Title,  	 	YELLOW) \
 	X(9, 	FONT_COLOR_FontColor, 	ORANGE) \
 	X(10, FONT_COLOR_BkColor, 	 	ORANGE) \
 	X(11, FONT_COLOR_FontSize,  	DARKYELLOW) \
 	X(11, FONT_COLOR_FontStyle,  	DARKYELLOW) \
 	X(11, FONT_COLOR_Fonts,  		DARKYELLOW) \
 	\
-	X(11, COLOR_BkScreen,  		BLUE) \
+	X(11, COLOR_BkScreen,  		DARKRED) \
 	\
 	X(20, FONT_ID_Title,			fontID_1) \
 	X(20, FONT_ID_FontColor,	fontID_2) \
@@ -78,22 +78,22 @@ typedef struct{
 	#undef X
 }FILE_NAME(struct);
 
-static FILE_NAME(struct) var = {0};
+static FILE_NAME(struct) v = {0};
 static uint64_t SelectBits = 0;
 
 static void FILE_NAME(funcSet__)(int offs, int val){
 	if(CHECK_bit(SelectBits,offs))
 		return;
 	else
-		*( (int*)((int*)(&var) + offs) ) = val;
+		*( (int*)((int*)(&v) + offs) ) = val;
 }
 
 int FILE_NAME(funcGet)(int offs){
-	return *( (int*)((int*)(&var) + offs) );
+	return *( (int*)((int*)(&v) + offs) );
 }
 
 void FILE_NAME(funcSet)(int offs, int val){
-	*( (int*)((int*)(&var) + offs) ) = val;
+	*( (int*)((int*)(&v) + offs) ) = val;
 	SET_bit(SelectBits,offs);
 }
 
@@ -775,8 +775,38 @@ void FILE_NAME(debugRcvStr)(void)
 		LCD_StrChangeColorRotVarIndirect(FONT_VAR_test, "90");
 }
 
+
+
+uint32_t LCD_LoadFont_dependOnColors(int fontSize, int fontStyle, uint32_t bkColor, uint32_t fontColor, uint32_t fontID) //przeniesc do font_lcd_
+{
+	if		 (bkColor==MYGRAY && fontColor == WHITE)
+		return LCD_LoadFont_DarkgrayWhite (fontSize, fontStyle, fontID);
+	else if(bkColor==MYGRAY  && fontColor == GREEN)
+		return LCD_LoadFont_DarkgrayGreen (fontSize, fontStyle, fontID);
+	else if(bkColor==WHITE  && fontColor == BLACK)
+		return LCD_LoadFont_WhiteBlack	 (fontSize, fontStyle, fontID);
+	else
+		return LCD_LoadFont_ChangeColor	 (fontSize, fontStyle, fontID);
+}
+
+StructTxtPxlLen LCD_Str_dependOnColors(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth)
+{
+	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+			 (bkColor==MYGRAY && fontColor == GREEN) )
+		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,0,bkColor,1,constWidth);
+	else if(bkColor==WHITE  && fontColor == BLACK)
+		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,0,bkColor,0,constWidth);
+	else
+		lenStr=LCD_StrChangeColor(fontID,Xpos,Ypos,txt, OnlyDigits,0,bkColor,fontColor,maxVal,constWidth);
+	return lenStr;
+}
+
+//LCD_Str_xxxxx(v.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,245,0)
+//LCD_Str(v.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,v.COLOR_BkScreen,0,0
+
 void FILE_NAME(main)(void)
 {
+
 	SCREEN_ResetAllParameters();
 	ResetRGB();
 	LCD_Clear(MYGRAY);
@@ -786,22 +816,31 @@ void FILE_NAME(main)(void)
 	#undef X
 
 
-	if		 (var.COLOR_BkScreen==MYGRAY && var.FONT_COLOR_Title == WHITE)
-		var.FONT_ID_Title = LCD_LoadFont_DarkgrayWhite (var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.FONT_ID_Title);
-	else if(var.COLOR_BkScreen==MYGRAY  && var.FONT_COLOR_Title == GREEN)
-		var.FONT_ID_Title = LCD_LoadFont_DarkgrayGreen (var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.FONT_ID_Title);
-	else if(var.COLOR_BkScreen==WHITE  && var.FONT_COLOR_Title == BLACK)
-		var.FONT_ID_Title = LCD_LoadFont_WhiteBlack	  (var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.FONT_ID_Title);
-	else
-		var.FONT_ID_Title = LCD_LoadFont_ChangeColor	  (var.FONT_SIZE_Title, var.FONT_STYLE_Title, var.FONT_ID_Title);
+		v.FONT_ID_Title = LCD_LoadFont_dependOnColors(v.FONT_SIZE_Title, v.FONT_STYLE_Title, v.COLOR_BkScreen, v.FONT_COLOR_Title, v.FONT_ID_Title);
 
 
-	if((var.COLOR_BkScreen==MYGRAY && var.FONT_COLOR_Title == WHITE) ||
-		(var.COLOR_BkScreen==MYGRAY  && var.FONT_COLOR_Title == GREEN) ||
-		(var.COLOR_BkScreen==WHITE  && var.FONT_COLOR_Title == BLACK))
-		lenStr=LCD_Str(var.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,var.COLOR_BkScreen,0,0);
-	else
-		lenStr=LCD_StrChangeColor(var.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_Title,245,0);
+		LCD_Str_dependOnColors(v.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski Rafa\xB3", fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,251,0);
+
+
+//	if		 (v.COLOR_BkScreen==MYGRAY && v.FONT_COLOR_Title == WHITE)
+//		v.FONT_ID_Title = LCD_LoadFont_DarkgrayWhite (v.FONT_SIZE_Title, v.FONT_STYLE_Title, v.FONT_ID_Title);
+//	else if(v.COLOR_BkScreen==MYGRAY  && v.FONT_COLOR_Title == GREEN)
+//		v.FONT_ID_Title = LCD_LoadFont_DarkgrayGreen (v.FONT_SIZE_Title, v.FONT_STYLE_Title, v.FONT_ID_Title);
+//	else if(v.COLOR_BkScreen==WHITE  && v.FONT_COLOR_Title == BLACK)
+//		v.FONT_ID_Title = LCD_LoadFont_WhiteBlack	  (v.FONT_SIZE_Title, v.FONT_STYLE_Title, v.FONT_ID_Title);
+//	else
+//		v.FONT_ID_Title = LCD_LoadFont_ChangeColor	  (v.FONT_SIZE_Title, v.FONT_STYLE_Title, v.FONT_ID_Title);
+//
+//
+//	if((v.COLOR_BkScreen==MYGRAY && v.FONT_COLOR_Title == WHITE) ||
+//		(v.COLOR_BkScreen==MYGRAY  && v.FONT_COLOR_Title == GREEN) ||
+//		(v.COLOR_BkScreen==WHITE  && v.FONT_COLOR_Title == BLACK))
+//		lenStr=LCD_Str(v.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,v.COLOR_BkScreen,0,0);
+//	else
+//		lenStr=LCD_StrChangeColor(v.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,245,0);
+
+
+
 
 
 

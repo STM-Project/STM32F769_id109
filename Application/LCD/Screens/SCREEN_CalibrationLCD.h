@@ -40,10 +40,11 @@ typedef enum{
 
 }_SCREEN_Calibration_enum;
 
-void 	SCREEN_Calibration_main		(void);
+void 	SCREEN_Calibration_main(void);
 
-int 	SCREEN_Calibration_funcGet	(int offs);
-void 	SCREEN_Calibration_funcSet	(int offs, int val);
-void 	SCREEN_Calibration_debug	(void);
+int 	SCREEN_Calibration_funcGet(int offs);
+void 	SCREEN_Calibration_funcSet(int offs, int val);
+void 	SCREEN_Calibration_setDefaultParam(void);
+void 	SCREEN_Calibration_debug(void);
 
 #endif /* LCD_SCREENS_SCREEN_CALIBRATIONLCD_H_ */

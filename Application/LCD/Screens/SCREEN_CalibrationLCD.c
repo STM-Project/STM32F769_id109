@@ -189,6 +189,13 @@ void FILE_NAME(debug)(void)
 	}
 }
 
+void FILE_NAME(setDefaultParam)(void)
+{
+	#define X(a,b,c) FILE_NAME(funcSet__)(b,c);
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
+}
+
 void FILE_NAME(main)(void)
 {
 	#define CIRCLES_NUMBER  STRUCT_TAB_SIZE(pos)
@@ -216,9 +223,7 @@ void FILE_NAME(main)(void)
 		#undef X
 	};
 
-	#define X(a,b,c) FILE_NAME(funcSet__)(b,c);
-		SCREEN_CALIBRATION_SET_PARAMETERS
-	#undef X
+	FILE_NAME(setDefaultParam)();
 
 	Delete_TouchLcd_Task();
 
