@@ -87,15 +87,24 @@ typedef struct{
 	#undef X
 }FILE_NAME(struct);
 
-static FILE_NAME(struct) var = {0};
+
+static FILE_NAME(struct) var ={
+#define X(a,b,c) c,
+	SCREEN_CALIBRATION_SET_PARAMETERS
+#undef X
+};
+
+
+
+
 static uint64_t SelectBits = 0;
 
-static void FILE_NAME(funcSet__)(int offs, int val){
-	if(CHECK_bit(SelectBits,offs))
-		return;
-	else
-		*( (int*)((int*)(&var) + offs) ) = val;
-}
+//static void FILE_NAME(funcSet__)(int offs, int val){
+//	if(CHECK_bit(SelectBits,offs))
+//		return;
+//	else
+//		*( (int*)((int*)(&var) + offs) ) = val;
+//}
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
@@ -191,9 +200,20 @@ void FILE_NAME(debug)(void)
 
 void FILE_NAME(setDefaultParam)(void)
 {
-	#define X(a,b,c) FILE_NAME(funcSet__)(b,c);
+	#define X(a,b,c) FILE_NAME(funcSet)(b,c);
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
+	SelectBits=0;
+}
+
+static int SetDefaultFontID(int FONT_ID_Name)
+{
+	int temp;
+	#define X(a,b,c) \
+		if(b==FONT_ID_Name){ var.b=c; temp=c; }
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
+		return temp;
 }
 
 void FILE_NAME(main)(void)
@@ -223,16 +243,21 @@ void FILE_NAME(main)(void)
 		#undef X
 	};
 
-	FILE_NAME(setDefaultParam)();
+	//FILE_NAME(setDefaultParam)();
 
 	Delete_TouchLcd_Task();
 
 	SCREEN_ResetAllParameters();
 
-	var.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_Title, 	 	var.FONT_STYLE_Title, 		var.FONT_ID_Title);			//if(0<=i) var.FONT_ID_Title = i;
-	var.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(var.FONT_SIZE_CircleName, 	var.FONT_STYLE_CircleName, var.FONT_ID_CircleName);	//if(0<=i) var.FONT_ID_CircleName = i;
-	var.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosLog,  	 	var.FONT_STYLE_PosLog,  	var.FONT_ID_PosLog);			//if(0<=i) var.FONT_ID_PosLog = i;
-	var.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosPhys, 	 	var.FONT_STYLE_PosPhys, 	var.FONT_ID_PosPhys);		//if(0<=i) var.FONT_ID_PosPhys = i;
+	var.FONT_ID_Title= fontID_1;
+	var.FONT_ID_CircleName= fontID_1;
+	var.FONT_ID_PosLog= fontID_1;
+	var.FONT_ID_PosPhys= fontID_1;
+
+	var.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_Title, 	 	var.FONT_STYLE_Title, 		SetDefaultFontID(FONT_ID_Title));			//if(0<=i) var.FONT_ID_Title = i;
+	var.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(var.FONT_SIZE_CircleName, 	var.FONT_STYLE_CircleName, SetDefaultFontID(FONT_ID_CircleName));	//if(0<=i) var.FONT_ID_CircleName = i;
+	var.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosLog,  	 	var.FONT_STYLE_PosLog,  	SetDefaultFontID(FONT_ID_PosLog));			//if(0<=i) var.FONT_ID_PosLog = i;
+	var.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosPhys, 	 	var.FONT_STYLE_PosPhys, 	SetDefaultFontID(FONT_ID_PosPhys));		//if(0<=i) var.FONT_ID_PosPhys = i;
 
 	FILE_NAME(debug)();
 	DisplayFontsStructState();

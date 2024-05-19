@@ -1120,7 +1120,7 @@ void SCREEN_ReadPanel(void)
 		switch(SCREEN_number)  //DYNAMICZNE ZARZADZANIE PAMIECIA FONT Z SDRAM zeby tyle nie zajmowalo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		{
 		case 0:
-			SCREEN_Calibration_setDefaultParam();
+
 			SCREEN_Calibration_funcSet(_FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(_FONT_SIZE_Title));
 			SCREEN_Calibration_funcSet(_FONT_SIZE_PosLog, SCREEN_Calibration_funcGet(_FONT_SIZE_CircleName));
 			SCREEN_Calibration_funcSet(_COLOR_BkScreen, MYGRAY);

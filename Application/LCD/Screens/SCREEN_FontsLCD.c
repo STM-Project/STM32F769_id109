@@ -801,8 +801,12 @@ StructTxtPxlLen LCD_Str_dependOnColors(int fontID, int Xpos, int Ypos, char *txt
 	return lenStr;
 }
 
-//LCD_Str_xxxxx(v.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,245,0)
-//LCD_Str(v.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski", fullHight,0,v.COLOR_BkScreen,0,0
+typedef struct{
+	int aa;
+	int bb;
+}AAA;
+
+AAA ffff= {1,2};
 
 void FILE_NAME(main)(void)
 {
@@ -811,7 +815,7 @@ void FILE_NAME(main)(void)
 	ResetRGB();
 	LCD_Clear(MYGRAY);
 
-	#define X(a,b,c) FILE_NAME(funcSet__)(b,c);
+	#define X(a,b,c) FILE_NAME(funcSet__)(b,c);  //to usunac jak calibration !!! dac = przy deklaracki struct
 		SCREEN_FONTS_SET_PARAMETERS
 	#undef X
 
