@@ -10,6 +10,25 @@
 
 #include "stm32f7xx_hal.h"
 
+#define Ą "\xA5"
+#define ą "\xB9"
+#define Ć "\xC6"
+#define ć "\xE6"
+#define Ę "\xCA"
+#define ę "\xEA"
+#define Ł "\xA3"
+#define ł "\xB3"
+#define Ń "\xD1"
+#define ń "\xF1"
+#define Ó "\xD3"
+#define ó "\xF3"
+#define Ś "\x8C"
+#define ś "\x9C"
+#define Ź "\x8F"
+#define ź "\x9F"
+#define Ż "\xAF"
+#define ż "\xBF"
+
 enum FontsSize
 {
 	FONT_8,
