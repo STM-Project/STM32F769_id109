@@ -775,39 +775,6 @@ void FILE_NAME(debugRcvStr)(void)
 		LCD_StrChangeColorRotVarIndirect(FONT_VAR_test, "90");
 }
 
-
-
-uint32_t LCD_LoadFont_dependOnColors(int fontSize, int fontStyle, uint32_t bkColor, uint32_t fontColor, uint32_t fontID) //przeniesc do font_lcd_
-{
-	if		 (bkColor==MYGRAY && fontColor == WHITE)
-		return LCD_LoadFont_DarkgrayWhite (fontSize, fontStyle, fontID);
-	else if(bkColor==MYGRAY  && fontColor == GREEN)
-		return LCD_LoadFont_DarkgrayGreen (fontSize, fontStyle, fontID);
-	else if(bkColor==WHITE  && fontColor == BLACK)
-		return LCD_LoadFont_WhiteBlack	 (fontSize, fontStyle, fontID);
-	else
-		return LCD_LoadFont_ChangeColor	 (fontSize, fontStyle, fontID);
-}
-
-StructTxtPxlLen LCD_Str_dependOnColors(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth)
-{
-	if		((bkColor==MYGRAY && fontColor == WHITE) ||
-			 (bkColor==MYGRAY && fontColor == GREEN) )
-		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,0,bkColor,1,constWidth);
-	else if(bkColor==WHITE  && fontColor == BLACK)
-		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,0,bkColor,0,constWidth);
-	else
-		lenStr=LCD_StrChangeColor(fontID,Xpos,Ypos,txt, OnlyDigits,0,bkColor,fontColor,maxVal,constWidth);
-	return lenStr;
-}
-
-typedef struct{
-	int aa;
-	int bb;
-}AAA;
-
-AAA ffff= {1,2};
-
 void FILE_NAME(main)(void)
 {
 
