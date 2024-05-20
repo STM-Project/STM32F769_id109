@@ -16,13 +16,14 @@
 #include "debug.h"
 #include "lang.h"
 
+#define PolishSign_L "\xB3" //do sprawdzenia
 /*----------------- Main Settings ------------------*/
 
 #define FILE_NAME(extend) SCREEN_Calibration_##extend
 
 static const char FILE_NAME(Lang)[]="\
 Kalibracja LCD,Calibration LCD,\
-Ko\xB3o,Circle,\
+Ko"PolishSign_L"o,Circle,\
 ";\
 
 #define SCREEN_CALIBRATION_SET_PARAMETERS \
@@ -94,22 +95,12 @@ static FILE_NAME(struct) var ={
 #undef X
 };
 
-
-
-
 static uint64_t SelectBits = 0;
-
-//static void FILE_NAME(funcSet__)(int offs, int val){
-//	if(CHECK_bit(SelectBits,offs))
-//		return;
-//	else
-//		*( (int*)((int*)(&var) + offs) ) = val;
-//}
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
-	/*Select only one CIRCLE...*/
+
 	#define CIRCLE_WITH_FRAME
 	//#define CIRCLE_WITHOUT_FRAME
 
@@ -243,21 +234,13 @@ void FILE_NAME(main)(void)
 		#undef X
 	};
 
-	//FILE_NAME(setDefaultParam)();
-
 	Delete_TouchLcd_Task();
-
 	SCREEN_ResetAllParameters();
 
-	var.FONT_ID_Title= fontID_1;
-	var.FONT_ID_CircleName= fontID_1;
-	var.FONT_ID_PosLog= fontID_1;
-	var.FONT_ID_PosPhys= fontID_1;
-
-	var.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_Title, 	 	var.FONT_STYLE_Title, 		SetDefaultFontID(FONT_ID_Title));			//if(0<=i) var.FONT_ID_Title = i;
-	var.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(var.FONT_SIZE_CircleName, 	var.FONT_STYLE_CircleName, SetDefaultFontID(FONT_ID_CircleName));	//if(0<=i) var.FONT_ID_CircleName = i;
-	var.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosLog,  	 	var.FONT_STYLE_PosLog,  	SetDefaultFontID(FONT_ID_PosLog));			//if(0<=i) var.FONT_ID_PosLog = i;
-	var.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosPhys, 	 	var.FONT_STYLE_PosPhys, 	SetDefaultFontID(FONT_ID_PosPhys));		//if(0<=i) var.FONT_ID_PosPhys = i;
+	var.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_Title, 	 	var.FONT_STYLE_Title, 		SetDefaultFontID(FONT_ID_Title));
+	var.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(var.FONT_SIZE_CircleName, 	var.FONT_STYLE_CircleName, SetDefaultFontID(FONT_ID_CircleName));
+	var.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosLog,  	 	var.FONT_STYLE_PosLog,  	SetDefaultFontID(FONT_ID_PosLog));
+	var.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosPhys, 	 	var.FONT_STYLE_PosPhys, 	SetDefaultFontID(FONT_ID_PosPhys));
 
 	FILE_NAME(debug)();
 	DisplayFontsStructState();
