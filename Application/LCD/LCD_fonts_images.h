@@ -222,4 +222,7 @@ uint16_t LCD_Xmiddle(int cmd, uint32_t val, char *txt, int space, int constWidth
 uint32_t SetPosAndWidth(uint16_t pos, uint16_t width);
 
 void SCREEN_ResetAllParameters(void);
+uint32_t LCD_LoadFont_dependOnColors(int fontSize, int fontStyle, uint32_t bkColor, uint32_t fontColor, uint32_t fontID);
+StructTxtPxlLen LCD_Str_dependOnColors(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth);
+
 #endif /* LCD_LCD_FONTS_IMAGES_H_ */
