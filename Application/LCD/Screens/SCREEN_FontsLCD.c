@@ -787,10 +787,10 @@ void FILE_NAME(main)(void)
 	#undef X
 
 
-		v.FONT_ID_Title = LCD_LoadFont_dependOnColors(v.FONT_SIZE_Title, v.FONT_STYLE_Title, v.COLOR_BkScreen, v.FONT_COLOR_Title, v.FONT_ID_Title);
+		v.FONT_ID_Title = LCD_LoadFont_DependOnColors(v.FONT_SIZE_Title, v.FONT_STYLE_Title, v.COLOR_BkScreen, v.FONT_COLOR_Title, v.FONT_ID_Title);
 
 
-		LCD_Str_dependOnColors(v.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski Rafa\xB3", fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,251,0);
+		LCD_StrDependOnColors(v.FONT_ID_Title, LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,SetPos,0), "Markielowski Rafa"ł, fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,251,0);
 
 
 //	if		 (v.COLOR_BkScreen==MYGRAY && v.FONT_COLOR_Title == WHITE)

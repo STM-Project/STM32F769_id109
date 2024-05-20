@@ -183,6 +183,7 @@ int LCD_LoadFont_WhiteBlack(int fontSize, int fontStyle, uint32_t fontID);
 int LCD_LoadFont_DarkgrayGreen(int fontSize, int fontStyle, uint32_t fontID);
 int LCD_LoadFont_DarkgrayWhite(int fontSize, int fontStyle, uint32_t fontID);
 int LCD_LoadFont_ChangeColor(int fontSize, int fontStyle, uint32_t fontID);
+uint32_t LCD_LoadFont_DependOnColors(int fontSize, int fontStyle, uint32_t bkColor, uint32_t fontColor, uint32_t fontID);
 
 StructTxtPxlLen LCD_Str(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,uint32_t bkColor, int coeff, int constWidth);
 StructTxtPxlLen LCD_StrWindow(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,uint32_t bkColor, int coeff, int constWidth);
@@ -199,6 +200,11 @@ StructTxtPxlLen LCD_StrVarIndirect(int idVar, char *txt);
 
 StructTxtPxlLen LCD_StrChangeColorVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor);
 StructTxtPxlLen LCD_StrChangeColorVarIndirect(int idVar, char *txt);
+
+StructTxtPxlLen LCD_StrDependOnColors(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth);
+StructTxtPxlLen LCD_StrDependOnColorsIndirect(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth);
+StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth, uint32_t bkScreenColor);
+StructTxtPxlLen LCD_StrDependOnColorsVarIndirect(int idVar, char *txt);
 
 void LCD_ResetStrMovBuffPos(void);
 void LCD_DisplayStrMovBuffState(void);
@@ -241,7 +247,5 @@ uint16_t LCD_Xmiddle(int cmd, uint32_t val, char *txt, int space, int constWidth
 uint32_t SetPosAndWidth(uint16_t pos, uint16_t width);
 
 void SCREEN_ResetAllParameters(void);
-uint32_t LCD_LoadFont_dependOnColors(int fontSize, int fontStyle, uint32_t bkColor, uint32_t fontColor, uint32_t fontID);
-StructTxtPxlLen LCD_Str_dependOnColors(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth);
 
 #endif /* LCD_LCD_FONTS_IMAGES_H_ */

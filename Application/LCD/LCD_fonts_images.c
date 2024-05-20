@@ -2882,7 +2882,7 @@ void SCREEN_ResetAllParameters(void)
 	LCD_DeleteAllFontAndImages();
 }
 
-uint32_t LCD_LoadFont_dependOnColors(int fontSize, int fontStyle, uint32_t bkColor, uint32_t fontColor, uint32_t fontID)
+uint32_t LCD_LoadFont_DependOnColors(int fontSize, int fontStyle, uint32_t bkColor, uint32_t fontColor, uint32_t fontID)
 {
 	if		 (bkColor==MYGRAY && fontColor == WHITE)
 		return LCD_LoadFont_DarkgrayWhite (fontSize, fontStyle, fontID);
@@ -2894,16 +2894,54 @@ uint32_t LCD_LoadFont_dependOnColors(int fontSize, int fontStyle, uint32_t bkCol
 		return LCD_LoadFont_ChangeColor	 (fontSize, fontStyle, fontID);
 }
 
-StructTxtPxlLen LCD_Str_dependOnColors(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth)
+StructTxtPxlLen LCD_StrDependOnColors(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth)
 {
 	StructTxtPxlLen lenStr;
 
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
 			 (bkColor==MYGRAY && fontColor == GREEN))
-		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,0,bkColor,1,constWidth);
+		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth);
 	else if(bkColor==WHITE  && fontColor == BLACK)
-		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,0,bkColor,0,constWidth);
+		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth);
 	else
-		lenStr=LCD_StrChangeColor(fontID,Xpos,Ypos,txt, OnlyDigits,0,bkColor,fontColor,maxVal,constWidth);
+		lenStr=LCD_StrChangeColor(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
 	return lenStr;
 }
+
+StructTxtPxlLen LCD_StrDependOnColorsIndirect(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth)
+{
+	StructTxtPxlLen lenStr;
+
+	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+			 (bkColor==MYGRAY && fontColor == GREEN))
+		lenStr=LCD_StrIndirect(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth);
+	else if(bkColor==WHITE  && fontColor == BLACK)
+		lenStr=LCD_StrIndirect(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth);
+	else
+		lenStr=LCD_StrChangeColorIndirect(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
+	return lenStr;
+}
+
+StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth, uint32_t bkScreenColor)
+{
+	StructTxtPxlLen lenStr;
+
+	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+			 (bkColor==MYGRAY && fontColor == GREEN))
+		lenStr=LCD_StrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor);
+	else if(bkColor==WHITE  && fontColor == BLACK)
+		lenStr=LCD_StrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor);
+	else
+		lenStr=LCD_StrChangeColorVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
+	return lenStr;
+}
+
+StructTxtPxlLen LCD_StrDependOnColorsVarIndirect(int idVar, char *txt){
+	StructTxtPxlLen temp;
+	temp = LCD_StrDependOnColorsIndirect(FontVar[idVar].id,FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
+	if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
+		return temp;
+	LCD_DimensionBkCorrect(idVar,temp,pLcd);
+	return temp;
+}
+
