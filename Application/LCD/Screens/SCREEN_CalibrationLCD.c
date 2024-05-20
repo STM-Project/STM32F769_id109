@@ -16,14 +16,14 @@
 #include "debug.h"
 #include "lang.h"
 
-#define PolishSign_L "\xB3" //do sprawdzenia
+#define PolishSign_L "\xA5\xB9\xC6\xE6\xCA\xEA\xA3\xB3\xD1\xF1\xD3\xF3\x8C\x9C\x8F\x9F\xAF\xBF" //do sprawdzenia  ZROBIC ENUM polish sign !!!!!
 /*----------------- Main Settings ------------------*/
 
 #define FILE_NAME(extend) SCREEN_Calibration_##extend
 
 static const char FILE_NAME(Lang)[]="\
 Kalibracja LCD,Calibration LCD,\
-Ko"PolishSign_L"o,Circle,\
+"PolishSign_L",Circle,\
 ";\
 
 #define SCREEN_CALIBRATION_SET_PARAMETERS \
