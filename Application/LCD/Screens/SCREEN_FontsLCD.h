@@ -11,6 +11,6 @@
 #include "stm32f7xx_hal.h"
 
 void SCREEN_Fonts_main			(void);
-void SCREEN_Fonts_debugRcvStr	(void);
+void SCREEN_Fonts_debugRcvStr(void);  //do usuniecia !!!
 
 #endif /* LCD_SCREENS_SCREEN_FONTSLCD_H_ */
