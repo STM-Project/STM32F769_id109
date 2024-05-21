@@ -75,6 +75,7 @@ Ko"ł"o,Circle,\
 #define DEBUG_Text_1  "error_touch"
 #define DEBUG_Text_2  "error_calculation_coeff"
 
+/*------------ Main Screen MACRO -----------------*/
 typedef enum{
 	#define X(a,b,c) b,
 		SCREEN_CALIBRATION_SET_PARAMETERS
@@ -87,14 +88,54 @@ typedef struct{
 	#undef X
 }FILE_NAME(struct);
 
-
 static FILE_NAME(struct) var ={
-#define X(a,b,c) c,
-	SCREEN_CALIBRATION_SET_PARAMETERS
-#undef X
+	#define X(a,b,c) c,
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
 };
 
-static uint64_t SelectBits = 0;
+static uint64_t FILE_NAME(SelBits) = 0;
+
+static int FILE_NAME(SetDefaultFontID)(int FONT_ID_Name){
+	int temp;
+	#define X(a,b,c) \
+		if(b==FONT_ID_Name){ var.b=c; temp=c; }
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
+		return temp;
+}
+
+void FILE_NAME(debug)(void){
+	if(var.DEBUG_ON){
+		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);  //--nazwa --- default -- value--  WYPISAC TAK !!!!
+		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(FILE_NAME(SelBits),a)?CoR_"change to: "_X:"", var.b);
+			SCREEN_CALIBRATION_SET_PARAMETERS
+		#undef X
+		DbgVar(1,200,CoG2_"}%s;\r\n"_X,getName(FILE_NAME(struct)));
+	}
+}
+
+int FILE_NAME(funcGet)(int offs){
+	return *( (int*)((int*)(&var) + offs) );
+}
+
+void FILE_NAME(funcSet)(int offs, int val){
+	*( (int*)((int*)(&var) + offs) ) = val;
+	SET_bit(FILE_NAME(SelBits),offs);
+}
+
+void FILE_NAME(setDefaultParam)(void){
+	#define X(a,b,c) FILE_NAME(funcSet)(b,c);
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
+	FILE_NAME(SelBits)=0;
+}
+
+//static void FILE_NAME(debugRcvStr)(void);
+//static void FILE_NAME(setTouch)	 (void);
+
+void 	FILE_NAME(main)(void);
+/*------------ End Main Screen MACRO -----------------*/
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
 {
@@ -168,44 +209,6 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 #endif
 }
 
-int FILE_NAME(funcGet)(int offs){
-	return *( (int*)((int*)(&var) + offs) );
-}
-
-void FILE_NAME(funcSet)(int offs, int val){
-	*( (int*)((int*)(&var) + offs) ) = val;
-	SET_bit(SelectBits,offs);
-}
-
-void FILE_NAME(debug)(void)
-{
-	if(var.DEBUG_ON){
-		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);  //--nazwa --- default -- value--  WYPISAC TAK !!!!
-		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(SelectBits,a)?CoR_"change to: "_X:"", var.b);
-			SCREEN_CALIBRATION_SET_PARAMETERS
-		#undef X
-		DbgVar(1,200,CoG2_"}%s;\r\n"_X,getName(FILE_NAME(struct)));
-	}
-}
-
-void FILE_NAME(setDefaultParam)(void)
-{
-	#define X(a,b,c) FILE_NAME(funcSet)(b,c);
-		SCREEN_CALIBRATION_SET_PARAMETERS
-	#undef X
-	SelectBits=0;
-}
-
-static int SetDefaultFontID(int FONT_ID_Name)
-{
-	int temp;
-	#define X(a,b,c) \
-		if(b==FONT_ID_Name){ var.b=c; temp=c; }
-		SCREEN_CALIBRATION_SET_PARAMETERS
-	#undef X
-		return temp;
-}
-
 void FILE_NAME(main)(void)
 {
 	#define CIRCLES_NUMBER  STRUCT_TAB_SIZE(pos)
@@ -236,10 +239,10 @@ void FILE_NAME(main)(void)
 	Delete_TouchLcd_Task();
 	SCREEN_ResetAllParameters();
 
-	var.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_Title, 	 	var.FONT_STYLE_Title, 		SetDefaultFontID(FONT_ID_Title));
-	var.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(var.FONT_SIZE_CircleName, 	var.FONT_STYLE_CircleName, SetDefaultFontID(FONT_ID_CircleName));
-	var.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosLog,  	 	var.FONT_STYLE_PosLog,  	SetDefaultFontID(FONT_ID_PosLog));
-	var.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosPhys, 	 	var.FONT_STYLE_PosPhys, 	SetDefaultFontID(FONT_ID_PosPhys));
+	var.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_Title, 	 	var.FONT_STYLE_Title, 		FILE_NAME(SetDefaultFontID)(FONT_ID_Title));
+	var.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(var.FONT_SIZE_CircleName, 	var.FONT_STYLE_CircleName, FILE_NAME(SetDefaultFontID)(FONT_ID_CircleName));
+	var.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosLog,  	 	var.FONT_STYLE_PosLog,  	FILE_NAME(SetDefaultFontID)(FONT_ID_PosLog));
+	var.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosPhys, 	 	var.FONT_STYLE_PosPhys, 	FILE_NAME(SetDefaultFontID)(FONT_ID_PosPhys));
 
 	FILE_NAME(debug)();
 	DisplayFontsStructState();
