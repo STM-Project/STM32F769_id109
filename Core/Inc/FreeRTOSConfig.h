@@ -64,9 +64,9 @@
 #define configTICK_RATE_HZ                       ((TickType_t)1000)
 #define configMAX_PRIORITIES                     ( 7 )
 #define configMINIMAL_STACK_SIZE                 ((uint16_t)128)
-#define configTOTAL_HEAP_SIZE                    ((size_t)(90*1024))
+#define configTOTAL_HEAP_SIZE                    ((size_t)(60*1024))
 #define configMAX_TASK_NAME_LEN                  ( 16 )
-#define configUSE_16_BIT_TICKS                   1  //TU zmienilem i nie trzesie obrazem !!!!
+#define configUSE_16_BIT_TICKS                   1
 #define configUSE_MUTEXES                        1
 #define configQUEUE_REGISTRY_SIZE                8
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION  1

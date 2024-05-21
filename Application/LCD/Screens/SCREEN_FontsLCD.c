@@ -41,7 +41,7 @@ Czcionki LCD,Fonts LCD,\
 	X(10, FONT_STYLE_FontStyle, 	Arial) \
 	X(11, FONT_STYLE_Fonts, 		Arial) \
 	\
-	X(12, FONT_COLOR_Title,  	 	YELLOW) \
+	X(12, FONT_COLOR_Title,  	 	WHITE) \
 	X(13, FONT_COLOR_FontColor, 	WHITE) \
 	X(14, FONT_COLOR_BkColor, 	 	WHITE) \
 	X(15, FONT_COLOR_FontSize,  	WHITE) \
@@ -261,77 +261,77 @@ static void Data2Refresh(int nr)
 	case PARAM_SIZE:
 		LCD_StrDependOnColorsVarIndirect(var.FONT_VAR_FontSize,TXT_FONT_SIZE);
 		break;
-	case FONTS:
-
-		switch(Test.type)
-		{
-		case 0:
-			if(Test.dispChangeColorOrNot==0){
-				LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
-				LCD_SetStrVar_fontColor(FONT_VAR_Fonts_,RGB_FONT);
-				LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,RGB_BK);
-				LCD_SetStrVar_coeff(FONT_VAR_Fonts_,Test.coeff);
-				StartMeasureTime_us();
-				 lenStr=LCD_StrChangeColorVarIndirect(FONT_VAR_Fonts_,Test.txt);
-				Test.speed=StopMeasureTime_us("");
-			}
-			else{
-				LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
-				LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,MYGRAY);
-				LCD_SetStrVar_coeff(FONT_VAR_Fonts_,0);
-				StartMeasureTime_us();
-				lenStr=LCD_StrVarIndirect(FONT_VAR_Fonts_,Test.txt);
-				Test.speed=StopMeasureTime_us("");
-			}
-			break;
-		case 1:
-			LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
-			LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,RGB_BK);
-			LCD_SetStrVar_coeff(FONT_VAR_Fonts_,Test.coeff);
-			StartMeasureTime_us();
-			lenStr=LCD_StrVarIndirect(FONT_VAR_Fonts_,Test.txt);
-		   Test.speed=StopMeasureTime_us("");
-		   break;
-		case 2:
-			LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
-			LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,WHITE);
-			Test.coeff=0; LCD_SetStrVar_coeff(FONT_VAR_Fonts_,0);
-			StartMeasureTime_us();
-			lenStr=LCD_StrVarIndirect(FONT_VAR_Fonts_,Test.txt);
-		   Test.speed=StopMeasureTime_us("");
-			break;
-		}
-		break;
+//	case FONTS:
+//
+//		switch(Test.type)
+//		{
+//		case 0:
+//			if(Test.dispChangeColorOrNot==0){
+//				LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
+//				LCD_SetStrVar_fontColor(FONT_VAR_Fonts_,RGB_FONT);
+//				LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,RGB_BK);
+//				LCD_SetStrVar_coeff(FONT_VAR_Fonts_,Test.coeff);
+//				StartMeasureTime_us();
+//				 lenStr=LCD_StrChangeColorVarIndirect(FONT_VAR_Fonts_,Test.txt);
+//				Test.speed=StopMeasureTime_us("");
+//			}
+//			else{
+//				LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
+//				LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,MYGRAY);
+//				LCD_SetStrVar_coeff(FONT_VAR_Fonts_,0);
+//				StartMeasureTime_us();
+//				lenStr=LCD_StrVarIndirect(FONT_VAR_Fonts_,Test.txt);
+//				Test.speed=StopMeasureTime_us("");
+//			}
+//			break;
+//		case 1:
+//			LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
+//			LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,RGB_BK);
+//			LCD_SetStrVar_coeff(FONT_VAR_Fonts_,Test.coeff);
+//			StartMeasureTime_us();
+//			lenStr=LCD_StrVarIndirect(FONT_VAR_Fonts_,Test.txt);
+//		   Test.speed=StopMeasureTime_us("");
+//		   break;
+//		case 2:
+//			LCD_SetStrVar_fontID(FONT_VAR_Fonts_,fontIDVar);
+//			LCD_SetStrVar_bkColor(FONT_VAR_Fonts_,WHITE);
+//			Test.coeff=0; LCD_SetStrVar_coeff(FONT_VAR_Fonts_,0);
+//			StartMeasureTime_us();
+//			lenStr=LCD_StrVarIndirect(FONT_VAR_Fonts_,Test.txt);
+//		   Test.speed=StopMeasureTime_us("");
+//			break;
+//		}
+//		break;
 	case PARAM_COLOR_BK:
 		LCD_StrDependOnColorsVarIndirect(var.FONT_VAR_BkColor,TXT_BK_COLOR);
 		break;
 	case PARAM_COLOR_FONT:
 		LCD_StrDependOnColorsVarIndirect(var.FONT_VAR_FontColor,TXT_FONT_COLOR);
 		break;
-	case PARAM_LEN_WINDOW:
-		LCD_StrVarIndirect(FONT_VAR_LenWin, TXT_LEN_WIN);
-		break;
-	case PARAM_OFFS_WINDOW:
-		LCD_StrVarIndirect(FONT_VAR_OffsWin, TXT_OFFS_WIN);
-		break;
+//	case PARAM_LEN_WINDOW:
+//		LCD_StrVarIndirect(FONT_VAR_LenWin, TXT_LEN_WIN);
+//		break;
+//	case PARAM_OFFS_WINDOW:
+//		LCD_StrVarIndirect(FONT_VAR_OffsWin, TXT_OFFS_WIN);
+//		break;
 	case PARAM_STYLE:
 		LCD_StrDependOnColorsVarIndirect(var.FONT_VAR_FontStyle,TXT_FONT_STYLE);
 		break;
-	case PARAM_COEFF:
-		LCD_StrVarIndirect(SFONT_VAR_Coeff,TXT_COEFF);
-		break;
-	case PARAM_SPEED:
-		LCD_StrVarIndirect(FONT_VAR_Speed,TXT_SPEED);
-		break;
-	case PARAM_LOAD_FONT_TIME:
-		LCD_StrVarIndirect(FONT_VAR_LoadFontTime, TXT_LOAD_FONT_TIME);
-		break;
-	case PARAM_POS_CURSOR:
-		LCD_StrVarIndirect(FONT_VAR_PosCursor,TXT_PosCursor());
-		break;
-	case PARAM_CPU_USAGE:
-		LCD_StrVarIndirect(FONT_VAR_CPU_usage,TXT_CPU_USAGE);
-		break;
+//	case PARAM_COEFF:
+//		LCD_StrVarIndirect(SFONT_VAR_Coeff,TXT_COEFF);
+//		break;
+//	case PARAM_SPEED:
+//		LCD_StrVarIndirect(FONT_VAR_Speed,TXT_SPEED);
+//		break;
+//	case PARAM_LOAD_FONT_TIME:
+//		LCD_StrVarIndirect(FONT_VAR_LoadFontTime, TXT_LOAD_FONT_TIME);
+//		break;
+//	case PARAM_POS_CURSOR:
+//		LCD_StrVarIndirect(FONT_VAR_PosCursor,TXT_PosCursor());
+//		break;
+//	case PARAM_CPU_USAGE:
+//		LCD_StrVarIndirect(FONT_VAR_CPU_usage,TXT_CPU_USAGE);
+//		break;
 	}
 }
 
@@ -501,13 +501,13 @@ static void ChangeFontStyle(void)
 	case Comic_Saens_MS:  Test.style=Arial; 			 break;
 	default:              Test.style=Arial;           break;
 	}
-	ClearCursorField();
-	LCD_LoadFontVar(fontID_3);
-	AdjustMiddle_X();
-	AdjustMiddle_Y();
-	Data2Refresh(FONTS);
-	Test.lenWin=lenStr.inChar;
-	SetCursor();
+//	ClearCursorField();
+//	LCD_LoadFontVar(fontID_3);
+//	AdjustMiddle_X();
+//	AdjustMiddle_Y();
+//	Data2Refresh(FONTS);
+//	Test.lenWin=lenStr.inChar;
+//	SetCursor();
 	Data2Refresh(PARAM_LEN_WINDOW);
 	Data2Refresh(PARAM_STYLE);
 	Data2Refresh(PARAM_SPEED);
@@ -585,21 +585,21 @@ static void IncFontSize(void)
 		Test.size=sizeLimit;
 		return;
 	}
-	ClearCursorField();
-	LCD_LoadFontVar(fontID_3);
-	if((Test.size==FONT_72)||(Test.size==FONT_72_bold)||(Test.size==FONT_72_italics)||
-	   (Test.size==FONT_130)||(Test.size==FONT_130_bold)||(Test.size==FONT_130_italics)){
-		Test.lenWin_prev=Test.lenWin;
-		Test.offsWin_prev=Test.offsWin;
-		Test.lenWin=8;
-		Test.offsWin=0;
-		ChangeTxt();
-	}
-	AdjustMiddle_X();
-	AdjustMiddle_Y();
-	Data2Refresh(FONTS);
-	Test.lenWin=lenStr.inChar;
-	SetCursor();
+//	ClearCursorField();
+//	LCD_LoadFontVar(fontID_3);
+//	if((Test.size==FONT_72)||(Test.size==FONT_72_bold)||(Test.size==FONT_72_italics)||
+//	   (Test.size==FONT_130)||(Test.size==FONT_130_bold)||(Test.size==FONT_130_italics)){
+//		Test.lenWin_prev=Test.lenWin;
+//		Test.offsWin_prev=Test.offsWin;
+//		Test.lenWin=8;
+//		Test.offsWin=0;
+//		ChangeTxt();
+//	}
+//	AdjustMiddle_X();
+//	AdjustMiddle_Y();
+//	Data2Refresh(FONTS);
+//	Test.lenWin=lenStr.inChar;
+//	SetCursor();
 	Data2Refresh(PARAM_LEN_WINDOW);
 	Data2Refresh(PARAM_SIZE);
 	Data2Refresh(PARAM_SPEED);
@@ -622,15 +622,15 @@ static void DecFontSize(void)
 	case 2:  sizeLimit=FONT_8_italics; break;
 	}
 	if(Test.size<sizeLimit) Test.size=sizeLimit;
-
-	ClearCursorField();
-	LCD_LoadFontVar(fontID_3);
-	ChangeTxt();
-	AdjustMiddle_X();
-	AdjustMiddle_Y();
-	Data2Refresh(FONTS);
-	Test.lenWin=lenStr.inChar;
-	SetCursor();
+//
+//	ClearCursorField();
+//	LCD_LoadFontVar(fontID_3);
+//	ChangeTxt();
+//	AdjustMiddle_X();
+//	AdjustMiddle_Y();
+//	Data2Refresh(FONTS);
+//	Test.lenWin=lenStr.inChar;
+//	SetCursor();
 	Data2Refresh(PARAM_SIZE);
 	Data2Refresh(PARAM_LEN_WINDOW);
 	Data2Refresh(PARAM_SPEED);
@@ -816,13 +816,13 @@ void FILE_NAME(main)(void)
 	var.FONT_ID_FontSize  = LCD_LoadFont_DependOnColors(var.FONT_SIZE_FontSize, var.FONT_STYLE_FontSize, 	var.COLOR_BkScreen, var.FONT_COLOR_FontSize,  var.FONT_ID_FontSize);
 	var.FONT_ID_FontStyle = LCD_LoadFont_DependOnColors(var.FONT_SIZE_FontStyle,var.FONT_STYLE_FontStyle, var.COLOR_BkScreen, var.FONT_COLOR_FontStyle, var.FONT_ID_FontStyle);
 
-	LCD_LoadFontVar(fontID_3);
+	//LCD_LoadFontVar(fontID_3);
 
-	LCD_StrDependOnColorsVar(FONT_VAR_Title,	   var.FONT_ID_Title, 	  LCD_Xpos(lenStr,SetPos,500),LCD_Ypos(lenStr,SetPos,0), "Markielowski Rafa"ł, fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_Title,		 251,0,var.COLOR_BkScreen);
-	LCD_StrDependOnColorsVar(FONT_VAR_FontColor, var.FONT_ID_FontColor, 23, 								LCD_Ypos(lenStr,SetPos,0), TXT_FONT_COLOR, 		 fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_FontColor, 251,0,var.COLOR_BkScreen);
-	LCD_StrDependOnColorsVar(FONT_VAR_BkColor,   var.FONT_ID_BkColor,   23, 								LCD_Ypos(lenStr,SetPos,0), TXT_BK_COLOR, 			 fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_BkColor,	 251,0,var.COLOR_BkScreen);
-	LCD_StrDependOnColorsVar(FONT_VAR_FontSize,  var.FONT_ID_FontSize,  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,5), TXT_FONT_SIZE, 		 fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_FontSize,	 251,0,var.COLOR_BkScreen);
-	LCD_StrDependOnColorsVar(FONT_VAR_FontStyle, var.FONT_ID_FontStyle, LCD_Xpos(lenStr,IncPos,70), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE, 		 fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_FontStyle, 251,0,var.COLOR_BkScreen);
+	lenStr=LCD_StrDependOnColorsVar(var.FONT_VAR_Title,	  var.FONT_ID_Title, 	 LCD_Xpos(lenStr,SetPos,500),LCD_Ypos(lenStr,SetPos,0), "Markielowski Rafa"ł, fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_Title,		 251,0,var.COLOR_BkScreen);
+	lenStr=LCD_StrDependOnColorsVar(var.FONT_VAR_FontColor, var.FONT_ID_FontColor, 23, 								LCD_Ypos(lenStr,SetPos,0), TXT_FONT_COLOR, 		 fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_FontColor, 251,1,var.COLOR_BkScreen);
+	lenStr=LCD_StrDependOnColorsVar(var.FONT_VAR_BkColor,   var.FONT_ID_BkColor,   23, 								LCD_Ypos(lenStr,IncPos,5), TXT_BK_COLOR, 			 fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_BkColor,	 251,1,var.COLOR_BkScreen);
+	lenStr=LCD_StrDependOnColorsVar(var.FONT_VAR_FontSize,  var.FONT_ID_FontSize,  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,5), TXT_FONT_SIZE, 		 fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_FontSize,	 251,0,var.COLOR_BkScreen);
+	lenStr=LCD_StrDependOnColorsVar(var.FONT_VAR_FontStyle, var.FONT_ID_FontStyle, LCD_Xpos(lenStr,IncPos,70), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE, 	 fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_FontStyle, 251,0,var.COLOR_BkScreen);
 
 
 
@@ -841,21 +841,21 @@ void FILE_NAME(main)(void)
 //	LCD_StrDescrVar(FONT_VAR_PosCursor,fontID_2,440,40,"T: ",TXT_PosCursor(),halfHight,0,MYGRAY,0,1,MYGRAY);
 //
 //	LCD_StrVar(	FONT_VAR_CPU_usage, fontID_2,450,0, TXT_CPU_USAGE, halfHight,0,MYGRAY,0,1,MYGRAY);
-
-
-	 Test.yFontsField=LCD_Ypos(lenStr,IncPos,5);
-	 LCD_Ymiddle(SetPos, Test.yFontsField|(LCD_GetYSize()-2)<<16 );
-	 LCD_Xmiddle(SetPos, Test.xFontsField|LCD_GetXSize()<<16,"",0,NoConstWidth);
-
-	StartMeasureTime_us();    //daj mozliwosc wpisywania dowolnego textu aby korygowac odstepy miedzy kazdymi fontami jakimi sie chce !!!!!!!
-	if(Test.type)
-		lenStr=LCD_StrVar(FONT_VAR_Fonts_,fontIDVar, LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,fontIDVar), Test.txt, fullHight, Test.spaceBetweenFonts,MYGRAY,0,Test.constWidth,MYGRAY);
-	else
-		lenStr=LCD_StrChangeColorVar(FONT_VAR_Fonts_,fontIDVar, LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,fontIDVar), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,MYGRAY);
-	Test.speed=StopMeasureTime_us("");
-
-
-	//LCD_StrVar(FONT_VAR_Speed,fontID_2, 150, 0, TXT_SPEED, fullHight, 0,MYGRAY,0,1,MYGRAY);
+//
+//
+//	 Test.yFontsField=LCD_Ypos(lenStr,IncPos,5);
+//	 LCD_Ymiddle(SetPos, Test.yFontsField|(LCD_GetYSize()-2)<<16 );
+//	 LCD_Xmiddle(SetPos, Test.xFontsField|LCD_GetXSize()<<16,"",0,NoConstWidth);
+//
+//	StartMeasureTime_us();    //daj mozliwosc wpisywania dowolnego textu aby korygowac odstepy miedzy kazdymi fontami jakimi sie chce !!!!!!!
+//	if(Test.type)
+//		lenStr=LCD_StrVar(FONT_VAR_Fonts_,fontIDVar, LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,fontIDVar), Test.txt, fullHight, Test.spaceBetweenFonts,MYGRAY,0,Test.constWidth,MYGRAY);
+//	else
+//		lenStr=LCD_StrChangeColorVar(FONT_VAR_Fonts_,fontIDVar, LCD_Xmiddle(GetPos,fontIDVar,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,fontIDVar), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,MYGRAY);
+//	Test.speed=StopMeasureTime_us("");
+//
+//
+//	LCD_StrVar(FONT_VAR_Speed,fontID_2, 150, 0, TXT_SPEED, fullHight, 0,MYGRAY,0,1,MYGRAY);
 
 
 	LCD_Show();
@@ -863,5 +863,5 @@ void FILE_NAME(main)(void)
 
 
 
-	LCD_StrDependOnColorsVarIndirect(FONT_VAR_Title,"Krasnal");
+	LCD_StrDependOnColorsVarIndirect(var.FONT_VAR_Title,"Krasnal");
 }
