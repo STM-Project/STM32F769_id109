@@ -1662,7 +1662,7 @@ StructTxtPxlLen LCD_StrVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, 
 	else return StructTxtPxlLen_ZeroValue;
 }
 StructTxtPxlLen LCD_StrDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *txtDescr, char *txtVar, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor){
-	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)
+	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)  //TU DAJ DEFINE ktory bada przedzial dozolony IS_IN_RANGE od 0 do MAX_OPEN....!!!!!!!!!!!!!!!!!!
 		return LCD_StrVar(idVar,fontID, Xpos+LCD_Str(fontID,Xpos,Ypos,txtDescr,OnlyDigits,space,bkColor,coeff,0).inPixel, Ypos,txtVar,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
 	else return StructTxtPxlLen_ZeroValue;
 }
@@ -1734,6 +1734,13 @@ StructTxtPxlLen LCD_StrChangeColorVar(int idVar,int fontID, int Xpos, int Ypos, 
 	}
 	else return StructTxtPxlLen_ZeroValue;
 }
+
+StructTxtPxlLen LCD_StrChangeColorDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *txtDescr, char *txtVar, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor){
+	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)
+		return LCD_StrChangeColorVar(idVar,fontID,Xpos+LCD_StrChangeColor(fontID,Xpos,Ypos,txtDescr,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth).inPixel, Ypos,txtVar,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
+	else return StructTxtPxlLen_ZeroValue;
+}
+
 StructTxtPxlLen LCD_StrChangeColorVarIndirect(int idVar, char *txt){
 	StructTxtPxlLen temp;
 	temp = LCD_StrChangeColorIndirect(FontVar[idVar].id,FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
@@ -2937,6 +2944,24 @@ StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar,int fontID, int Xpos, int Ypo
 	}
 	else
 		lenStr=LCD_StrChangeColorVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
+	return lenStr;
+}
+
+StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *txtDescr, char *txtVar, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth, uint32_t bkScreenColor)
+{
+	StructTxtPxlLen lenStr;
+
+	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+			 (bkColor==MYGRAY && fontColor == GREEN)){
+		lenStr=LCD_StrDescrVar(idVar,fontID,Xpos,Ypos,txtDescr,txtVar, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor);
+		if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY) FontVar[idVar].fontColor = fontColor;
+	}
+	else if(bkColor==WHITE  && fontColor == BLACK){
+		lenStr=LCD_StrDescrVar(idVar,fontID,Xpos,Ypos,txtDescr,txtVar, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor);
+		if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY) FontVar[idVar].fontColor = fontColor;
+	}
+	else
+		lenStr=LCD_StrChangeColorDescrVar(idVar,fontID,Xpos,Ypos,txtDescr,txtVar, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
 	return lenStr;
 }
 
