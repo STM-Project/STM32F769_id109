@@ -199,11 +199,13 @@ StructTxtPxlLen LCD_StrDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *
 StructTxtPxlLen LCD_StrVarIndirect(int idVar, char *txt);
 
 StructTxtPxlLen LCD_StrChangeColorVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor);
+StructTxtPxlLen LCD_StrChangeColorDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *txtDescr, char *txtVar, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor);
 StructTxtPxlLen LCD_StrChangeColorVarIndirect(int idVar, char *txt);
 
 StructTxtPxlLen LCD_StrDependOnColors(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth);
 StructTxtPxlLen LCD_StrDependOnColorsIndirect(int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth);
 StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth, uint32_t bkScreenColor);
+StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *txtDescr, char *txtVar, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth, uint32_t bkScreenColor);
 StructTxtPxlLen LCD_StrDependOnColorsVarIndirect(int idVar, char *txt);
 
 void LCD_ResetStrMovBuffPos(void);
