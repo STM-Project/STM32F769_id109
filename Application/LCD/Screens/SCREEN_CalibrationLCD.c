@@ -88,7 +88,7 @@ typedef struct{
 	#undef X
 }FILE_NAME(struct);
 
-static FILE_NAME(struct) var ={
+static FILE_NAME(struct) v ={
 	#define X(a,b,c) c,
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
@@ -99,16 +99,16 @@ static uint64_t FILE_NAME(SelBits) = 0;
 static int FILE_NAME(SetDefaultFontID)(int FONT_ID_Name){
 	int temp;
 	#define X(a,b,c) \
-		if(b==FONT_ID_Name){ var.b=c; temp=c; }
+		if(b==FONT_ID_Name){ v.b=c; temp=c; }
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 		return temp;
 }
 
 void FILE_NAME(debug)(void){
-	if(var.DEBUG_ON){
+	if(v.DEBUG_ON){
 		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);  //--nazwa --- default -- value--  WYPISAC TAK !!!!
-		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(FILE_NAME(SelBits),a)?CoR_"change to: "_X:"", var.b);
+		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(FILE_NAME(SelBits),a)?CoR_"change to: "_X:"", v.b);
 			SCREEN_CALIBRATION_SET_PARAMETERS
 		#undef X
 		DbgVar(1,200,CoG2_"}%s;\r\n"_X,getName(FILE_NAME(struct)));
@@ -116,11 +116,11 @@ void FILE_NAME(debug)(void){
 }
 
 int FILE_NAME(funcGet)(int offs){
-	return *( (int*)((int*)(&var) + offs) );
+	return *( (int*)((int*)(&v) + offs) );
 }
 
 void FILE_NAME(funcSet)(int offs, int val){
-	*( (int*)((int*)(&var) + offs) ) = val;
+	*( (int*)((int*)(&v) + offs) ) = val;
 	SET_bit(FILE_NAME(SelBits),offs);
 }
 
@@ -167,23 +167,23 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
 	ptr = StrAll(3,GetSelTxt(0,FILE_NAME(Lang),1)," ",name);
-	width = _ShowCircleIndirect(log.x, log.y, width, 0, var.COLOR_CircleFrame, var.COLOR_CircleFill, var.COLOR_BkScreen);
-	lenStr=LCD_StrChangeColorIndirect(var.FONT_ID_CircleName, LCD_Xmiddle(GetPos,var.FONT_ID_CircleName,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), ptr, fullHight, 0, var.COLOR_BkScreen,var.FONT_COLOR_CircleName,var.COEFF_COLOR_CircleName,NoConstWidth);
+	width = _ShowCircleIndirect(log.x, log.y, width, 0, v.COLOR_CircleFrame, v.COLOR_CircleFill, v.COLOR_BkScreen);
+	lenStr=LCD_StrChangeColorIndirect(v.FONT_ID_CircleName, LCD_Xmiddle(GetPos,v.FONT_ID_CircleName,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), ptr, fullHight, 0, v.COLOR_BkScreen,v.FONT_COLOR_CircleName,v.COEFF_COLOR_CircleName,NoConstWidth);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
-	xPos = LCD_Xmiddle(GetPos,var.FONT_ID_PosLog,ptr,0,NoConstWidth);
+	xPos = LCD_Xmiddle(GetPos,v.FONT_ID_PosLog,ptr,0,NoConstWidth);
 	CorrectPosIfOutRange(&xPos);
 
 #ifdef DISPLAY_COMMA_UNDER_COMMA_
 	ptr = StrAll(2,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none));
-	lenStr=LCD_StrChangeColorIndirect(var.FONT_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.COLOR_BkScreen,var.FONT_COLOR_PosLog,var.COEFF_COLOR_PosLog,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(v.FONT_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, v.COLOR_BkScreen,v.FONT_COLOR_PosLog,v.COEFF_COLOR_PosLog,NoConstWidth);
 	xPos = xPos + lenStr.inPixel;
 	CorrectPosIfOutRange(&xPos);
 
 	ptr = StrAll(3,",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
-	lenStr=LCD_StrChangeColorIndirect(var.FONT_ID_PosLog, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, var.COLOR_BkScreen,var.FONT_COLOR_PosLog,var.COEFF_COLOR_PosLog,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(v.FONT_ID_PosLog, xPos, LCD_Ypos(lenStr,GetPos,0), ptr, fullHight, 0, v.COLOR_BkScreen,v.FONT_COLOR_PosLog,v.COEFF_COLOR_PosLog,NoConstWidth);
 #else
-	lenStr=LCD_StrChangeColorIndirect(var.FONT_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.COLOR_BkScreen,var.FONT_COLOR_PosLog,var.COEFF_COLOR_PosLog,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(v.FONT_ID_PosLog, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, v.COLOR_BkScreen,v.FONT_COLOR_PosLog,v.COEFF_COLOR_PosLog,NoConstWidth);
 #endif
 
 	WaitForTouchState(press);
@@ -194,18 +194,18 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 	WaitForTouchState(release);
 
-	width = _ShowCircleIndirect(log.x, log.y, width, 0, var.COLOR_CircleFrame, var.COLOR_CircleFillPress, var.COLOR_BkScreen);
+	width = _ShowCircleIndirect(log.x, log.y, width, 0, v.COLOR_CircleFrame, v.COLOR_CircleFillPress, v.COLOR_BkScreen);
 
 #ifdef DISPLAY_COMMA_UNDER_COMMA_
 	ptr = StrAll(2,"(",Int2Str(phys->x,None,3,Sign_none));
-	xPos = xPos - LCD_GetWholeStrPxlWidth(var.FONT_ID_PosPhys,ptr,0,NoConstWidth);
+	xPos = xPos - LCD_GetWholeStrPxlWidth(v.FONT_ID_PosPhys,ptr,0,NoConstWidth);
 	CorrectPosIfOutRange(&xPos);
 
 	ptr = StrAll(5,"(",Int2Str(phys->x,None,3,Sign_none),",",Int2Str(phys->y,None,3,Sign_none),")");
-	LCD_StrChangeColorIndirect(var.FONT_ID_PosPhys, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.COLOR_BkScreen,var.FONT_COLOR_PosPhys,var.COEFF_COLOR_PosPhys,NoConstWidth);
+	LCD_StrChangeColorIndirect(v.FONT_ID_PosPhys, xPos, LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, v.COLOR_BkScreen,v.FONT_COLOR_PosPhys,v.COEFF_COLOR_PosPhys,NoConstWidth);
 #else
 	ptr = StrAll(5,"(",Int2Str(phys->x,None,3,Sign_none),",",Int2Str(phys->y,None,3,Sign_none),")");
-	LCD_StrChangeColorIndirect(var.FONT_ID_PosPhys, LCD_Xmiddle(GetPos,var.FONT_ID_PosPhys,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, var.COLOR_BkScreen,var.FONT_COLOR_PosPhys,var.COEFF_COLOR_PosPhys,NoConstWidth);
+	LCD_StrChangeColorIndirect(v.FONT_ID_PosPhys, LCD_Xmiddle(GetPos,v.FONT_ID_PosPhys,ptr,0,NoConstWidth), LCD_Ypos(lenStr,IncPos,1), ptr, fullHight, 0, v.COLOR_BkScreen,v.FONT_COLOR_PosPhys,v.COEFF_COLOR_PosPhys,NoConstWidth);
 #endif
 }
 
@@ -239,25 +239,25 @@ void FILE_NAME(main)(void)
 	Delete_TouchLcd_Task();
 	SCREEN_ResetAllParameters();
 
-	var.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_Title, 	 	var.FONT_STYLE_Title, 		FILE_NAME(SetDefaultFontID)(FONT_ID_Title));
-	var.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(var.FONT_SIZE_CircleName, 	var.FONT_STYLE_CircleName, FILE_NAME(SetDefaultFontID)(FONT_ID_CircleName));
-	var.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosLog,  	 	var.FONT_STYLE_PosLog,  	FILE_NAME(SetDefaultFontID)(FONT_ID_PosLog));
-	var.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(var.FONT_SIZE_PosPhys, 	 	var.FONT_STYLE_PosPhys, 	FILE_NAME(SetDefaultFontID)(FONT_ID_PosPhys));
+	v.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_Title, 	 	v.FONT_STYLE_Title, 		FILE_NAME(SetDefaultFontID)(FONT_ID_Title));
+	v.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(v.FONT_SIZE_CircleName, 	v.FONT_STYLE_CircleName, FILE_NAME(SetDefaultFontID)(FONT_ID_CircleName));
+	v.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosLog,  	 	v.FONT_STYLE_PosLog,  	FILE_NAME(SetDefaultFontID)(FONT_ID_PosLog));
+	v.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosPhys, 	 	v.FONT_STYLE_PosPhys, 	FILE_NAME(SetDefaultFontID)(FONT_ID_PosPhys));
 
 	FILE_NAME(debug)();
 	DisplayFontsStructState();
 
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
-	LCD_Clear(var.COLOR_BkScreen);  LCD_Show();
+	LCD_Clear(v.COLOR_BkScreen);  LCD_Show();
 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
 	LCD_Xmiddle(SetPos,SetPosAndWidth(0,LCD_X),NULL,0,NoConstWidth);
-	lenStr=LCD_StrChangeColorIndirect(var.FONT_ID_Title, LCD_Xmiddle(GetPos,var.FONT_ID_Title,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,0), ptr, fullHight,0,var.COLOR_BkScreen,var.FONT_COLOR_Title,var.COEFF_COLOR_CircleName,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(v.FONT_ID_Title, LCD_Xmiddle(GetPos,v.FONT_ID_Title,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,0), ptr, fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,v.COEFF_COLOR_CircleName,NoConstWidth);
 
 	uint8_t status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 
 	if(status)
-		Dbg(var.DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,1));
+		Dbg(v.DEBUG_ON, TEXT2PRINT(DEBUG_Text_1,1));
 	else
 	{
 	   SetLogXY(pos,width,CIRCLES_NUMBER);
@@ -268,7 +268,7 @@ void FILE_NAME(main)(void)
 	   SetPhysXY(phys,CIRCLES_NUMBER);
 
 	   if(CalcutaleCoeffCalibration(CIRCLES_NUMBER))
-	   	Dbg(var.DEBUG_ON, TEXT2PRINT(DEBUG_Text_2,1));
+	   	Dbg(v.DEBUG_ON, TEXT2PRINT(DEBUG_Text_2,1));
 	   else{
 		   CalibrationWasDone();
 		   DisplayCoeffCalibration();
