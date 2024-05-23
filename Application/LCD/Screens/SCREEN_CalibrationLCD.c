@@ -96,16 +96,25 @@ static FILE_NAME(struct) v ={
 
 static uint64_t FILE_NAME(SelBits) = 0;
 
-static int FILE_NAME(SetDefaultFontID)(int FONT_ID_Name){
+static int FILE_NAME(SetDefaultParam)(int param){
 	int temp;
 	#define X(a,b,c) \
-		if(b==FONT_ID_Name){ v.b=c; temp=c; }
+		if(b==param){ v.b=c; temp=c; }
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
 		return temp;
 }
 
-void FILE_NAME(debug)(void){
+static int FILE_NAME(GetDefaultParam)(int param){
+	int temp;
+	#define X(a,b,c) \
+		if(b==param) temp=c;
+		SCREEN_CALIBRATION_SET_PARAMETERS
+	#undef X
+		return temp;
+}
+
+void FILE_NAME(printInfo)(void){
 	if(v.DEBUG_ON){
 		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);  //--nazwa --- default -- value--  WYPISAC TAK !!!!
 		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(FILE_NAME(SelBits),a)?CoR_"change to: "_X:"", v.b);
@@ -124,7 +133,7 @@ void FILE_NAME(funcSet)(int offs, int val){
 	SET_bit(FILE_NAME(SelBits),offs);
 }
 
-void FILE_NAME(setDefaultParam)(void){
+void FILE_NAME(setDefaultAllParam)(void){
 	#define X(a,b,c) FILE_NAME(funcSet)(b,c);
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
@@ -239,12 +248,12 @@ void FILE_NAME(main)(void)
 	Delete_TouchLcd_Task();
 	SCREEN_ResetAllParameters();
 
-	v.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_Title, 	 	v.FONT_STYLE_Title, 		FILE_NAME(SetDefaultFontID)(FONT_ID_Title));
-	v.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(v.FONT_SIZE_CircleName, 	v.FONT_STYLE_CircleName, FILE_NAME(SetDefaultFontID)(FONT_ID_CircleName));
-	v.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosLog,  	 	v.FONT_STYLE_PosLog,  	FILE_NAME(SetDefaultFontID)(FONT_ID_PosLog));
-	v.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosPhys, 	 	v.FONT_STYLE_PosPhys, 	FILE_NAME(SetDefaultFontID)(FONT_ID_PosPhys));
+	v.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_Title, 	 	v.FONT_STYLE_Title, 		FILE_NAME(GetDefaultParam)(FONT_ID_Title));
+	v.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(v.FONT_SIZE_CircleName, 	v.FONT_STYLE_CircleName, FILE_NAME(GetDefaultParam)(FONT_ID_CircleName));
+	v.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosLog,  	 	v.FONT_STYLE_PosLog,  	FILE_NAME(GetDefaultParam)(FONT_ID_PosLog));
+	v.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosPhys, 	 	v.FONT_STYLE_PosPhys, 	FILE_NAME(GetDefaultParam)(FONT_ID_PosPhys));
 
-	FILE_NAME(debug)();
+	FILE_NAME(printInfo)();
 	DisplayFontsStructState();
 
 	LCD_SetCircleAA(RATIO_AA_VALUE_MAX, RATIO_AA_VALUE_MAX);
