@@ -934,7 +934,7 @@ void FILE_NAME(main)(void)
 		 	touchTemp[0].y= 240;
 		 	touchTemp[1].y= 480;
 		 	//SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,TOUCH_GET_PER_X_PROBE);
-		 	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);
+		 	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);  //W DEBUG FPNTS WPISZ JESZCZE JAKI LCD_STR !!!!!
 
 
 	v.FONT_ID_Title 	 =	LCD_LoadFont_DependOnColors(v.FONT_SIZE_Title, 	 	v.FONT_STYLE_Title, 		v.COLOR_BkScreen, v.FONT_COLOR_Title,		FILE_NAME(GetDefaultParam)(FONT_ID_Title));
