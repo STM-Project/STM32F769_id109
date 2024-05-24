@@ -190,7 +190,7 @@ void FILE_NAME(main)(void);
 
 
 
-static char bufTemp[50];
+static char bufTemp[50];  //zastanowic sie czy nie usunac !!
 
 #define FLOAT2STR(val)	Float2Str(val,' ',4,Sign_plusMinus,1)
 #define INT2STR(val)		  Int2Str(val,'0',3,Sign_none)
@@ -199,7 +199,7 @@ static char bufTemp[50];
 
 #define TXT_FONT_COLOR 	StrAll(5,INT2STR(Test.font[0])," ",INT2STR(Test.font[1])," ",INT2STR(Test.font[2]))
 #define TXT_BK_COLOR 	StrAll(5,INT2STR(Test.bk[0]),  " ",INT2STR(Test.bk[1]),  " ",INT2STR(Test.bk[2]))
-#define TXT_FONT_SIZE	StrAll(3,GetSelTxt(0,LANG_ReadPanel_StringType,Test.type),":",LCD_FontSize2Str(bufTemp,Test.size))
+#define TXT_FONT_SIZE	StrAll(3,GetSelTxt(0,LANG_ReadPanel_StringType,Test.type),":",LCD_FontSize2Str(bufTemp,Test.size))  //stad USUN to GetSelTxt i wpowadz spcjalna funkcje !!!
 #define TXT_FONT_STYLE	LCD_FontStyle2Str(bufTemp,Test.style)
 #define TXT_COEFF			Int2Str(Test.coeff  ,' ',3,Sign_plusMinus)
 #define TXT_LEN_WIN		Int2Str(Test.lenWin ,' ',3,Sign_none)
