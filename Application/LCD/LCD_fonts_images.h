@@ -175,6 +175,7 @@ void LCD_DeleteAllFontAndImages(void);
 int LCD_DeleteFont(uint32_t fontID);
 char *LCD_FontSize2Str(char *buffTemp, int fontSize);
 char *LCD_FontStyle2Str(char *buffTemp, int fontStyle);
+char *LCD_LoadFontStrType(char *buffTemp, int id, int idAlt);
 void DisplayFontsStructState(void);
 void InfoForImagesFonts(void);
 
