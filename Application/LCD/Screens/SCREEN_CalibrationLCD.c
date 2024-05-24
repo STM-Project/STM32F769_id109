@@ -248,10 +248,10 @@ void FILE_NAME(main)(void)
 	Delete_TouchLcd_Task();
 	SCREEN_ResetAllParameters();
 
-	v.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_Title, 	 	v.FONT_STYLE_Title, 		FILE_NAME(GetDefaultParam)(FONT_ID_Title));
-	v.FONT_ID_CircleName 	= LCD_LoadFont_ChangeColor(v.FONT_SIZE_CircleName, 	v.FONT_STYLE_CircleName, FILE_NAME(GetDefaultParam)(FONT_ID_CircleName));
-	v.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosLog,  	 	v.FONT_STYLE_PosLog,  	FILE_NAME(GetDefaultParam)(FONT_ID_PosLog));
-	v.FONT_ID_PosPhys 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosPhys, 	 	v.FONT_STYLE_PosPhys, 	FILE_NAME(GetDefaultParam)(FONT_ID_PosPhys));
+	v.FONT_ID_Title 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_Title, 	 	v.FONT_STYLE_Title, 			FILE_NAME(GetDefaultParam)(FONT_ID_Title));
+	v.FONT_ID_CircleName = LCD_LoadFont_ChangeColor(v.FONT_SIZE_CircleName, v.FONT_STYLE_CircleName, 	FILE_NAME(GetDefaultParam)(FONT_ID_CircleName));
+	v.FONT_ID_PosLog 		= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosLog,  	v.FONT_STYLE_PosLog,  		FILE_NAME(GetDefaultParam)(FONT_ID_PosLog));
+	v.FONT_ID_PosPhys 	= LCD_LoadFont_ChangeColor(v.FONT_SIZE_PosPhys, 	v.FONT_STYLE_PosPhys, 		FILE_NAME(GetDefaultParam)(FONT_ID_PosPhys));
 
 	FILE_NAME(printInfo)();
 	DisplayFontsStructState();
