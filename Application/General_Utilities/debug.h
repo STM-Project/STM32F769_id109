@@ -33,6 +33,7 @@ typedef enum{
 #define CoB_	"\x1b[38;2;50;190;255m"
 
 #define BkR_	"\x1b[48;2;160;70;45m"
+#define BkW_	"\x1b[48;2;255;255;255m"
 
 #define Bol_	"\x1b[1m"
 #define Ita_	"\x1b[4m"

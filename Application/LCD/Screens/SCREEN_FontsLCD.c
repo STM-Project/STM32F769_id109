@@ -12,13 +12,6 @@
 #include "tim.h"
 #include "touch.h"
 
- //TRZEBA ZMIENIC BO BEZSENSU !!!!!
-const char LANG_ReadPanel_StringType[]="\  
-LCD_StrChangeColor,LCD_StrChangeColor,\
-LCD_Str,LCD_Str,\
-WHITE_BLACK,WHITE_BLACK,\
-";
-
 /*----------------- Main Settings ------------------*/
 
 #define FILE_NAME(extend) SCREEN_Fonts_##extend
@@ -99,7 +92,7 @@ Czcionki LCD,Fonts LCD,\
 	X(62, FONT_VAR_PosCursor,		fontVar_10) \
 	X(63, FONT_VAR_CPUusage,		fontVar_11) \
 	X(64, FONT_VAR_Speed,			fontVar_12) \
-	X(65, FONT_VAR_Fonts,  			fontVar_13)
+	X(65, FONT_VAR_Fonts,  			fontVar_13)   //dolozyc DEBUG_ON
 
 /*------------ End Main Settings -----------------*/
 
@@ -199,7 +192,7 @@ static char bufTemp[50];  //zastanowic sie czy nie usunac !!
 
 #define TXT_FONT_COLOR 	StrAll(5,INT2STR(Test.font[0])," ",INT2STR(Test.font[1])," ",INT2STR(Test.font[2]))
 #define TXT_BK_COLOR 	StrAll(5,INT2STR(Test.bk[0]),  " ",INT2STR(Test.bk[1]),  " ",INT2STR(Test.bk[2]))
-#define TXT_FONT_SIZE	StrAll(3,GetSelTxt(0,LANG_ReadPanel_StringType,Test.type),":",LCD_FontSize2Str(bufTemp,Test.size))  //stad USUN to GetSelTxt i wpowadz spcjalna funkcje !!!
+#define TXT_FONT_SIZE	StrAll(3,LCD_LoadFontStrType(bufTemp,0,Test.type+1),":",LCD_FontSize2Str(bufTemp+25,Test.size))
 #define TXT_FONT_STYLE	LCD_FontStyle2Str(bufTemp,Test.style)
 #define TXT_COEFF			Int2Str(Test.coeff  ,' ',3,Sign_plusMinus)
 #define TXT_LEN_WIN		Int2Str(Test.lenWin ,' ',3,Sign_none)
@@ -527,7 +520,7 @@ static void LCD_LoadFontVar(void)
 		Dbg(1,"\r\nERROR_LoadFontVar ");
 		v.FONT_ID_Fonts=0;
 	}
-	DisplayFontsStructState();  //tu dac kolory w dbg!!!!
+	DisplayFontsStructState();
 	if(startScreen) Data2Refresh(PARAM_LOAD_FONT_TIME);
 }
 

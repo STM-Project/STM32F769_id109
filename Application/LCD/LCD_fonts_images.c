@@ -16,6 +16,7 @@
 #include "sd_card.h"
 #include "errors_service.h"
 #include "debug.h"
+#include "mini_printf.h"
 
 #define MAX_FONTS_AND_IMAGES_MEMORY_SIZE	0x600000
 #define LCD_MOVABLE_FONTS_BUFF_SIZE		LCD_BUFF_XSIZE * LCD_BUFF_YSIZE
@@ -1318,52 +1319,30 @@ char *LCD_FontStyle2Str(char *buffTemp, int fontStyle)
 
 char *LCD_LoadFontStrType(char *buffTemp, int id, int idAlt)
 {
-//	if(idAlt){
-//		switch(idAlt){
-//			case 1: strcpy(buffTemp,"LCD_Str (Gray-White)");
-//				break;
-//			case 2: strcpy(buffTemp,"LCD_Str (Gray-Green)");
-//				break;
-//			case 3: strcpy(buffTemp,"LCD_Str (White-Black)");
-//				break;
-//			default: strcpy(buffTemp,"LCD_StrChangeColor");
-//				break;
-//		}
-//	}
-//	else{
-		if		 (idAlt ? (idAlt==1) : (MYGRAY==Font[id].fontBkColorToIndex && WHITE==Font[id].fontColorToIndex)){
-			*buffTemp = '1';	strcpy(buffTemp+1,"LCD_Str (Gray-White)"); }
-		else if(idAlt ? (idAlt==2) : (MYGRAY==Font[id].fontBkColorToIndex && MYGREEN==Font[id].fontColorToIndex)){
-			*buffTemp = '2';	strcpy(buffTemp+1,"LCD_Str (Gray-Green)"); }
-		else if(idAlt ? (idAlt==3) : (WHITE==Font[id].fontBkColorToIndex  && BLACK==Font[id].fontColorToIndex)){
-			*buffTemp = '3';	strcpy(buffTemp+1,"LCD_Str (White-Black)"); }
-		else{
-			*buffTemp = '4';	strcpy(buffTemp+1,"LCD_StrChangeColor"); }
-	//}
+	if		 (idAlt ? (idAlt==1) : (MYGRAY==Font[id].fontBkColorToIndex && MYGREEN==Font[id].fontColorToIndex)){
+		*buffTemp = '1';	strcpy(buffTemp+1,"(Gray-Green) "); }
+	else if(idAlt ? (idAlt==2) : (MYGRAY==Font[id].fontBkColorToIndex && WHITE==Font[id].fontColorToIndex)){
+		*buffTemp = '2';	strcpy(buffTemp+1,"(Gray-White) "); }
+	else if(idAlt ? (idAlt==3) : (WHITE==Font[id].fontBkColorToIndex  && BLACK==Font[id].fontColorToIndex)){
+		*buffTemp = '3';	strcpy(buffTemp+1,"(White-Black)"); }
+	else{
+		*buffTemp = '0';	buffTemp[1]=0; }
 	return buffTemp;
 }
 
 void DisplayFontsStructState(void){
-	char bufTemp[65],bufTemp2[120];
-	DbgVar(1,250,CoGr_"\r\nADDRESS:0x%x  FONTS_MEMORY_SIZE:%d  Counter:%d\r\n"_X,fontsImagesMemoryBuffer, MAX_FONTS_AND_IMAGES_MEMORY_SIZE, CounterBusyBytesForFontsImages);
+	char bufTemp[65],bufTemp2[100];
+	DbgVar(1,250,CoGr_"\r\nBuff address: 0x%x     Buff size: %d     busy bytes: %d\r\n"_X, fontsImagesMemoryBuffer, MAX_FONTS_AND_IMAGES_MEMORY_SIZE, CounterBusyBytesForFontsImages);
 	for(int i=0; i < MAX_OPEN_FONTS_SIMULTANEOUSLY; i++){
 		if(Font[i].fontSizeToIndex){
 			LCD_LoadFontStrType(bufTemp+40,i,0);
 			switch(bufTemp[40]){
-			case '1':
-				vsnprintf(bufTemp2,119,"%*s", -22,bufTemp+41);
-				break;
-			case '2':
-				vsnprintf(bufTemp2,119,CoG_"%*s"_X, -22,bufTemp+41);
-				break;
-			case '3':
-				vsnprintf(bufTemp2,119,BkW_ CoBl_"%*s"_X, -22,bufTemp+41);
-				break;
-			case '4':
-				vsnprintf(bufTemp2,119,CoR_"%*s"_X, -22,bufTemp+41);
-				break;
+				case '1': mini_snprintf(bufTemp2,100,CoG_"%s"_X, bufTemp+41); break;
+				case '2': mini_snprintf(bufTemp2,100,"%s", bufTemp+41); break;
+				case '3': mini_snprintf(bufTemp2,100,BkW_ CoBl_"%s"_X, bufTemp+41); break;
+				default:  bufTemp2[0]=0; break;
 			}
-			DbgVar2(1,250,CoGr_"Idx:%*d"_X "%*s %*s %s  FontAddr:0x%06x  fontSdramLenght:%d\r\n",-4,i, -16,LCD_FontStyle2Str(bufTemp,Font[i].fontStyleToIndex), -17,LCD_FontSize2Str(bufTemp+20,Font[i].fontSizeToIndex-1), bufTemp2, Font[i].pointerToMemoryFont-fontsImagesMemoryBuffer, Font[i].fontSdramLenght);
+			DbgVar2(1,300,CoGr_"%*d"_X "%*s %*s %s   "CoGr_"FontAddr:"_X" 0x%06x   "CoGr_"fontSdramLenght:"_X" %d\r\n",-2,i, -16,LCD_FontStyle2Str(bufTemp,Font[i].fontStyleToIndex), -17,LCD_FontSize2Str(bufTemp+20,Font[i].fontSizeToIndex-1), bufTemp2, Font[i].pointerToMemoryFont-fontsImagesMemoryBuffer, Font[i].fontSdramLenght);
 		}
 	}
 }
