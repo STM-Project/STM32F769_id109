@@ -95,7 +95,7 @@ static FILE_NAME(struct) v ={
 };
 
 static uint64_t FILE_NAME(SelBits) = 0;
-
+/*
 static int FILE_NAME(SetDefaultParam)(int param){
 	int temp;
 	#define X(a,b,c) \
@@ -104,7 +104,7 @@ static int FILE_NAME(SetDefaultParam)(int param){
 	#undef X
 		return temp;
 }
-
+*/
 static int FILE_NAME(GetDefaultParam)(int param){
 	int temp;
 	#define X(a,b,c) \
@@ -116,7 +116,8 @@ static int FILE_NAME(GetDefaultParam)(int param){
 
 void FILE_NAME(printInfo)(void){
 	if(v.DEBUG_ON){
-		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);  //--nazwa --- default -- value--  WYPISAC TAK !!!!
+		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);
+		DbgVar2(1,200,CoGr_"%*s %*s %*s %s\r\n"_X, -8,"id", -18,"name", -15,"default value", "value");
 		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(FILE_NAME(SelBits),a)?CoR_"change to: "_X:"", v.b);
 			SCREEN_CALIBRATION_SET_PARAMETERS
 		#undef X
@@ -139,10 +140,10 @@ void FILE_NAME(setDefaultAllParam)(void){
 	#undef X
 	FILE_NAME(SelBits)=0;
 }
-
-//static void FILE_NAME(debugRcvStr)(void);
-//static void FILE_NAME(setTouch)	 (void);
-
+/*
+static void FILE_NAME(debugRcvStr)(void);
+static void FILE_NAME(setTouch)	 (void);
+*/
 void 	FILE_NAME(main)(void);
 /*------------ End Main Screen MACRO -----------------*/
 

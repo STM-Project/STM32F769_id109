@@ -47,7 +47,7 @@
 
 #define SET_bit(allBits,bitNr)	allBits |=   1<<bitNr
 #define CLEAR_bit(allBits,bitNr)	allBits &= ~(1<<bitNr)
-#define CHECK_bit(allBits,bitNr) (allBits>>bitNr) & 0x0000000000000001
+#define CHECK_bit(allBits,bitNr) (allBits>>(bitNr>63?63:bitNr)) & 0x0000000000000001
 
 #define SDRAM __attribute__ ((section(".sdram")))
 

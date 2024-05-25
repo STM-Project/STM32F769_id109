@@ -451,13 +451,13 @@ void SCREEN_ReadPanel(void)
 		{
 		case 0:
 
-			SCREEN_Calibration_funcSet(CALIBRATION_FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(CALIBRATION_FONT_SIZE_Title));
-			SCREEN_Calibration_funcSet(CALIBRATION_FONT_SIZE_PosLog, SCREEN_Calibration_funcGet(CALIBRATION_FONT_SIZE_CircleName));
-			SCREEN_Calibration_funcSet(CALIBRATION_COLOR_BkScreen, MYGRAY);
-			SCREEN_Calibration_funcSet(CALIBRATION_FONT_COLOR_CircleName, RED);
-			SCREEN_Calibration_funcSet(CALIBRATION_COLOR_CircleFill, LIGHTRED);
-			SCREEN_Calibration_funcSet(CALIBRATION_COEFF_COLOR_PosLog, 254);
-			SCREEN_Calibration_printInfo();
+//			SCREEN_Calibration_funcSet(CALIBRATION_FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(CALIBRATION_FONT_SIZE_Title));
+//			SCREEN_Calibration_funcSet(CALIBRATION_FONT_SIZE_PosLog, SCREEN_Calibration_funcGet(CALIBRATION_FONT_SIZE_CircleName));
+//			SCREEN_Calibration_funcSet(CALIBRATION_COLOR_BkScreen, MYGRAY);
+//			SCREEN_Calibration_funcSet(CALIBRATION_FONT_COLOR_CircleName, RED);
+//			SCREEN_Calibration_funcSet(CALIBRATION_COLOR_CircleFill, LIGHTRED);
+//			SCREEN_Calibration_funcSet(CALIBRATION_COEFF_COLOR_PosLog, 254);
+//			SCREEN_Calibration_printInfo();
 			//NOWY_0();
 			SCREEN_Fonts_main();
 			startScreen=1;
@@ -473,8 +473,8 @@ void SCREEN_ReadPanel(void)
 		case 3:
 			NOWY_3();
 			startScreen=1;
-			SCREEN_Fonts_funcSet(FONTS_FONT_COLOR_FontColor, MYRED);
-			SCREEN_Fonts_printInfo();
+//			SCREEN_Fonts_funcSet(FONTS_FONT_COLOR_FontColor, MYRED);
+//			SCREEN_Fonts_printInfo();
 			break;
 		case 4:
 			SCREEN_Test_Circle();
