@@ -131,7 +131,7 @@ static FILE_NAME(struct) v ={
 };
 
 static uint64_t FILE_NAME(SelBits) = 0;
-/*
+
 static int FILE_NAME(SetDefaultParam)(int param){
 	int temp;
 	#define X(a,b,c) \
@@ -140,7 +140,7 @@ static int FILE_NAME(SetDefaultParam)(int param){
 	#undef X
 		return temp;
 }
-*/
+
 static int FILE_NAME(GetDefaultParam)(int param){
 	int temp;
 	#define X(a,b,c) \
@@ -517,7 +517,6 @@ static void LCD_LoadFontVar(void)
 		v.FONT_ID_Fonts=0;
 	}
 	DisplayFontsStructState();
-	if(startScreen) Data2Refresh(PARAM_LOAD_FONT_TIME);
 }
 
 static void AdjustMiddle_X(void){
@@ -543,6 +542,7 @@ static void ChangeFontStyle(void)
 	Data2Refresh(FONTS);
 	Test.lenWin=lenStr.inChar;
 	SetCursor();
+	Data2Refresh(PARAM_LOAD_FONT_TIME);
 	Data2Refresh(PARAM_LEN_WINDOW);
 	Data2Refresh(PARAM_STYLE);
 	Data2Refresh(PARAM_SPEED);
@@ -635,6 +635,7 @@ static void IncFontSize(void)
 	Data2Refresh(FONTS);
 	Test.lenWin=lenStr.inChar;
 	SetCursor();
+	Data2Refresh(PARAM_LOAD_FONT_TIME);
 	Data2Refresh(PARAM_LEN_WINDOW);
 	Data2Refresh(PARAM_SIZE);
 	Data2Refresh(PARAM_SPEED);
@@ -666,6 +667,7 @@ static void DecFontSize(void)
 	Data2Refresh(FONTS);
 	Test.lenWin=lenStr.inChar;
 	SetCursor();
+	Data2Refresh(PARAM_LOAD_FONT_TIME);
 	Data2Refresh(PARAM_SIZE);
 	Data2Refresh(PARAM_LEN_WINDOW);
 	Data2Refresh(PARAM_SPEED);
@@ -688,6 +690,7 @@ static void ChangeFontBoldItalNorm(void)
 	Data2Refresh(FONTS);
 	Test.lenWin=lenStr.inChar;
 	SetCursor();
+	Data2Refresh(PARAM_LOAD_FONT_TIME);
 	Data2Refresh(PARAM_LEN_WINDOW);
 	Data2Refresh(PARAM_SIZE);
 	Data2Refresh(PARAM_SPEED);
@@ -713,6 +716,7 @@ static void ReplaceLcdStrType(void)
 	Data2Refresh(FONTS);
 	Test.lenWin=lenStr.inChar;
 	SetCursor();
+	Data2Refresh(PARAM_LOAD_FONT_TIME);
 	Data2Refresh(PARAM_LEN_WINDOW);
 	Data2Refresh(PARAM_SIZE);
 	Data2Refresh(PARAM_SPEED);
@@ -754,6 +758,7 @@ static void DisplayFontsWithChangeColorOrNot(void){
 	RefreshAllParam();
 }
 
+int aaaaa=0;
 void FILE_NAME(setTouch)(void)
 {
 	uint16_t state;
@@ -763,7 +768,36 @@ void FILE_NAME(setTouch)(void)
 	switch(state)
 	{
 		case Point_1:
+
+			if(aaaaa == 0)
+			{
+				v.FONT_COLOR_FontColor =DARKYELLOW;
+				//v.FONT_SIZE_FontColor =FONT_12_bold;
+
+				FILE_NAME(main)();
+
+
+					aaaaa=1;
+
+
+			}
+			else
+			{
+
+
+				FILE_NAME(setDefaultAllParam)();
+
+				FILE_NAME(main)();
+
+
+
+					aaaaa=0;
+			}
+
+
+
 			Dbg(1,"\r\nTouchPoint_1");
+
 			break;
 		case Point_2:
 			Dbg(1,"\r\nTouchPoint_2");
@@ -874,7 +908,7 @@ void FILE_NAME(main)(void)
 	SCREEN_ResetAllParameters();
 	DeleteAllTouch();
 	ResetRGB();
-	LCD_Clear(MYGRAY);
+	LCD_Clear(v.COLOR_BkScreen);
 
 		 	touchTemp[0].x= 0;
 		 	touchTemp[0].y= 0;
@@ -941,7 +975,7 @@ void FILE_NAME(main)(void)
 	v.FONT_ID_Speed 			= LCD_LoadFont_DependOnColors(v.FONT_SIZE_Speed,			v.FONT_STYLE_Speed, 			v.COLOR_BkScreen, v.FONT_COLOR_Speed, 			FILE_NAME(GetDefaultParam)(FONT_ID_Speed));
 
 	LCD_LoadFontVar();
-	FILE_NAME(printInfo)();
+	//FILE_NAME(printInfo)();
 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
 	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_Title,	   v.FONT_ID_Title, 	 	LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,0), ptr, 				fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,	  255,0,v.COLOR_BkScreen);
