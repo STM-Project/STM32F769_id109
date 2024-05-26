@@ -33,6 +33,9 @@
 #define INT2STR_TIME(val) Int2Str(val,' ',6,Sign_none)
 #define ONEBIT(val)	     Int2Str(val,' ',0,Sign_none)
 
+int argNmb = 0;
+char **argVal = NULL;
+
 xTaskHandle vtask_ScreensSelectLCD_Handle;
 StructTxtPxlLen lenStr;
 int startScreen=0;
@@ -459,7 +462,7 @@ void SCREEN_ReadPanel(void)
 //			SCREEN_Calibration_funcSet(CALIBRATION_COEFF_COLOR_PosLog, 254);
 //			SCREEN_Calibration_printInfo();
 			//NOWY_0();
-			SCREEN_Fonts_main();
+			SCREEN_Fonts_main(argNmb,argVal);
 			startScreen=1;
 			break;
 		case 1:
@@ -481,7 +484,7 @@ void SCREEN_ReadPanel(void)
 			startScreen=1;
 			break;
 		case 5:
-			SCREEN_Calibration_main();
+			SCREEN_Calibration_main(argNmb,argVal);
 			startScreen=1;
 			break;
 		}

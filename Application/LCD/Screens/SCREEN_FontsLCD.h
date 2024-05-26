@@ -63,7 +63,7 @@ typedef enum{
 
 }_SCREEN_Fonts_enum;
 
-void SCREEN_Fonts_main			(void);
+void SCREEN_Fonts_main(int argNmb, char **argVal);
 
 int SCREEN_Fonts_funcGet(int offs);
 void SCREEN_Fonts_funcSet(int offs, int val);

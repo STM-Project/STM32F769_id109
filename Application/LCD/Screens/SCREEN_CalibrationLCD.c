@@ -144,7 +144,7 @@ void FILE_NAME(setDefaultAllParam)(void){
 static void FILE_NAME(debugRcvStr)(void);
 static void FILE_NAME(setTouch)	 (void);
 */
-void 	FILE_NAME(main)(void);
+void 	FILE_NAME(main)(int argNmb, char **argVal);
 /*------------ End Main Screen MACRO -----------------*/
 
 static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t width, char *name)
@@ -219,7 +219,7 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 #endif
 }
 
-void FILE_NAME(main)(void)
+void FILE_NAME(main)(int argNmb, char **argVal)
 {
 	#define CIRCLES_NUMBER  STRUCT_TAB_SIZE(pos)
 

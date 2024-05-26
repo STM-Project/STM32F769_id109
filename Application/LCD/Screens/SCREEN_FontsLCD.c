@@ -69,7 +69,7 @@ Czcionki LCD,Fonts LCD,\
 	\
 	X(41, FONT_SIZE_Press, 	 	FONT_12_bold) \
 	X(42, FONT_STYLE_Press, 	Comic_Saens_MS) \
-	X(43, FONT_COLOR_Press, 	BLACK) \
+	X(43, FONT_COLOR_Press, 	RED) \
 	X(44, FONT_BKCOLOR_Press, 	WHITE) \
 	\
 	X(45, FONT_ID_Title,			fontID_1) \
@@ -185,7 +185,7 @@ void FILE_NAME(setDefaultAllParam)(void){
 void FILE_NAME(debugRcvStr)(void);
 void FILE_NAME(setTouch)(void);
 
-void FILE_NAME(main)(void);
+void 	FILE_NAME(main)(int argNmb, char **argVal);
 
 /*------------ End Main Screen MACRO -----------------*/
 
@@ -825,35 +825,36 @@ void FILE_NAME(setTouch)(void)
 				LCD_SetStrVar_bkColor(v.FONT_VAR_FontColor,v.FONT_BKCOLOR_Press);
 				LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontColor, v.COLOR_BkScreen);
 
-				if		 (v.FONT_BKCOLOR_Press==MYGRAY && v.FONT_COLOR_Press == WHITE)	  LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,0);
+				if		 (v.FONT_BKCOLOR_Press==MYGRAY && v.FONT_COLOR_Press == WHITE)	  LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,0);  // to zamienic na 1 funkcje ukrytą !!!!!!!
 				else if(v.FONT_BKCOLOR_Press==MYGRAY && v.FONT_COLOR_Press == MYGREEN) LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,0);
 				else if(v.FONT_BKCOLOR_Press==WHITE  && v.FONT_COLOR_Press == BLACK)	  LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,1);
-				else																						  LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,253);
+				else																						  LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,240);
 
 
 				LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontColor,TXT_FONT_COLOR);
 
-HAL_Delay(1000);
+//HAL_Delay(1000);
 
 				FILE_NAME(setDefaultAllParam)();
 				v.FONT_SIZE_FontColor  = v.FONT_SIZE_Press;
 				v.FONT_COLOR_FontColor = v.FONT_COLOR_Press;
 				v.FONT_STYLE_FontColor = v.FONT_STYLE_Press;
 				v.FONT_BKCOLOR_FontColor = v.FONT_BKCOLOR_Press;
-				FILE_NAME(main)();
+				FILE_NAME(main)(argNmb,argVal);
 
 
 					aaaaa=1;
 
 
+
 			}
 			else
 			{
-
+				///DAC TU funkcje czy IsStillPress()
 
 				FILE_NAME(setDefaultAllParam)();
 
-				FILE_NAME(main)();
+				FILE_NAME(main)(argNmb,argVal);
 
 
 
@@ -967,7 +968,7 @@ void FILE_NAME(debugRcvStr)(void)
 		LCD_ResetSpacesBetweenFonts();
 }
 
-void FILE_NAME(main)(void)
+void FILE_NAME(main)(int argNmb, char **argVal)
 {
 	char *ptr=NULL;
 
@@ -980,7 +981,7 @@ void FILE_NAME(main)(void)
 		 	touchTemp[0].y= 0;
 		 	touchTemp[1].x= touchTemp[0].x+200;
 		 	touchTemp[1].y= touchTemp[0].y+150;
-		 	SetTouch(ID_TOUCH_POINT,Point_1,release);
+		 	SetTouch(ID_TOUCH_POINT,Point_1,press);
 	//
 	//	 	touchTemp[0].x= 0;
 	//	 	touchTemp[0].y= 300;
@@ -1045,7 +1046,7 @@ void FILE_NAME(main)(void)
 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
 	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_Title,	   v.FONT_ID_Title, 	 	LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,0), ptr, 				fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,	  255,0,v.COLOR_BkScreen);
-	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_FontColor, v.FONT_ID_FontColor, 23, 								 LCD_Ypos(lenStr,SetPos,0), TXT_FONT_COLOR, 	fullHight,0,v.FONT_BKCOLOR_FontColor,v.FONT_COLOR_FontColor, 255,1,v.COLOR_BkScreen);
+	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_FontColor, v.FONT_ID_FontColor, 23, 								 LCD_Ypos(lenStr,SetPos,0), TXT_FONT_COLOR, 	fullHight,0,v.FONT_BKCOLOR_FontColor,v.FONT_COLOR_FontColor, 240,1,v.COLOR_BkScreen);
 	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_BkColor,   v.FONT_ID_BkColor,   23, 								 LCD_Ypos(lenStr,IncPos,5), TXT_BK_COLOR,    fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_BkColor,	  255,1,v.COLOR_BkScreen);
 	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_FontSize,  v.FONT_ID_FontSize,  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,5), TXT_FONT_SIZE, 	fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_FontSize,  255,0,v.COLOR_BkScreen);
 	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_FontStyle, v.FONT_ID_FontStyle, LCD_Xpos(lenStr,IncPos,70), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE, 	fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_FontStyle, 255,0,v.COLOR_BkScreen);

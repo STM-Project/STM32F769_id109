@@ -1661,7 +1661,7 @@ StructTxtPxlLen LCD_StrChangeColorWindowIndirect(uint32_t posBuff, int Xwin, int
 }
 StructTxtPxlLen LCD_StrVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor){
 	StructTxtPxlLen temp;
-	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)
+	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
 		temp = LCD_Str(fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth);
 		if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
@@ -1684,7 +1684,7 @@ StructTxtPxlLen LCD_StrVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, 
 	else return StructTxtPxlLen_ZeroValue;
 }
 StructTxtPxlLen LCD_StrDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *txtDescr, char *txtVar, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor){
-	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)  //TU DAJ DEFINE ktory bada przedzial dozolony IS_IN_RANGE od 0 do MAX_OPEN....!!!!!!!!!!!!!!!!!!
+	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 		return LCD_StrVar(idVar,fontID, Xpos+LCD_Str(fontID,Xpos,Ypos,txtDescr,OnlyDigits,space,bkColor,coeff,0).inPixel, Ypos,txtVar,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
 	else return StructTxtPxlLen_ZeroValue;
 }
@@ -1733,7 +1733,7 @@ StructTxtPxlLen LCD_StrVarIndirect(int idVar, char *txt){
 
 StructTxtPxlLen LCD_StrChangeColorVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor){
 	StructTxtPxlLen temp;
-	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)
+	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
 		temp = LCD_StrChangeColor(fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
 		if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
@@ -1758,7 +1758,7 @@ StructTxtPxlLen LCD_StrChangeColorVar(int idVar,int fontID, int Xpos, int Ypos, 
 }
 
 StructTxtPxlLen LCD_StrChangeColorDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *txtDescr, char *txtVar, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor){
-	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)
+	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 		return LCD_StrChangeColorVar(idVar,fontID,Xpos+LCD_StrChangeColor(fontID,Xpos,Ypos,txtDescr,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth).inPixel, Ypos,txtVar,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
 	else return StructTxtPxlLen_ZeroValue;
 }
@@ -2046,7 +2046,7 @@ StructTxtPxlLen LCD_StrChangeColorRotWin(int rot, int winWidth, int fontID, int 
 StructTxtPxlLen LCD_StrMovH(int idVar, int rot, int posWin, int winWidth ,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth)
 {
 	StructTxtPxlLen temp;
-	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)
+	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
 		int fontHeight= OnlyDigits==fullHight?LCD_GetFontHeight(fontID):LCD_GetFontHalfHeight(fontID);
 		if(fontHeight<0)
@@ -2111,7 +2111,7 @@ StructTxtPxlLen LCD_StrMovH(int idVar, int rot, int posWin, int winWidth ,int fo
 StructTxtPxlLen LCD_StrChangeColorMovH(int idVar, int rot, int posWin, int winWidth ,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor, int maxVal, int constWidth)
 {
 	StructTxtPxlLen temp;
-	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)
+	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
 		int fontHeight= OnlyDigits==fullHight?LCD_GetFontHeight(fontID):LCD_GetFontHalfHeight(fontID);
 		if(fontHeight<0)
@@ -2329,7 +2329,7 @@ StructTxtPxlLen LCD_StrMovV(int idVar, int rot, int posWin, int winWidth,int win
 {
 	StructTxtPxlLen temp;
 
-	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)
+	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
 		int fontHeight= OnlyDigits==fullHight?LCD_GetFontHeight(fontID):LCD_GetFontHalfHeight(fontID);
 		if(fontHeight<0)
@@ -2418,7 +2418,7 @@ StructTxtPxlLen LCD_StrChangeColorMovV(int idVar, int rot, int posWin, int winWi
 {
 	StructTxtPxlLen temp;
 
-	if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY)
+	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
 		int fontHeight= OnlyDigits==fullHight?LCD_GetFontHeight(fontID):LCD_GetFontHalfHeight(fontID);
 		if(fontHeight<0)
@@ -2958,11 +2958,11 @@ StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar,int fontID, int Xpos, int Ypo
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
 			 (bkColor==MYGRAY && fontColor == MYGREEN)){
 		lenStr=LCD_StrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor);
-		if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY) FontVar[idVar].fontColor = fontColor;
+		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
 	}
 	else if(bkColor==WHITE  && fontColor == BLACK){
 		lenStr=LCD_StrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor);
-		if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY) FontVar[idVar].fontColor = fontColor;
+		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
 	}
 	else
 		lenStr=LCD_StrChangeColorVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
@@ -2976,11 +2976,11 @@ StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, int Xpos, in
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
 			 (bkColor==MYGRAY && fontColor == MYGREEN)){
 		lenStr=LCD_StrDescrVar(idVar,fontID,Xpos,Ypos,txtDescr,txtVar, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor);
-		if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY) FontVar[idVar].fontColor = fontColor;
+		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
 	}
 	else if(bkColor==WHITE  && fontColor == BLACK){
 		lenStr=LCD_StrDescrVar(idVar,fontID,Xpos,Ypos,txtDescr,txtVar, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor);
-		if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY) FontVar[idVar].fontColor = fontColor;
+		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
 	}
 	else
 		lenStr=LCD_StrChangeColorDescrVar(idVar,fontID,Xpos,Ypos,txtDescr,txtVar, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
