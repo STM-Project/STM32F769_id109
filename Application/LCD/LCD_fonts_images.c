@@ -2915,7 +2915,7 @@ uint32_t LCD_LoadFont_DependOnColors(int fontSize, int fontStyle, uint32_t bkCol
 {
 	if		 (bkColor==MYGRAY && fontColor == WHITE)
 		return LCD_LoadFont_DarkgrayWhite (fontSize, fontStyle, fontID);
-	else if(bkColor==MYGRAY  && fontColor == GREEN)
+	else if(bkColor==MYGRAY  && fontColor == MYGREEN)
 		return LCD_LoadFont_DarkgrayGreen (fontSize, fontStyle, fontID);
 	else if(bkColor==WHITE  && fontColor == BLACK)
 		return LCD_LoadFont_WhiteBlack	 (fontSize, fontStyle, fontID);
@@ -2928,7 +2928,7 @@ StructTxtPxlLen LCD_StrDependOnColors(int fontID, int Xpos, int Ypos, char *txt,
 	StructTxtPxlLen lenStr;
 
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
-			 (bkColor==MYGRAY && fontColor == GREEN))
+			 (bkColor==MYGRAY && fontColor == MYGREEN))
 		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth);
 	else if(bkColor==WHITE  && fontColor == BLACK)
 		lenStr=LCD_Str(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth);
@@ -2942,7 +2942,7 @@ StructTxtPxlLen LCD_StrDependOnColorsIndirect(int fontID, int Xpos, int Ypos, ch
 	StructTxtPxlLen lenStr;
 
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
-			 (bkColor==MYGRAY && fontColor == GREEN))
+			 (bkColor==MYGRAY && fontColor == MYGREEN))
 		lenStr=LCD_StrIndirect(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth);
 	else if(bkColor==WHITE  && fontColor == BLACK)
 		lenStr=LCD_StrIndirect(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth);
@@ -2956,7 +2956,7 @@ StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar,int fontID, int Xpos, int Ypo
 	StructTxtPxlLen lenStr;
 
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
-			 (bkColor==MYGRAY && fontColor == GREEN)){
+			 (bkColor==MYGRAY && fontColor == MYGREEN)){
 		lenStr=LCD_StrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor);
 		if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY) FontVar[idVar].fontColor = fontColor;
 	}
@@ -2974,7 +2974,7 @@ StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, int Xpos, in
 	StructTxtPxlLen lenStr;
 
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
-			 (bkColor==MYGRAY && fontColor == GREEN)){
+			 (bkColor==MYGRAY && fontColor == MYGREEN)){
 		lenStr=LCD_StrDescrVar(idVar,fontID,Xpos,Ypos,txtDescr,txtVar, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor);
 		if(idVar<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY) FontVar[idVar].fontColor = fontColor;
 	}

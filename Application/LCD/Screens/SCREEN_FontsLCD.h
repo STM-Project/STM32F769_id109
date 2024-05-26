@@ -54,7 +54,12 @@ typedef enum{
 	FONTS_FONT_COLOR_Fonts,
 
 	FONTS_COLOR_BkScreen,
-	FONTS_DEBUG_ON
+	FONTS_DEBUG_ON,
+
+	FONTS_SIZE_Press,
+	FONTS_STYLE_Press,
+	FONTS_COLOR_Press,
+	FONTS_BKCOLOR_Press,
 
 }_SCREEN_Fonts_enum;
 
