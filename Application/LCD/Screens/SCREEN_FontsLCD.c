@@ -104,7 +104,7 @@ Czcionki LCD,Fonts LCD,\
 
 #define TOUCH_GET_PER_X_PROBE		3
 
-enum new_touch{
+typedef enum{
 	Point_1 = 1,
 	Point_2,
 	Point_3,
@@ -114,7 +114,9 @@ enum new_touch{
 	Move_4,
 	AnyPress,
 	AnyPressWithWait
-};
+}NEW_TOUCH;
+
+static NEW_TOUCH touchType = 0;  //USUN!!!!
 
 /*------------ Main Screen MACRO -----------------*/
 typedef enum{
@@ -136,7 +138,7 @@ static FILE_NAME(struct) v ={
 };
 
 static uint64_t FILE_NAME(SelBits) = 0;
-
+/*
 static int FILE_NAME(SetDefaultParam)(int param){
 	int temp;
 	#define X(a,b,c) \
@@ -145,7 +147,7 @@ static int FILE_NAME(SetDefaultParam)(int param){
 	#undef X
 		return temp;
 }
-
+*/
 static int FILE_NAME(GetDefaultParam)(int param){
 	int temp;
 	#define X(a,b,c) \
@@ -198,7 +200,7 @@ static char bufTemp[50];
 
 #define TXT_FONT_COLOR 	StrAll(5,INT2STR(Test.font[0])," ",INT2STR(Test.font[1])," ",INT2STR(Test.font[2]))
 #define TXT_BK_COLOR 	StrAll(5,INT2STR(Test.bk[0]),  " ",INT2STR(Test.bk[1]),  " ",INT2STR(Test.bk[2]))
-#define TXT_FONT_SIZE	StrAll(3,LCD_LoadFontStrType(bufTemp,0,Test.type+1),":",LCD_FontSize2Str(bufTemp+25,Test.size))
+#define TXT_FONT_SIZE	StrAll(3,LCD_FontType2Str(bufTemp,0,Test.type+1),":",LCD_FontSize2Str(bufTemp+25,Test.size))
 #define TXT_FONT_STYLE	LCD_FontStyle2Str(bufTemp,Test.style)
 #define TXT_COEFF			Int2Str(Test.coeff  ,' ',3,Sign_plusMinus)
 #define TXT_LEN_WIN		Int2Str(Test.lenWin ,' ',3,Sign_none)
@@ -775,61 +777,16 @@ void FILE_NAME(setTouch)(void)
 		case Point_1:
 
 
-//			if(aaaaa == 0)
-//			{
-//				v.FONT_SIZE_FontColor = FONT_14_bold;
-//				v.FONT_COLOR_FontColor = BLACK;
-//				v.COLOR_BkScreen = WHITE;
-//				v.FONT_ID_FontColor	= LCD_LoadFont_DependOnColors(v.FONT_SIZE_FontColor, v.FONT_STYLE_FontColor, v.COLOR_BkScreen, v.FONT_COLOR_FontColor, FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
-//
-//
-//				LCD_SetStrVar_fontID(v.FONT_VAR_FontColor,v.FONT_ID_FontColor);
-//				LCD_SetStrVar_fontColor(v.FONT_VAR_FontColor,v.FONT_COLOR_FontColor);
-//				LCD_SetStrVar_bkColor(v.FONT_VAR_FontColor,v.COLOR_BkScreen);
-//				LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,1);
-//				LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontColor, v.COLOR_BkScreen);
-//				LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontColor,TXT_FONT_COLOR);
-//
-//HAL_Delay(1000);
-//
-//				FILE_NAME(setDefaultAllParam)();
-//				v.FONT_COLOR_FontColor =YELLOW;
-//				v.FONT_SIZE_FontColor =FONT_14_bold;
-//				FILE_NAME(main)();
-//
-//
-//					aaaaa=1;
-//
-//
-//			}
-//			else
-//			{
-//
-//
-//				FILE_NAME(setDefaultAllParam)();
-//
-//				FILE_NAME(main)();
-//
-//
-//
-//					aaaaa=0;
-//			}
-
 			if(aaaaa == 0)
 			{
 
 				v.FONT_ID_FontColor = LCD_LoadFont_DependOnColors(v.FONT_SIZE_Press, v.FONT_STYLE_Press, v.FONT_BKCOLOR_Press, v.FONT_COLOR_Press, FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
 
-				LCD_SetStrVar_fontID(v.FONT_VAR_FontColor,v.FONT_ID_FontColor);
-				LCD_SetStrVar_fontColor(v.FONT_VAR_FontColor,v.FONT_COLOR_Press);
-				LCD_SetStrVar_bkColor(v.FONT_VAR_FontColor,v.FONT_BKCOLOR_Press);
+				LCD_SetStrVar_fontID			(v.FONT_VAR_FontColor, v.FONT_ID_FontColor);
+				LCD_SetStrVar_fontColor 	(v.FONT_VAR_FontColor, v.FONT_COLOR_Press);
+				LCD_SetStrVar_bkColor		(v.FONT_VAR_FontColor, v.FONT_BKCOLOR_Press);
 				LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontColor, v.COLOR_BkScreen);
-
-				if		 (v.FONT_BKCOLOR_Press==MYGRAY && v.FONT_COLOR_Press == WHITE)	  LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,0);  // to zamienic na 1 funkcje ukrytą !!!!!!!
-				else if(v.FONT_BKCOLOR_Press==MYGRAY && v.FONT_COLOR_Press == MYGREEN) LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,0);
-				else if(v.FONT_BKCOLOR_Press==WHITE  && v.FONT_COLOR_Press == BLACK)	  LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,1);
-				else																						  LCD_SetStrVar_coeff(v.FONT_VAR_FontColor,240);
-
+				LCD_SetStrVar_coeff			(v.FONT_VAR_FontColor, LCD_GetCoeffDependOnFontType(v.FONT_COLOR_Press, v.FONT_BKCOLOR_Press, 11));
 
 				LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontColor,TXT_FONT_COLOR);
 
@@ -840,7 +797,7 @@ void FILE_NAME(setTouch)(void)
 				v.FONT_COLOR_FontColor = v.FONT_COLOR_Press;
 				v.FONT_STYLE_FontColor = v.FONT_STYLE_Press;
 				v.FONT_BKCOLOR_FontColor = v.FONT_BKCOLOR_Press;
-				FILE_NAME(main)(argNmb,argVal);
+				FILE_NAME(main)(1,NULL);
 
 
 					aaaaa=1;
@@ -854,7 +811,7 @@ void FILE_NAME(setTouch)(void)
 
 				FILE_NAME(setDefaultAllParam)();
 
-				FILE_NAME(main)(argNmb,argVal);
+				FILE_NAME(main)(1,NULL);
 
 
 
@@ -973,21 +930,23 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 	char *ptr=NULL;
 
 	SCREEN_ResetAllParameters();
-	DeleteAllTouch();
-	ResetRGB();
+	if(0==argNmb) DeleteAllTouch();
+	if(0==argNmb) ResetRGB();
 	LCD_Clear(v.COLOR_BkScreen);
 
+	if(0==argNmb)
+	{
 		 	touchTemp[0].x= 0;
 		 	touchTemp[0].y= 0;
 		 	touchTemp[1].x= touchTemp[0].x+200;
 		 	touchTemp[1].y= touchTemp[0].y+150;
 		 	SetTouch(ID_TOUCH_POINT,Point_1,press);
-	//
-	//	 	touchTemp[0].x= 0;
-	//	 	touchTemp[0].y= 300;
-	//	 	touchTemp[1].x= touchTemp[0].x+200;
-	//	 	touchTemp[1].y= touchTemp[0].y+180;
-	//	 	SetTouch(ID_TOUCH_POINT,Point_2,release);
+
+		 	touchTemp[0].x= 0;
+		 	touchTemp[0].y= 300;
+		 	touchTemp[1].x= touchTemp[0].x+200;
+		 	touchTemp[1].y= touchTemp[0].y+180;
+		 	SetTouch(ID_TOUCH_POINT,Point_2,pressRelease);  //sprawdzic czy dzila pressRelease !!!!!!
 	//
 	//	 	touchTemp[0].x= 600;
 	//	 	touchTemp[0].y= 0;
@@ -1025,7 +984,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 		 	touchTemp[1].y= 480;
 		 	//SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,TOUCH_GET_PER_X_PROBE);
 		 	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);  //W DEBUG FPNTS WPISZ JESZCZE JAKI LCD_STR !!!!!
-
+	}
 
 	v.FONT_ID_Title 	 	= LCD_LoadFont_DependOnColors(v.FONT_SIZE_Title, 	  v.FONT_STYLE_Title, 	  v.COLOR_BkScreen, v.FONT_COLOR_Title,	  FILE_NAME(GetDefaultParam)(FONT_ID_Title));
 	v.FONT_ID_FontColor	= LCD_LoadFont_DependOnColors(v.FONT_SIZE_FontColor, v.FONT_STYLE_FontColor, v.FONT_BKCOLOR_FontColor, v.FONT_COLOR_FontColor, FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
