@@ -1317,7 +1317,7 @@ char *LCD_FontStyle2Str(char *buffTemp, int fontStyle)
 	return buffTemp;
 }
 
-char *LCD_LoadFontStrType(char *buffTemp, int id, int idAlt)
+char *LCD_FontType2Str(char *buffTemp, int id, int idAlt)
 {
 	if		 (idAlt ? (idAlt==1) : (MYGRAY==Font[id].fontBkColorToIndex && MYGREEN==Font[id].fontColorToIndex)){
 		*buffTemp = '1';	strcpy(buffTemp+1,"(Gray-Green) "); }
@@ -1330,12 +1330,24 @@ char *LCD_LoadFontStrType(char *buffTemp, int id, int idAlt)
 	return buffTemp;
 }
 
+int LCD_GetCoeffDependOnFontType(uint32_t fontColor, uint32_t bkColor, int correct)
+{
+	if		 (bkColor==MYGRAY && fontColor == MYGREEN)
+		return 0;
+	else if(bkColor==MYGRAY && fontColor == WHITE)
+		return 0;
+	else if(bkColor==WHITE  && fontColor == BLACK)
+		return 1;
+	else
+		return 255-correct;
+}
+
 void DisplayFontsStructState(void){
 	char bufTemp[65],bufTemp2[100];
 	DbgVar(1,250,CoGr_"\r\nBuff address: 0x%x     Buff size: %d     busy bytes: %d\r\n"_X, fontsImagesMemoryBuffer, MAX_FONTS_AND_IMAGES_MEMORY_SIZE, CounterBusyBytesForFontsImages);
 	for(int i=0; i < MAX_OPEN_FONTS_SIMULTANEOUSLY; i++){
 		if(Font[i].fontSizeToIndex){
-			LCD_LoadFontStrType(bufTemp+40,i,0);
+			LCD_FontType2Str(bufTemp+40,i,0);
 			switch(bufTemp[40]){
 				case '1': mini_snprintf(bufTemp2,100,CoG_"%s"_X, bufTemp+41); break;
 				case '2': mini_snprintf(bufTemp2,100,"%s", bufTemp+41); break;
