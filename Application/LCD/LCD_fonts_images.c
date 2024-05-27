@@ -680,9 +680,6 @@ static StructTxtPxlLen LCD_DrawStrToBuff(uint32_t posBuff,uint32_t windowX,uint3
 	if(constWidth)
 		LCD_Set_ConstWidthFonts(fontIndex);
 
-//	touchTemp.x_Start= posX;
-//	touchTemp.y_Start= posY;
-
 	/* Get bitmap data address offset */
 	index = fontsBuffer[10] + (fontsBuffer[11] << 8) + (fontsBuffer[12] << 16)  + (fontsBuffer[13] << 24);
 	/* Read bitmap width */
@@ -759,8 +756,7 @@ static StructTxtPxlLen LCD_DrawStrToBuff(uint32_t posBuff,uint32_t windowX,uint3
 
 	if(constWidth)
 		LCD_Reset_ConstWidthFonts(fontIndex);
-//	touchTemp.x_End= posX;
-//	touchTemp.y_End= posY+height;
+
 	structTemp.inChar=lenTxt;
 	structTemp.inPixel=lenTxtInPixel;
 	structTemp.height=j;
@@ -885,9 +881,6 @@ static StructTxtPxlLen LCD_DrawStrChangeColorToBuff(uint32_t posBuff,uint32_t wi
 	if(constWidth)
 		LCD_Set_ConstWidthFonts(fontIndex);
 
-//	touchTemp.x_Start= posX;
-//	touchTemp.y_Start= posY;
-
 	/* Get bitmap data address offset */
 	index = fontsBuffer[10] + (fontsBuffer[11] << 8) + (fontsBuffer[12] << 16)  + (fontsBuffer[13] << 24);
 	/* Read bitmap width */
@@ -946,8 +939,6 @@ static StructTxtPxlLen LCD_DrawStrChangeColorToBuff(uint32_t posBuff,uint32_t wi
 		posX += xi;
 		posX += space + RealizeSpaceCorrect(txt+n,id);
 	}
-//	touchTemp.x_End= posX;
-//	touchTemp.y_End= posY+height;
 
 	if(constWidth)
 		LCD_Reset_ConstWidthFonts(fontIndex);

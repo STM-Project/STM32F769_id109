@@ -771,7 +771,7 @@ void FILE_NAME(setTouch)(void)
 	uint16_t state;
 	XY_Touch_Struct pos;
 
-	state = LCD_Touch_Get(&pos);
+	state = LCD_Touch_GetTypeAndPosition(&pos);
 	switch(state)
 	{
 		case Point_1:
@@ -811,7 +811,7 @@ void FILE_NAME(setTouch)(void)
 
 				FILE_NAME(setDefaultAllParam)();
 
-				FILE_NAME(main)(1,NULL);
+				FILE_NAME(main)(1,NULL);   //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 
 
 
@@ -849,6 +849,59 @@ void FILE_NAME(setTouch)(void)
 			break;
 	}
 }
+
+/*if(0==argNmb)
+{
+	 	touchTemp[0].x= 0;
+	 	touchTemp[0].y= 0;
+	 	touchTemp[1].x= touchTemp[0].x+200;
+	 	touchTemp[1].y= touchTemp[0].y+150;
+	 	SetTouch(ID_TOUCH_POINT,Point_1,press);
+
+	 	touchTemp[0].x= 0;
+	 	touchTemp[0].y= 300;
+	 	touchTemp[1].x= touchTemp[0].x+200;
+	 	touchTemp[1].y= touchTemp[0].y+180;
+	 	SetTouch(ID_TOUCH_POINT,Point_2,pressRelease);
+//
+//	 	touchTemp[0].x= 600;
+//	 	touchTemp[0].y= 0;
+//	 	touchTemp[1].x= touchTemp[0].x+200;
+//	 	touchTemp[1].y= touchTemp[0].y+150;
+//	 	SetTouch(ID_TOUCH_POINT,Point_3,release);
+//
+//	 	touchTemp[0].x= LCD_GetXSize()-LCD_GetXSize()/5;
+//	 	touchTemp[1].x= LCD_GetXSize()/5;
+//	 	touchTemp[0].y= 150;
+//	 	touchTemp[1].y= 300;
+//	 	SetTouch(ID_TOUCH_MOVE_LEFT,Move_1,press);
+//
+//	 	touchTemp[0].x= LCD_GetXSize()/5;
+//	 	touchTemp[1].x= LCD_GetXSize()-LCD_GetXSize()/5;
+//	 	touchTemp[0].y= 150;
+//	 	touchTemp[1].y= 300;
+//	 	SetTouch(ID_TOUCH_MOVE_RIGHT,Move_2,release);
+//
+//	 	touchTemp[0].y= LCD_GetYSize()-LCD_GetYSize()/5;
+//	 	touchTemp[1].y= LCD_GetYSize()/5;
+//	 	touchTemp[0].x= 300;
+//	 	touchTemp[1].x= 450;
+//	 	SetTouch(ID_TOUCH_MOVE_UP,Move_3,press);
+//
+//	 	touchTemp[0].y= LCD_GetYSize()/5;
+//	 	touchTemp[1].y= LCD_GetYSize()-LCD_GetYSize()/5;
+//	 	touchTemp[0].x= 500;
+//	 	touchTemp[1].x= 650;
+//	 	SetTouch(ID_TOUCH_MOVE_DOWN,Move_4,release);
+
+	 	touchTemp[0].x= 400;
+	 	touchTemp[1].x= 800;
+	 	touchTemp[0].y= 240;
+	 	touchTemp[1].y= 480;
+	 	//SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,TOUCH_GET_PER_X_PROBE);
+	 	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);  //W DEBUG FPNTS WPISZ JESZCZE JAKI LCD_STR !!!!!
+}
+*/
 
 void FILE_NAME(debugRcvStr)(void)
 {
@@ -925,7 +978,16 @@ void FILE_NAME(debugRcvStr)(void)
 		LCD_ResetSpacesBetweenFonts();
 }
 
-void FILE_NAME(main)(int argNmb, char **argVal)
+void SetTouchForStrVar(uint16_t ID_touch, uint16_t idx_touch, uint8_t param_touch, int idVar, StructTxtPxlLen lenStr)
+{
+	touchTemp[0].x = LCD_GetStrVar_x(idVar);
+	touchTemp[0].y = LCD_GetStrVar_y(idVar);
+ 	touchTemp[1].x = touchTemp[0].x + lenStr.inPixel;
+ 	touchTemp[1].y = touchTemp[0].y + lenStr.height;
+ 	SetTouch(ID_touch, idx_touch, param_touch);
+}
+
+void FILE_NAME(main)(int argNmb, char **argVal) //Zmiezrzyc dokladnie A2B2 A1B1 i zapisac na stale !!!!
 {
 	char *ptr=NULL;
 
@@ -934,57 +996,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 	if(0==argNmb) ResetRGB();
 	LCD_Clear(v.COLOR_BkScreen);
 
-	if(0==argNmb)
-	{
-		 	touchTemp[0].x= 0;
-		 	touchTemp[0].y= 0;
-		 	touchTemp[1].x= touchTemp[0].x+200;
-		 	touchTemp[1].y= touchTemp[0].y+150;
-		 	SetTouch(ID_TOUCH_POINT,Point_1,press);
 
-		 	touchTemp[0].x= 0;
-		 	touchTemp[0].y= 300;
-		 	touchTemp[1].x= touchTemp[0].x+200;
-		 	touchTemp[1].y= touchTemp[0].y+180;
-		 	SetTouch(ID_TOUCH_POINT,Point_2,pressRelease);  //sprawdzic czy dzila pressRelease !!!!!!
-	//
-	//	 	touchTemp[0].x= 600;
-	//	 	touchTemp[0].y= 0;
-	//	 	touchTemp[1].x= touchTemp[0].x+200;
-	//	 	touchTemp[1].y= touchTemp[0].y+150;
-	//	 	SetTouch(ID_TOUCH_POINT,Point_3,release);
-	//
-	//	 	touchTemp[0].x= LCD_GetXSize()-LCD_GetXSize()/5;
-	//	 	touchTemp[1].x= LCD_GetXSize()/5;
-	//	 	touchTemp[0].y= 150;
-	//	 	touchTemp[1].y= 300;
-	//	 	SetTouch(ID_TOUCH_MOVE_LEFT,Move_1,press);
-	//
-	//	 	touchTemp[0].x= LCD_GetXSize()/5;
-	//	 	touchTemp[1].x= LCD_GetXSize()-LCD_GetXSize()/5;
-	//	 	touchTemp[0].y= 150;
-	//	 	touchTemp[1].y= 300;
-	//	 	SetTouch(ID_TOUCH_MOVE_RIGHT,Move_2,release);
-	//
-	//	 	touchTemp[0].y= LCD_GetYSize()-LCD_GetYSize()/5;
-	//	 	touchTemp[1].y= LCD_GetYSize()/5;
-	//	 	touchTemp[0].x= 300;
-	//	 	touchTemp[1].x= 450;
-	//	 	SetTouch(ID_TOUCH_MOVE_UP,Move_3,press);
-	//
-	//	 	touchTemp[0].y= LCD_GetYSize()/5;
-	//	 	touchTemp[1].y= LCD_GetYSize()-LCD_GetYSize()/5;
-	//	 	touchTemp[0].x= 500;
-	//	 	touchTemp[1].x= 650;
-	//	 	SetTouch(ID_TOUCH_MOVE_DOWN,Move_4,release);
-
-		 	touchTemp[0].x= 400;
-		 	touchTemp[1].x= 800;
-		 	touchTemp[0].y= 240;
-		 	touchTemp[1].y= 480;
-		 	//SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,TOUCH_GET_PER_X_PROBE);
-		 	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);  //W DEBUG FPNTS WPISZ JESZCZE JAKI LCD_STR !!!!!
-	}
 
 	v.FONT_ID_Title 	 	= LCD_LoadFont_DependOnColors(v.FONT_SIZE_Title, 	  v.FONT_STYLE_Title, 	  v.COLOR_BkScreen, v.FONT_COLOR_Title,	  FILE_NAME(GetDefaultParam)(FONT_ID_Title));
 	v.FONT_ID_FontColor	= LCD_LoadFont_DependOnColors(v.FONT_SIZE_FontColor, v.FONT_STYLE_FontColor, v.FONT_BKCOLOR_FontColor, v.FONT_COLOR_FontColor, FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
@@ -1009,6 +1021,13 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_BkColor,   v.FONT_ID_BkColor,   23, 								 LCD_Ypos(lenStr,IncPos,5), TXT_BK_COLOR,    fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_BkColor,	  255,1,v.COLOR_BkScreen);
 	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_FontSize,  v.FONT_ID_FontSize,  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,5), TXT_FONT_SIZE, 	fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_FontSize,  255,0,v.COLOR_BkScreen);
 	lenStr=LCD_StrDependOnColorsVar(v.FONT_VAR_FontStyle, v.FONT_ID_FontStyle, LCD_Xpos(lenStr,IncPos,70), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE, 	fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_FontStyle, 255,0,v.COLOR_BkScreen);
+
+
+	if(0==argNmb)
+		SetTouchForStrVar(ID_TOUCH_POINT, Point_1, press, v.FONT_VAR_FontColor, lenStr);
+
+
+
 
 	LCD_StrDependOnColorsVar	  (v.FONT_VAR_Coeff, 		 v.FONT_ID_Coeff, 		150, 20, TXT_COEFF,  		 	 fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Coeff, 			255,1,v.COLOR_BkScreen);
 	LCD_StrDependOnColorsVar	  (v.FONT_VAR_LenWin,		 v.FONT_ID_LenWin,		400,  0, TXT_LEN_WIN,		 	 halfHight,0,v.COLOR_BkScreen,v.FONT_COLOR_LenWin,			255,1,v.COLOR_BkScreen);

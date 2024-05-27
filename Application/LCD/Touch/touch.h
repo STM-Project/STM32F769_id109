@@ -40,7 +40,7 @@ extern uint8_t touchDetect;
 extern XY_Touch_Struct  touchTemp[];
 
 void		LCD_Touch_Service			(void);
-uint16_t LCD_Touch_Get				(XY_Touch_Struct *posXY);
+uint16_t LCD_Touch_GetTypeAndPosition				(XY_Touch_Struct *posXY);
 void 		DeleteAllTouch				(void);
 int 		GetTouchToTemp				(uint16_t idx);
 void 		DeleteSelectTouch			(uint16_t idx);

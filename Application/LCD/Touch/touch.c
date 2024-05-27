@@ -193,7 +193,7 @@ void CalibrationWasDone(void)
 	Calibration_Done = 1;
 }
 
-static uint8_t CheckTouch(XY_Touch_Struct *pos)
+static uint8_t GetTouchPos(XY_Touch_Struct *pos)
 {
   if(touchDetect)
   {
@@ -211,7 +211,7 @@ static uint8_t CheckTouch(XY_Touch_Struct *pos)
   return 0;
 }
 
-static uint16_t CHECK_Touch(void)
+static uint16_t GetTouchType(void)
 {
 	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 	{
@@ -373,7 +373,7 @@ void LCD_Touch_Service(void)
 {
 	XY_Touch_Struct pos = {0};
 
-	if(CheckTouch(&pos))
+	if(GetTouchPos(&pos))
 	{
 		if(release == ServiceTouch.press){
 			ServiceTouch.press = press;
@@ -395,13 +395,13 @@ void LCD_Touch_Service(void)
 		ServiceTouch.press = release;
 }
 
-uint16_t LCD_Touch_Get(XY_Touch_Struct *posXY)
+uint16_t LCD_Touch_GetTypeAndPosition(XY_Touch_Struct *posXY)
 {
 	uint16_t touchRecognize = 0;
 
 	if(0 < ServiceTouch.idx)
 	{
-		touchRecognize = CHECK_Touch();
+		touchRecognize = GetTouchType();
 		if( 0 != touchRecognize || ((release == ServiceTouch.press) && (0 == touchRecognize)) )
 			ServiceTouch.idx = 0;
 	}
