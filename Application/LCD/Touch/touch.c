@@ -203,11 +203,9 @@ static uint8_t CheckTouch(XY_Touch_Struct *pos)
 
 	 if(TS_State.TouchDetected)
 	 {
-		 //_A1=1075; _B1=-24900;   _A2=1124;  _B2=-53012;
-		// _A1=1067; _B1=-46030;   _A2=1111;  _B2=-65544;
 		 pos->x = Calibration_GetX(TS_State.x);
-	     pos->y = Calibration_GetY(TS_State.y);
-	     return 1;
+	    pos->y = Calibration_GetY(TS_State.y);
+	    return 1;
 	 }
   }
   return 0;
@@ -222,12 +220,12 @@ static uint16_t CHECK_Touch(void)
 			switch(Touch[i].id)
 			{
 				case ID_TOUCH_POINT:
-					if(ServiceTouch.press == Touch[i].param)
+					if( pressRelease == Touch[i].param ? 1 : Touch[i].param == ServiceTouch.press)
 					{
 						if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
 							(ServiceTouch.pos[0].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[0].y < Touch[i].pos[1].y))
 						{
-							if(press == Touch[i].param)
+							if(press == ServiceTouch.press)
 							{
 								if(Touch[i].flags1 == 0){
 									Touch[i].flags1 = 1;
