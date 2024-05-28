@@ -2953,7 +2953,23 @@ StructTxtPxlLen LCD_StrDependOnColorsIndirect(int fontID, int Xpos, int Ypos, ch
 		lenStr=LCD_StrChangeColorIndirect(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
 	return lenStr;
 }
-
+//StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar, int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth)
+//{
+//	StructTxtPxlLen lenStr;
+//
+//	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+//			 (bkColor==MYGRAY && fontColor == MYGREEN)){
+//		lenStr=LCD_StrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor);
+//		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
+//	}
+//	else if(bkColor==WHITE  && fontColor == BLACK){
+//		lenStr=LCD_StrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor);
+//		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
+//	}
+//	else
+//		lenStr=LCD_StrChangeColorVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
+//	return lenStr;
+//}
 StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,int maxVal, int constWidth, uint32_t bkScreenColor)
 {
 	StructTxtPxlLen lenStr;
