@@ -6,9 +6,9 @@
 
 typedef enum{
 	Coeff_A1 = 1067,
-	Coeff_A2 = 1111,
-	Coeff_B1 = -46030,
-	Coeff_B2 = -65544
+	Coeff_A2 = 1161,
+	Coeff_B1 = -23007,
+	Coeff_B2 = -64383
 }DEFAULT_TOUCH_COEFF_CALIBR;
 
 #define SERVICE_TOUCH_PROB_TIME_MS	20
@@ -53,5 +53,6 @@ int CalcutaleCoeffCalibration(int maxSize);
 uint8_t IsCalibrationDone(void);
 void CalibrationWasDone(void);
 void DisplayCoeffCalibration(void);
+void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos);
 
 #endif

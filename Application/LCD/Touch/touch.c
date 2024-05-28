@@ -159,6 +159,14 @@ void DisplayCoeffCalibration(void)
 	 DbgVar(1,250,"\r\nCoeff Calibration: A1=%d B1=%d   A2=%d B2=%d ",_A1,_B1,_A2,_B2);
 }
 
+void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos)
+{
+	if(GetTouchToTemp(touchIdx))
+	{
+		DbgVar(1,50,"\r\nPos (%d--%d--%d)  (%d--%d--%d) ",touchTemp[0].x, pos.x, touchTemp[1].x,	touchTemp[0].y, pos.y, touchTemp[1].y);
+	}
+}
+
 static uint16_t Calibration_GetX(uint32_t x)
 {
 	int32_t temp= (((_A1 * x) + _B1)/1000);
@@ -222,6 +230,7 @@ static uint16_t GetTouchType(void)
 				case ID_TOUCH_POINT:
 					if( pressRelease == Touch[i].param ? 1 : Touch[i].param == ServiceTouch.press)
 					{
+						//if(IS_RANGE(ServiceTouch.idx, 0, BUF_LCD_TOUCH_SIZE-1)){
 						if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
 							(ServiceTouch.pos[0].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[0].y < Touch[i].pos[1].y))
 						{
@@ -234,25 +243,27 @@ static uint16_t GetTouchType(void)
 							}
 							else
 								return Touch[i].index;
-						}
+						}//}
 					}
 					break;
 
 				case ID_TOUCH_GET_ANY_POINT:
 					if(ServiceTouch.press == press)
 					{
+						if(IS_RANGE(ServiceTouch.idx, 0, BUF_LCD_TOUCH_SIZE-1)){
 						if((ServiceTouch.pos[ServiceTouch.idx-1].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[ServiceTouch.idx-1].x < Touch[i].pos[1].x) &&
 							(ServiceTouch.pos[ServiceTouch.idx-1].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[ServiceTouch.idx-1].y < Touch[i].pos[1].y))
 						{
 							if(0 == (ServiceTouch.idx % Touch[i].param))
 								return Touch[i].index;
-						}
+						}}
 					}
 					break;
 
 				case ID_TOUCH_GET_ANY_POINT_WITH_WAIT:
 					if(ServiceTouch.press == press)
 					{
+						if(IS_RANGE(ServiceTouch.idx, 0, BUF_LCD_TOUCH_SIZE-1)){
 						if((ServiceTouch.pos[ServiceTouch.idx-1].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[ServiceTouch.idx-1].x < Touch[i].pos[1].x) &&
 							(ServiceTouch.pos[ServiceTouch.idx-1].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[ServiceTouch.idx-1].y < Touch[i].pos[1].y))
 						{
@@ -281,7 +292,7 @@ static uint16_t GetTouchType(void)
 										return Touch[i].index;
 									break;
 							}
-						}
+						}}
 					}
 					break;
 
@@ -369,7 +380,7 @@ static uint16_t GetTouchType(void)
 	return 0;
 }
 
-void LCD_Touch_Service(void)
+void LCD_Touch_Service(void)  // a to w 2 watku jest
 {
 	XY_Touch_Struct pos = {0};
 
@@ -395,7 +406,7 @@ void LCD_Touch_Service(void)
 		ServiceTouch.press = release;
 }
 
-uint16_t LCD_Touch_GetTypeAndPosition(XY_Touch_Struct *posXY)
+uint16_t LCD_Touch_GetTypeAndPosition(XY_Touch_Struct *posXY)  // to w 1 watku jest  i maj wsolny ServiceTouch.idx
 {
 	uint16_t touchRecognize = 0;
 

@@ -839,7 +839,7 @@ void FILE_NAME(setTouch)(void)
 	switch(state)
 	{
 		case Point_1:
-			if(aaaaa == 0){
+			if(aaaaa == 0){ //aaaaa zle dziala naprzemiennie !!!! z jednym do druhiego nie wymazuje !!!!==================
 				SELECT_CURRENT_FONT(FontColor,TXT_FONT_COLOR);
 				aaaaa=1;
 			}
@@ -848,7 +848,7 @@ void FILE_NAME(setTouch)(void)
 				FILE_NAME(main)(1,NULL);   //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 				aaaaa=0;
 			}
-			Dbg(1,"\r\nTouchPoint_1");
+			DisplayTouchPosXY(Point_1,pos);  Dbg(1,": TouchPoint_1 ");
 			break;
 
 		case Point_2:
@@ -861,7 +861,7 @@ void FILE_NAME(setTouch)(void)
 				FILE_NAME(main)(1,NULL);
 				aaaaa=0;
 			}
-			Dbg(1,"\r\nTouchPoint_2");
+			DisplayTouchPosXY(Point_2,pos);  Dbg(1,": TouchPoint_2 ");
 			break;
 
 
@@ -886,6 +886,9 @@ void FILE_NAME(setTouch)(void)
 			break;
 		case AnyPressWithWait:
 			DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
+			break;
+		default:
+			//AAAAA();
 			break;
 	}
 }
@@ -1036,6 +1039,13 @@ void FILE_NAME(main)(int argNmb, char **argVal) //Zmiezrzyc dokladnie A2B2 A1B1 
 	if(0==argNmb) ResetRGB();
 	LCD_Clear(v.COLOR_BkScreen);
 
+	if(0==argNmb) {
+	 	touchTemp[0].y= LCD_GetYSize()/5;
+	 	touchTemp[1].y= LCD_GetYSize()-LCD_GetYSize()/5;
+	 	touchTemp[0].x= 500;
+	 	touchTemp[1].x= 750;
+	 	SetTouch(ID_TOUCH_MOVE_DOWN,Move_4,press);
+	}
 
 	v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
 	v.FONT_ID_FontColor		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontColor),	FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
