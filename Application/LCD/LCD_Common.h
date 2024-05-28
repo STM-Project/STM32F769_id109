@@ -8,7 +8,6 @@
 #ifndef LCD_LCD_COMMON_H_
 #define LCD_LCD_COMMON_H_
 
-
 typedef enum{
    BLUE          = ((uint32_t)0xFF0000FF),
  	GREEN         = ((uint32_t)0xFF00FF00),
@@ -43,7 +42,10 @@ typedef enum{
 	MYGREEN    	 = ((uint32_t)0xff50FF50),
 	MYLIGHTGRAY  = ((uint32_t)0xFFB0B0B0)
 
-}COLORS_DEFINITION;;
+}COLORS_DEFINITION;
+
+#define LOAD_FONT_PARAM(name) 	v.FONT_SIZE_##name, v.FONT_STYLE_##name, v.FONT_BKCOLOR_##name, v.FONT_COLOR_##name
+#define STR_FONT_PARAM(name,bkScreen) 	v.FONT_VAR_##name, v.FONT_ID_##name,  v.FONT_COLOR_##name, v.FONT_BKCOLOR_##name, v.COLOR_##bkScreen
 
 #define RGB2INT(R,G,B)		(R<<16|G<<8|B)|0xFF000000
 #define R_PART(rgb)		(rgb>>16)&0x000000FF
