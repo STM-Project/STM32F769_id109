@@ -42,10 +42,10 @@ Ko"ł"o,Circle,\
 	X(10, FONT_COLOR_PosLog, 	 	ORANGE) \
 	X(11, FONT_COLOR_PosPhys,  	DARKYELLOW) \
 	\
-	X(12, COLOR_BkScreen, 			BLACK) \
+	X(12, COLOR_BkScreen, 			MYGRAY) \
 	X(13, COLOR_CircleFrame, 		WHITE) \
-	X(14, COLOR_CircleFill, 		ORANGE) \
-	X(15, COLOR_CircleFillPress, 	DARKCYAN) \
+	X(14, COLOR_CircleFill, 		MYGRAY) \
+	X(15, COLOR_CircleFillPress, 	GRAY) \
 	\
 	X(16, COEFF_COLOR_CircleName, 255)	\
 	X(17, COEFF_COLOR_PosLog,  	255)	\
@@ -152,8 +152,8 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 {
 	#define DISPLAY_COMMA_UNDER_COMMA_
 
-	#define CIRCLE_WITH_FRAME
-	//#define CIRCLE_WITHOUT_FRAME
+	//#define CIRCLE_WITH_FRAME
+	#define CIRCLE_WITHOUT_FRAME
 
 	StructTxtPxlLen lenStr={0};
 	int16_t xPos=0;
