@@ -24,8 +24,8 @@ Czcionki LCD,Fonts LCD,\
 #define SCREEN_FONTS_SET_PARAMETERS \
 /* id   name							default value */ \
 	X(0, FONT_SIZE_Title, 	 		FONT_14_bold) \
-	X(1, FONT_SIZE_FontColor, 	 	FONT_10) \
-	X(2, FONT_SIZE_BkColor,			FONT_10) \
+	X(1, FONT_SIZE_FontColor, 	 	FONT_14) \
+	X(2, FONT_SIZE_BkColor,			FONT_14) \
 	X(3, FONT_SIZE_FontSize,		FONT_10) \
 	X(4, FONT_SIZE_FontStyle,		FONT_10) \
 	X(5, FONT_SIZE_Coeff,			FONT_10) \
@@ -789,9 +789,11 @@ static void DisplayFontsWithChangeColorOrNot(void){
 		v.FONT_BKCOLOR_##curr = v.FONT_BKCOLOR_Press;\
 	FILE_NAME(main)(1,NULL);
 
-#define CHECK_TOUCH(state) CHECK_bit(FILE_NAME(SelTouch),state-1)
-#define SET_TOUCH(state) SET_bit(FILE_NAME(SelTouch),state-1)
-#define CLR_TOUCH(state) RST_bit(FILE_NAME(SelTouch),state-1)
+#define CHECK_TOUCH(state)		CHECK_bit(FILE_NAME(SelTouch),state-1)
+#define SET_TOUCH(state) 	SET_bit(FILE_NAME(SelTouch),state-1)
+#define CLR_TOUCH(state) 	RST_bit(FILE_NAME(SelTouch),state-1)
+#define CLR_ALL_TOUCH 	FILE_NAME(SelTouch) = 0
+
 
 void FILE_NAME(setTouch)(void)
 {
@@ -802,27 +804,27 @@ void FILE_NAME(setTouch)(void)
 	switch(state)
 	{
 		case Point_1:
-			if(CHECK_TOUCH(state)){
-				SELECT_CURRENT_FONT(FontColor,TXT_FONT_COLOR);
-				SET_TOUCH(state);
+			if(0==CHECK_TOUCH(state)){
+				SELECT_CURRENT_FONT(FontColor,TXT_FONT_COLOR);  //Zrobic ze jezeli zmiana koloru font i bk to nie caly obraz przeladowac !!!!!!
+				CLR_ALL_TOUCH; SET_TOUCH(state);
 			}
 			else{
 				FILE_NAME(setDefaultAllParam)(0);
 				FILE_NAME(main)(1,NULL);   //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
-				CLR_TOUCH(state);
+				CLR_ALL_TOUCH;
 			}
 			DisplayTouchPosXY(Point_1,pos);  Dbg(1,": TouchPoint_1 ");
 			break;
 
 		case Point_2:
-			if(CHECK_bit(FILE_NAME(SelTouch),state-1)){
+			if(0==CHECK_TOUCH(state)){
 				SELECT_CURRENT_FONT(BkColor,TXT_BK_COLOR);
-				SET_TOUCH(state);
+				CLR_ALL_TOUCH; SET_TOUCH(state);
 			}
 			else{
 				FILE_NAME(setDefaultAllParam)(0);
 				FILE_NAME(main)(1,NULL);
-				CLR_TOUCH(state);
+				CLR_ALL_TOUCH;
 			}
 			DisplayTouchPosXY(Point_2,pos);  Dbg(1,": TouchPoint_2 ");
 			break;
@@ -851,7 +853,7 @@ void FILE_NAME(setTouch)(void)
 			DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
 			break;
 		default:
-			//AAAAA();
+			DisplayAnyTouchPosXY();
 			break;
 	}
 }
@@ -985,9 +987,7 @@ void FILE_NAME(debugRcvStr)(void)
 		LCD_ResetSpacesBetweenFonts();
 	else if(DEBUG_RcvStr("p"))
 	{
-		Delete_TouchLcd_Task();
-		HAL_Delay(200);
-		Create_TouchLcd_Task();
+		Dbg(1,Clr_ Mag_"\r\nStart:\r\n"_X);
 
 	}
 
@@ -1017,6 +1017,12 @@ void FILE_NAME(main)(int argNmb, char **argVal) //Zmiezrzyc dokladnie A2B2 A1B1 
 	 	touchTemp[0].x= 500;
 	 	touchTemp[1].x= 750;
 	 	SetTouch(ID_TOUCH_MOVE_DOWN,Move_4,press);
+
+	 	touchTemp[0].x= 0;
+	 	touchTemp[0].y= 300;
+	 	touchTemp[1].x= touchTemp[0].x+200;
+	 	touchTemp[1].y= touchTemp[0].y+180;
+	 	SetTouch(ID_TOUCH_POINT,Point_3,pressRelease);
 	}
 
 	v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
@@ -1039,10 +1045,10 @@ void FILE_NAME(main)(int argNmb, char **argVal) //Zmiezrzyc dokladnie A2B2 A1B1 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, BkScreen),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,0), ptr,fullHight,0,255,0);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, BkScreen), 23, LCD_Ypos(lenStr,SetPos,0), TXT_FONT_COLOR, fullHight,0, 240,1);
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, BkScreen), 23, LCD_Ypos(lenStr,SetPos,5), TXT_FONT_COLOR, fullHight,0, 240,1);
 	if(0==argNmb) SetTouchForStrVar(ID_TOUCH_POINT, Point_1, press, v.FONT_VAR_FontColor, lenStr);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, BkScreen),  23, LCD_Ypos(lenStr,IncPos,5), TXT_BK_COLOR,fullHight,0,	255,1);
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, BkScreen),  23, LCD_Ypos(lenStr,IncPos,10), TXT_BK_COLOR,fullHight,0,	255,1);
 	if(0==argNmb) SetTouchForStrVar(ID_TOUCH_POINT, Point_2, press, v.FONT_VAR_BkColor, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontSize, BkScreen),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,5), TXT_FONT_SIZE, 	fullHight,0,255,0);

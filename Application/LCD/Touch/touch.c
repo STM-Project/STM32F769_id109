@@ -160,7 +160,11 @@ void DisplayCoeffCalibration(void){
 
 void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos){
 	if(GetTouchToTemp(touchIdx))
-		DbgVar(1,50,"\r\nPos (%d--"Cya_"%d"_X"--%d)  (%d--"Cya_"%d"_X"--%d) ",touchTemp[0].x, pos.x, touchTemp[1].x,	touchTemp[0].y, pos.y, touchTemp[1].y);
+		DbgVar(1,100,"\r\nPos (%d--"Cya_"%d"_X"--%d)  (%d--"Cya_"%d"_X"--%d) ",touchTemp[0].x, pos.x, touchTemp[1].x,	touchTemp[0].y, pos.y, touchTemp[1].y);
+}
+void DisplayAnyTouchPosXY(void){
+	if(press == ServiceTouch.press)
+		DbgVar(1,20,"\r\nPos %d:  %d %d ",ServiceTouch.idx, ServiceTouch.pos[ServiceTouch.idx-1].x, ServiceTouch.pos[ServiceTouch.idx-1].y);
 }
 
 static uint16_t Calibration_GetX(uint32_t x)
@@ -215,8 +219,9 @@ static uint8_t GetTouchPos(XY_Touch_Struct *pos)
   return 0;
 }
 
-static uint16_t GetTouchType(void)
+static uint16_t GetTouchType(int *param)
 {
+	*param=0;
 	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 	{
 		if(0 < Touch[i].index)
@@ -226,19 +231,24 @@ static uint16_t GetTouchType(void)
 				case ID_TOUCH_POINT:
 					if( pressRelease == Touch[i].param ? 1 : Touch[i].param == ServiceTouch.press)
 					{
-						if((ServiceTouch.pos[0].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[0].x < Touch[i].pos[1].x) &&
-							(ServiceTouch.pos[0].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[0].y < Touch[i].pos[1].y))
-						{
-							if(press == ServiceTouch.press)
+
+						for(int j=0; j<ServiceTouch.idx; j++){
+							if((ServiceTouch.pos[j].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[j].x < Touch[i].pos[1].x) &&
+								(ServiceTouch.pos[j].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[j].y < Touch[i].pos[1].y))
 							{
-								if(Touch[i].flags1 == 0){
-									Touch[i].flags1 = 1;
+								if(press == ServiceTouch.press)
+								{
+									if(Touch[i].flags1 == 0){
+										Touch[i].flags1 = 1;
+										*param=j;
+										return Touch[i].index;
+									}
+								}
+								else{
+									*param=j;
 									return Touch[i].index;
 								}
-							}
-							else
-								return Touch[i].index;
-						}
+						}}
 					}
 					break;
 
@@ -404,10 +414,11 @@ void LCD_Touch_Service(void)	//to jest w watku 1  i zapisuje do ServiceTouch.idx
 uint16_t LCD_Touch_GetTypeAndPosition(XY_Touch_Struct *posXY)//to jest w watku 2 i tu tez zapisuje do ServiceTouch.idx !!!
 {
 	uint16_t touchRecognize = 0;
+	int param = 0;
 
 	if(0 < ServiceTouch.idx)
 	{
-		touchRecognize = GetTouchType();
+		touchRecognize = GetTouchType(&param);
 		if( 0 != touchRecognize || ((release == ServiceTouch.press) && (0 == touchRecognize)) )
 			ServiceTouch.idx = 0;
 	}
@@ -417,8 +428,8 @@ uint16_t LCD_Touch_GetTypeAndPosition(XY_Touch_Struct *posXY)//to jest w watku 2
 		posXY->y = ServiceTouch.pos[ServiceTouch.idx-1].y;
 	}
 	else{
-		posXY->x = ServiceTouch.pos[0].x;
-		posXY->y = ServiceTouch.pos[0].y;
+		posXY->x = ServiceTouch.pos[param].x;
+		posXY->y = ServiceTouch.pos[param].y;
 	}
 	return touchRecognize;
 }
