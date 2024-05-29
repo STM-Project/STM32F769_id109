@@ -639,6 +639,6 @@ void vtask_ScreensSelectLCD(void *pvParameters)
 
 void Create_ScreensSelectLCD_Task(void)  //TO DAC DO FOLDERA TSKS !!!!!!!!!!!!!!!!!!!!
 {
-	xTaskCreate(vtask_ScreensSelectLCD, (char* )"vtask_ScreensSelectLCD", 2048, NULL, (unsigned portBASE_TYPE ) 1, &vtask_ScreensSelectLCD_Handle);
+	xTaskCreate(vtask_ScreensSelectLCD, (char* )"vtask_ScreensSelectLCD", 2048, NULL, (unsigned portBASE_TYPE ) 1, &vtask_ScreensSelectLCD_Handle); //TO dac do folderu TASK !!!!!
 }
 
