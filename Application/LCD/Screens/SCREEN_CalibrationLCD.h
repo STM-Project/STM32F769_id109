@@ -44,7 +44,7 @@ void 	SCREEN_Calibration_main(int argNmb, char **argVal);
 
 int 	SCREEN_Calibration_funcGet(int offs);
 void 	SCREEN_Calibration_funcSet(int offs, int val);
-void 	SCREEN_Calibration_setDefaultAllParam(void);
+void 	SCREEN_Calibration_setDefaultAllParam(int rst);
 void 	SCREEN_Calibration_printInfo(void);
 
 #endif /* LCD_SCREENS_SCREEN_CALIBRATIONLCD_H_ */
