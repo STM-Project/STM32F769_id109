@@ -134,11 +134,12 @@ void FILE_NAME(funcSet)(int offs, int val){
 	SET_bit(FILE_NAME(SelBits),offs);
 }
 
-void FILE_NAME(setDefaultAllParam)(void){
+void FILE_NAME(setDefaultAllParam)(int rst){
 	#define X(a,b,c) FILE_NAME(funcSet)(b,c);
 		SCREEN_CALIBRATION_SET_PARAMETERS
 	#undef X
-	FILE_NAME(SelBits)=0;
+	if(rst)
+		FILE_NAME(SelBits)=0;
 }
 /*
 static void FILE_NAME(debugRcvStr)(void);
