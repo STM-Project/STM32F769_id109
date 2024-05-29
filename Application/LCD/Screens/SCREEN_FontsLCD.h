@@ -67,7 +67,7 @@ void SCREEN_Fonts_main(int argNmb, char **argVal);
 
 int SCREEN_Fonts_funcGet(int offs);
 void SCREEN_Fonts_funcSet(int offs, int val);
-void 	SCREEN_Fonts_setDefaultAllParam(void);
+void SCREEN_Fonts_setDefaultAllParam(int rst);
 void SCREEN_Fonts_printInfo(void);
 
 void SCREEN_Fonts_debugRcvStr(void);
