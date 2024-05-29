@@ -139,7 +139,12 @@ void vTouchpanelTimerCallback(TimerHandle_t pxTimer)
 xTouchpanelTimer = xTimerCreate("TouchPanelTimer", TOUCHPANEL_REFRESH_PERIOD_MS, 1, 0, vTouchpanelTimerCallback);
 			xTimerStart(xTouchpanelTimer,TOUCHPANEL_REFRESH_PERIOD_MS);
 
-
+w funkcji touch:
+if(ts.TouchDetected)
+{
+		PASSWORDS_ResetLogOutTimer();
+		    	SCREENSAVER_ResetTimer();
+}
 
 
 //##############################################UNION ##########################################################
