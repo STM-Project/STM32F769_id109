@@ -166,8 +166,9 @@ userMessage.Data.p = &tempEthSettings;
 WM_SendMessage(userMessage.hWin, &userMessage);
 
 //#############################################TOUCH TYPE ##########################################################
+#define TOUCH_GET_PER_X_PROBE		3
 
-/*if(0==argNmb)
+if(0==argNmb)
 {
 	 	touchTemp[0].x= 0;
 	 	touchTemp[0].y= 0;
@@ -218,7 +219,7 @@ WM_SendMessage(userMessage.hWin, &userMessage);
 	 	//SetTouch(ID_TOUCH_GET_ANY_POINT,AnyPress,TOUCH_GET_PER_X_PROBE);
 	 	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);  //W DEBUG FPNTS WPISZ JESZCZE JAKI LCD_STR !!!!!
 }
-*/
+
 
 
 #endif

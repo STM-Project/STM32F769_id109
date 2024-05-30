@@ -17,7 +17,6 @@
 #include "stmpe811.h"
 
 /*----------------- Main Settings ------------------*/
-
 #define FILE_NAME(extend) SCREEN_Fonts_##extend
 
 static const char FILE_NAME(Lang)[]="\
@@ -39,7 +38,7 @@ Czcionki LCD,Fonts LCD,\
 	X(10, FONT_SIZE_PosCursor,		FONT_10) \
 	X(11, FONT_SIZE_CPUusage,		FONT_10) \
 	X(12, FONT_SIZE_Speed,			FONT_10) \
-	X(13, FONT_SIZE_Fonts,			FONT_10) \
+	X(13, FONT_SIZE_Fonts,			FONT_36_bold) \
 	\
 	X(14, FONT_STYLE_Title, 	 	Arial) \
 	X(15, FONT_STYLE_FontColor, 	Arial) \
@@ -69,7 +68,7 @@ Czcionki LCD,Fonts LCD,\
 	X(38, FONT_COLOR_PosCursor,	WHITE) \
 	X(39, FONT_COLOR_CPUusage,		WHITE) \
 	X(40, FONT_COLOR_Speed,			WHITE) \
-	X(41, FONT_COLOR_Fonts,  		WHITE) \
+	X(41, FONT_COLOR_Fonts,  		0xFFE1A000) \
 	\
 	X(42, FONT_BKCOLOR_Title,  	 	MYGRAY) \
 	X(43, FONT_BKCOLOR_FontColor, 	MYGRAY) \
@@ -84,7 +83,7 @@ Czcionki LCD,Fonts LCD,\
 	X(52, FONT_BKCOLOR_PosCursor,		MYGRAY) \
 	X(53, FONT_BKCOLOR_CPUusage,		MYGRAY) \
 	X(54, FONT_BKCOLOR_Speed,			MYGRAY) \
-	X(55, FONT_BKCOLOR_Fonts,  		MYGRAY) \
+	X(55, FONT_BKCOLOR_Fonts,  		0xFF090440) \
 	\
 	X(56, COLOR_BkScreen,  		MYGRAY) \
 	X(57, DEBUG_ON,  	1) \
@@ -126,20 +125,6 @@ Czcionki LCD,Fonts LCD,\
 	X(90, FONT_VAR_Fonts,  			fontVar_14) \
 	X(91, FONT_VAR_Press,  			fontVar_15) \
 /*------------ End Main Settings -----------------*/
-
-#define TOUCH_GET_PER_X_PROBE		3
-
-typedef enum{
-	Point_1 = 1,
-	Point_2,
-	Point_3,
-	Move_1,
-	Move_2,
-	Move_3,
-	Move_4,
-	AnyPress,
-	AnyPressWithWait
-}NEW_TOUCH;
 
 /*------------ Main Screen MACRO -----------------*/
 typedef enum{
@@ -218,10 +203,9 @@ void FILE_NAME(debugRcvStr)(void);
 void FILE_NAME(setTouch)(void);
 
 void 	FILE_NAME(main)(int argNmb, char **argVal);
-
 /*------------ End Main Screen MACRO -----------------*/
 
-static char bufTemp[50];
+#define TEXT_TO_SHOW		"Rafa"ł" Markielowski"
 
 #define FLOAT2STR(val)	Float2Str(val,' ',4,Sign_plusMinus,1)
 #define INT2STR(val)		  Int2Str(val,'0',3,Sign_none)
@@ -230,9 +214,9 @@ static char bufTemp[50];
 
 #define TXT_FONT_COLOR 	StrAll(7," ",INT2STR(Test.font[0])," ",INT2STR(Test.font[1])," ",INT2STR(Test.font[2])," ")
 #define TXT_BK_COLOR 	StrAll(7," ",INT2STR(Test.bk[0]),  " ",INT2STR(Test.bk[1]),  " ",INT2STR(Test.bk[2])," ")
-#define TXT_FONT_TYPE	StrAll(3,ONEBIT(Test.type+1)," ",LCD_FontType2Str(bufTemp,0,Test.type+1)+1)
-#define TXT_FONT_SIZE	LCD_FontSize2Str(bufTemp+25,Test.size)
-#define TXT_FONT_STYLE	LCD_FontStyle2Str(bufTemp,Test.style)
+#define TXT_FONT_TYPE	StrAll(5," ",ONEBIT(Test.type+1)," ",LCD_FontType2Str(bufTemp,0,Test.type+1)+1," ")
+#define TXT_FONT_SIZE	StrAll(3," ",LCD_FontSize2Str(bufTemp+25,Test.size)," ")
+#define TXT_FONT_STYLE	StrAll(3," ",LCD_FontStyle2Str(bufTemp,Test.style)," ")
 #define TXT_COEFF			Int2Str(Test.coeff  ,' ',3,Sign_plusMinus)
 #define TXT_LEN_WIN		Int2Str(Test.lenWin ,' ',3,Sign_none)
 #define TXT_OFFS_WIN		Int2Str(Test.offsWin,' ',3,Sign_none)
@@ -242,6 +226,27 @@ static char bufTemp[50];
 
 #define RGB_FONT 	RGB2INT(Test.font[0],Test.font[1],Test.font[2])
 #define RGB_BK    RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2])
+
+typedef enum{
+	Point_1 = 1,
+	Point_2,
+	Point_3,
+	Point_4,
+	Point_5,
+	Point_6,
+	Point_7,
+	Point_8,
+	Point_9,
+	Point_10,
+	Point_11,
+	Point_12,
+	Move_1,
+	Move_2,
+	Move_3,
+	Move_4,
+	AnyPress,
+	AnyPressWithWait
+}NEW_TOUCH;
 
 typedef enum{
 	PARAM_TYPE,
@@ -260,6 +265,7 @@ typedef enum{
 	FONTS
 }REFRESH_DATA;
 
+static char bufTemp[50];
 static int lenTxt_prev;
 static StructTxtPxlLen lenStr;
 
@@ -490,30 +496,31 @@ static void DecCoeefRGB(void){
 	Data2Refresh(PARAM_SPEED);
 }
 
-static int ChangeTxt(void){
+static int ChangeTxt(void){ //wprowadzanie z klawiatury textu !!!!!!
 	//return CopyCharsTab(Test.txt,Test.lenWin,Test.offsWin,Test.size);
 
 	const char *pChar;
-		int i,j, lenChars;
+	int i, j, lenChars;
 
-		pChar="Rafa"ł" Markielowski";
+	pChar= TEXT_TO_SHOW;
 
-		lenChars=mini_strlen(pChar);
-		for(i=0;i<Test.lenWin;++i)
-		{
-			j=Test.offsWin+i;
-			if(j<lenChars)
-				Test.txt[i]=pChar[j];
-			else
-				break;
-		}
-		Test.txt[i]=0;
-
-		if(i==Test.lenWin)
-			return 0;
+	lenChars=mini_strlen(pChar);
+	for(i=0;i < Test.lenWin;++i)
+	{
+		j=Test.offsWin + i;
+		if(j < lenChars)
+			Test.txt[i]=pChar[j];
 		else
-			return 1;
+			break;
+	}
+	Test.txt[i]=0;
+
+	if(i == Test.lenWin)
+		return 0;
+	else
+		return 1;
 }
+
 static void ResetRGB(void)
 {
 	Test.xFontsField=0;
@@ -538,7 +545,7 @@ static void ResetRGB(void)
 
 	//strcpy(Test.txt,"Rafa"ł" Markielowski");
 
-	Test.lenWin=4;
+	Test.lenWin=mini_strlen(TEXT_TO_SHOW);
 	Test.offsWin=0;
 
 	Test.lenWin_prev=Test.lenWin;
@@ -828,23 +835,42 @@ static void DisplayFontsWithChangeColorOrNot(void){
 
 void FILE_NAME(setTouch)(void)
 {
-	#define SELECT_CURRENT_FONT(curr,txt) \
-		LCD_SetStrVar_fontID(v.FONT_VAR_##curr,v.FONT_ID_Press);\
-		LCD_SetStrVar_fontColor(v.FONT_VAR_##curr,v.FONT_COLOR_Press);\
-		LCD_SetStrVar_bkColor(v.FONT_VAR_##curr,v.FONT_BKCOLOR_Press);\
-		LCD_SetStrVar_coeff(v.FONT_VAR_##curr,252);\
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_##curr,txt)
+	#define SELECT_CURRENT_FONT(src,dst,txt,coeff) \
+		LCD_SetStrVar_fontID		(v.FONT_VAR_##src, v.FONT_ID_##dst);\
+		LCD_SetStrVar_fontColor	(v.FONT_VAR_##src, v.FONT_COLOR_##dst);\
+		LCD_SetStrVar_bkColor  	(v.FONT_VAR_##src, v.FONT_BKCOLOR_##dst);\
+		LCD_SetStrVar_coeff		(v.FONT_VAR_##src, coeff);\
+		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_##src, txt)
 
-	#define DESELECT_CURRENT_FONT(curr,txt) \
-		LCD_SetStrVar_fontID(v.FONT_VAR_##curr,v.FONT_ID_FontColor);\
-		LCD_SetStrVar_fontColor(v.FONT_VAR_##curr,v.FONT_COLOR_##curr);\
-		LCD_SetStrVar_bkColor(v.FONT_VAR_##curr,v.FONT_BKCOLOR_##curr);\
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_##curr,txt)
+	#define DESELECT_CURRENT_FONT(src,txt) \
+		LCD_SetStrVar_fontID		(v.FONT_VAR_##src, v.FONT_ID_##src);\
+		LCD_SetStrVar_fontColor	(v.FONT_VAR_##src, v.FONT_COLOR_##src);\
+		LCD_SetStrVar_bkColor	(v.FONT_VAR_##src, v.FONT_BKCOLOR_##src);\
+		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_##src, txt)
+
+	#define DESELECT_ALL_FONTS \
+		DESELECT_CURRENT_FONT(FontColor,	TXT_FONT_COLOR);\
+		DESELECT_CURRENT_FONT(BkColor,	TXT_BK_COLOR);\
+		DESELECT_CURRENT_FONT(FontType,	TXT_FONT_TYPE);\
+		DESELECT_CURRENT_FONT(FontSize,	TXT_FONT_SIZE);\
+		DESELECT_CURRENT_FONT(FontStyle,	TXT_FONT_STYLE)
 
 	#define CHECK_TOUCH(state)	CHECK_bit(FILE_NAME(SelTouch),state-1)
-	#define SET_TOUCH(state) 	SET_bit(FILE_NAME(SelTouch),state-1)
-	#define CLR_TOUCH(state) 	RST_bit(FILE_NAME(SelTouch),state-1)
+	#define SET_TOUCH(state) 	SET_bit	(FILE_NAME(SelTouch),state-1)
+	#define CLR_TOUCH(state) 	RST_bit	(FILE_NAME(SelTouch),state-1)
 	#define CLR_ALL_TOUCH 		FILE_NAME(SelTouch) = 0
+
+	#define CASE_TOUCH_STATE(state,touchPoint, src,dst, txt,coeff) \
+		case touchPoint:\
+			if(0==CHECK_TOUCH(state)){\
+				DESELECT_ALL_FONTS;		CLR_ALL_TOUCH;\
+				SELECT_CURRENT_FONT(src, dst, txt, coeff);\
+				SET_TOUCH(state);\
+			}\
+			else{\
+				DESELECT_CURRENT_FONT(src, txt);\
+				CLR_ALL_TOUCH;\
+			}
 
 	uint16_t state;
 	XY_Touch_Struct pos;
@@ -852,36 +878,30 @@ void FILE_NAME(setTouch)(void)
 	state = LCD_Touch_GetTypeAndPosition(&pos);
 	switch(state)
 	{
-		case Point_1:
-			if(0==CHECK_TOUCH(state)){
-				SELECT_CURRENT_FONT(FontColor,TXT_FONT_COLOR);
-				DESELECT_CURRENT_FONT(BkColor,TXT_BK_COLOR);
-				CLR_ALL_TOUCH; SET_TOUCH(state);
-			}
-			else{
-				DESELECT_CURRENT_FONT(FontColor,TXT_FONT_COLOR);
-				CLR_ALL_TOUCH;
-			}
+		CASE_TOUCH_STATE(state,Point_1, FontColor,Press, TXT_FONT_COLOR,252);
 			DisplayTouchPosXY(Point_1,pos);  Dbg(1,": TouchPoint_1 ");
 			break;
 
-		case Point_2:
-			if(0==CHECK_TOUCH(state)){
-				DESELECT_CURRENT_FONT(FontColor,TXT_FONT_COLOR);
-				SELECT_CURRENT_FONT(BkColor,TXT_BK_COLOR);
-				CLR_ALL_TOUCH; SET_TOUCH(state);
-			}
-			else{
-				DESELECT_CURRENT_FONT(BkColor,TXT_BK_COLOR);
-				CLR_ALL_TOUCH;
-			}
+		CASE_TOUCH_STATE(state,Point_2, BkColor,Press, TXT_BK_COLOR,252);
 			DisplayTouchPosXY(Point_2,pos);  Dbg(1,": TouchPoint_2 ");
+			break;
+
+		CASE_TOUCH_STATE(state,Point_3, FontType,Press, TXT_FONT_TYPE,252);
+			DisplayTouchPosXY(Point_3,pos);  Dbg(1,": TouchPoint_3 ");
+			break;
+
+		CASE_TOUCH_STATE(state,Point_4, FontSize,Press, TXT_FONT_SIZE,252);
+			DisplayTouchPosXY(Point_4,pos);  Dbg(1,": TouchPoint_4 ");
+			break;
+
+		CASE_TOUCH_STATE(state,Point_5, FontStyle,Press, TXT_FONT_STYLE,252);
+			DisplayTouchPosXY(Point_5,pos);  Dbg(1,": TouchPoint_5 ");
 			break;
 
 
 
-		case Point_3:
-			Dbg(1,"\r\nTouchPoint_3");
+		case Point_12:
+			Dbg(1,"\r\nTouchPoint_12");
 			break;
 		case Move_1:
 			Dbg(1,"\r\nTouchMove_1");
@@ -1026,7 +1046,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	 	touchTemp[0].y= 300;
 	 	touchTemp[1].x= touchTemp[0].x+200;
 	 	touchTemp[1].y= touchTemp[0].y+180;
-	 	SetTouch(ID_TOUCH_POINT,Point_3,pressRelease);
+	 	SetTouch(ID_TOUCH_POINT,Point_12,pressRelease);
 
 
 	v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
@@ -1051,20 +1071,25 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, BkScreen),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,0), ptr,fullHight,0,255,NoConstWidth);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, BkScreen), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,5), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, BkScreen), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,5), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);  //zrobic mniejsza czcionka przeliczenie na hex !!!
 	SetTouchForStrVar(ID_TOUCH_POINT, Point_1, press, v.FONT_VAR_FontColor, lenStr);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, BkScreen),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_BK_COLOR,fullHight,0,	255,ConstWidth);
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, BkScreen),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_BK_COLOR,fullHight,0,	255,ConstWidth); //zrobic mniejsza czcionka przeliczenie na hex !!!
 	SetTouchForStrVar(ID_TOUCH_POINT, Point_2, press, v.FONT_VAR_BkColor, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontType, BkScreen),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_FONT_TYPE, 	fullHight,0,255,NoConstWidth);
+	SetTouchForStrVar(ID_TOUCH_POINT, Point_3, press, v.FONT_VAR_FontType, lenStr);
+
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontSize, BkScreen),  LCD_Xpos(lenStr,IncPos,20), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_SIZE, 	fullHight,0,255,NoConstWidth);
+	SetTouchForStrVar(ID_TOUCH_POINT, Point_4, press, v.FONT_VAR_FontSize, lenStr);
+
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontStyle, BkScreen), LCD_Xpos(lenStr,IncPos,80), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE, 	fullHight,0,255,NoConstWidth);
+	SetTouchForStrVar(ID_TOUCH_POINT, Point_5, press, v.FONT_VAR_FontStyle, lenStr);
 
 
 //X(51, FONT_BKCOLOR_Fonts,  		MYGRAY) \ //TU PODMNIENIC RGB !!!!
 
-	LCD_StrDependOnColorsVar(STR_FONT_PARAM(Coeff,BkScreen),200, 20, TXT_COEFF,  		 	fullHight,0,255,ConstWidth);
+	LCD_StrDependOnColorsVar(STR_FONT_PARAM(Coeff,BkScreen),200, 20, TXT_COEFF,  		 	fullHight,0,255,ConstWidth);  //DESCRiption malymi szarymi literkami !!!! oddzoelone kreseczkami !!!
 	LCD_StrDependOnColorsVar(STR_FONT_PARAM(LenWin,BkScreen),400,  0, TXT_LEN_WIN,		 	 halfHight,0,255,ConstWidth);
 	LCD_StrDependOnColorsVar(STR_FONT_PARAM(OffsWin,BkScreen),400, 20, TXT_OFFS_WIN,	    	 halfHight,0,255,ConstWidth);
 	LCD_StrDependOnColorsVar(STR_FONT_PARAM(LoadFontTime,BkScreen),320, 20, TXT_LOAD_FONT_TIME,	 halfHight,0,255,ConstWidth);
