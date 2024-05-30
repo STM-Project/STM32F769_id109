@@ -16,8 +16,7 @@
 #define TIME_700_MS_TO_NUMBER_PROBE	  	(700 / SERVICE_TOUCH_PROB_TIME_MS)
 #define TIME_5000_MS_TO_NUMBER_PROBE	(5000 / SERVICE_TOUCH_PROB_TIME_MS / Touch[i].param)
 
-typedef struct
-{
+typedef struct{
   uint8_t press;
   uint8_t idx;
   XY_Touch_Struct  pos[BUF_LCD_TOUCH_SIZE];
@@ -33,9 +32,9 @@ typedef struct
   XY_Touch_Struct  pos[MAX_NUMBER_PIONTS_TOUCH];
 }Touch_Struct;
 
-
 static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 static Touch_Struct  Touch[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
+
 XY_Touch_Struct  touchTemp[MAX_NUMBER_PIONTS_TOUCH] = {0};
 
 static uint8_t Calibration_Done = 0;

@@ -5,10 +5,10 @@
 #include "stm32f7xx_hal.h"
 
 typedef enum{
-	Coeff_A1 = 1067,
-	Coeff_B1 = -23361,
-	Coeff_A2 = 1414,
-	Coeff_B2 = -188376
+	Coeff_A1 = 1070,
+	Coeff_B1 = -26479,
+	Coeff_A2 = 1085,
+	Coeff_B2 = -26279
 //	Coeff_A1 = 1067,
 //	Coeff_B1 = -46030,
 //	Coeff_A2 = 1111,
