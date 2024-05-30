@@ -166,7 +166,10 @@ void StartDefaultTask(void const * argument)
 
 	MX_FATFS_Init();
 	DEBUG_Init();
-	BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
+
+	if(BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize()))
+		Dbg(1,"\r\nERROR: BSP_TS_Init ");
+
 	SetLang(2,Polish);
 	LCD_SetSpacesBetweenFonts();
 	DeleteAllTouch();

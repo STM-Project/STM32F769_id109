@@ -23,7 +23,7 @@ typedef enum{
 
 char* Int2Str(int value, char freeSign, int maxDigits, int plusMinus);
 char* Float2Str(float value, char freeSign, int maxDigits, int plusMinus, int dec_digits);
-char* StrAll(int a, ...);
+char* StrAll(int nmbStr, ...);
 
 void SwapUint16(uint16_t *a, uint16_t *b);
 

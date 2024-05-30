@@ -45,7 +45,7 @@ Ko"ł"o,Circle,\
 	X(12, COLOR_BkScreen, 			MYGRAY) \
 	X(13, COLOR_CircleFrame, 		WHITE) \
 	X(14, COLOR_CircleFill, 		MYGRAY) \
-	X(15, COLOR_CircleFillPress, 	GRAY) \
+	X(15, COLOR_CircleFillPress, 	0xFF606060) \
 	\
 	X(16, COEFF_COLOR_CircleName, 255)	\
 	X(17, COEFF_COLOR_PosLog,  	255)	\

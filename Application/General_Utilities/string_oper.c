@@ -230,7 +230,7 @@ char* Float2Str(float value, char freeSign, int maxDigits, int plusMinus, int de
 	return strBuff+idx_copy;
 }
 
-char* StrAll(int nrStr, ...)
+char* StrAll(int nmbStr, ...)
 {
 	int i,len,lenOut;
 	char *ptr;
@@ -239,7 +239,7 @@ char* StrAll(int nrStr, ...)
 	va_start(va,0);
 	strBuffOut[0]=0;
 
-	for(i=0;i<nrStr;++i)
+	for(i=0;i<nmbStr;++i)
 	{
 		ptr=va_arg(va,char*);
 		len=strlen(ptr);
