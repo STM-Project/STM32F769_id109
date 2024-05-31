@@ -71,13 +71,17 @@ typedef enum{
 	FONTS_FONT_BKCOLOR_Speed,
 	FONTS_FONT_BKCOLOR_Fonts,
 
-	FONTS_COLOR_BkScreen,
-	FONTS_DEBUG_ON,
-
 	FONTS_SIZE_Press,
 	FONTS_STYLE_Press,
 	FONTS_COLOR_Press,
 	FONTS_BKCOLOR_Press,
+
+	FONTS_COLOR_BkScreen,
+	FONTS_COLOR_MainFrame,
+	FONTS_COLOR_Frame,
+	FONTS_COLOR_FillMainFrame,
+	FONTS_COLOR_FillFrame,
+	FONTS_DEBUG_ON,
 
 }_SCREEN_Fonts_enum;
 

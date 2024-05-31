@@ -47,10 +47,11 @@ typedef enum{
 #define LOAD_FONT_PARAM(name) 	v.FONT_SIZE_##name, v.FONT_STYLE_##name, v.FONT_BKCOLOR_##name, v.FONT_COLOR_##name
 #define STR_FONT_PARAM(name,bkScreen) 	v.FONT_VAR_##name, v.FONT_ID_##name,  v.FONT_COLOR_##name, v.FONT_BKCOLOR_##name, v.COLOR_##bkScreen
 
-#define RGB2INT(R,G,B)		(R<<16|G<<8|B)|0xFF000000
-#define R_PART(rgb)		(rgb>>16)&0x000000FF
-#define G_PART(rgb)		(rgb>>8)&0x000000FF
-#define B_PART(rgb)		 rgb&0x000000FF
+#define COLOR_GRAY(v)	((v<<16|v<<8|v)|0xFF000000)
+#define RGB2INT(R,G,B)	((R<<16|G<<8|B)|0xFF000000)
+#define R_PART(rgb)		((rgb>>16)&0x000000FF)
+#define G_PART(rgb)		((rgb>>8)&0x000000FF)
+#define B_PART(rgb)		 (rgb&0x000000FF)
 
 #define COLOR_TO_Y(color)		(0.299*((color>>16)&0x000000FF) + 0.587*((color>>8)&0x000000FF) + 0.114*(color&0x000000FF))
 #define COLOR_TO_Cb(color)		(128 - 0.168736*((color>>16)&0x000000FF) - 0.331264*((color>>8)&0x000000FF) + 0.5*(color&0x000000FF))
