@@ -1020,6 +1020,20 @@ void FILE_NAME(debugRcvStr)(void)
 
 }
 
+static void LCD_DrawMainFrame(figureShape shape, uint8_t bold)
+{
+	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
+
+	if(shape==pShape[1] || shape==pShape[3])
+		v.COLOR_MainFrame = SetColorBoldFrame(v.COLOR_MainFrame,bold);
+
+	if(shape==pShape[2] || shape==pShape[3])
+		Set_AACoeff_RoundFrameRectangle(0.55, 0.73);
+
+	LCD_Shape(0,0,shape,LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+}
+
+
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
 	char *ptr=NULL;
@@ -1061,16 +1075,13 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_LoadFontVar();
 	//FILE_NAME(printInfo)();
 
-	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
-
-	v.COLOR_MainFrame = SetColorBoldFrame(v.COLOR_MainFrame,0);
-	LCD_Shape(0,0,pShape[0],LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+	LCD_DrawMainFrame(LCD_BoldRoundRectangle,0);
 
 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,0), ptr,fullHight,0,255,NoConstWidth);
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,8), ptr,fullHight,0,255,NoConstWidth);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,5), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);  //zrobic mniejsza czcionka przeliczenie na hex !!!
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);  //zrobic mniejsza czcionka przeliczenie na hex !!!
 	ConfigTouchForStrVar(ID_TOUCH_POINT, Point_1, press, v.FONT_VAR_FontColor, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_BK_COLOR,fullHight,0,	255,ConstWidth); //zrobic mniejsza czcionka przeliczenie na hex !!!
@@ -1104,7 +1115,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 		lenStr=LCD_StrVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,v.COLOR_BkScreen,0,Test.constWidth,v.COLOR_BkScreen);
 	else
 		lenStr=LCD_StrChangeColorVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,v.COLOR_BkScreen);
-	Test.speed=StopMeasureTime_us("");
+	Test.speed=StopMeasureTime_us("");  //dla FONTS trzeba odstepy spacji po lewekj i prawej stronie aby lepiej wygladaly bk
 
 	LCD_StrDependOnColorsVar(STR_FONT_PARAM(Speed, FillMainFrame),450,0,TXT_SPEED,fullHight,0,255,ConstWidth);
 
