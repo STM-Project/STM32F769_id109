@@ -22,7 +22,7 @@ void vtask_TouchLcd(void *pvParameters)
 
 	while(1)
 	{
-		LCD_Touch_Service();
+		LCD_TOUCH_Service();
 		vTaskDelayUntil(&xLastExecutionTime, SERVICE_TOUCH_PROB_TIME_MS);
 	}
 }

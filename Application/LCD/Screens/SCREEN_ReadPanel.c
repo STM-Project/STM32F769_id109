@@ -36,20 +36,21 @@
 int argNmb = 0;
 char **argVal = NULL;
 
-xTaskHandle vtask_ScreensSelectLCD_Handle;
+
 StructTxtPxlLen lenStr;
 int startScreen=0;
 
+int ConfigTouchForStrVar(uint16_t ID_touch, uint16_t idx_touch, uint8_t param_touch, int idVar, StructTxtPxlLen lenStr){
+ 	LCD_SetStrVar_idxTouch(idVar,idx_touch);
+	touchTemp[0].x = LCD_GetStrVar_x(idVar);
+	touchTemp[0].y = LCD_GetStrVar_y(idVar);
+ 	touchTemp[1].x = touchTemp[0].x + lenStr.inPixel;
+ 	touchTemp[1].y = touchTemp[0].y + lenStr.height;
+ 	return LCD_TOUCH_Set(ID_touch, idx_touch, param_touch);
+}
 
-
-void vtaskWifi(void *argument)
-{
-	while (1)
-	{
-
-	 	vTaskDelay(1);
-	}
-
+int SetTouchForNewEndPos(int idVar, StructTxtPxlLen lenStr){
+	return LCD_TOUCH_SetNewPos( LCD_GetStrVar_idxTouch(idVar), LCD_GetStrVar_x(idVar), LCD_GetStrVar_y(idVar), lenStr.inPixel, lenStr.height );
 }
 
 
@@ -621,24 +622,6 @@ void SCREEN_ReadPanel(void)
 //	LCD_Znak_XX(0,LCD_X,LCD_Y, 240,136, 30,15, LIGHTGRAY,WHITE,WHITE);
 //	StopMeasureTime_us("\r\nLCD_Znak_XX:");
 
-void vtask_ScreensSelectLCD(void *pvParameters)
-{
 
 
-	while(1)
-	{
-
-			SCREEN_ReadPanel();
-
-
-
-					vTaskDelay(20);
-
-	}
-}
-
-void Create_ScreensSelectLCD_Task(void)  //TO DAC DO FOLDERA TSKS !!!!!!!!!!!!!!!!!!!!
-{
-	xTaskCreate(vtask_ScreensSelectLCD, (char* )"vtask_ScreensSelectLCD", 2048, NULL, (unsigned portBASE_TYPE ) 1, &vtask_ScreensSelectLCD_Handle); //TO dac do folderu TASK !!!!!
-}
 

@@ -123,6 +123,7 @@ typedef struct{
 	uint16_t yPos_prev;
 	uint16_t widthPxl_prev;
 	uint16_t heightPxl_prev;
+	uint16_t touch_idx;
 	MOVABLE_FONTS_SETTING FontMov;
 } FONTS_VAR_SETTING;
 static FONTS_VAR_SETTING FontVar[MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY];
@@ -1134,6 +1135,9 @@ void LCD_SetStrVar_fontID(int idVar, int fontID){
 void LCD_SetStrVar_bkScreenColor(int idVar, int bkScreenColor){
 	FontVar[idVar].bkScreenColor=bkScreenColor;
 }
+void LCD_SetStrVar_idxTouch(int idVar, int idxTouch){
+	FontVar[idVar].touch_idx=idxTouch;
+}
 void LCD_SetStrVar_Mov_posWin(int idVar, int posWin){
 	FontVar[idVar].FontMov.posWin=posWin;
 }
@@ -1167,6 +1171,9 @@ int LCD_GetStrVar_fontID(int idVar){
 }
 int LCD_GetStrVar_bkScreenColor(int idVar){
 	return FontVar[idVar].bkScreenColor;
+}
+int LCD_GetStrVar_idxTouch(int idVar){
+	return FontVar[idVar].touch_idx;
 }
 int LCD_GetStrVar_Mov_posWin(int idVar){
 	return FontVar[idVar].FontMov.posWin;
@@ -2997,4 +3004,3 @@ StructTxtPxlLen LCD_StrDependOnColorsVarIndirect(int idVar, char *txt){
 	LCD_DimensionBkCorrect(idVar,temp,pLcd);
 	return temp;
 }
-

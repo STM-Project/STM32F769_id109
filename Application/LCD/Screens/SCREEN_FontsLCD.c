@@ -1,7 +1,6 @@
 
 #include "SCREEN_FontsLCD.h"
 #include "LCD_BasicGaphics.h"
-#include "LCD_fonts_images.h"
 #include "LCD_Common.h"
 #include "timer.h"
 #include "lang.h"
@@ -171,7 +170,6 @@ static int FILE_NAME(GetDefaultParam)(int param){
 		return temp;
 }
 
-
 void FILE_NAME(printInfo)(void){
 	if(v.DEBUG_ON){
 		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);
@@ -183,17 +181,14 @@ void FILE_NAME(printInfo)(void){
 	}
 }
 
-
 int FILE_NAME(funcGet)(int offs){
 	return *( (int*)((int*)(&v) + offs) );
 }
-
 
 void FILE_NAME(funcSet)(int offs, int val){
 	*( (int*)((int*)(&v) + offs) ) = val;
 	SET_bit(FILE_NAME(SelBits),offs);
 }
-
 
 void FILE_NAME(setDefaultAllParam)(int rst){
 	#define X(a,b,c) FILE_NAME(funcSet)(b,c);
@@ -343,10 +338,12 @@ static void Data2Refresh(int nr)
 	switch(nr)
 	{
 	case PARAM_TYPE:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontType,TXT_FONT_TYPE);
+		lenStr=LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontType,TXT_FONT_TYPE);
+		SetTouchForNewEndPos(v.FONT_VAR_FontType, lenStr);
 		break;
 	case PARAM_SIZE:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontSize,TXT_FONT_SIZE);
+		lenStr=LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontSize,TXT_FONT_SIZE);
+		SetTouchForNewEndPos(v.FONT_VAR_FontSize, lenStr);
 		break;
 	case FONTS:
 
@@ -402,7 +399,8 @@ static void Data2Refresh(int nr)
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_OffsWin, TXT_OFFS_WIN);
 		break;
 	case PARAM_STYLE:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle,TXT_FONT_STYLE);
+		lenStr=LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, TXT_FONT_STYLE);
+		SetTouchForNewEndPos(v.FONT_VAR_FontStyle, lenStr);
 		break;
 	case PARAM_COEFF:
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Coeff,TXT_COEFF);
@@ -607,7 +605,7 @@ static void ChangeFontStyle(void)
 	{
 	case Arial:   			 Test.style=Times_New_Roman; break;
 	case Times_New_Roman: Test.style=Comic_Saens_MS;  break;
-	case Comic_Saens_MS:  Test.style=Arial; 			 break;
+	case Comic_Saens_MS:  Test.style=Arial; 			  break;
 	default:              Test.style=Arial;           break;
 	}
 	ClearCursorField();
@@ -879,7 +877,7 @@ void FILE_NAME(setTouch)(void)
 	uint16_t state;
 	XY_Touch_Struct pos;
 
-	state = LCD_Touch_GetTypeAndPosition(&pos);
+	state = LCD_TOUCH_GetTypeAndPosition(&pos);
 	switch(state)
 	{
 		CASE_TOUCH_STATE(state,Point_1, FontColor,Press, TXT_FONT_COLOR,252);
@@ -1022,21 +1020,12 @@ void FILE_NAME(debugRcvStr)(void)
 
 }
 
-void SetTouchForStrVar(uint16_t ID_touch, uint16_t idx_touch, uint8_t param_touch, int idVar, StructTxtPxlLen lenStr)
-{
-	touchTemp[0].x = LCD_GetStrVar_x(idVar);
-	touchTemp[0].y = LCD_GetStrVar_y(idVar);
- 	touchTemp[1].x = touchTemp[0].x + lenStr.inPixel;
- 	touchTemp[1].y = touchTemp[0].y + lenStr.height;
- 	SetTouch(ID_touch, idx_touch, param_touch);
-}
-
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
 	char *ptr=NULL;
 
-	SCREEN_ResetAllParameters();
-	DeleteAllTouch();
+	SCREEN_ResetAllParameters();		//ROBIMY TU JUZ KLAWIATUTE i wprowadzanie textu dowolnego !!!!!
+	LCD_TOUCH_DeleteAllSetTouch();  //Przyciski do zmian paranetru !!!!
 	ResetRGB();
 	LCD_Clear(v.COLOR_BkScreen);
 
@@ -1044,13 +1033,13 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	 	touchTemp[1].y= LCD_GetYSize()-LCD_GetYSize()/5;
 	 	touchTemp[0].x= 500;
 	 	touchTemp[1].x= 750;
-	 	SetTouch(ID_TOUCH_MOVE_DOWN,Move_4,press);
+	 	LCD_TOUCH_Set(ID_TOUCH_MOVE_DOWN,Move_4,press);
 
 	 	touchTemp[0].x= 0;
 	 	touchTemp[0].y= 300;
 	 	touchTemp[1].x= touchTemp[0].x+200;
 	 	touchTemp[1].y= touchTemp[0].y+180;
-	 	SetTouch(ID_TOUCH_POINT,Point_12,pressRelease);
+	 	LCD_TOUCH_Set(ID_TOUCH_POINT,Point_12,pressRelease);
 
 
 	v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
@@ -1072,29 +1061,32 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_LoadFontVar();
 	//FILE_NAME(printInfo)();
 
-	LCD_Shape(0,0,LCD_Rectangle,LCD_X,140,v.COLOR_MainFrame, v.COLOR_FillMainFrame,v.COLOR_BkScreen);
+	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
+
+	v.COLOR_MainFrame = SetColorBoldFrame(v.COLOR_MainFrame,0);
+	LCD_Shape(0,0,pShape[0],LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,0), ptr,fullHight,0,255,NoConstWidth);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,5), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);  //zrobic mniejsza czcionka przeliczenie na hex !!!
-	SetTouchForStrVar(ID_TOUCH_POINT, Point_1, press, v.FONT_VAR_FontColor, lenStr);
+	ConfigTouchForStrVar(ID_TOUCH_POINT, Point_1, press, v.FONT_VAR_FontColor, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_BK_COLOR,fullHight,0,	255,ConstWidth); //zrobic mniejsza czcionka przeliczenie na hex !!!
-	SetTouchForStrVar(ID_TOUCH_POINT, Point_2, press, v.FONT_VAR_BkColor, lenStr);
+	ConfigTouchForStrVar(ID_TOUCH_POINT, Point_2, press, v.FONT_VAR_BkColor, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontType, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_FONT_TYPE, 	fullHight,0,255,NoConstWidth);
-	SetTouchForStrVar(ID_TOUCH_POINT, Point_3, press, v.FONT_VAR_FontType, lenStr);
+	ConfigTouchForStrVar(ID_TOUCH_POINT, Point_3, press, v.FONT_VAR_FontType, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontSize, FillMainFrame),  LCD_Xpos(lenStr,IncPos,20), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_SIZE, 	fullHight,0,255,NoConstWidth);
-	SetTouchForStrVar(ID_TOUCH_POINT, Point_4, press, v.FONT_VAR_FontSize, lenStr);
+	ConfigTouchForStrVar(ID_TOUCH_POINT, Point_4, press, v.FONT_VAR_FontSize, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontStyle, FillMainFrame), LCD_Xpos(lenStr,IncPos,80), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE, 	fullHight,0,255,NoConstWidth);
-	SetTouchForStrVar(ID_TOUCH_POINT, Point_5, press, v.FONT_VAR_FontStyle, lenStr); //pole touch uwglednic za kazdym razem bo sie zmienia !!!! rozne dlugosci !!!
+	ConfigTouchForStrVar(ID_TOUCH_POINT, Point_5, press, v.FONT_VAR_FontStyle, lenStr);
 
 
-//X(51, FONT_BKCOLOR_Fonts,  		MYGRAY) \ //TU PODMNIENIC RGB !!!!
+
 
 	LCD_StrDependOnColorsVar(STR_FONT_PARAM(Coeff,FillMainFrame),200, 20, TXT_COEFF,  		 	fullHight,0,255,ConstWidth);  //DESCRiption malymi szarymi literkami !!!! oddzoelone kreseczkami !!!
 	LCD_StrDependOnColorsVar(STR_FONT_PARAM(LenWin,FillMainFrame),400,  0, TXT_LEN_WIN,		 	 halfHight,0,255,ConstWidth);

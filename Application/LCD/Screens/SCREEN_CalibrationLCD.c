@@ -278,7 +278,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 
 	   SetPhysXY(phys,CIRCLES_NUMBER);
 
-	   if(CalcutaleCoeffCalibration(CIRCLES_NUMBER))
+	   if(LCD_TOUCH_CalcCoeffCalibr(CIRCLES_NUMBER))
 	   	Dbg(v.DEBUG_ON, TEXT2PRINT(DEBUG_Text_2,1));
 	   else{
 		   CalibrationWasDone();

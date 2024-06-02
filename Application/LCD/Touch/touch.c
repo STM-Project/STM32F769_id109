@@ -101,7 +101,7 @@ void SetPhysXY(XY_Touch_Struct *pos, int maxSize)
    }
 }
 
-int CalcutaleCoeffCalibration(int maxSize)
+int LCD_TOUCH_CalcCoeffCalibr(int maxSize)
 {
 	int j=0;
 
@@ -230,7 +230,6 @@ static uint16_t GetTouchType(int *param)
 				case ID_TOUCH_POINT:
 					if( pressRelease == Touch[i].param ? 1 : Touch[i].param == ServiceTouch.press)
 					{
-
 						for(int j=0; j<ServiceTouch.idx; j++){
 							if((ServiceTouch.pos[j].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[j].x < Touch[i].pos[1].x) &&
 								(ServiceTouch.pos[j].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[j].y < Touch[i].pos[1].y))
@@ -383,8 +382,8 @@ static uint16_t GetTouchType(int *param)
 	}
 	return 0;
 }
-
-void LCD_Touch_Service(void)	//to jest w watku 1  i zapisuje do ServiceTouch.idx !!!
+/* Poniższa funkcja jest wywoływana w jednym wątku i zapisuje do zmiennej: ServiceTouch.idx */
+void LCD_TOUCH_Service(void)
 {
 	XY_Touch_Struct pos = {0};
 
@@ -409,8 +408,8 @@ void LCD_Touch_Service(void)	//to jest w watku 1  i zapisuje do ServiceTouch.idx
 	else
 		ServiceTouch.press = release;
 }
-
-uint16_t LCD_Touch_GetTypeAndPosition(XY_Touch_Struct *posXY)//to jest w watku 2 i tu tez zapisuje do ServiceTouch.idx !!!
+/* Poniższa funkcja jest wywoływana w drugim wątku i zapisuje też do zmiennej: ServiceTouch.idx */
+uint16_t LCD_TOUCH_GetTypeAndPosition(XY_Touch_Struct *posXY)
 {
 	uint16_t touchRecognize = 0;
 	int param = 0;
@@ -449,7 +448,7 @@ int isTouchTemp(void)
 		return 0;
 }
 
-int SetTouch(uint16_t ID, uint16_t idx, uint8_t param)
+int LCD_TOUCH_Set(uint16_t ID, uint16_t idx, uint8_t param)
 {
   if(isTouchTemp())
   {
@@ -500,7 +499,23 @@ int GetTouchToTemp(uint16_t idx)
 	return 0;
 }
 
-void DeleteAllTouch(void)
+int LCD_TOUCH_SetNewPos(uint16_t idx, uint16_t x, uint16_t y, uint16_t xLen, uint16_t yLen)
+{
+	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+	{
+		if(Touch[i].index==idx)
+		{
+			Touch[i].pos[0].x = x;
+			Touch[i].pos[0].y = y;
+			Touch[i].pos[1].x = x + xLen;
+			Touch[i].pos[1].y = y + yLen;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+void LCD_TOUCH_DeleteAllSetTouch(void)
 {
 	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 		Touch[i].index=0;

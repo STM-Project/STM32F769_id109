@@ -28,7 +28,7 @@
 /* USER CODE BEGIN Includes */
 #include "debug.h"
 #include "fatfs.h"
-#include "SCREEN_ReadPanel.h"
+#include "ScreenLcdTask.h"
 #include "lang.h"
 #include "TouchLcdTask.h"
 #include "debug.h"
@@ -172,7 +172,7 @@ void StartDefaultTask(void const * argument)
 
 	SetLang(2,Polish);
 	LCD_SetSpacesBetweenFonts();
-	DeleteAllTouch();
+	LCD_TOUCH_DeleteAllSetTouch();
 	Dbg(1,"\r\nStart ");
 
 	Create_TouchLcd_Task(); //sprawdz ustawienia w MXCUbe ustawienia freeRTOS z FP70 i wygeneruj projekt jeszcze raz

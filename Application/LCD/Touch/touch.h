@@ -34,8 +34,7 @@ enum TOUCH_PRESS_RELEASE{
   neverMind
 };
 
-typedef struct
-{
+typedef struct{
   uint16_t x;
   uint16_t y;
 }XY_Touch_Struct;
@@ -43,17 +42,18 @@ typedef struct
 extern uint8_t touchDetect;
 extern XY_Touch_Struct  touchTemp[];
 
-void		LCD_Touch_Service			(void);
-uint16_t LCD_Touch_GetTypeAndPosition				(XY_Touch_Struct *posXY);
-void 		DeleteAllTouch				(void);
+void		LCD_TOUCH_Service			(void);
+uint16_t LCD_TOUCH_GetTypeAndPosition				(XY_Touch_Struct *posXY);
+void 		LCD_TOUCH_DeleteAllSetTouch				(void);
 int 		GetTouchToTemp				(uint16_t idx);
+int 		LCD_TOUCH_SetNewPos				(uint16_t idx, uint16_t x, uint16_t y, uint16_t xLen, uint16_t yLen);
 void 		DeleteSelectTouch			(uint16_t idx);
 void 		DeleteAllTouchWithout	(uint16_t idx);
-int 		SetTouch						(uint16_t id, uint16_t idx, uint8_t param);
+int 		LCD_TOUCH_Set						(uint16_t id, uint16_t idx, uint8_t param);
 void SetLogXY(XY_Touch_Struct *pos, uint16_t *width, int maxSize);
 void SetPhysXY(XY_Touch_Struct *pos, int maxSize);
 void WaitForTouchState(uint8_t Pressed);
-int CalcutaleCoeffCalibration(int maxSize);
+int LCD_TOUCH_CalcCoeffCalibr(int maxSize);
 uint8_t IsCalibrationDone(void);
 void CalibrationWasDone(void);
 void DisplayCoeffCalibration(void);
