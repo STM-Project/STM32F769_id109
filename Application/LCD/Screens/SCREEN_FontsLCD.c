@@ -93,7 +93,7 @@ Czcionki LCD,Fonts LCD,\
 	X(61, COLOR_MainFrame,  	COLOR_GRAY(0xB0)) \
 	X(62, COLOR_Frame,  			COLOR_GRAY(0x80)) \
 	X(63, COLOR_FillMainFrame, COLOR_GRAY(0x38)) \
-	X(64, COLOR_FillFrame, 		MYGRAY) \
+	X(64, COLOR_FillFrame, 		COLOR_GRAY(0x20)) \
 	X(65, DEBUG_ON,  	1) \
 	\
 	X(66, FONT_ID_Title,			fontID_1) \
@@ -1020,7 +1020,7 @@ void FILE_NAME(debugRcvStr)(void)
 
 }
 
-static void LCD_DrawMainFrame(figureShape shape, uint8_t bold)
+static void LCD_DrawMainFrame(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int a,int b,int c)
 {
 	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
 
@@ -1030,7 +1030,21 @@ static void LCD_DrawMainFrame(figureShape shape, uint8_t bold)
 	if(shape==pShape[2] || shape==pShape[3])
 		Set_AACoeff_RoundFrameRectangle(0.55, 0.73);
 
-	LCD_Shape(0,0,shape,LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+	LCD_Shape(x,y,shape,w,h,a,b,c);
+}
+
+static void LCD_Keyboard(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t width,uint16_t hight, uint8_t interSpace, int a,int b,int c)
+{
+	#define	_F(xPos,yPos)	LCD_DrawMainFrame(shape,bold, xPos,yPos, width,hight, a,b,c)
+	#define	dx	(width + interSpace)
+	#define	dy	(hight + interSpace)
+
+	_F(x, y);		_F(x+dx, y); 		_F(x+2*dx, y);
+	_F(x, y+dy);	_F(x+dx, y+dy); 	_F(x+2*dx, y+dy);
+
+	#undef _F
+	#undef dx
+	#undef dy
 }
 
 
@@ -1075,7 +1089,9 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_LoadFontVar();
 	//FILE_NAME(printInfo)();
 
-	LCD_DrawMainFrame(LCD_BoldRoundRectangle,0);
+	LCD_DrawMainFrame(LCD_Rectangle,0, 0,0, LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+
+	LCD_Keyboard(LCD_RoundRectangle,0, 650,160, 30,20, 5, SHAPE_PARAM(Frame,FillFrame,BkScreen));
 
 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
