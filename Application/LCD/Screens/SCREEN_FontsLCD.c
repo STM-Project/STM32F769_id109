@@ -89,44 +89,45 @@ Czcionki LCD,Fonts LCD,\
 	X(58, FONT_COLOR_Press, 	DARKRED) \
 	X(59, FONT_BKCOLOR_Press, 	WHITE) \
 	\
-	X(60, COLOR_BkScreen,  		MYGRAY) \
-	X(61, COLOR_MainFrame,  	COLOR_GRAY(0xB0)) \
-	X(62, COLOR_Frame,  			COLOR_GRAY(0x80)) \
-	X(63, COLOR_FillMainFrame, COLOR_GRAY(0x38)) \
-	X(64, COLOR_FillFrame, 		COLOR_GRAY(0x20)) \
-	X(65, DEBUG_ON,  	1) \
+	X(60, COLOR_BkScreen,  			MYGRAY) \
+	X(61, COLOR_MainFrame,  		COLOR_GRAY(0xB0)) \
+	X(62, COLOR_Frame,  				COLOR_GRAY(0x80)) \
+	X(63, COLOR_FillMainFrame, 	COLOR_GRAY(0x38)) \
+	X(64, COLOR_FillFrame, 			COLOR_GRAY(0x20)) \
+	X(65, COLOR_FillFramePress,	COLOR_GRAY(0xA0)) \
+	X(66, DEBUG_ON,  	1) \
 	\
-	X(66, FONT_ID_Title,			fontID_1) \
-	X(67, FONT_ID_FontColor,	fontID_2) \
-	X(68, FONT_ID_BkColor, 		fontID_3) \
-	X(69, FONT_ID_FontType, 	fontID_4) \
-	X(70, FONT_ID_FontSize, 	fontID_5) \
-	X(71, FONT_ID_FontStyle,  	fontID_6) \
-	X(72, FONT_ID_Coeff,  		fontID_7) \
-	X(73, FONT_ID_LenWin,  		fontID_8) \
-	X(74, FONT_ID_OffsWin,  	fontID_9) \
-	X(75, FONT_ID_LoadFontTime,fontID_10) \
-	X(76, FONT_ID_PosCursor,	fontID_11) \
-	X(77, FONT_ID_CPUusage,		fontID_12) \
-	X(78, FONT_ID_Speed,			fontID_13) \
-	X(79, FONT_ID_Fonts,  		fontID_14) \
-	X(80, FONT_ID_Press,  		fontID_15) \
+	X(67, FONT_ID_Title,			fontID_1) \
+	X(68, FONT_ID_FontColor,	fontID_2) \
+	X(69, FONT_ID_BkColor, 		fontID_3) \
+	X(70, FONT_ID_FontType, 	fontID_4) \
+	X(71, FONT_ID_FontSize, 	fontID_5) \
+	X(72, FONT_ID_FontStyle,  	fontID_6) \
+	X(73, FONT_ID_Coeff,  		fontID_7) \
+	X(74, FONT_ID_LenWin,  		fontID_8) \
+	X(75, FONT_ID_OffsWin,  	fontID_9) \
+	X(76, FONT_ID_LoadFontTime,fontID_10) \
+	X(77, FONT_ID_PosCursor,	fontID_11) \
+	X(78, FONT_ID_CPUusage,		fontID_12) \
+	X(79, FONT_ID_Speed,			fontID_13) \
+	X(80, FONT_ID_Fonts,  		fontID_14) \
+	X(81, FONT_ID_Press,  		fontID_15) \
 	\
-	X(81, FONT_VAR_Title,			fontVar_1) \
-	X(82, FONT_VAR_FontColor,		fontVar_2) \
-	X(83, FONT_VAR_BkColor, 		fontVar_3) \
-	X(84, FONT_VAR_FontType, 		fontVar_4) \
-	X(85, FONT_VAR_FontSize, 		fontVar_5) \
-	X(86, FONT_VAR_FontStyle,  	fontVar_6) \
-	X(87, FONT_VAR_Coeff,  			fontVar_7) \
-	X(88, FONT_VAR_LenWin,  		fontVar_8) \
-	X(89, FONT_VAR_OffsWin,  		fontVar_9) \
-	X(90, FONT_VAR_LoadFontTime,	fontVar_10) \
-	X(91, FONT_VAR_PosCursor,		fontVar_11) \
-	X(91, FONT_VAR_CPUusage,		fontVar_12) \
-	X(93, FONT_VAR_Speed,			fontVar_13) \
-	X(94, FONT_VAR_Fonts,  			fontVar_14) \
-	X(95, FONT_VAR_Press,  			fontVar_15) \
+	X(82, FONT_VAR_Title,			fontVar_1) \
+	X(83, FONT_VAR_FontColor,		fontVar_2) \
+	X(84, FONT_VAR_BkColor, 		fontVar_3) \
+	X(85, FONT_VAR_FontType, 		fontVar_4) \
+	X(86, FONT_VAR_FontSize, 		fontVar_5) \
+	X(87, FONT_VAR_FontStyle,  	fontVar_6) \
+	X(88, FONT_VAR_Coeff,  			fontVar_7) \
+	X(89, FONT_VAR_LenWin,  		fontVar_8) \
+	X(90, FONT_VAR_OffsWin,  		fontVar_9) \
+	X(91, FONT_VAR_LoadFontTime,	fontVar_10) \
+	X(92, FONT_VAR_PosCursor,		fontVar_11) \
+	X(93, FONT_VAR_CPUusage,		fontVar_12) \
+	X(94, FONT_VAR_Speed,			fontVar_13) \
+	X(95, FONT_VAR_Fonts,  			fontVar_14) \
+	X(96, FONT_VAR_Press,  			fontVar_15) \
 /*------------ End Main Settings -----------------*/
 
 /*------------ Main Screen MACRO -----------------*/
@@ -835,6 +836,60 @@ static void DisplayFontsWithChangeColorOrNot(void){
 	RefreshAllParam();
 }
 
+#define KEYBOARD_RGB(colorPress,blockNr)	LCD_Keyboard(LCD_RoundRectangle,0, 550,160, 60,40, 10, SHAPE_PARAM(Frame,colorPress,BkScreen),0,blockNr)
+
+static void LCD_DrawMainFrame(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int a,int b,int c)
+{
+	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
+
+	if(shape==pShape[1] || shape==pShape[3])
+		v.COLOR_MainFrame = SetColorBoldFrame(v.COLOR_MainFrame,bold);
+
+	if(shape==pShape[2] || shape==pShape[3])
+		Set_AACoeff_RoundFrameRectangle(0.55, 0.73);
+
+	LCD_Shape(x,y,shape,w,h,a,b,c);
+}
+
+static void LCD_Keyboard(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t width,uint16_t hight, uint8_t interSpace, int frameColor,int fillColor,int bkColor, uint16_t touchIdx, uint8_t selBlockPress)
+{
+	#define	_F(xPos,yPos)	LCD_DrawMainFrame(shape,bold, xPos,yPos, width,hight, frameColor,fillColor,bkColor)
+	#define	dx	(width + interSpace)
+	#define	dy	(hight + interSpace)
+
+	switch(selBlockPress)
+	{
+	case 1:	_F(x, y);			break;
+	case 2:	_F(x+dx, y);		break;
+	case 3:	_F(x+2*dx, y);		break;
+	case 4:	_F(x, y+dy);		break;
+	case 5:	_F(x+dx, y+dy);	break;
+	case 6:	_F(x+2*dx, y+dy);	break;
+	default:
+		_F(x, y);		_F(x+dx, y); 		_F(x+2*dx, y);
+		_F(x, y+dy);	_F(x+dx, y+dy); 	_F(x+2*dx, y+dy);
+		break;
+	}
+
+	if(touchIdx){
+		touchTemp[0].x= x;
+		touchTemp[1].x= x+width;
+		touchTemp[0].y= y;
+		touchTemp[1].y= y+hight;
+		LCD_TOUCH_Set(ID_TOUCH_POINT,touchIdx,press);
+
+		touchTemp[0].x= x;
+		touchTemp[1].x= x+width;
+		touchTemp[0].y= y+dy;
+		touchTemp[1].y= y+dy + hight;
+		LCD_TOUCH_Set(ID_TOUCH_POINT,touchIdx+1,press);
+	}
+
+	#undef _F
+	#undef dx
+	#undef dy
+}
+
 void FILE_NAME(setTouch)(void)
 {
 	#define SELECT_CURRENT_FONT(src,dst,txt,coeff) \
@@ -899,6 +954,18 @@ void FILE_NAME(setTouch)(void)
 		CASE_TOUCH_STATE(state,Point_5, FontStyle,Press, TXT_FONT_STYLE,252);
 			DisplayTouchPosXY(Point_5,pos);  Dbg(1,": TouchPoint_5 ");
 			break;
+
+	case Point_6:
+			ChangeValRGB('f', 'R', 1);
+			KEYBOARD_RGB(FillFramePress,1);
+			Dbg(1,"\r\nTouchPoint_6");
+			break;
+	case Point_7:
+			ChangeValRGB('f', 'R', -1);
+			KEYBOARD_RGB(FillFramePress,2);
+			Dbg(1,"\r\nTouchPoint_7");
+			break;
+
 
 
 
@@ -1020,32 +1087,7 @@ void FILE_NAME(debugRcvStr)(void)
 
 }
 
-static void LCD_DrawMainFrame(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int a,int b,int c)
-{
-	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
 
-	if(shape==pShape[1] || shape==pShape[3])
-		v.COLOR_MainFrame = SetColorBoldFrame(v.COLOR_MainFrame,bold);
-
-	if(shape==pShape[2] || shape==pShape[3])
-		Set_AACoeff_RoundFrameRectangle(0.55, 0.73);
-
-	LCD_Shape(x,y,shape,w,h,a,b,c);
-}
-
-static void LCD_Keyboard(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t width,uint16_t hight, uint8_t interSpace, int a,int b,int c)
-{
-	#define	_F(xPos,yPos)	LCD_DrawMainFrame(shape,bold, xPos,yPos, width,hight, a,b,c)
-	#define	dx	(width + interSpace)
-	#define	dy	(hight + interSpace)
-
-	_F(x, y);		_F(x+dx, y); 		_F(x+2*dx, y);
-	_F(x, y+dy);	_F(x+dx, y+dy); 	_F(x+2*dx, y+dy);
-
-	#undef _F
-	#undef dx
-	#undef dy
-}
 
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
@@ -1091,7 +1133,9 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	LCD_DrawMainFrame(LCD_Rectangle,0, 0,0, LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
-	LCD_Keyboard(LCD_RoundRectangle,0, 650,160, 30,20, 5, SHAPE_PARAM(Frame,FillFrame,BkScreen));
+	LCD_Keyboard(LCD_RoundRectangle,0, 550,160, 60,40, 10, SHAPE_PARAM(Frame,FillFrame,BkScreen),Point_6,0);
+
+
 
 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
