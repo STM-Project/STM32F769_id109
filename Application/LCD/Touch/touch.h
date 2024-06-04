@@ -15,6 +15,7 @@ typedef enum{
 //	Coeff_B2 = -65544
 }DEFAULT_TOUCH_COEFF_CALIBR;
 
+#define TOUCH_GET_PER_X_PROBE		3
 #define SERVICE_TOUCH_PROB_TIME_MS	20
 
 enum TOUCH_TYPE{
@@ -49,7 +50,8 @@ int 		GetTouchToTemp				(uint16_t idx);
 int 		LCD_TOUCH_SetNewPos				(uint16_t idx, uint16_t x, uint16_t y, uint16_t xLen, uint16_t yLen);
 void 		DeleteSelectTouch			(uint16_t idx);
 void 		DeleteAllTouchWithout	(uint16_t idx);
-int 		LCD_TOUCH_Set						(uint16_t id, uint16_t idx, uint8_t param);
+int 		LCD_TOUCH_Set				(uint16_t id, uint16_t idx, uint8_t param);
+int LCD_TOUCH_isPress(void);
 void SetLogXY(XY_Touch_Struct *pos, uint16_t *width, int maxSize);
 void SetPhysXY(XY_Touch_Struct *pos, int maxSize);
 void WaitForTouchState(uint8_t Pressed);

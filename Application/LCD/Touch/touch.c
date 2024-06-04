@@ -432,7 +432,7 @@ uint16_t LCD_TOUCH_GetTypeAndPosition(XY_Touch_Struct *posXY)
 	return touchRecognize;
 }
 
-void clearTouchTemp(void)
+static void clearTouchTemp(void)
 {
 	for(int i=0; i<MAX_NUMBER_PIONTS_TOUCH; ++i){
 		touchTemp[i].x = 0;
@@ -440,12 +440,16 @@ void clearTouchTemp(void)
 	}
 }
 
-int isTouchTemp(void)
+static int isTouchTemp(void)
 {
 	if((touchTemp[0].x != touchTemp[1].x) || (touchTemp[0].y != touchTemp[1].y))
 		return 1;
 	else
 		return 0;
+}
+
+int LCD_TOUCH_isPress(void){
+	return ServiceTouch.press;
 }
 
 int LCD_TOUCH_Set(uint16_t ID, uint16_t idx, uint8_t param)

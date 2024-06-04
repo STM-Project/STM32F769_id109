@@ -91,7 +91,7 @@ Czcionki LCD,Fonts LCD,\
 	\
 	X(60, COLOR_BkScreen,  			MYGRAY) \
 	X(61, COLOR_MainFrame,  		COLOR_GRAY(0xB0)) \
-	X(62, COLOR_Frame,  				COLOR_GRAY(0x80)) \
+	X(62, COLOR_Frame,  				COLOR_GRAY(0xA0)) \
 	X(63, COLOR_FillMainFrame, 	COLOR_GRAY(0x38)) \
 	X(64, COLOR_FillFrame, 			COLOR_GRAY(0x20)) \
 	X(65, COLOR_FillFramePress,	COLOR_GRAY(0xA0)) \
@@ -264,6 +264,17 @@ typedef enum{
 	PARAM_MOV_TXT,
 	FONTS
 }REFRESH_DATA;
+
+typedef enum{
+	All_Block,
+	Block_1,
+	Block_2,
+	Block_3,
+	Block_4,
+	Block_5,
+	Block_6,
+	All_Block_Indirect
+}SELECT_BLOCK;
 
 static char bufTemp[50];
 static int lenTxt_prev;
@@ -461,10 +472,14 @@ static void ChangeValRGB(char font_bk, char rgb, int32_t sign)
 	case 1:
 		if(color[idx] <= 255-Test.step)
 			color[idx]+=Test.step;
+		else
+			color[idx]=255;
 		break;
 	case -1:
 		if(color[idx] >= Test.step)
 			color[idx]-=Test.step;
+		else
+			color[idx]=0;
 		break;
 	}
 	Data2Refresh(FONTS);
@@ -536,7 +551,7 @@ static void ResetRGB(void)
 	Test.font[1]=G_PART(v.FONT_COLOR_Fonts);
 	Test.font[2]=B_PART(v.FONT_COLOR_Fonts);
 
-	Test.step=5;
+	Test.step=1;
 	Test.coeff=255;
 	Test.coeff_prev=Test.coeff;
 
@@ -871,15 +886,18 @@ static void LCD_Keyboard(figureShape shape, uint8_t bold, uint16_t x,uint16_t y,
 	#define	dx	(width + interSpace)
 	#define	dy	(hight + interSpace)
 
-	switch(selBlockPress)
-	{
-	case 1:	_P(x, y);			break;
-	case 2:	_P(x+dx, y);		break;
-	case 3:	_P(x+2*dx, y);		break;
-	case 4:	_P(x, y+dy);		break;
-	case 5:	_P(x+dx, y+dy);	break;
-	case 6:	_P(x+2*dx, y+dy);	break;
-	default:
+	switch(selBlockPress){
+	case Block_1:	_P(x, y);			break;
+	case Block_2:	_P(x+dx, y);		break;
+	case Block_3:	_P(x+2*dx, y);		break;
+	case Block_4:	_P(x, y+dy);		break;
+	case Block_5:	_P(x+dx, y+dy);	break;
+	case Block_6:	_P(x+2*dx, y+dy);	break;
+	case All_Block_Indirect:
+		_P(x, y);		_P(x+dx, y); 		_P(x+2*dx, y);
+		_P(x, y+dy);	_P(x+dx, y+dy); 	_P(x+2*dx, y+dy);
+		break;
+	case All_Block:
 		_F(x, y);		_F(x+dx, y); 		_F(x+2*dx, y);
 		_F(x, y+dy);	_F(x+dx, y+dy); 	_F(x+2*dx, y+dy);
 		break;
@@ -890,16 +908,17 @@ static void LCD_Keyboard(figureShape shape, uint8_t bold, uint16_t x,uint16_t y,
 		touchTemp[1].x= x+width;
 		touchTemp[0].y= y;
 		touchTemp[1].y= y+hight;
-		LCD_TOUCH_Set(ID_TOUCH_POINT,touchIdx,press);
+		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,touchIdx,TOUCH_GET_PER_X_PROBE);
 
 		touchTemp[0].x= x;
 		touchTemp[1].x= x+width;
 		touchTemp[0].y= y+dy;
 		touchTemp[1].y= y+dy + hight;
-		LCD_TOUCH_Set(ID_TOUCH_POINT,touchIdx+1,press);
+		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,touchIdx+1,TOUCH_GET_PER_X_PROBE);
 	}
 
 	#undef _F
+	#undef _P
 	#undef dx
 	#undef dy
 }
@@ -943,6 +962,7 @@ void FILE_NAME(setTouch)(void)
 				CLR_ALL_TOUCH;\
 			}
 
+	static uint16_t statePrev=0;
 	uint16_t state;
 	XY_Touch_Struct pos;
 
@@ -971,13 +991,15 @@ void FILE_NAME(setTouch)(void)
 
 	case Point_6:
 			ChangeValRGB('f', 'R', 1);
-			KEYBOARD_RGB(FillFramePress,1);
-			Dbg(1,"\r\nTouchPoint_6");
+			KEYBOARD_RGB(FillFramePress,Block_1);
+			Dbg(1,"\r\nTouchPoint_6");  Test.step=5;
+			statePrev = state;
 			break;
 	case Point_7:
 			ChangeValRGB('f', 'R', -1);
-			KEYBOARD_RGB(FillFramePress,2);
-			Dbg(1,"\r\nTouchPoint_7");
+			KEYBOARD_RGB(FillFramePress,Block_4);
+			Dbg(1,"\r\nTouchPoint_7"); Test.step=5;
+			statePrev = state;
 			break;
 
 
@@ -1005,7 +1027,24 @@ void FILE_NAME(setTouch)(void)
 			DbgVar(1,40,"\r\nAny Press With Wait: x= %03d y= %03d", pos.x, pos.y);
 			break;
 		default:
-			DisplayAnyTouchPosXY();
+
+			if(LCD_TOUCH_isPress()==release)
+			{
+				if(statePrev==Point_6 || statePrev==Point_7){
+					KEYBOARD_RGB(FillFrame,All_Block_Indirect);  statePrev=state; Test.step=1;}
+			}
+
+//			if(statePrev==Point_6 && cnt > 10){
+//				KEYBOARD_RGB(FillFrame,1);
+//				statePrev=state;
+//			}
+//			if(statePrev==Point_7 && cnt > 10){
+//				KEYBOARD_RGB(FillFrame,4);
+//				statePrev=state;
+//			}
+//			cnt++;
+			//Test.step=1;
+			//DisplayAnyTouchPosXY();
 			break;
 	}
 }
@@ -1106,24 +1145,24 @@ void FILE_NAME(debugRcvStr)(void)
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
-	char *ptr=NULL;
+	char *ptr=NULL;   //zaokraglic selected text w biale roundRectange !!!!!
 
 	SCREEN_ResetAllParameters();		//ROBIMY TU JUZ KLAWIATUTE i wprowadzanie textu dowolnego !!!!!
 	LCD_TOUCH_DeleteAllSetTouch();  //Przyciski do zmian paranetru !!!!
 	ResetRGB();
 	LCD_Clear(v.COLOR_BkScreen);
 
-	 	touchTemp[0].y= LCD_GetYSize()/5;
-	 	touchTemp[1].y= LCD_GetYSize()-LCD_GetYSize()/5;
-	 	touchTemp[0].x= 500;
-	 	touchTemp[1].x= 750;
-	 	LCD_TOUCH_Set(ID_TOUCH_MOVE_DOWN,Move_4,press);
-
-	 	touchTemp[0].x= 0;
-	 	touchTemp[0].y= 300;
-	 	touchTemp[1].x= touchTemp[0].x+200;
-	 	touchTemp[1].y= touchTemp[0].y+180;
-	 	LCD_TOUCH_Set(ID_TOUCH_POINT,Point_12,pressRelease);
+//	 	touchTemp[0].y= LCD_GetYSize()/5;
+//	 	touchTemp[1].y= LCD_GetYSize()-LCD_GetYSize()/5;
+//	 	touchTemp[0].x= 500;
+//	 	touchTemp[1].x= 750;
+//	 	LCD_TOUCH_Set(ID_TOUCH_MOVE_DOWN,Move_4,press);
+//
+//	 	touchTemp[0].x= 0;
+//	 	touchTemp[0].y= 300;
+//	 	touchTemp[1].x= touchTemp[0].x+200;
+//	 	touchTemp[1].y= touchTemp[0].y+180;
+//	 	LCD_TOUCH_Set(ID_TOUCH_POINT,Point_12,pressRelease);
 
 
 	v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
@@ -1147,7 +1186,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	LCD_DrawMainFrame(LCD_Rectangle,0, 0,0, LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
-	LCD_Keyboard(LCD_RoundRectangle,0, 550,160, 60,40, 10, SHAPE_PARAM(Frame,FillFrame,BkScreen),Point_6,0);
+	LCD_Keyboard(LCD_RoundRectangle,0, 550,160, 60,40, 10, SHAPE_PARAM(Frame,FillFrame,BkScreen),Point_6,All_Block);
 
 
 
