@@ -851,20 +851,34 @@ static void LCD_DrawMainFrame(figureShape shape, uint8_t bold, uint16_t x,uint16
 	LCD_Shape(x,y,shape,w,h,a,b,c);
 }
 
+static void LCD_DrawMainFrameIndirect(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int a,int b,int c)
+{
+	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
+
+	if(shape==pShape[1] || shape==pShape[3])
+		v.COLOR_MainFrame = SetColorBoldFrame(v.COLOR_MainFrame,bold);
+
+	if(shape==pShape[2] || shape==pShape[3])
+		Set_AACoeff_RoundFrameRectangle(0.55, 0.73);
+
+	LCD_ShapeIndirect(x,y,shape,w,h,a,b,c);
+}
+
 static void LCD_Keyboard(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t width,uint16_t hight, uint8_t interSpace, int frameColor,int fillColor,int bkColor, uint16_t touchIdx, uint8_t selBlockPress)
 {
-	#define	_F(xPos,yPos)	LCD_DrawMainFrame(shape,bold, xPos,yPos, width,hight, frameColor,fillColor,bkColor)
+	#define	_F(xPos,yPos)	LCD_DrawMainFrame			 (shape,bold, xPos,yPos, width,hight, frameColor,fillColor,bkColor)
+	#define	_P(xPos,yPos)	LCD_DrawMainFrameIndirect(shape,bold, xPos,yPos, width,hight, frameColor,fillColor,bkColor)
 	#define	dx	(width + interSpace)
 	#define	dy	(hight + interSpace)
 
 	switch(selBlockPress)
 	{
-	case 1:	_F(x, y);			break;
-	case 2:	_F(x+dx, y);		break;
-	case 3:	_F(x+2*dx, y);		break;
-	case 4:	_F(x, y+dy);		break;
-	case 5:	_F(x+dx, y+dy);	break;
-	case 6:	_F(x+2*dx, y+dy);	break;
+	case 1:	_P(x, y);			break;
+	case 2:	_P(x+dx, y);		break;
+	case 3:	_P(x+2*dx, y);		break;
+	case 4:	_P(x, y+dy);		break;
+	case 5:	_P(x+dx, y+dy);	break;
+	case 6:	_P(x+2*dx, y+dy);	break;
 	default:
 		_F(x, y);		_F(x+dx, y); 		_F(x+2*dx, y);
 		_F(x, y+dy);	_F(x+dx, y+dy); 	_F(x+2*dx, y+dy);
