@@ -94,7 +94,7 @@ Czcionki LCD,Fonts LCD,\
 	X(62, COLOR_FillMainFrame, 	COLOR_GRAY(0x38)) \
 	X(63, COLOR_Frame,  				COLOR_GRAY(0xB0)) \
 	X(64, COLOR_FillFrame, 			COLOR_GRAY(0x38)) \
-	X(65, COLOR_FramePress, 		COLOR_GRAY(0x00)) \
+	X(65, COLOR_FramePress, 		DARKRED) \
 	X(66, COLOR_FillFramePress,	COLOR_GRAY(0xFF)) \
 	X(67, DEBUG_ON,  	1) \
 	\
@@ -315,7 +315,7 @@ static char* TXT_PosCursor(void){
 	return Test.posCursor>0 ? Int2Str(Test.posCursor-1,' ',3,Sign_none) : StrAll(1,"off");
 }
 
-static void ClearCursorField(void){
+static void ClearCursorField(void){         //MYGRAY,MYGRAY,MYGRAY  popraw to !!!!!!!!!!!!!!!!
 	LCD_ShapeIndirect(LCD_GetStrVar_x(v.FONT_VAR_Fonts),LCD_GetStrVar_y(v.FONT_VAR_Fonts)+LCD_GetFontHeight(v.FONT_ID_Fonts)+Test.spaceCoursorY,LCD_Rectangle, lenStr.inPixel,Test.heightCursor, MYGRAY,MYGRAY,MYGRAY);
 }
 
@@ -853,14 +853,14 @@ static void DisplayFontsWithChangeColorOrNot(void){
 	RefreshAllParam();
 }
 
-#define KEYBOARD_RGB(FrameColor,fillColor,bkColor,blockNr)	LCD_Keyboard_RGB(LCD_RoundRectangle,0, 550,160, 60,40, 10, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,blockNr)
+#define KEYBOARD_RGB(shape,bold,FrameColor,fillColor,bkColor,blockNr)	LCD_Keyboard_RGB(shape,bold, 550,160, 60,40, 10, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,blockNr)
 
 static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int frameColor,int fillColor,int bkColor)
 {
 	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
 
 	if(shape==pShape[1] || shape==pShape[3])
-		v.COLOR_MainFrame = SetColorBoldFrame(v.COLOR_MainFrame,bold);
+		frameColor = SetColorBoldFrame(frameColor,bold);
 
 	if(shape==pShape[2] || shape==pShape[3])
 		Set_AACoeff_RoundFrameRectangle(0.55, 0.73);
@@ -994,11 +994,11 @@ void FILE_NAME(setTouch)(void)
 
 	case Point_6:
 			ChangeValRGB('f', 'R', 1);
-			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
+			KEYBOARD_RGB(LCD_BoldRoundRectangle,4,FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
 			break;
 	case Point_7:
 			ChangeValRGB('f', 'R', -1);
-			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
+			KEYBOARD_RGB(LCD_BoldRoundRectangle,4,FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
 			break;
 
 
@@ -1029,7 +1029,7 @@ void FILE_NAME(setTouch)(void)
 
 			if(_WasState(Point_6) || _WasState(Point_7))
 			{
-				KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,All_Block_Indirect);
+				KEYBOARD_RGB(LCD_RoundRectangle,0,Frame,FillFrame,BkScreen,All_Block_Indirect);
 				Test.step=1;
 			}
 			break;
@@ -1171,7 +1171,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_LoadFontVar();
 	//FILE_NAME(printInfo)();
 
-	LCD_DrawMainFrame(LCD_Rectangle,NoIndDisp,0, 0,0, LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen)); // dlatego daj bk color MYGRAY aby zachowac kolory przy cieniowaniu !!!!!
 
 	LCD_Keyboard_RGB(LCD_RoundRectangle,0, 550,160, 60,40, 10, SHAPE_PARAM(Frame,FillFrame,BkScreen),Point_6,All_Block);  //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
 
@@ -1231,14 +1231,19 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_Press);
 	LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_Press);
 	LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_Press);
+	LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_Press);
+
+//LCD_GetStrVar_widthPxl(v.FONT_VAR_FontStyle), LCD_GetStrVar_heightPxl(v.FONT_VAR_FontStyle)
+	//LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle)
+
+int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
 
 
-	//LCD_GetStrVar_widthPxl(v.FONT_VAR_FontStyle), LCD_GetStrVar_heightPxl(v.FONT_VAR_FontStyle)
-
+//
 	LCD_DrawMainFrame(LCD_RoundRectangle,IndDisp,0, \
-			LCD_GetStrVar_x(v.FONT_VAR_FontStyle)-5, LCD_GetStrVar_y(v.FONT_VAR_FontStyle), \
-			LCD_GetWholeStrPxlWidth(v.FONT_ID_FontStyle," 123456789 ",0,NoConstWidth), LCD_GetFontHeight(v.FONT_ID_FontStyle) + 10, \
-			v.FONT_BKCOLOR_FontStyle, v.FONT_BKCOLOR_FontStyle, v.FONT_BKCOLOR_FontStyle);
+			LCD_GetStrVar_x(v.FONT_VAR_FontStyle)-spac, LCD_GetStrVar_y(v.FONT_VAR_FontStyle)-2, \
+			LCD_GetWholeStrPxlWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),"123456789",0,NoConstWidth)+2*spac, LCD_GetFontHeight(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle))+4, \
+			LCD_GetStrVar_bkColor(v.FONT_VAR_FontStyle), LCD_GetStrVar_bkColor(v.FONT_VAR_FontStyle), v.FONT_BKCOLOR_FontStyle);
 
-	LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, " 123456789 ");
+	lenStr=LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, "123456789");
 }

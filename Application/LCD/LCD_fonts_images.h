@@ -168,6 +168,8 @@ int LCD_GetStrVar_heightType(int idVar);
 int LCD_GetStrVar_widthType(int idVar);
 int LCD_GetStrVar_coeff(int idVar);
 int LCD_GetStrVar_space(int idVar);
+int LCD_GetStrVar_widthPxl(int idVar);
+int LCD_GetStrVar_heightPxl(int idVar);
 int LCD_GetStrVar_fontID(int idVar);
 int LCD_GetStrVar_bkScreenColor(int idVar);
 int LCD_GetStrVar_idxTouch(int idVar);

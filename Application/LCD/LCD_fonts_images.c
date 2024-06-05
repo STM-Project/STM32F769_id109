@@ -1166,6 +1166,12 @@ int LCD_GetStrVar_coeff(int idVar){
 int LCD_GetStrVar_space(int idVar){
 	return FontVar[idVar].space;
 }
+int LCD_GetStrVar_widthPxl(int idVar){
+	return FontVar[idVar].widthPxl_prev;
+}
+int LCD_GetStrVar_heightPxl(int idVar){
+	return FontVar[idVar].heightPxl_prev;
+}
 int LCD_GetStrVar_fontID(int idVar){
 	return FontVar[idVar].id;
 }
