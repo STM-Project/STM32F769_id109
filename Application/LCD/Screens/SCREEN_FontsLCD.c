@@ -366,14 +366,14 @@ static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold
 		LCD_Shape(x,y,shape,w,h,frameColor,fillColor,bkColor);
 }
 
-static void LCD_FrameForStr(int idVar, uint32_t bkScreenColor, char *str)
+static void LCD_FrameForStr(int idVar, uint32_t bkColor, char *str)
 {
 	int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
 
 	LCD_DrawMainFrame(LCD_RoundRectangle,IndDisp,0, \
 		LCD_GetStrVar_x(idVar)-spac, LCD_GetStrVar_y(idVar)-2, \
 		LCD_GetWholeStrPxlWidth(LCD_GetStrVar_fontID(idVar),str,0,NoConstWidth)+2*spac, LCD_GetFontHeight(LCD_GetStrVar_fontID(idVar))+4, \
-		LCD_GetStrVar_bkColor(idVar), LCD_GetStrVar_bkColor(idVar), bkScreenColor);
+		LCD_GetStrVar_bkColor(idVar), LCD_GetStrVar_bkColor(idVar), bkColor);
 }
 
 static void Data2Refresh(int nr)
