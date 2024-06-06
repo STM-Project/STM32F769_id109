@@ -213,7 +213,7 @@ void NOWY_2(void)  //dac mozliwosc zablokowania Dbg definem!!!
 	StopMeasureTime_us("\r\nAAAAAAAAAAAA3:");
 
 
-
+ //Frame Indirect nie dziala !!!!!!!!!!!!!!!!!
 
 
 
