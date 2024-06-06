@@ -69,19 +69,19 @@ Czcionki LCD,Fonts LCD,\
 	X(40, FONT_COLOR_Speed,			WHITE) \
 	X(41, FONT_COLOR_Fonts,  		0xFFE1A000) \
 	\
-	X(42, FONT_BKCOLOR_Title,  	 	COLOR_GRAY(0x38)) \
-	X(43, FONT_BKCOLOR_FontColor, 	COLOR_GRAY(0x38)) \
-	X(44, FONT_BKCOLOR_BkColor, 	 	COLOR_GRAY(0x38)) \
-	X(45, FONT_BKCOLOR_FontType,  	COLOR_GRAY(0x38)) \
-	X(46, FONT_BKCOLOR_FontSize,  	COLOR_GRAY(0x38)) \
-	X(47, FONT_BKCOLOR_FontStyle,  	COLOR_GRAY(0x38)) \
-	X(48, FONT_BKCOLOR_Coeff,  		COLOR_GRAY(0x38)) \
-	X(49, FONT_BKCOLOR_LenWin,  		COLOR_GRAY(0x38)) \
-	X(50, FONT_BKCOLOR_OffsWin,  		COLOR_GRAY(0x38)) \
-	X(51, FONT_BKCOLOR_LoadFontTime,	COLOR_GRAY(0x38)) \
-	X(52, FONT_BKCOLOR_PosCursor,		COLOR_GRAY(0x38)) \
-	X(53, FONT_BKCOLOR_CPUusage,		COLOR_GRAY(0x38)) \
-	X(54, FONT_BKCOLOR_Speed,			COLOR_GRAY(0x38)) \
+	X(42, FONT_BKCOLOR_Title,  	 	MYGRAY) \
+	X(43, FONT_BKCOLOR_FontColor, 	MYGRAY) \
+	X(44, FONT_BKCOLOR_BkColor, 	 	MYGRAY) \
+	X(45, FONT_BKCOLOR_FontType,  	MYGRAY) \
+	X(46, FONT_BKCOLOR_FontSize,  	MYGRAY) \
+	X(47, FONT_BKCOLOR_FontStyle,  	MYGRAY) \
+	X(48, FONT_BKCOLOR_Coeff,  		MYGRAY) \
+	X(49, FONT_BKCOLOR_LenWin,  		MYGRAY) \
+	X(50, FONT_BKCOLOR_OffsWin,  		MYGRAY) \
+	X(51, FONT_BKCOLOR_LoadFontTime,	MYGRAY) \
+	X(52, FONT_BKCOLOR_PosCursor,		MYGRAY) \
+	X(53, FONT_BKCOLOR_CPUusage,		MYGRAY) \
+	X(54, FONT_BKCOLOR_Speed,			MYGRAY) \
 	X(55, FONT_BKCOLOR_Fonts,  		0xFF090440) \
 	\
 	X(56, FONT_SIZE_Press, 	 	FONT_14_bold) \
@@ -89,9 +89,9 @@ Czcionki LCD,Fonts LCD,\
 	X(58, FONT_COLOR_Press, 	DARKRED) \
 	X(59, FONT_BKCOLOR_Press, 	WHITE) \
 	\
-	X(60, COLOR_BkScreen,  			MYGRAY) \
+	X(60, COLOR_BkScreen,  			COLOR_GRAY(0x38)) \
 	X(61, COLOR_MainFrame,  		COLOR_GRAY(0xB0)) \
-	X(62, COLOR_FillMainFrame, 	COLOR_GRAY(0x38)) \
+	X(62, COLOR_FillMainFrame, 	MYGRAY) \
 	X(63, COLOR_Frame,  				COLOR_GRAY(0xB0)) \
 	X(64, COLOR_FillFrame, 			COLOR_GRAY(0x38)) \
 	X(65, COLOR_FramePress, 		DARKRED) \
@@ -316,7 +316,7 @@ static char* TXT_PosCursor(void){
 }
 
 static void ClearCursorField(void){         //MYGRAY,MYGRAY,MYGRAY  popraw to !!!!!!!!!!!!!!!!
-	LCD_ShapeIndirect(LCD_GetStrVar_x(v.FONT_VAR_Fonts),LCD_GetStrVar_y(v.FONT_VAR_Fonts)+LCD_GetFontHeight(v.FONT_ID_Fonts)+Test.spaceCoursorY,LCD_Rectangle, lenStr.inPixel,Test.heightCursor, MYGRAY,MYGRAY,MYGRAY);
+	LCD_ShapeIndirect(LCD_GetStrVar_x(v.FONT_VAR_Fonts),LCD_GetStrVar_y(v.FONT_VAR_Fonts)+LCD_GetFontHeight(v.FONT_ID_Fonts)+Test.spaceCoursorY,LCD_Rectangle, lenStr.inPixel,Test.heightCursor, v.COLOR_BkScreen,v.COLOR_BkScreen,v.COLOR_BkScreen);
 }
 
 static void SetCursor(void)  //KURSOR DLA BIG FONT DAC PODWOJNY !!!!!
@@ -347,6 +347,35 @@ static void SetCursor(void)  //KURSOR DLA BIG FONT DAC PODWOJNY !!!!!
 	}
 }
 
+
+
+
+static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int frameColor,int fillColor,int bkColor)// zastanowic czy nie dac to do BasicGraphic.c
+{
+	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
+
+	if(shape==pShape[1] || shape==pShape[3])
+		frameColor = SetColorBoldFrame(frameColor,bold);
+
+	if(shape==pShape[2] || shape==pShape[3])
+		Set_AACoeff_RoundFrameRectangle(0.55, 0.73);
+
+	if(IndDisp==directDisplay)
+		LCD_ShapeIndirect(x,y,shape,w,h,frameColor,fillColor,bkColor);
+	else
+		LCD_Shape(x,y,shape,w,h,frameColor,fillColor,bkColor);
+}
+
+static void LCD_FrameForStr(int idVar, uint32_t bkScreenColor, char *str)
+{
+	int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
+
+	LCD_DrawMainFrame(LCD_RoundRectangle,IndDisp,0, \
+		LCD_GetStrVar_x(idVar)-spac, LCD_GetStrVar_y(idVar)-2, \
+		LCD_GetWholeStrPxlWidth(LCD_GetStrVar_fontID(idVar),str,0,NoConstWidth)+2*spac, LCD_GetFontHeight(LCD_GetStrVar_fontID(idVar))+4, \
+		LCD_GetStrVar_bkColor(idVar), LCD_GetStrVar_bkColor(idVar), bkScreenColor);
+}
+
 static void Data2Refresh(int nr)
 {
 	switch(nr)
@@ -370,6 +399,11 @@ static void Data2Refresh(int nr)
 				LCD_SetStrVar_bkColor(v.FONT_VAR_Fonts,RGB_BK);
 				LCD_SetStrVar_coeff(v.FONT_VAR_Fonts,Test.coeff);
 				StartMeasureTime_us();
+
+
+
+				LCD_FrameForStr(v.FONT_VAR_Fonts, v.COLOR_BkScreen, Test.txt );
+
 				 lenStr=LCD_StrChangeColorVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 				Test.speed=StopMeasureTime_us("");
 			}
@@ -855,22 +889,6 @@ static void DisplayFontsWithChangeColorOrNot(void){
 
 #define KEYBOARD_RGB(shape,bold,FrameColor,fillColor,bkColor,blockNr)	LCD_Keyboard_RGB(shape,bold, 550,160, 60,40, 10, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,blockNr)
 
-static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int frameColor,int fillColor,int bkColor)
-{
-	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
-
-	if(shape==pShape[1] || shape==pShape[3])
-		frameColor = SetColorBoldFrame(frameColor,bold);
-
-	if(shape==pShape[2] || shape==pShape[3])
-		Set_AACoeff_RoundFrameRectangle(0.55, 0.73);
-
-	if(IndDisp==directDisplay)
-		LCD_ShapeIndirect(x,y,shape,w,h,frameColor,fillColor,bkColor);
-	else
-		LCD_Shape(x,y,shape,w,h,frameColor,fillColor,bkColor);
-}
-
 static void LCD_Keyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t width,uint16_t height, uint8_t interSpace, int frameColor,int fillColor,int bkColor, uint16_t touchIdx, uint8_t selBlockPress)
 {
 	#define	_F(xPos,yPos)	LCD_DrawMainFrame(shape,NoIndDisp,bold, xPos,yPos, width,height, frameColor,fillColor,bkColor)
@@ -1233,17 +1251,12 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_Press);
 	LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_Press);
 
-//LCD_GetStrVar_widthPxl(v.FONT_VAR_FontStyle), LCD_GetStrVar_heightPxl(v.FONT_VAR_FontStyle)
-	//LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle)
+	LCD_FrameForStr(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle, "123456789");
+	LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, "123456789");
 
-int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
+	LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_FontStyle);
+	LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_FontStyle);
+	LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle);
+	LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontStyle, v.COLOR_FillMainFrame);
 
-
-//
-	LCD_DrawMainFrame(LCD_RoundRectangle,IndDisp,0, \
-			LCD_GetStrVar_x(v.FONT_VAR_FontStyle)-spac, LCD_GetStrVar_y(v.FONT_VAR_FontStyle)-2, \
-			LCD_GetWholeStrPxlWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),"123456789",0,NoConstWidth)+2*spac, LCD_GetFontHeight(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle))+4, \
-			LCD_GetStrVar_bkColor(v.FONT_VAR_FontStyle), LCD_GetStrVar_bkColor(v.FONT_VAR_FontStyle), v.FONT_BKCOLOR_FontStyle);
-
-	lenStr=LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, "123456789");
 }
