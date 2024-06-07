@@ -124,6 +124,7 @@ typedef struct{
 	uint16_t widthPxl_prev;
 	uint16_t heightPxl_prev;
 	uint16_t touch_idx;
+	uint8_t bkRoundRect;
 	MOVABLE_FONTS_SETTING FontMov;
 } FONTS_VAR_SETTING;
 static FONTS_VAR_SETTING FontVar[MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY];
@@ -763,9 +764,140 @@ static StructTxtPxlLen LCD_DrawStrToBuff(uint32_t posBuff,uint32_t windowX,uint3
 	structTemp.height=j;
 	return structTemp;
 }
+
+static void _Middle_RoundRectangleFrame(uint32_t *buff, int fillHeight, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpSizeX, uint32_t width, uint32_t height){
+	int _height = height-fillHeight;
+	int _width = width-2;
+	if(1/*rectangleFrame*/)
+	{
+		for (int j=0; j<_height; j++)
+		{
+			_FillBuff(buff,1, FrameColor);
+			_FillBuff(buff,_width, FillColor);
+			_FillBuff(buff,1, FrameColor);
+			_NextLine(BkpSizeX,width);
+		}
+	}
+	else
+	{
+		for (int j=0; j<_height; j++)
+		{
+			_FillBuff(buff,1, FrameColor);
+			k+=_width;
+			_FillBuff(buff,1, FrameColor);
+			_NextLine(BkpSizeX,width);
+		}
+	}
+}
+
+static void LCD_DrawRoundRectangleFrame(uint32_t *buff, uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+{
+	#define A(a,b) 	_FillBuff(buff,a,b)
+
+	uint8_t thickness = BkpColor>>24;
+	uint32_t o1,o2;
+	uint32_t i1 = GetTransitionColor(FrameColor,FillColor,0.55);
+	uint32_t i2 = GetTransitionColor(FrameColor,FillColor,0.73);
+
+	if((thickness==0)||(thickness==255)){
+		o1 = GetTransitionColor(FrameColor,BkpColor,0.55);
+		o2 = GetTransitionColor(FrameColor,BkpColor,0.73);
+	}
+
+	void _Fill(int x){
+		A(x,FillColor);
+	}
+
+	void _Out_AA_left(int stage)
+	{
+		if((thickness==0)||(thickness==255))
+		{	switch(stage)
+			{
+			case 0:	A(3,BkpColor); A(1,o2); A(1,o1);  break;
+			case 1:	A(2,BkpColor); A(1,o1);  break;
+			case 2:	A(1,BkpColor); A(1,o1);  break;
+			case 3:	A(1,o2); break;
+			case 4:	A(1,o1); break;
+			}
+		}
+		else
+		{  switch(stage)
+			{
+			case 0:	k+=5; break;
+			case 1:	k+=3; break;
+			case 2:	k+=2; break;
+			case 3:	k+=1; break;
+			case 4:	k+=1; break;
+			}
+		}
+	}
+
+	void _Out_AA_right(int stage)
+	{
+		if((thickness==0)||(thickness==255))
+		{	switch(stage)
+			{
+			case 0:	A(1,o1); A(1,o2); A(3,BkpColor);  break;
+			case 1:	A(1,o1); A(2,BkpColor);  break;
+			case 2:	A(1,o1); A(1,BkpColor);  break;
+			case 3:	A(1,o2); break;
+			case 4:	A(1,o1); break;
+			}
+		}
+		else
+		{	switch(stage)
+			{
+			case 0:	k+=5; break;
+			case 1:	k+=3; break;
+			case 2:	k+=2; break;
+			case 3:	k+=1; break;
+			case 4:	k+=1; break;
+			}
+		}
+	}
+
+	_StartLine(posBuff,BkpSizeX,x,y);
+	_Out_AA_left(0); A(width-10,FrameColor); _Out_AA_right(0);
+	_NextLine(BkpSizeX,width);
+	_Out_AA_left(1); A(2,FrameColor); A(1,i1);A(1,i2); _Fill(width-14); A(1,i2);A(1,i1);A(2,FrameColor); _Out_AA_right(1);
+	_NextLine(BkpSizeX,width);
+	_Out_AA_left(2); A(1,FrameColor); A(1,i1); _Fill(width-8); A(1,i1); A(1,FrameColor); _Out_AA_right(2);
+	_NextLine(BkpSizeX,width);
+	_Out_AA_left(3); A(1,FrameColor); A(1,i1); _Fill(width-6); A(1,i1); A(1,FrameColor); _Out_AA_right(3);
+	_NextLine(BkpSizeX,width);
+	_Out_AA_left(4); A(1,FrameColor); _Fill(width-4); A(1,FrameColor); _Out_AA_right(4);
+	_NextLine(BkpSizeX,width);
+
+	A(1,FrameColor);  A(1,i1); _Fill(width-4); A(1,i1); A(1,FrameColor);
+	_NextLine(BkpSizeX,width);
+	A(1,FrameColor);  A(1,i2); _Fill(width-4); A(1,i2); A(1,FrameColor);
+	_NextLine(BkpSizeX,width);
+
+	_Middle_RoundRectangleFrame(buff,14,FrameColor,FillColor,BkpSizeX,width,height);
+
+	A(1,FrameColor);  A(1,i2); _Fill(width-4); A(1,i2); A(1,FrameColor);
+	_NextLine(BkpSizeX,width);
+	A(1,FrameColor);  A(1,i1); _Fill(width-4); A(1,i1); A(1,FrameColor);
+	_NextLine(BkpSizeX,width);
+
+	_Out_AA_left(4); A(1,FrameColor); _Fill(width-4); A(1,FrameColor); _Out_AA_right(4);
+	_NextLine(BkpSizeX,width);
+	_Out_AA_left(3); A(1,FrameColor); A(1,i1); _Fill(width-6); A(1,i1); A(1,FrameColor); _Out_AA_right(3);
+	_NextLine(BkpSizeX,width);
+	_Out_AA_left(2); A(1,FrameColor); A(1,i1); _Fill(width-8); A(1,i1); A(1,FrameColor); _Out_AA_right(2);
+	_NextLine(BkpSizeX,width);
+	_Out_AA_left(1); A(2,FrameColor); A(1,i1);A(1,i2); _Fill(width-14); A(1,i2);A(1,i1);A(2,FrameColor); _Out_AA_right(1);
+	_NextLine(BkpSizeX,width);
+	_Out_AA_left(0); A(width-10,FrameColor); _Out_AA_right(0);
+
+	#undef  A
+}
+
 static StructTxtPxlLen LCD_DrawStrIndirectToBuffAndDisplay(uint32_t posBuff, int displayOn, uint32_t maxSizeX, uint32_t maxSizeY, int id, int X, int Y, char *txt, uint32_t *LcdBuffer,int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth)
 {
 	StructTxtPxlLen structTemp={0,0,0};
+	int idVar = id>>16;
+	id=id&0x0000FFFF;
 	int fontIndex=SearchFontIndex(FontID[id].size, FontID[id].style, FontID[id].bkColor, FontID[id].color);
 	if(fontIndex==-1)
 		return structTemp;
@@ -809,8 +941,12 @@ static StructTxtPxlLen LCD_DrawStrIndirectToBuffAndDisplay(uint32_t posBuff, int
 	}
 	lenTxt=i;
 
-	if(bkColor){
-		LCD_RectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,bkColor,bkColor,bkColor);
+	if(bkColor)
+	{
+		if(1==LCD_GetStrVar_bkRoundRect(idVar))
+			LCD_DrawRoundRectangleFrame(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,bkColor,bkColor,LCD_GetStrVar_bkScreenColor(idVar));
+		else
+			LCD_RectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,bkColor,bkColor,bkColor);
 		Y_bkColor= COLOR_TO_Y(bkColor)+coeff;
 	}
 
@@ -951,155 +1087,11 @@ static StructTxtPxlLen LCD_DrawStrChangeColorToBuff(uint32_t posBuff,uint32_t wi
 
 }
 
-
-
-
-//####################### TEST #################################
-//####################### TEST #################################
-//####################### TEST #################################
-//####################### TEST #################################
-
-
-
-static void _Middle_RoundRectangleFrame(uint32_t *buff, int fillHeight, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpSizeX, uint32_t width, uint32_t height){
-	int _height = height-fillHeight;
-	int _width = width-2;
-	if(1/*rectangleFrame*/)
-	{
-		for (int j=0; j<_height; j++)
-		{
-			_FillBuff(buff,1, FrameColor);
-			_FillBuff(buff,_width, FillColor);
-			_FillBuff(buff,1, FrameColor);
-			_NextLine(BkpSizeX,width);
-		}
-	}
-	else
-	{
-		for (int j=0; j<_height; j++)
-		{
-			_FillBuff(buff,1, FrameColor);
-			k+=_width;
-			_FillBuff(buff,1, FrameColor);
-			_NextLine(BkpSizeX,width);
-		}
-	}
-}
-
-static void LCD_DrawRoundRectangleFrame(uint32_t *buff, uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
-{
-	#define A(a,b) 	_FillBuff(buff,a,b)
-
-	uint8_t thickness = BkpColor>>24;
-	uint32_t o1,o2;
-	uint32_t i1 = GetTransitionColor(FrameColor,FillColor,0.55);
-	uint32_t i2 = GetTransitionColor(FrameColor,FillColor,0.73);
-
-	if((thickness==0)||(thickness==255)){
-		o1 = GetTransitionColor(FrameColor,BkpColor,0.55);
-		o2 = GetTransitionColor(FrameColor,BkpColor,0.73);
-	}
-
-	void _Fill(int x)
-	{
-		if(1/*rectangleFrame*/)
-			A(x,FillColor);
-		else
-			k+=x;
-	}
-
-	void _Out_AA_left(int stage)
-	{
-		if((thickness==0)||(thickness==255))
-		{	switch(stage)
-			{
-			case 0:	A(3,BkpColor); A(1,o2); A(1,o1);  break;
-			case 1:	A(2,BkpColor); A(1,o1);  break;
-			case 2:	A(1,BkpColor); A(1,o1);  break;
-			case 3:	A(1,o2); break;
-			case 4:	A(1,o1); break;
-			}
-		}
-		else
-		{  switch(stage)
-			{
-			case 0:	k+=5; break;
-			case 1:	k+=3; break;
-			case 2:	k+=2; break;
-			case 3:	k+=1; break;
-			case 4:	k+=1; break;
-			}
-		}
-	}
-
-	void _Out_AA_right(int stage)
-	{
-		if((thickness==0)||(thickness==255))
-		{	switch(stage)
-			{
-			case 0:	A(1,o1); A(1,o2); A(3,BkpColor);  break;
-			case 1:	A(1,o1); A(2,BkpColor);  break;
-			case 2:	A(1,o1); A(1,BkpColor);  break;
-			case 3:	A(1,o2); break;
-			case 4:	A(1,o1); break;
-			}
-		}
-		else
-		{	switch(stage)
-			{
-			case 0:	k+=5; break;
-			case 1:	k+=3; break;
-			case 2:	k+=2; break;
-			case 3:	k+=1; break;
-			case 4:	k+=1; break;
-			}
-		}
-	}
-
-	_StartLine(posBuff,BkpSizeX,x,y);
-	_Out_AA_left(0); A(width-10,FrameColor); _Out_AA_right(0);
-	_NextLine(BkpSizeX,width);
-	_Out_AA_left(1); A(2,FrameColor); A(1,i1);A(1,i2); _Fill(width-14); A(1,i2);A(1,i1);A(2,FrameColor); _Out_AA_right(1);
-	_NextLine(BkpSizeX,width);
-	_Out_AA_left(2); A(1,FrameColor); A(1,i1); _Fill(width-8); A(1,i1); A(1,FrameColor); _Out_AA_right(2);
-	_NextLine(BkpSizeX,width);
-	_Out_AA_left(3); A(1,FrameColor); A(1,i1); _Fill(width-6); A(1,i1); A(1,FrameColor); _Out_AA_right(3);
-	_NextLine(BkpSizeX,width);
-	_Out_AA_left(4); A(1,FrameColor); _Fill(width-4); A(1,FrameColor); _Out_AA_right(4);
-	_NextLine(BkpSizeX,width);
-
-	A(1,FrameColor);  A(1,i1); _Fill(width-4); A(1,i1); A(1,FrameColor);
-	_NextLine(BkpSizeX,width);
-	A(1,FrameColor);  A(1,i2); _Fill(width-4); A(1,i2); A(1,FrameColor);
-	_NextLine(BkpSizeX,width);
-
-	_Middle_RoundRectangleFrame(buff,14,FrameColor,FillColor,BkpSizeX,width,height);
-
-	A(1,FrameColor);  A(1,i2); _Fill(width-4); A(1,i2); A(1,FrameColor);
-	_NextLine(BkpSizeX,width);
-	A(1,FrameColor);  A(1,i1); _Fill(width-4); A(1,i1); A(1,FrameColor);
-	_NextLine(BkpSizeX,width);
-
-	_Out_AA_left(4); A(1,FrameColor); _Fill(width-4); A(1,FrameColor); _Out_AA_right(4);
-	_NextLine(BkpSizeX,width);
-	_Out_AA_left(3); A(1,FrameColor); A(1,i1); _Fill(width-6); A(1,i1); A(1,FrameColor); _Out_AA_right(3);
-	_NextLine(BkpSizeX,width);
-	_Out_AA_left(2); A(1,FrameColor); A(1,i1); _Fill(width-8); A(1,i1); A(1,FrameColor); _Out_AA_right(2);
-	_NextLine(BkpSizeX,width);
-	_Out_AA_left(1); A(2,FrameColor); A(1,i1);A(1,i2); _Fill(width-14); A(1,i2);A(1,i1);A(2,FrameColor); _Out_AA_right(1);
-	_NextLine(BkpSizeX,width);
-	_Out_AA_left(0); A(width-10,FrameColor); _Out_AA_right(0);
-
-	#undef  A
-}
-//####################### END TEST #################################
-//####################### END TEST #################################
-//####################### END TEST #################################
-//####################### TEST #################################
-
 static StructTxtPxlLen LCD_DrawStrChangeColorIndirectToBuffAndDisplay(uint32_t posBuff, int displayOn, uint32_t maxSizeX, uint32_t maxSizeY, int id, int X, int Y, char *txt, uint32_t *LcdBuffer,int OnlyDigits, int space, uint32_t NewBkColor, uint32_t NewFontColor, int constWidth)
 {
 	StructTxtPxlLen structTemp={0,0,0};
+	int idVar = id>>16;
+	id=id&0x0000FFFF;
 	int fontIndex=SearchFontIndex(FontID[id].size, FontID[id].style, FontID[id].bkColor, FontID[id].color);
 	if(fontIndex==-1)
 		return structTemp;
@@ -1142,8 +1134,10 @@ static StructTxtPxlLen LCD_DrawStrChangeColorIndirectToBuffAndDisplay(uint32_t p
 	}
 	lenTxt=i;
 
-	//LCD_RectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,NewBkColor,NewBkColor,NewBkColor);
-	LCD_DrawRoundRectangleFrame(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,NewBkColor,NewBkColor,NewBkColor);
+	if(1==LCD_GetStrVar_bkRoundRect(idVar))
+		LCD_DrawRoundRectangleFrame(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,NewBkColor,NewBkColor,LCD_GetStrVar_bkScreenColor(idVar));
+	else
+		LCD_RectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,NewBkColor,NewBkColor,NewBkColor);
 
 	idxChangeColorBuff=0;
    for(i=0;i<MAX_SIZE_CHANGECOLOR_BUFF;++i){
@@ -1193,7 +1187,7 @@ static StructTxtPxlLen LCD_DrawStr(uint32_t posBuff,uint32_t BkpSizeX,uint32_t B
 		return StructTxtPxlLen_ZeroValue;
 }
 static StructTxtPxlLen LCD_DrawStrIndirect(uint32_t posBuff,int displayOn,uint32_t maxSizeX,uint32_t maxSizeY,int fontID, int Xpos, int Ypos, char *txt, uint32_t *LcdBuffer, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth){
-	if(fontID < MAX_OPEN_FONTS_SIMULTANEOUSLY)
+	if((fontID&0x0000FFFF) < MAX_OPEN_FONTS_SIMULTANEOUSLY)
 		return LCD_DrawStrIndirectToBuffAndDisplay(posBuff,displayOn,maxSizeX,maxSizeY,fontID,Xpos,Ypos,txt,LcdBuffer,OnlyDigits,space,bkColor,coeff,constWidth);
 	else
 		return StructTxtPxlLen_ZeroValue;
@@ -1207,8 +1201,8 @@ static StructTxtPxlLen LCD_DrawStrChangeColor(uint32_t posBuff,uint32_t BkpSizeX
 		return StructTxtPxlLen_ZeroValue;
 }
 static StructTxtPxlLen LCD_DrawStrChangeColorIndirect(uint32_t posBuff,int displayOn,uint32_t maxSizeX,uint32_t maxSizeY,int fontID, int Xpos, int Ypos, char *txt, uint32_t *LcdBuffer, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor, uint8_t maxVal, int constWidth){
-	if(fontID < MAX_OPEN_FONTS_SIMULTANEOUSLY){
-		CalculateFontCoeff(FontID[fontID].bkColor,FontID[fontID].color,bkColor,fontColor,maxVal);
+	if((fontID&0x0000FFFF) < MAX_OPEN_FONTS_SIMULTANEOUSLY){
+		CalculateFontCoeff(FontID[fontID&0x0000FFFF].bkColor,FontID[fontID&0x0000FFFF].color,bkColor,fontColor,maxVal);
 		return LCD_DrawStrChangeColorIndirectToBuffAndDisplay(posBuff,displayOn,maxSizeX,maxSizeY,fontID,Xpos,Ypos,txt,LcdBuffer,OnlyDigits,space,bkColor,fontColor,constWidth);
 	}
 	else
@@ -1326,6 +1320,9 @@ int LCD_GetStrVar_fontID(int idVar){
 }
 int LCD_GetStrVar_bkScreenColor(int idVar){
 	return FontVar[idVar].bkScreenColor;
+}
+int LCD_GetStrVar_bkRoundRect(int idVar){
+	return FontVar[idVar].bkRoundRect;
 }
 int LCD_GetStrVar_idxTouch(int idVar){
 	return FontVar[idVar].touch_idx;
@@ -1844,6 +1841,7 @@ StructTxtPxlLen LCD_StrVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, 
 		FontVar[idVar].yPos_prev = FontVar[idVar].yPos;
 		FontVar[idVar].widthPxl_prev = temp.inPixel;
 		FontVar[idVar].heightPxl_prev = temp.height;
+		FontVar[idVar].bkRoundRect = bkColor>>24;
 		return temp;
 	}
 	else return StructTxtPxlLen_ZeroValue;
@@ -1889,7 +1887,7 @@ static void LCD_DimensionBkCorrect(int idVar, StructTxtPxlLen temp, uint32_t *Lc
 
 StructTxtPxlLen LCD_StrVarIndirect(int idVar, char *txt){
 	StructTxtPxlLen temp;
-	temp = LCD_StrIndirect(FontVar[idVar].id,FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
+	temp = LCD_StrIndirect( (FontVar[idVar].bkRoundRect==1 ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
 	if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
 		return temp;
 	LCD_DimensionBkCorrect(idVar,temp,pLcd);
@@ -1917,6 +1915,7 @@ StructTxtPxlLen LCD_StrChangeColorVar(int idVar,int fontID, int Xpos, int Ypos, 
 		FontVar[idVar].yPos_prev = FontVar[idVar].yPos;
 		FontVar[idVar].widthPxl_prev = temp.inPixel;
 		FontVar[idVar].heightPxl_prev = temp.height;
+		FontVar[idVar].bkRoundRect = bkColor>>24;
 		return temp;
 	}
 	else return StructTxtPxlLen_ZeroValue;
@@ -1930,7 +1929,7 @@ StructTxtPxlLen LCD_StrChangeColorDescrVar(int idVar,int fontID, int Xpos, int Y
 
 StructTxtPxlLen LCD_StrChangeColorVarIndirect(int idVar, char *txt){
 	StructTxtPxlLen temp;
-	temp = LCD_StrChangeColorIndirect(FontVar[idVar].id,FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
+	temp = LCD_StrChangeColorIndirect( (FontVar[idVar].bkRoundRect==1 ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
 	if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
 		return temp;
 	LCD_DimensionBkCorrect(idVar,temp,pLcd);
@@ -3153,7 +3152,7 @@ StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, uint32_t fon
 
 StructTxtPxlLen LCD_StrDependOnColorsVarIndirect(int idVar, char *txt){
 	StructTxtPxlLen temp;
-	temp = LCD_StrDependOnColorsIndirect(FontVar[idVar].id,FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
+	temp = LCD_StrDependOnColorsIndirect( (FontVar[idVar].bkRoundRect==1 ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
 	if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
 		return temp;
 	LCD_DimensionBkCorrect(idVar,temp,pLcd);

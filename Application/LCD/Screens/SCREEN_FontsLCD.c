@@ -37,7 +37,7 @@ Czcionki LCD,Fonts LCD,\
 	X(10, FONT_SIZE_PosCursor,		FONT_10) \
 	X(11, FONT_SIZE_CPUusage,		FONT_10) \
 	X(12, FONT_SIZE_Speed,			FONT_10) \
-	X(13, FONT_SIZE_Fonts,			FONT_8) \
+	X(13, FONT_SIZE_Fonts,			FONT_20) \
 	\
 	X(14, FONT_STYLE_Title, 	 	Arial) \
 	X(15, FONT_STYLE_FontColor, 	Arial) \
@@ -70,11 +70,11 @@ Czcionki LCD,Fonts LCD,\
 	X(41, FONT_COLOR_Fonts,  		0xFFE1A000) \
 	\
 	X(42, FONT_BKCOLOR_Title,  	 	MYGRAY) \
-	X(43, FONT_BKCOLOR_FontColor, 	MYGRAY) \
-	X(44, FONT_BKCOLOR_BkColor, 	 	MYGRAY) \
-	X(45, FONT_BKCOLOR_FontType,  	MYGRAY) \
-	X(46, FONT_BKCOLOR_FontSize,  	MYGRAY) \
-	X(47, FONT_BKCOLOR_FontStyle,  	MYGRAY) \
+	X(43, FONT_BKCOLOR_FontColor, 	0x1404040) \
+	X(44, FONT_BKCOLOR_BkColor, 	 	0x1404040) \
+	X(45, FONT_BKCOLOR_FontType,  	0x1404040) \
+	X(46, FONT_BKCOLOR_FontSize,  	0x1404040) \
+	X(47, FONT_BKCOLOR_FontStyle,  	0x1404040) \
 	X(48, FONT_BKCOLOR_Coeff,  		MYGRAY) \
 	X(49, FONT_BKCOLOR_LenWin,  		MYGRAY) \
 	X(50, FONT_BKCOLOR_OffsWin,  		MYGRAY) \
@@ -82,7 +82,7 @@ Czcionki LCD,Fonts LCD,\
 	X(52, FONT_BKCOLOR_PosCursor,		MYGRAY) \
 	X(53, FONT_BKCOLOR_CPUusage,		MYGRAY) \
 	X(54, FONT_BKCOLOR_Speed,			MYGRAY) \
-	X(55, FONT_BKCOLOR_Fonts,  		0xFF090440) \
+	X(55, FONT_BKCOLOR_Fonts,  		0x1090440) \
 	\
 	X(56, FONT_SIZE_Press, 	 	FONT_14_bold) \
 	X(57, FONT_STYLE_Press, 	Arial) \
@@ -226,7 +226,7 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define TXT_CPU_USAGE		   StrAll(2,INT2STR(osGetCPUUsage()),"c")
 
 #define RGB_FONT 	RGB2INT(Test.font[0],Test.font[1],Test.font[2])
-#define RGB_BK    RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2])
+#define RGB_BK    (RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2])&0x1FFFFFF)
 
 typedef enum{
 	NoTouch,
@@ -366,15 +366,15 @@ static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold
 		LCD_Shape(x,y,shape,w,h,frameColor,fillColor,bkColor);
 }
 
-static void LCD_FrameForStr(int idVar, uint32_t bkColor, char *str)
-{
-	int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
-
-	LCD_DrawMainFrame(LCD_RoundRectangle,IndDisp,0, \
-		LCD_GetStrVar_x(idVar)-spac, LCD_GetStrVar_y(idVar)-2, \
-		LCD_GetWholeStrPxlWidth(LCD_GetStrVar_fontID(idVar),str,0,NoConstWidth)+2*spac, LCD_GetFontHeight(LCD_GetStrVar_fontID(idVar))+4, \
-		LCD_GetStrVar_bkColor(idVar), LCD_GetStrVar_bkColor(idVar), bkColor);
-}
+//static void LCD_FrameForStr(int idVar, uint32_t bkColor, char *str)
+//{
+//	int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
+//
+//	LCD_DrawMainFrame(LCD_RoundRectangle,IndDisp,0, \
+//		LCD_GetStrVar_x(idVar)-spac, LCD_GetStrVar_y(idVar)-2, \
+//		LCD_GetWholeStrPxlWidth(LCD_GetStrVar_fontID(idVar),str,0,NoConstWidth)+2*spac, LCD_GetFontHeight(LCD_GetStrVar_fontID(idVar))+4, \
+//		LCD_GetStrVar_bkColor(idVar), LCD_GetStrVar_bkColor(idVar), bkColor);
+//}
 
 static void Data2Refresh(int nr)
 {
@@ -399,28 +399,6 @@ static void Data2Refresh(int nr)
 				LCD_SetStrVar_bkColor(v.FONT_VAR_Fonts,RGB_BK);
 				LCD_SetStrVar_coeff(v.FONT_VAR_Fonts,Test.coeff);
 				StartMeasureTime_us();
-
-
-//				int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
-//
-				//LCD_FrameForStr(v.FONT_VAR_Fonts, v.COLOR_BkScreen, Test.txt );
-//
-//				LCD_ShapeIndirect(10/*LCD_GetStrVar_x(v.FONT_VAR_Fonts)-spac*/,  200/*LCD_GetStrVar_y(v.FONT_VAR_Fonts)-2*/,  LCD_RoundFrame,\
-//						LCD_GetWholeStrPxlWidth(LCD_GetStrVar_fontID(v.FONT_VAR_Fonts),"12",0,NoConstWidth)+2*spac,      LCD_GetFontHeight(LCD_GetStrVar_fontID(v.FONT_VAR_Fonts))+4, \
-//						RGB_BK/*SetColorBoldFrame(RGB_BK,0)*/,RGB_BK,v.COLOR_BkScreen);
-
-
-				//LCD_ShapeIndirect(100,200,LCD_RoundFrame,200,50, SetColorBoldFrame(RED,0),DARKGREEN,v.COLOR_BkScreen);
-				//LCD_ShapeIndirect(100,200,LCD_RoundFrame,100,45, SetColorBoldFrame(RED,0),DARKGREEN,v.COLOR_BkScreen);
-				//LCD_ShapeWindowIndirect(x,y,LCD_RoundFrame,	0,width,width, 0, 0, width,width, SetColorBoldFrame(frameColor,0), TRANSPARENT, fillColor);
-
-
-//LCD_StrChangeColorWindowIndirect(0,     LCD_GetStrVar_x(v.FONT_VAR_Fonts),    LCD_GetStrVar_y(v.FONT_VAR_Fonts),\
-//		LCD_GetWholeStrPxlWidth(LCD_GetStrVar_fontID(v.FONT_VAR_Fonts),Test.txt,0,NoConstWidth),       LCD_GetFontHeight(LCD_GetStrVar_fontID(v.FONT_VAR_Fonts)),\
-//		LCD_GetStrVar_fontID(v.FONT_VAR_Fonts), 0, 0, Test.txt, fullHight, 0, RGB_BK, RGB_FONT,255, NoConstWidth);
-
-
-
 				 lenStr=LCD_StrChangeColorVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 				Test.speed=StopMeasureTime_us("");
 			}
@@ -1149,11 +1127,6 @@ void FILE_NAME(debugRcvStr)(void)
 		DbgVar(DEBUG_ON,100,Clr_ Mag_"\r\nStart: %s\r\n"_X,GET_CODE_FUNCTION);
 		DisplayCoeffCalibration();
 
-		Delete_TouchLcd_Task();
-		if(BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize()))
-			Dbg(1,"\r\nERROR: BSP_TS_Init ");
-		Create_TouchLcd_Task();
-
 	}
 	else if(DEBUG_RcvStr("-"))
 	{
@@ -1257,61 +1230,5 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_Show();
 
 	DbgVar(DEBUG_ON,100,Clr_ Mag_"\r\nStart: %s\r\n"_X,GET_CODE_FUNCTION);
-
-
-
-
-
-
-//	LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_Press);
-//	LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_Press);
-//	LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_Press);
-//	LCD_SetStrVar_coeff		(v.FONT_VAR_FontStyle, 255);
-
-
-//	int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
-//	LCD_DrawMainFrame(LCD_Rectangle,IndDisp,0, \
-//		LCD_GetStrVar_x(v.FONT_VAR_FontStyle)-spac, LCD_GetStrVar_y(v.FONT_VAR_FontStyle)-2, \
-//		150/*LCD_GetStrVar_widthPxl(v.FONT_VAR_FontStyle)+2*spac*/, LCD_GetFontHeight(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle))+4, \
-//		v.FONT_BKCOLOR_FontStyle, v.FONT_BKCOLOR_FontStyle, v.FONT_BKCOLOR_FontStyle);
-
-
-//	LCD_FrameForStr(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle, "ab");
-//	LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, "ab");
-//
-//	LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_FontStyle);
-//	LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_FontStyle);
-//	LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle);
-	//LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontStyle, v.COLOR_FillMainFrame);
-
-
-
-
-
-
-//	LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_Press);
-//		LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_Press);
-//		LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_Press);
-//		LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_Press);
-//		LCD_SetStrVar_coeff		(v.FONT_VAR_FontStyle, 255);
-//
-//
-//
-//		int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
-//		LCD_DrawMainFrame(LCD_Rectangle,IndDisp,0, \
-//			LCD_GetStrVar_x(v.FONT_VAR_FontStyle)-spac, LCD_GetStrVar_y(v.FONT_VAR_FontStyle)-2, \
-//			LCD_GetStrVar_widthPxl(v.FONT_VAR_FontStyle)+2*spac, LCD_GetFontHeight(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle))+4, \
-//			RED, RED, v.FONT_BKCOLOR_FontStyle);
-//
-//
-//
-//		LCD_FrameForStr(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle, "abcd");
-//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, "abcd");
-//
-//		LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_FontStyle);
-//		LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_FontStyle);
-//		LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle);
-//		LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontStyle, v.COLOR_FillMainFrame);
-
 
 }
