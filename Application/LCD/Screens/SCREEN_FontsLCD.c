@@ -1263,10 +1263,10 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-	LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_Press);
-	LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_Press);
-	LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_Press);
-	LCD_SetStrVar_coeff		(v.FONT_VAR_FontStyle, 255);
+//	LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_Press);
+//	LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_Press);
+//	LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_Press);
+//	LCD_SetStrVar_coeff		(v.FONT_VAR_FontStyle, 255);
 
 
 //	int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
@@ -1276,12 +1276,12 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 //		v.FONT_BKCOLOR_FontStyle, v.FONT_BKCOLOR_FontStyle, v.FONT_BKCOLOR_FontStyle);
 
 
-	LCD_FrameForStr(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle, "ab");
-	LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, "ab");
-
-	LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_FontStyle);
-	LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_FontStyle);
-	LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle);
+//	LCD_FrameForStr(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle, "ab");
+//	LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, "ab");
+//
+//	LCD_SetStrVar_fontID		(v.FONT_VAR_FontStyle, v.FONT_ID_FontStyle);
+//	LCD_SetStrVar_fontColor	(v.FONT_VAR_FontStyle, v.FONT_COLOR_FontStyle);
+//	LCD_SetStrVar_bkColor	(v.FONT_VAR_FontStyle, v.FONT_BKCOLOR_FontStyle);
 	//LCD_SetStrVar_bkScreenColor(v.FONT_VAR_FontStyle, v.COLOR_FillMainFrame);
 
 
