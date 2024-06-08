@@ -70,11 +70,11 @@ Czcionki LCD,Fonts LCD,\
 	X(41, FONT_COLOR_Fonts,  		0xFFE1A000) \
 	\
 	X(42, FONT_BKCOLOR_Title,  	 	MYGRAY) \
-	X(43, FONT_BKCOLOR_FontColor, 	0x1404040) \
-	X(44, FONT_BKCOLOR_BkColor, 	 	0x1404040) \
-	X(45, FONT_BKCOLOR_FontType,  	0x1404040) \
-	X(46, FONT_BKCOLOR_FontSize,  	0x1404040) \
-	X(47, FONT_BKCOLOR_FontStyle,  	0x1404040) \
+	X(43, FONT_BKCOLOR_FontColor, 	FONT_BK_ROUND(MYGRAY)) \
+	X(44, FONT_BKCOLOR_BkColor, 	 	FONT_BK_ROUND(MYGRAY)) \
+	X(45, FONT_BKCOLOR_FontType,  	FONT_BK_ROUND(MYGRAY)) \
+	X(46, FONT_BKCOLOR_FontSize,  	FONT_BK_ROUND(MYGRAY)) \
+	X(47, FONT_BKCOLOR_FontStyle,  	FONT_BK_ROUND(MYGRAY)) \
 	X(48, FONT_BKCOLOR_Coeff,  		MYGRAY) \
 	X(49, FONT_BKCOLOR_LenWin,  		MYGRAY) \
 	X(50, FONT_BKCOLOR_OffsWin,  		MYGRAY) \
@@ -82,7 +82,7 @@ Czcionki LCD,Fonts LCD,\
 	X(52, FONT_BKCOLOR_PosCursor,		MYGRAY) \
 	X(53, FONT_BKCOLOR_CPUusage,		MYGRAY) \
 	X(54, FONT_BKCOLOR_Speed,			MYGRAY) \
-	X(55, FONT_BKCOLOR_Fonts,  		0x1090440) \
+	X(55, FONT_BKCOLOR_Fonts,  		FONT_BK_ROUND(0x090440)) \
 	\
 	X(56, FONT_SIZE_Press, 	 	FONT_14_bold) \
 	X(57, FONT_STYLE_Press, 	Arial) \
@@ -226,7 +226,7 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define TXT_CPU_USAGE		   StrAll(2,INT2STR(osGetCPUUsage()),"c")
 
 #define RGB_FONT 	RGB2INT(Test.font[0],Test.font[1],Test.font[2])
-#define RGB_BK    (RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2])&0x1FFFFFF)
+#define RGB_BK    FONT_BK_ROUND(RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2]))
 
 typedef enum{
 	NoTouch,
@@ -347,9 +347,6 @@ static void SetCursor(void)  //KURSOR DLA BIG FONT DAC PODWOJNY !!!!!
 	}
 }
 
-
-
-
 static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int frameColor,int fillColor,int bkColor)// zastanowic czy nie dac to do BasicGraphic.c
 {
 	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
@@ -365,16 +362,6 @@ static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold
 	else
 		LCD_Shape(x,y,shape,w,h,frameColor,fillColor,bkColor);
 }
-
-//static void LCD_FrameForStr(int idVar, uint32_t bkColor, char *str)
-//{
-//	int spac= LCD_GetFontWidth(LCD_GetStrVar_fontID(v.FONT_VAR_FontStyle),' ');
-//
-//	LCD_DrawMainFrame(LCD_RoundRectangle,IndDisp,0, \
-//		LCD_GetStrVar_x(idVar)-spac, LCD_GetStrVar_y(idVar)-2, \
-//		LCD_GetWholeStrPxlWidth(LCD_GetStrVar_fontID(idVar),str,0,NoConstWidth)+2*spac, LCD_GetFontHeight(LCD_GetStrVar_fontID(idVar))+4, \
-//		LCD_GetStrVar_bkColor(idVar), LCD_GetStrVar_bkColor(idVar), bkColor);
-//}
 
 static void Data2Refresh(int nr)
 {
@@ -478,7 +465,6 @@ static void RefreshAllParam(void)
 	Data2Refresh(PARAM_SPEED);
 	Data2Refresh(PARAM_POS_CURSOR);
 }
-
 
 static void ChangeValRGB(char font_bk, char rgb, int32_t sign)
 {
