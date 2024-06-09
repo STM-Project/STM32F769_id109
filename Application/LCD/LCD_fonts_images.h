@@ -156,6 +156,7 @@ void LCD_SetStrVar_widthType(int idVar, int constWidth);
 void LCD_SetStrVar_coeff(int idVar, int coeff);
 void LCD_SetStrVar_space(int idVar, int space);
 void LCD_SetStrVar_fontID(int idVar, int fontID);
+void LCD_SetStrVar_bkRoundRect(int idVar, int bkRoundRect);
 void LCD_SetStrVar_bkScreenColor(int idVar, int bkScreenColor);
 void LCD_SetStrVar_idxTouch(int idVar, int idxTouch);
 void LCD_SetStrVar_Mov_posWin(int idVar, int posWin);

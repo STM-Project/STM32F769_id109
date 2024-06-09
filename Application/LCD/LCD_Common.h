@@ -49,8 +49,6 @@ typedef enum{
 	IndDisp
 }LCD_SHOW_INDIRECT_OR_NOT_INDIRECT;
 
-#define FONT_BK_ROUND(bkColor)	((bkColor&0x00FFFFFF)|0x1000000)
-
 #define LOAD_FONT_PARAM(name) 			v.FONT_SIZE_##name, v.FONT_STYLE_##name, v.FONT_BKCOLOR_##name, v.FONT_COLOR_##name
 #define STR_FONT_PARAM(name,bkScreen) 	v.FONT_VAR_##name, v.FONT_ID_##name, v.FONT_COLOR_##name, v.FONT_BKCOLOR_##name, v.COLOR_##bkScreen
 #define SHAPE_PARAM(frame,fill,bk) 		v.COLOR_##frame, v.COLOR_##fill, v.COLOR_##bk

@@ -157,9 +157,9 @@ void DisplayCoeffCalibration(void){
 	 DbgVar(1,250,"\r\nCoeff Calibration: A1=%d B1=%d   A2=%d B2=%d ",_A1,_B1,_A2,_B2);
 }
 
-void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos){
+void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos, char *txt){
 	if(GetTouchToTemp(touchIdx))
-		DbgVar(1,100,"\r\nPos (%d--"Cya_"%d"_X"--%d)  (%d--"Cya_"%d"_X"--%d) ",touchTemp[0].x, pos.x, touchTemp[1].x,	touchTemp[0].y, pos.y, touchTemp[1].y);
+		DbgVar(1,100,"\r\nPos (%d--"Cya_"%d"_X"--%d)  (%d--"Cya_"%d"_X"--%d) %s",touchTemp[0].x, pos.x, touchTemp[1].x,	touchTemp[0].y, pos.y, touchTemp[1].y, txt);
 }
 void DisplayAnyTouchPosXY(void){
 	if(press == ServiceTouch.press)

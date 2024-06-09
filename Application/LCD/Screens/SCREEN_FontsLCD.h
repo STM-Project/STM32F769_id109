@@ -84,6 +84,7 @@ typedef enum{
 	FONTS_COLOR_FramePress,
 	FONTS_COLOR_FillFramePress,
 	FONTS_DEBUG_ON,
+	FONTS_BK_FONT_ROUND,
 
 }_SCREEN_Fonts_enum;
 

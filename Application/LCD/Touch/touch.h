@@ -59,7 +59,7 @@ int LCD_TOUCH_CalcCoeffCalibr(int maxSize);
 uint8_t IsCalibrationDone(void);
 void CalibrationWasDone(void);
 void DisplayCoeffCalibration(void);
-void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos);
+void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos, char *txt);
 void DisplayAnyTouchPosXY(void);
 
 #endif
