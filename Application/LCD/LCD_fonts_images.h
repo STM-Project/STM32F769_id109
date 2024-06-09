@@ -139,6 +139,13 @@ enum ConstWidthFontOrNot
 	ConstWidth,
 };
 
+enum RoundRectangleBkFont
+{
+	BK_Rectangle,
+	BK_Round,
+	BK_LittleRound,
+};
+
 typedef struct {
 	uint16_t inChar;
 	uint16_t inPixel;

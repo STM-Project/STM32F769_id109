@@ -291,6 +291,35 @@ static void LCD_RectangleBuff(uint32_t *buff, uint32_t posBuff,uint32_t BkpSizeX
 		_FillBuff(buff,width, FrameColor);
 	}
 }
+static void LCD_LittleRoundRectangleBuff(uint32_t *buff, uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+{
+	_StartLine(posBuff,BkpSizeX,x,y);
+	_FillBuff(buff, 2, BkpColor);	 _FillBuff(buff, width-4, FrameColor);  _FillBuff(buff, 2, BkpColor);
+	_NextLine(BkpSizeX,width);
+	_FillBuff(buff, 1, BkpColor); _FillBuff(buff, width-2, FrameColor);  _FillBuff(buff, 1, BkpColor);
+	if(height>1)
+	{
+		_NextLine(BkpSizeX,width);
+		for (int j=0; j<height-4; j++)
+		{
+			if(width>1)
+			{
+				_FillBuff(buff,1, FrameColor);
+				_FillBuff(buff,width-2, FillColor);
+				_FillBuff(buff,1, FrameColor);
+				_NextLine(BkpSizeX,width);
+			}
+			else
+			{
+				_FillBuff(buff,width, FillColor);
+				_NextLine(BkpSizeX,width);
+			}
+		}
+		_FillBuff(buff, 1, BkpColor); _FillBuff(buff, width-2, FrameColor);  _FillBuff(buff, 1, BkpColor);
+		_NextLine(BkpSizeX,width);
+		_FillBuff(buff, 2, BkpColor);	 _FillBuff(buff, width-4, FrameColor);  _FillBuff(buff, 2, BkpColor);
+	}
+}
 
 static int RealizeSpaceCorrect(char *txt, int id)
 {
@@ -689,7 +718,7 @@ static void _Middle_RoundRectangleFrame(uint32_t *buff, int fillHeight, uint32_t
 	}
 }
 
-static void LCD_DrawRoundRectangleFrame(uint32_t *buff, uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+static void LCD_RoundRectangleBuff(uint32_t *buff, uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
 {
 	#define A(a,b) 	_FillBuff(buff,a,b)
 
@@ -842,10 +871,18 @@ static StructTxtPxlLen LCD_DrawStrToBuff(uint32_t posBuff,uint32_t windowX,uint3
 
 	if(bkColor)
 	{
-		if(1==LCD_GetStrVar_bkRoundRect(idVar))
-			LCD_DrawRoundRectangleFrame(LcdBuffer,posBuff,windowX,windowY,X,Y,lenTxtInPixel, Y+height>windowY?windowY-Y:height, bkColor,bkColor,LCD_GetStrVar_bkScreenColor(idVar));
-		else
+		switch(LCD_GetStrVar_bkRoundRect(idVar))
+		{
+		case BK_Rectangle:
 			LCD_RectangleBuff(LcdBuffer,posBuff,windowX,windowY,X,Y,lenTxtInPixel, Y+height>windowY?windowY-Y:height, bkColor,bkColor,bkColor);
+			break;
+		case BK_Round:
+			LCD_RoundRectangleBuff(LcdBuffer,posBuff,windowX,windowY,X,Y,lenTxtInPixel, Y+height>windowY?windowY-Y:height, bkColor,bkColor,LCD_GetStrVar_bkScreenColor(idVar));
+			break;
+		case BK_LittleRound:
+			LCD_LittleRoundRectangleBuff(LcdBuffer,posBuff,windowX,windowY,X,Y,lenTxtInPixel, Y+height>windowY?windowY-Y:height, bkColor,bkColor,LCD_GetStrVar_bkScreenColor(idVar));
+			break;
+		}
 		Y_bkColor= COLOR_TO_Y(bkColor)+coeff;
 	}
 
@@ -948,10 +985,18 @@ static StructTxtPxlLen LCD_DrawStrIndirectToBuffAndDisplay(uint32_t posBuff, int
 
 	if(bkColor)
 	{
-		if(1==LCD_GetStrVar_bkRoundRect(idVar))
-			LCD_DrawRoundRectangleFrame(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,bkColor,bkColor,LCD_GetStrVar_bkScreenColor(idVar));
-		else
+		switch(LCD_GetStrVar_bkRoundRect(idVar))
+		{
+		case BK_Rectangle:
 			LCD_RectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,bkColor,bkColor,bkColor);
+			break;
+		case BK_Round:
+			LCD_RoundRectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,bkColor,bkColor,LCD_GetStrVar_bkScreenColor(idVar));
+			break;
+		case BK_LittleRound:
+			LCD_LittleRoundRectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,bkColor,bkColor,LCD_GetStrVar_bkScreenColor(idVar));
+			break;
+		}
 		Y_bkColor= COLOR_TO_Y(bkColor)+coeff;
 	}
 
@@ -1053,10 +1098,18 @@ static StructTxtPxlLen LCD_DrawStrChangeColorToBuff(uint32_t posBuff,uint32_t wi
 	}
 	lenTxt=i;
 
-	if(1==LCD_GetStrVar_bkRoundRect(idVar))
-		LCD_DrawRoundRectangleFrame(LcdBuffer,posBuff,windowX,windowY,X,Y,lenTxtInPixel,Y+height>windowY?windowY-Y:height,NewBkColor,NewBkColor,LCD_GetStrVar_bkScreenColor(idVar));
-	else
+	switch(LCD_GetStrVar_bkRoundRect(idVar))
+	{
+	case BK_Rectangle:
 		LCD_RectangleBuff(LcdBuffer,posBuff,windowX,windowY,X,Y,lenTxtInPixel,Y+height>windowY?windowY-Y:height,NewBkColor,NewBkColor,NewBkColor);
+		break;
+	case BK_Round:
+		LCD_RoundRectangleBuff(LcdBuffer,posBuff,windowX,windowY,X,Y,lenTxtInPixel,Y+height>windowY?windowY-Y:height,NewBkColor,NewBkColor,LCD_GetStrVar_bkScreenColor(idVar));
+		break;
+	case BK_LittleRound:
+		LCD_LittleRoundRectangleBuff(LcdBuffer,posBuff,windowX,windowY,X,Y,lenTxtInPixel,Y+height>windowY?windowY-Y:height,NewBkColor,NewBkColor,LCD_GetStrVar_bkScreenColor(idVar));
+		break;
+	}
 
 	idxChangeColorBuff=0;
    for(i=0;i<MAX_SIZE_CHANGECOLOR_BUFF;++i){
@@ -1145,10 +1198,18 @@ static StructTxtPxlLen LCD_DrawStrChangeColorIndirectToBuffAndDisplay(uint32_t p
 	}
 	lenTxt=i;
 
-	if(1==LCD_GetStrVar_bkRoundRect(idVar))
-		LCD_DrawRoundRectangleFrame(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,NewBkColor,NewBkColor,LCD_GetStrVar_bkScreenColor(idVar));
-	else
+	switch(LCD_GetStrVar_bkRoundRect(idVar))
+	{
+	case BK_Rectangle:
 		LCD_RectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,NewBkColor,NewBkColor,NewBkColor);
+		break;
+	case BK_Round:
+		LCD_RoundRectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,NewBkColor,NewBkColor,LCD_GetStrVar_bkScreenColor(idVar));
+		break;
+	case BK_LittleRound:
+		LCD_LittleRoundRectangleBuff(LcdBuffer,posBuff,lenTxtInPixel,height,0,0,lenTxtInPixel,Y+height>maxSizeY?maxSizeY-Y:height,NewBkColor,NewBkColor,LCD_GetStrVar_bkScreenColor(idVar));
+		break;
+	}
 
 	idxChangeColorBuff=0;
    for(i=0;i<MAX_SIZE_CHANGECOLOR_BUFF;++i){
@@ -1374,6 +1435,7 @@ void LCD_DeleteAllFontAndImages(void)
 	for(i=0; i<MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY; i++)
 	{
 		FontVar[i].id=0;
+		FontVar[i].bkRoundRect=0;
 	}
 }
 
@@ -1841,7 +1903,7 @@ StructTxtPxlLen LCD_StrVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, 
 	FontVar[idVar].bkScreenColor = bkScreenColor;
 	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
-		temp = LCD_Str(FontVar[idVar].bkRoundRect==1 ? fontID|(idVar<<16) : fontID, Xpos,Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth);
+		temp = LCD_Str(FontVar[idVar].bkRoundRect ? fontID|(idVar<<16) : fontID, Xpos,Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth);
 		if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0)){
 			FontVar[idVar].bkScreenColor = bkScreenColor_copy;
 			return temp;
@@ -1852,7 +1914,6 @@ StructTxtPxlLen LCD_StrVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, 
 		FontVar[idVar].heightType=OnlyDigits;
 		FontVar[idVar].space=space;
 		FontVar[idVar].bkColor=bkColor;
-		FontVar[idVar].bkScreenColor=bkScreenColor;
 		FontVar[idVar].coeff=coeff;
 		FontVar[idVar].widthType=constWidth;
 		FontVar[idVar].xPos_prev = FontVar[idVar].xPos;
@@ -1904,7 +1965,7 @@ static void LCD_DimensionBkCorrect(int idVar, StructTxtPxlLen temp, uint32_t *Lc
 
 StructTxtPxlLen LCD_StrVarIndirect(int idVar, char *txt){
 	StructTxtPxlLen temp;
-	temp = LCD_StrIndirect( (FontVar[idVar].bkRoundRect==1 ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
+	temp = LCD_StrIndirect( (FontVar[idVar].bkRoundRect ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
 	if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
 		return temp;
 	LCD_DimensionBkCorrect(idVar,temp,pLcd);
@@ -1917,7 +1978,7 @@ StructTxtPxlLen LCD_StrChangeColorVar(int idVar,int fontID, int Xpos, int Ypos, 
 	FontVar[idVar].bkScreenColor = bkScreenColor;
 	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
-		temp = LCD_StrChangeColor(FontVar[idVar].bkRoundRect==1 ? fontID|(idVar<<16) : fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
+		temp = LCD_StrChangeColor(FontVar[idVar].bkRoundRect ? fontID|(idVar<<16) : fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
 		if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0)){
 			FontVar[idVar].bkScreenColor = bkScreenColor_copy;
 			return temp;
@@ -1928,7 +1989,6 @@ StructTxtPxlLen LCD_StrChangeColorVar(int idVar,int fontID, int Xpos, int Ypos, 
 		FontVar[idVar].heightType=OnlyDigits;
 		FontVar[idVar].space=space;
 		FontVar[idVar].bkColor=bkColor;
-		FontVar[idVar].bkScreenColor=bkScreenColor;
 		FontVar[idVar].fontColor=fontColor;
 		FontVar[idVar].coeff=maxVal;
 		FontVar[idVar].widthType=constWidth;
@@ -1949,7 +2009,7 @@ StructTxtPxlLen LCD_StrChangeColorDescrVar(int idVar,int fontID, int Xpos, int Y
 
 StructTxtPxlLen LCD_StrChangeColorVarIndirect(int idVar, char *txt){
 	StructTxtPxlLen temp;
-	temp = LCD_StrChangeColorIndirect( (FontVar[idVar].bkRoundRect==1 ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
+	temp = LCD_StrChangeColorIndirect( (FontVar[idVar].bkRoundRect ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
 	if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
 		return temp;
 	LCD_DimensionBkCorrect(idVar,temp,pLcd);
@@ -3172,7 +3232,7 @@ StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, uint32_t fon
 
 StructTxtPxlLen LCD_StrDependOnColorsVarIndirect(int idVar, char *txt){
 	StructTxtPxlLen temp;
-	temp = LCD_StrDependOnColorsIndirect( (FontVar[idVar].bkRoundRect==1 ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
+	temp = LCD_StrDependOnColorsIndirect( (FontVar[idVar].bkRoundRect ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
 	if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
 		return temp;
 	LCD_DimensionBkCorrect(idVar,temp,pLcd);
