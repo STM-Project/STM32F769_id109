@@ -183,7 +183,7 @@ int LCD_GetStrVar_bkScreenColor(int idVar);
 int LCD_GetStrVar_bkRoundRect(int idVar);
 int LCD_GetStrVar_idxTouch(int idVar);
 int LCD_GetStrVar_Mov_posWin(int idVar);
-
+void LCD_FONTS_SetBk(int idVar, int bkType);
 void LCD_DeleteAllFontAndImages(void);
 int LCD_DeleteFont(uint32_t fontID);
 char *LCD_FontSize2Str(char *buffTemp, int fontSize);

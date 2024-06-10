@@ -112,8 +112,8 @@ Czcionki LCD,Fonts LCD,\
 	X(79, FONT_ID_PosCursor,	fontID_11) \
 	X(80, FONT_ID_CPUusage,		fontID_12) \
 	X(81, FONT_ID_Speed,			fontID_13) \
-	X(82, FONT_ID_Fonts,  		fontID_14) \
-	X(83, FONT_ID_Press,  		fontID_15) \
+	X(82, FONT_ID_Press,  		fontID_15) \
+	X(83, FONT_ID_Fonts,  		fontID_14) \
 	\
 	X(84, FONT_VAR_Title,			fontVar_1) \
 	X(85, FONT_VAR_FontColor,		fontVar_2) \
@@ -1147,6 +1147,20 @@ void FILE_NAME(debugRcvStr)(void)
 	}
 
 }
+//DAJ PRESS W MACRO POKOLEI !!!!!!!!!!!!!!!!! COLOR BK STYLE SIZE !!!!!!!!!!!
+static void LoadFonts(int startFontID, int endFontID, in maxNmbOfMacrosFontSize){
+//	for(int i=startFontID; i<=endFontID; ++i)
+//		 *((int*)((int*)(&v)+i)) = LCD_LoadFont_DependOnColors( *((int*)((int*)(&a)+i-startFontID)), *((int*)((int*)(&b)+i-startFontID)), *((int*)((int*)(&c)+i-startFontID)), *((int*)((int*)(&d)+i-startFontID)),	FILE_NAME(GetDefaultParam)(i));
+
+
+	#define A(x)	 *((int*)((int*)(&v)+x))
+	int i = endFontID-startFontID
+
+	*((int*)((int*)(&v)+startFontID)) = LCD_LoadFont_DependOnColors( A(0),A(14),A(42),A(28),	FILE_NAME(GetDefaultParam)(startFontID)); startFontID++;
+	*((int*)((int*)(&v)+startFontID)) = LCD_LoadFont_DependOnColors( A(1),A(15),A(43),A(29),	FILE_NAME(GetDefaultParam)(startFontID));
+
+//*((int*)((int*)(&a)+i)), *((int*)((int*)(&b)+i)), *((int*)((int*)(&c)+i)), *((int*)((int*)(&d)+i))
+}
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
@@ -1160,8 +1174,10 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	 LCD_Clear(v.COLOR_BkScreen);
 
-	 v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
-	 v.FONT_ID_FontColor		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontColor),	FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
+	 LoadFonts(FONT_ID_Title, FONT_ID_Press);
+
+	// v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
+	// v.FONT_ID_FontColor		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontColor),	FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
 	 v.FONT_ID_BkColor 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(BkColor),  	FILE_NAME(GetDefaultParam)(FONT_ID_BkColor));
 	 v.FONT_ID_FontType 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontType), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontType));
 	 v.FONT_ID_FontSize 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontSize), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontSize));
@@ -1185,16 +1201,16 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,8), ptr,fullHight,0,255,NoConstWidth);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);LCD_SetStrVar_bkRoundRect(v.FONT_VAR_FontColor,BK_Rectangle);  //zrobic mniejsza czcionka przeliczenie na hex !!!
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);LCD_FONTS_SetBk(v.FONT_VAR_FontColor,BK_Rectangle);  //zrobic mniejsza czcionka przeliczenie na hex !!!
 	if(0==argNmb) ConfigTouchForStrVar(ID_TOUCH_POINT, Point_1, press, v.FONT_VAR_FontColor, lenStr);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_BK_COLOR,fullHight,0,	255,ConstWidth);LCD_SetStrVar_bkRoundRect(v.FONT_VAR_BkColor,BK_Round); //zrobic mniejsza czcionka przeliczenie na hex !!!
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_BK_COLOR,fullHight,0,	255,ConstWidth);LCD_FONTS_SetBk(v.FONT_VAR_BkColor,BK_Round); //zrobic mniejsza czcionka przeliczenie na hex !!!
 	if(0==argNmb) ConfigTouchForStrVar(ID_TOUCH_POINT, Point_2, press, v.FONT_VAR_BkColor, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontType, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_FONT_TYPE, 	fullHight,0,255,NoConstWidth);
 	if(0==argNmb) ConfigTouchForStrVar(ID_TOUCH_POINT, Point_3, press, v.FONT_VAR_FontType, lenStr);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontSize, FillMainFrame),  LCD_Xpos(lenStr,IncPos,20), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_SIZE, 	fullHight,0,255,NoConstWidth); LCD_SetStrVar_bkRoundRect(v.FONT_VAR_FontSize,BK_LittleRound);
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontSize, FillMainFrame),  LCD_Xpos(lenStr,IncPos,20), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_SIZE, 	fullHight,0,255,NoConstWidth); LCD_FONTS_SetBk(v.FONT_VAR_FontSize,BK_LittleRound);
 	if(0==argNmb) ConfigTouchForStrVar(ID_TOUCH_POINT, Point_4, press, v.FONT_VAR_FontSize, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontStyle, FillMainFrame), LCD_Xpos(lenStr,IncPos,80), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE, 	fullHight,0,255,NoConstWidth);
@@ -1213,7 +1229,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	 LCD_Ymiddle(SetPos, Test.yFontsField|(LCD_GetYSize()-2)<<16 );
 	 LCD_Xmiddle(SetPos, Test.xFontsField|LCD_GetXSize()<<16,"",0,NoConstWidth);
 
-	 LCD_SetStrVar_bkRoundRect(v.FONT_VAR_Fonts,BK_LittleRound);
+	 LCD_FONTS_SetBk(v.FONT_VAR_Fonts,BK_LittleRound);
 	 StartMeasureTime_us();    //daj mozliwosc wpisywania dowolnego textu aby korygowac odstepy miedzy kazdymi fontami jakimi sie chce !!!!!!!
 	 if(Test.type)
 		 lenStr=LCD_StrVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,v.COLOR_BkScreen,0,Test.constWidth,v.COLOR_BkScreen);
