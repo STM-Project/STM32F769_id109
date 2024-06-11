@@ -37,57 +37,56 @@ Czcionki LCD,Fonts LCD,\
 	X(10, FONT_SIZE_PosCursor,		FONT_10) \
 	X(11, FONT_SIZE_CPUusage,		FONT_10) \
 	X(12, FONT_SIZE_Speed,			FONT_10) \
-	X(13, FONT_SIZE_Fonts,			FONT_20) \
+	X(13, FONT_SIZE_Press, 	 		FONT_14_bold) \
+	X(14, FONT_SIZE_Fonts,			FONT_20) \
 	\
-	X(14, FONT_STYLE_Title, 	 	Arial) \
-	X(15, FONT_STYLE_FontColor, 	Arial) \
-	X(16, FONT_STYLE_BkColor, 		Arial) \
-	X(17, FONT_STYLE_FontType, 	Arial) \
-	X(18, FONT_STYLE_FontSize, 	Arial) \
-	X(19, FONT_STYLE_FontStyle, 	Arial) \
-	X(20, FONT_STYLE_Coeff, 		Arial) \
-	X(21, FONT_STYLE_LenWin, 		Arial) \
-	X(22, FONT_STYLE_OffsWin, 		Arial) \
-	X(23, FONT_STYLE_LoadFontTime,Arial) \
-	X(24, FONT_STYLE_PosCursor,	Arial) \
-	X(25, FONT_STYLE_CPUusage,		Arial) \
-	X(26, FONT_STYLE_Speed,			Arial) \
-	X(27, FONT_STYLE_Fonts, 		Arial) \
+	X(15, FONT_STYLE_Title, 	 	Arial) \
+	X(16, FONT_STYLE_FontColor, 	Arial) \
+	X(17, FONT_STYLE_BkColor, 		Arial) \
+	X(18, FONT_STYLE_FontType, 	Arial) \
+	X(19, FONT_STYLE_FontSize, 	Arial) \
+	X(20, FONT_STYLE_FontStyle, 	Arial) \
+	X(21, FONT_STYLE_Coeff, 		Arial) \
+	X(22, FONT_STYLE_LenWin, 		Arial) \
+	X(23, FONT_STYLE_OffsWin, 		Arial) \
+	X(24, FONT_STYLE_LoadFontTime,Arial) \
+	X(25, FONT_STYLE_PosCursor,	Arial) \
+	X(26, FONT_STYLE_CPUusage,		Arial) \
+	X(27, FONT_STYLE_Speed,			Arial) \
+	X(28, FONT_STYLE_Press, 		Arial) \
+	X(29, FONT_STYLE_Fonts, 		Arial) \
 	\
-	X(28, FONT_COLOR_Title,  	 	WHITE) \
-	X(29, FONT_COLOR_FontColor, 	WHITE) \
-	X(30, FONT_COLOR_BkColor, 	 	WHITE) \
-	X(31, FONT_COLOR_FontType,  	WHITE) \
-	X(32, FONT_COLOR_FontSize,  	WHITE) \
-	X(33, FONT_COLOR_FontStyle,  	WHITE) \
-	X(34, FONT_COLOR_Coeff,  		WHITE) \
-	X(35, FONT_COLOR_LenWin,  		WHITE) \
-	X(36, FONT_COLOR_OffsWin,  	WHITE) \
-	X(37, FONT_COLOR_LoadFontTime,WHITE) \
-	X(38, FONT_COLOR_PosCursor,	WHITE) \
-	X(39, FONT_COLOR_CPUusage,		WHITE) \
-	X(40, FONT_COLOR_Speed,			WHITE) \
-	X(41, FONT_COLOR_Fonts,  		0xFFE1A000) \
+	X(30, FONT_COLOR_Title,  	 	WHITE) \
+	X(31, FONT_COLOR_FontColor, 	WHITE) \
+	X(32, FONT_COLOR_BkColor, 	 	WHITE) \
+	X(33, FONT_COLOR_FontType,  	WHITE) \
+	X(34, FONT_COLOR_FontSize,  	WHITE) \
+	X(35, FONT_COLOR_FontStyle,  	WHITE) \
+	X(36, FONT_COLOR_Coeff,  		WHITE) \
+	X(37, FONT_COLOR_LenWin,  		WHITE) \
+	X(38, FONT_COLOR_OffsWin,  	WHITE) \
+	X(39, FONT_COLOR_LoadFontTime,WHITE) \
+	X(40, FONT_COLOR_PosCursor,	WHITE) \
+	X(41, FONT_COLOR_CPUusage,		WHITE) \
+	X(42, FONT_COLOR_Speed,			WHITE) \
+	X(43, FONT_COLOR_Press, 		DARKRED) \
+	X(44, FONT_COLOR_Fonts,  		0xFFE1A000) \
 	\
-	X(42, FONT_BKCOLOR_Title,  	 	MYGRAY) \
-	X(43, FONT_BKCOLOR_FontColor, 	MYGRAY) \
-	X(44, FONT_BKCOLOR_BkColor, 	 	MYGRAY) \
-	X(45, FONT_BKCOLOR_FontType,  	MYGRAY) \
-	X(46, FONT_BKCOLOR_FontSize,  	MYGRAY) \
-	X(47, FONT_BKCOLOR_FontStyle,  	MYGRAY) \
-	X(48, FONT_BKCOLOR_Coeff,  		MYGRAY) \
-	X(49, FONT_BKCOLOR_LenWin,  		MYGRAY) \
-	X(50, FONT_BKCOLOR_OffsWin,  		MYGRAY) \
-	X(51, FONT_BKCOLOR_LoadFontTime,	MYGRAY) \
-	X(52, FONT_BKCOLOR_PosCursor,		MYGRAY) \
-	X(53, FONT_BKCOLOR_CPUusage,		MYGRAY) \
-	X(54, FONT_BKCOLOR_Speed,			MYGRAY) \
-	X(55, FONT_BKCOLOR_Fonts,  		0x090440) \
-	\
-	X(56, FONT_SIZE_Press, 	 	FONT_14_bold) \
-	X(57, FONT_STYLE_Press, 	Arial) \
-	X(58, FONT_COLOR_Press, 	DARKRED) \
-	X(59, FONT_BKCOLOR_Press, 	WHITE) \
+	X(45, FONT_BKCOLOR_Title,  	 	MYGRAY) \
+	X(46, FONT_BKCOLOR_FontColor, 	MYGRAY) \
+	X(47, FONT_BKCOLOR_BkColor, 	 	MYGRAY) \
+	X(48, FONT_BKCOLOR_FontType,  	MYGRAY) \
+	X(49, FONT_BKCOLOR_FontSize,  	MYGRAY) \
+	X(50, FONT_BKCOLOR_FontStyle,  	MYGRAY) \
+	X(51, FONT_BKCOLOR_Coeff,  		MYGRAY) \
+	X(52, FONT_BKCOLOR_LenWin,  		MYGRAY) \
+	X(53, FONT_BKCOLOR_OffsWin,  		MYGRAY) \
+	X(54, FONT_BKCOLOR_LoadFontTime,	MYGRAY) \
+	X(55, FONT_BKCOLOR_PosCursor,		MYGRAY) \
+	X(56, FONT_BKCOLOR_CPUusage,		MYGRAY) \
+	X(57, FONT_BKCOLOR_Speed,			MYGRAY) \
+	X(58, FONT_BKCOLOR_Press, 			WHITE) \
+	X(59, FONT_BKCOLOR_Fonts,  		0x090440) \
 	\
 	X(60, COLOR_BkScreen,  			COLOR_GRAY(0x38)) \
 	X(61, COLOR_MainFrame,  		COLOR_GRAY(0xDA)) \
@@ -852,11 +851,11 @@ static void DisplayFontsWithChangeColorOrNot(void){
 	RefreshAllParam();
 }
 
-#define KEYBOARD_RGB(shape,bold,FrameColor,fillColor,bkColor,blockNr)	LCD_Keyboard_RGB(shape,bold, 550,160, 60,40, 10, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,blockNr)
+#define KEYBOARD_RGB(shape,bold,FrameColor,fillColor,bkColor,blockNr)	LCD_Keyboard_RGB(shape,bold, 550,160, 60,40, 2, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,blockNr)
 
 static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int frameColor,int fillColor,int bkColor)// zastanowic czy nie dac to do BasicGraphic.c
 {
-	figureShape pShape[4] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle};
+	figureShape pShape[5] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle, LCD_LittleRoundRectangle};
 
 	if(shape==pShape[1] || shape==pShape[3])
 		frameColor = SetColorBoldFrame(frameColor,bold);
@@ -1019,12 +1018,12 @@ void FILE_NAME(setTouch)(void)
 			break;
 
 	case Point_6:
-			ChangeValRGB('f', 'R', 1);
-			KEYBOARD_RGB(LCD_BoldRoundRectangle,4,FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
+			ChangeValRGB('f', 'R', 1);  //DAC LCD_LittleRoundRectangle() !!!!!!!!!!!!!!!!!!!!!!!!!!!###################
+			KEYBOARD_RGB(LCD_LittleRoundRectangle,4,FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
 			break;
 	case Point_7:
 			ChangeValRGB('f', 'R', -1);
-			KEYBOARD_RGB(LCD_BoldRoundRectangle,4,FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
+			KEYBOARD_RGB(LCD_LittleRoundRectangle,4,FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
 			break;
 
 
@@ -1055,7 +1054,7 @@ void FILE_NAME(setTouch)(void)
 
 			if(_WasState(Point_6) || _WasState(Point_7))
 			{
-				KEYBOARD_RGB(LCD_RoundRectangle,0,Frame,FillFrame,BkScreen,All_Block_Indirect);
+				KEYBOARD_RGB(LCD_LittleRoundRectangle,0,Frame,FillFrame,BkScreen,All_Block_Indirect);
 				Test.step=1;
 			}
 			break;
@@ -1147,19 +1146,18 @@ void FILE_NAME(debugRcvStr)(void)
 	}
 
 }
-//DAJ PRESS W MACRO POKOLEI !!!!!!!!!!!!!!!!! COLOR BK STYLE SIZE !!!!!!!!!!!
-static void LoadFonts(int startFontID, int endFontID, in maxNmbOfMacrosFontSize){
-//	for(int i=startFontID; i<=endFontID; ++i)
-//		 *((int*)((int*)(&v)+i)) = LCD_LoadFont_DependOnColors( *((int*)((int*)(&a)+i-startFontID)), *((int*)((int*)(&b)+i-startFontID)), *((int*)((int*)(&c)+i-startFontID)), *((int*)((int*)(&d)+i-startFontID)),	FILE_NAME(GetDefaultParam)(i));
 
-
+static void LoadFonts(int startFontID, int endFontID){
+	#define OMITTED_FONTS	1	/*this define delete for another screens*/
 	#define A(x)	 *((int*)((int*)(&v)+x))
-	int i = endFontID-startFontID
 
-	*((int*)((int*)(&v)+startFontID)) = LCD_LoadFont_DependOnColors( A(0),A(14),A(42),A(28),	FILE_NAME(GetDefaultParam)(startFontID)); startFontID++;
-	*((int*)((int*)(&v)+startFontID)) = LCD_LoadFont_DependOnColors( A(1),A(15),A(43),A(29),	FILE_NAME(GetDefaultParam)(startFontID));
+	int d = endFontID-startFontID + 1 + OMITTED_FONTS;
+	int j=0;
 
-//*((int*)((int*)(&a)+i)), *((int*)((int*)(&b)+i)), *((int*)((int*)(&c)+i)), *((int*)((int*)(&d)+i))
+	for(int i=startFontID; i<=endFontID; ++i){
+		*((int*)((int*)(&v)+i)) = LCD_LoadFont_DependOnColors( A(j),A(j+d),A(j+3*d),A(j+2*d),	FILE_NAME(GetDefaultParam)(i));
+		j++;
+	}
 }
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
@@ -1176,21 +1174,21 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	 LoadFonts(FONT_ID_Title, FONT_ID_Press);
 
-	// v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
-	// v.FONT_ID_FontColor		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontColor),	FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
-	 v.FONT_ID_BkColor 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(BkColor),  	FILE_NAME(GetDefaultParam)(FONT_ID_BkColor));
-	 v.FONT_ID_FontType 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontType), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontType));
-	 v.FONT_ID_FontSize 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontSize), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontSize));
-	 v.FONT_ID_FontStyle  	= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontStyle),	FILE_NAME(GetDefaultParam)(FONT_ID_FontStyle));
-
-	 v.FONT_ID_Coeff 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Coeff), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Coeff));
-	 v.FONT_ID_LenWin 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(LenWin), 		 FILE_NAME(GetDefaultParam)(FONT_ID_LenWin));
-	 v.FONT_ID_OffsWin 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(OffsWin), 	 FILE_NAME(GetDefaultParam)(FONT_ID_OffsWin));
-	 v.FONT_ID_LoadFontTime 	= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(LoadFontTime),FILE_NAME(GetDefaultParam)(FONT_ID_LoadFontTime));
-	 v.FONT_ID_PosCursor 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(PosCursor), 	 FILE_NAME(GetDefaultParam)(FONT_ID_PosCursor));
-	 v.FONT_ID_CPUusage 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(CPUusage), 	 FILE_NAME(GetDefaultParam)(FONT_ID_CPUusage));
-	 v.FONT_ID_Speed 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Speed), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Speed));
-	 v.FONT_ID_Press 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Press), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Press));
+//	 v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
+//	 v.FONT_ID_FontColor		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontColor),	FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
+//	 v.FONT_ID_BkColor 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(BkColor),  	FILE_NAME(GetDefaultParam)(FONT_ID_BkColor));
+//	 v.FONT_ID_FontType 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontType), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontType));
+//	 v.FONT_ID_FontSize 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontSize), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontSize));
+//	 v.FONT_ID_FontStyle  	= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontStyle),	FILE_NAME(GetDefaultParam)(FONT_ID_FontStyle));
+//
+//	 v.FONT_ID_Coeff 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Coeff), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Coeff));
+//	 v.FONT_ID_LenWin 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(LenWin), 		 FILE_NAME(GetDefaultParam)(FONT_ID_LenWin));
+//	 v.FONT_ID_OffsWin 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(OffsWin), 	 FILE_NAME(GetDefaultParam)(FONT_ID_OffsWin));
+//	 v.FONT_ID_LoadFontTime 	= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(LoadFontTime),FILE_NAME(GetDefaultParam)(FONT_ID_LoadFontTime));
+//	 v.FONT_ID_PosCursor 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(PosCursor), 	 FILE_NAME(GetDefaultParam)(FONT_ID_PosCursor));
+//	 v.FONT_ID_CPUusage 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(CPUusage), 	 FILE_NAME(GetDefaultParam)(FONT_ID_CPUusage));
+//	 v.FONT_ID_Speed 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Speed), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Speed));
+//	 v.FONT_ID_Press 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Press), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Press));
 
 	 LCD_LoadFontVar();
 	}
