@@ -91,10 +91,10 @@ Czcionki LCD,Fonts LCD,\
 	X(60, COLOR_BkScreen,  			COLOR_GRAY(0x38)) \
 	X(61, COLOR_MainFrame,  		COLOR_GRAY(0xDA)) \
 	X(62, COLOR_FillMainFrame, 	MYGRAY) \
-	X(63, COLOR_Frame,  				COLOR_GRAY(0xDA)) \
-	X(64, COLOR_FillFrame, 			COLOR_GRAY(0x28)) \
+	X(63, COLOR_Frame,  				COLOR_GRAY(0x60)) \
+	X(64, COLOR_FillFrame, 			COLOR_GRAY(0x2C)) \
 	X(65, COLOR_FramePress, 		COLOR_GRAY(0x28)) \
-	X(66, COLOR_FillFramePress,	COLOR_GRAY(0xDA)) \
+	X(66, COLOR_FillFramePress,	COLOR_GRAY(0x60)) \
 	X(67, DEBUG_ON,  	1) \
 	X(68, BK_FONT_ROUND,  	1) \
 	\
@@ -150,7 +150,8 @@ static FILE_NAME(struct) v ={
 	#undef X
 };
 
-static uint64_t FILE_NAME(SelBits) = 0;
+#define SEL_BITS_SIZE	5
+static uint64_t FILE_NAME(SelBits)[5] = {0};
 static uint64_t FILE_NAME(SelTouch) = 0;
 /*
 static int FILE_NAME(SetDefaultParam)(int param){
@@ -175,7 +176,7 @@ void FILE_NAME(printInfo)(void){
 	if(v.DEBUG_ON){
 		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);
 		DbgVar2(1,200,CoGr_"%*s %*s %*s %s\r\n"_X, -8,"id", -18,"name", -15,"default value", "value");
-		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit(FILE_NAME(SelBits),a)?CoR_"change to: "_X:"", v.b);
+		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit( FILE_NAME(SelBits)[a/64], (a-64*(a/64)) )?CoR_"change to: "_X:"", v.b);
 			SCREEN_FONTS_SET_PARAMETERS
 		#undef X
 		DbgVar(1,200,CoG2_"}%s;\r\n"_X,getName(FILE_NAME(struct)));
@@ -188,15 +189,17 @@ int FILE_NAME(funcGet)(int offs){
 
 void FILE_NAME(funcSet)(int offs, int val){
 	*( (int*)((int*)(&v) + offs) ) = val;
-	SET_bit(FILE_NAME(SelBits),offs);
+	SET_bit( FILE_NAME(SelBits)[offs/64], (offs-64*(offs/64)) );
 }
 
 void FILE_NAME(setDefaultAllParam)(int rst){
 	#define X(a,b,c) FILE_NAME(funcSet)(b,c);
 		SCREEN_FONTS_SET_PARAMETERS
 	#undef X
-	if(rst)
-		FILE_NAME(SelBits)=0;
+	if(rst){
+		for(int i=0;i<SEL_BITS_SIZE;++i)
+			FILE_NAME(SelBits)[i]=0;
+	}
 }
 
 void FILE_NAME(debugRcvStr)(void);
@@ -851,7 +854,7 @@ static void DisplayFontsWithChangeColorOrNot(void){
 	RefreshAllParam();
 }
 
-#define KEYBOARD_RGB(shape,bold,FrameColor,fillColor,bkColor,blockNr)	LCD_Keyboard_RGB(shape,bold, 550,160, 60,40, 2, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,blockNr)
+#define KEYBOARD_RGB(shape,bold,FrameColor,fillColor,bkColor,blockNr)	LCD_Keyboard_RGB(shape,bold, 550,160, 60,40, 4, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,blockNr)
 
 static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int frameColor,int fillColor,int bkColor)// zastanowic czy nie dac to do BasicGraphic.c
 {
@@ -913,31 +916,6 @@ static void LCD_Keyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint16_
 	#undef dy
 }
 
-static void TouchService(int touchPoint, int touchAction)
-{
-	switch(touchPoint)
-	{
-	case Point_1:
-		switch(touchAction){
-		case press:
-			LCD_Keyboard_RGB(LCD_RoundRectangle,0, 550,160, 60,40, 10, SHAPE_PARAM(Frame,FillFrame,BkScreen),Point_6,All_Block_Indirect);  //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
-			break;
-		case release:
-			DeleteSelectTouch(Point_6);
-			DeleteSelectTouch(Point_7);
-			FILE_NAME(main)(1, NULL);
-			break;
-		}
-		break;
-
-	case Point_2:
-		break;
-
-	default:
-		break;
-	}
-}
-
 void FILE_NAME(setTouch)(void)
 {
 	#define SELECT_CURRENT_FONT(src,dst,txt,coeff) \
@@ -971,21 +949,28 @@ void FILE_NAME(setTouch)(void)
 				DESELECT_ALL_FONTS;		CLR_ALL_TOUCH;\
 				SELECT_CURRENT_FONT(src, dst, txt, coeff);\
 				SET_TOUCH(state);\
-				TouchService(touchPoint,press);\
+				touchPress=press;\
 			}\
 			else{\
 				DESELECT_CURRENT_FONT(src, txt);\
 				CLR_ALL_TOUCH;\
-				TouchService(touchPoint,release);\
+				touchPress=release;\
 			}
 
 	static uint16_t statePrev=0;
 	uint16_t state;
+	uint8_t touchPress;
 	XY_Touch_Struct pos;
 
 	void _SaveState(void){
 		statePrev = state;
 	}
+
+	int _IsPress(void){
+		if(press==touchPress) return 1;
+		else return 0;
+	}
+
 	int _WasState(int point){
 		if(release==LCD_TOUCH_isPress() && point==statePrev){
 			statePrev = state;
@@ -998,10 +983,24 @@ void FILE_NAME(setTouch)(void)
 	switch(state)
 	{
 		CASE_TOUCH_STATE(state,Point_1, FontColor,Press, TXT_FONT_COLOR,252); //bit naprzemiennioosci
+			if(_IsPress())
+				LCD_Keyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),Point_6,All_Block_Indirect);  //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
+			else{
+				DeleteSelectTouch(Point_6);
+				DeleteSelectTouch(Point_7);
+				FILE_NAME(main)(1, NULL);
+			}
 			DisplayTouchPosXY(Point_1,pos,"TouchPoint_1");
 			break;
 
 		CASE_TOUCH_STATE(state,Point_2, BkColor,Press, TXT_BK_COLOR,252);
+			if(_IsPress())
+				LCD_Keyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),Point_6,All_Block_Indirect);  //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
+			else{
+				DeleteSelectTouch(Point_6);
+				DeleteSelectTouch(Point_7);
+				FILE_NAME(main)(1, NULL);
+			}
 			DisplayTouchPosXY(Point_2,pos,"TouchPoint_2");
 			break;
 
@@ -1019,11 +1018,11 @@ void FILE_NAME(setTouch)(void)
 
 	case Point_6:
 			ChangeValRGB('f', 'R', 1);  //DAC LCD_LittleRoundRectangle() !!!!!!!!!!!!!!!!!!!!!!!!!!!###################
-			KEYBOARD_RGB(LCD_LittleRoundRectangle,4,FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
+			KEYBOARD_RGB(LCD_LittleRoundRectangle,0,FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
 			break;
 	case Point_7:
 			ChangeValRGB('f', 'R', -1);
-			KEYBOARD_RGB(LCD_LittleRoundRectangle,4,FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
+			KEYBOARD_RGB(LCD_LittleRoundRectangle,40,FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
 			break;
 
 
@@ -1138,6 +1137,8 @@ void FILE_NAME(debugRcvStr)(void)
 	{
 		DbgVar(DEBUG_ON,100,Clr_ Mag_"\r\nStart: %s\r\n"_X,GET_CODE_FUNCTION);
 		DisplayCoeffCalibration();
+
+		SCREEN_Fonts_funcSet(COLOR_FramePress, BLACK);
 
 	}
 	else if(DEBUG_RcvStr("-"))

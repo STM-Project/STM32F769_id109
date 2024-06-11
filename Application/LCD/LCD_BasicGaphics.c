@@ -2514,9 +2514,9 @@ uint32_t SetColorBoldFrame(uint32_t frameColor, uint8_t thickness){
 
 void LCD_LittleRoundRectangle(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){
 	_StartDrawLine(posBuff,BkpSizeX,x,y);
-	_FillBuff(2, BkpColor);	 _FillBuff(width-4, FrameColor);  _FillBuff(2, BkpColor);
+	_FillBuff(2,BkpColor);	 _FillBuff(width-4,FrameColor);  _FillBuff(2, BkpColor);
 	_NextDrawLine(BkpSizeX,width);
-	_FillBuff(1, BkpColor); _FillBuff(width-2, FrameColor);  _FillBuff(1, BkpColor);
+	_FillBuff(1,BkpColor);_FillBuff(1,FrameColor);	 _FillBuff(width-4, FillColor);  _FillBuff(1,FrameColor);_FillBuff(1, BkpColor);
 	if(height>1)
 	{
 		_NextDrawLine(BkpSizeX,width);
@@ -2535,7 +2535,7 @@ void LCD_LittleRoundRectangle(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSi
 				_NextDrawLine(BkpSizeX,width);
 			}
 		}
-		_FillBuff(1, BkpColor); _FillBuff(width-2, FrameColor);  _FillBuff(1, BkpColor);
+		_FillBuff(1,BkpColor);_FillBuff(1,FrameColor);	 _FillBuff(width-4, FillColor);  _FillBuff(1,FrameColor);_FillBuff(1, BkpColor);
 		_NextDrawLine(BkpSizeX,width);
 		_FillBuff(2, BkpColor);	 _FillBuff(width-4, FrameColor);  _FillBuff(2, BkpColor);
 	}
