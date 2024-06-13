@@ -911,7 +911,6 @@ static int LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint1
 			s.nmbTouch = 0;
 			return 1;
 		}
-
 		s.forTouch = forTouchIdx;
 		s.startTouch = startTouchIdx;
 		s.nmbTouch = 0;
@@ -1025,8 +1024,8 @@ void FILE_NAME(setTouch)(void)
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
-//			if(LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_6,All_Block_Indirect))
-//				FILE_NAME(main)(1, NULL);
+			if(LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_8,All_Block_Indirect))
+				FILE_NAME(main)(1, NULL);
 			DisplayTouchPosXY(state,pos,"Touch_BkColor");
 			break;
 
@@ -1042,16 +1041,24 @@ void FILE_NAME(setTouch)(void)
 			DisplayTouchPosXY(state,pos,"Touch_FontStyle");
 			break;
 
-	case Point_6:
+		case Point_6:
 			ChangeValRGB('f', 'R', 1);
 			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
 			break;
-	case Point_7:
+		case Point_7:
 			ChangeValRGB('f', 'R', -1);
 			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
 			break;
 
 
+		case Point_8:
+			ChangeValRGB('b', 'R', 1);
+			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
+			break;
+		case Point_9:
+			ChangeValRGB('b', 'R', -1);
+			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
+			break;
 
 
 		case Point_12:
@@ -1077,7 +1084,8 @@ void FILE_NAME(setTouch)(void)
 			break;
 		default:
 
-			if(_WasState(Point_6) || _WasState(Point_7))
+			if(_WasState(Point_6) || _WasState(Point_7) ||
+				_WasState(Point_8) || _WasState(Point_9) )
 			{
 				KEYBOARD_RGB(Frame,FillFrame,BkScreen,All_Block_Indirect);
 				Test.step=1;
