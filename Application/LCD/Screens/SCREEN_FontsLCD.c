@@ -153,7 +153,7 @@ static FILE_NAME(struct) v ={
 #define SEL_BITS_SIZE	5
 static uint64_t FILE_NAME(SelBits)[5] = {0};
 static uint64_t FILE_NAME(SelTouch) = 0;
-/*
+
 static int FILE_NAME(SetDefaultParam)(int param){
 	int temp;
 	#define X(a,b,c) \
@@ -162,7 +162,7 @@ static int FILE_NAME(SetDefaultParam)(int param){
 	#undef X
 		return temp;
 }
-*/
+
 static int FILE_NAME(GetDefaultParam)(int param){
 	int temp;
 	#define X(a,b,c) \
@@ -855,7 +855,7 @@ static void DisplayFontsWithChangeColorOrNot(void){
 }
 
 #define _NONE	0,0,0,0,0,0,0
-#define KEYBOARD_RGB(FrameColor,fillColor,bkColor,blockNr)	LCD_SetKeyboard_RGB(_NONE, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,blockNr)
+#define KEYBOARD_RGB(FrameColor,fillColor,bkColor,blockNr)	LCD_SetKeyboard_RGB(_NONE, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,NoTouch,blockNr)
 
 
 static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int frameColor,int fillColor,int bkColor)// zastanowic czy nie dac to do BasicGraphic.c
@@ -874,7 +874,7 @@ static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold
 		LCD_Shape(x,y,shape,w,h,frameColor,fillColor,bkColor);
 }
 
-static void LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t width,uint16_t height, uint8_t interSpace, int frameColor,int fillColor,int bkColor, uint16_t StartTouchIdx, uint8_t selBlockPress)
+static int LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t width,uint16_t height, uint8_t interSpace, int frameColor,int fillColor,int bkColor, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t selBlockPress)
 {
 	#define	_F(xPos,yPos)	LCD_DrawMainFrame(s.shape,NoIndDisp,s.bold, xPos,yPos, s.width,s.height, frameColor,fillColor,bkColor)
 	#define	_P(xPos,yPos)	LCD_DrawMainFrame(s.shape,IndDisp,  s.bold, xPos,yPos, s.width,s.height, frameColor,fillColor,bkColor)
@@ -889,6 +889,9 @@ static void LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint
 		uint16_t width;
 		uint16_t height;
 		uint8_t space;
+		uint8_t forTouch;
+		uint8_t startTouch;
+		uint8_t nmbTouch;
 	}s;
 
 	if(shape!=0){
@@ -899,6 +902,19 @@ static void LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint
 		s.width = width;
 		s.height = height;
 		s.space = interSpace;
+
+		for(int i=0; i<s.nmbTouch; ++i)
+			DeleteSelectTouch(s.startTouch+i);
+
+		if(s.forTouch == forTouchIdx){
+			s.forTouch = NoTouch;
+			s.nmbTouch = 0;
+			return 1;
+		}
+
+		s.forTouch = forTouchIdx;
+		s.startTouch = startTouchIdx;
+		s.nmbTouch = 0;
 	}
 	else{
 		x=s.x;
@@ -922,24 +938,26 @@ static void LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint
 		break;
 	}
 
-	if(StartTouchIdx){
+	if(startTouchIdx){
 		touchTemp[0].x= x;
 		touchTemp[1].x= x+width;
 		touchTemp[0].y= y;
 		touchTemp[1].y= y+height;
-		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,StartTouchIdx,TOUCH_GET_PER_X_PROBE);
+		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,startTouchIdx,TOUCH_GET_PER_X_PROBE);	s.nmbTouch++;
 
 		touchTemp[0].x= x;
 		touchTemp[1].x= x+width;
 		touchTemp[0].y= y+dy;
 		touchTemp[1].y= y+dy + height;
-		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,StartTouchIdx+1,TOUCH_GET_PER_X_PROBE);
+		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,startTouchIdx+1,TOUCH_GET_PER_X_PROBE);	s.nmbTouch++;
 	}
 
 	#undef _F
 	#undef _P
 	#undef dx
 	#undef dy
+
+	return 0;
 }
 
 void FILE_NAME(setTouch)(void)
@@ -975,26 +993,18 @@ void FILE_NAME(setTouch)(void)
 				DESELECT_ALL_FONTS;		CLR_ALL_TOUCH;\
 				SELECT_CURRENT_FONT(src, dst, txt, coeff);\
 				SET_TOUCH(state);\
-				touchPress=press;\
 			}\
 			else{\
 				DESELECT_CURRENT_FONT(src, txt);\
 				CLR_ALL_TOUCH;\
-				touchPress=release;\
 			}
 
 	static uint16_t statePrev=0;
 	uint16_t state;
-	uint8_t touchPress;
 	XY_Touch_Struct pos;
 
 	void _SaveState(void){
 		statePrev = state;
-	}
-
-	int _IsPress(void){
-		if(press==touchPress) return 1;
-		else return 0;
 	}
 
 	int _WasState(int point){
@@ -1006,40 +1016,30 @@ void FILE_NAME(setTouch)(void)
 	}
 
 	state = LCD_TOUCH_GetTypeAndPosition(&pos);
-	switch(state)// Point_1 nazwij lepiej
+	switch(state)
 	{
-		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252); //bit naprzemiennioosci
-			if(_IsPress())
-				LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),Point_6,All_Block_Indirect);  //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
-			else{
-				DeleteSelectTouch(Point_6);
-				DeleteSelectTouch(Point_7);
+		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252);
+			if(LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_6,All_Block_Indirect))    //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
 				FILE_NAME(main)(1, NULL);
-			}
-			DisplayTouchPosXY(Touch_FontColor,pos,"TouchPoint_1");
+			DisplayTouchPosXY(state,pos,"Touch_FontColor");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
-			if(_IsPress())
-				LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),Point_6,All_Block_Indirect);  //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
-			else{
-				DeleteSelectTouch(Point_6);
-				DeleteSelectTouch(Point_7);
-				FILE_NAME(main)(1, NULL);
-			}
-			DisplayTouchPosXY(Touch_BkColor,pos,"TouchPoint_2");
+//			if(LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_6,All_Block_Indirect))
+//				FILE_NAME(main)(1, NULL);
+			DisplayTouchPosXY(state,pos,"Touch_BkColor");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontType, FontType,Press, TXT_FONT_TYPE,252);
-			DisplayTouchPosXY(Touch_FontType,pos,"TouchPoint_3");
+			DisplayTouchPosXY(state,pos,"Touch_FontType");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontSize, FontSize,Press, TXT_FONT_SIZE,252);
-			DisplayTouchPosXY(Touch_FontSize,pos,"TouchPoint_4");
+			DisplayTouchPosXY(state,pos,"Touch_FontSize");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontStyle, FontStyle,Press, TXT_FONT_STYLE,252);
-			DisplayTouchPosXY(Touch_FontStyle,pos,"TouchPoint_5");
+			DisplayTouchPosXY(state,pos,"Touch_FontStyle");
 			break;
 
 	case Point_6:
