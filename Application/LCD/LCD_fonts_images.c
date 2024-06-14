@@ -3198,6 +3198,7 @@ StructTxtPxlLen LCD_StrDependOnColorsIndirect(int fontID, int Xpos, int Ypos, ch
 		lenStr=LCD_StrChangeColorIndirect(fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
 	return lenStr;
 }
+
 StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar, int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth)
 {
 	StructTxtPxlLen lenStr;
@@ -3241,4 +3242,32 @@ StructTxtPxlLen LCD_StrDependOnColorsVarIndirect(int idVar, char *txt){
 		return temp;
 	LCD_DimensionBkCorrect(idVar,temp,pLcd);
 	return temp;
+}
+
+StructTxtPxlLen LCD_StrDependOnColorsWindow(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth)
+{
+	StructTxtPxlLen lenStr;
+
+	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+			 (bkColor==MYGRAY && fontColor == MYGREEN))
+		lenStr=LCD_StrWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,1,constWidth);
+	else if(bkColor==WHITE  && fontColor == BLACK)
+		lenStr=LCD_StrWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,0,constWidth);
+	else
+		lenStr=LCD_StrChangeColorWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
+	return lenStr;
+}
+
+StructTxtPxlLen LCD_StrDependOnColorsWindowIndirect(uint32_t posBuff, int Xwin, int Ywin,uint32_t BkpSizeX,uint32_t BkpSizeY,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth)
+{
+	StructTxtPxlLen lenStr;
+
+	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+			 (bkColor==MYGRAY && fontColor == MYGREEN))
+		lenStr=LCD_StrWindowIndirect(posBuff,Xwin,Ywin,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,1,constWidth);
+	else if(bkColor==WHITE  && fontColor == BLACK)
+		lenStr=LCD_StrWindowIndirect(posBuff,Xwin,Ywin,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,0,constWidth);
+	else
+		lenStr=LCD_StrChangeColorWindowIndirect(posBuff,Xwin,Ywin,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
+	return lenStr;
 }
