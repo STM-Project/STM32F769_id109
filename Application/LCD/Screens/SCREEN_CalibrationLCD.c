@@ -176,13 +176,13 @@ static void GetPhysValues(XY_Touch_Struct log, XY_Touch_Struct *phys, uint16_t w
 
 	width = LCD_CalculateCircleWidth(width);
 
-	LCD_Xmiddle(SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
+	LCD_Xmiddle(0,SetPos,SetPosAndWidth(log.x,width),NULL,0,NoConstWidth);
 	ptr = StrAll(3,GetSelTxt(0,FILE_NAME(Lang),1)," ",name);
 	width = _ShowCircleIndirect(log.x, log.y, width, 0, v.COLOR_CircleFrame, v.COLOR_CircleFill, v.COLOR_BkScreen);
-	lenStr=LCD_StrChangeColorIndirect(v.FONT_ID_CircleName, LCD_Xmiddle(GetPos,v.FONT_ID_CircleName,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), ptr, fullHight, 0, v.COLOR_BkScreen,v.FONT_COLOR_CircleName,v.COEFF_COLOR_CircleName,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(v.FONT_ID_CircleName, LCD_Xmiddle(0,GetPos,v.FONT_ID_CircleName,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,log.y+width+2), ptr, fullHight, 0, v.COLOR_BkScreen,v.FONT_COLOR_CircleName,v.COEFF_COLOR_CircleName,NoConstWidth);
 
 	ptr = StrAll(5,"(",Int2Str(CenterOfCircle(log.x,width),None,3,Sign_none),",",Int2Str(CenterOfCircle(log.y,width),None,3,Sign_none),")");
-	xPos = LCD_Xmiddle(GetPos,v.FONT_ID_PosLog,ptr,0,NoConstWidth);
+	xPos = LCD_Xmiddle(0,GetPos,v.FONT_ID_PosLog,ptr,0,NoConstWidth);
 	CorrectPosIfOutRange(&xPos);
 
 #ifdef DISPLAY_COMMA_UNDER_COMMA_
@@ -262,8 +262,8 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 	LCD_Clear(v.COLOR_BkScreen);  LCD_Show();
 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
-	LCD_Xmiddle(SetPos,SetPosAndWidth(0,LCD_X),NULL,0,NoConstWidth);
-	lenStr=LCD_StrChangeColorIndirect(v.FONT_ID_Title, LCD_Xmiddle(GetPos,v.FONT_ID_Title,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,0), ptr, fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,v.COEFF_COLOR_CircleName,NoConstWidth);
+	LCD_Xmiddle(0,SetPos,SetPosAndWidth(0,LCD_X),NULL,0,NoConstWidth);
+	lenStr=LCD_StrChangeColorIndirect(v.FONT_ID_Title, LCD_Xmiddle(0,GetPos,v.FONT_ID_Title,ptr,0,NoConstWidth), LCD_Ypos(lenStr,SetPos,0), ptr, fullHight,0,v.COLOR_BkScreen,v.FONT_COLOR_Title,v.COEFF_COLOR_CircleName,NoConstWidth);
 
 	uint8_t status = BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize());
 

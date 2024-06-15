@@ -3118,34 +3118,35 @@ uint16_t LCD_Xpos(StructTxtPxlLen structTemp, int cmd, int offs)
 	}
 }
 
-uint16_t LCD_Ymiddle(int cmd, uint32_t val)
+#define LCD_XY_MIDDLE_MAX_NUMBER_USE	50
+uint16_t LCD_Ymiddle(int nr, int cmd, uint32_t val)
 {
-	static uint16_t startPosY=0, heightY=0;
+	static uint16_t startPosY[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0}, heightY[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0};
 	switch(cmd)
 	{
 	case SetPos:
-		startPosY= val;
-		heightY= (val>>16);
-		return startPosY;
+		startPosY[nr]= val;
+		heightY[nr]= (val>>16);
+		return startPosY[nr];
 	case GetPos:
 	default:
-		return MIDDLE(startPosY,heightY,LCD_GetFontHeight(val));
+		return MIDDLE(startPosY[nr],heightY[nr],LCD_GetFontHeight(val));
 	}
 }
-uint16_t LCD_Xmiddle(int cmd, uint32_t param, char *txt, int space, int constWidth)
+uint16_t LCD_Xmiddle(int nr, int cmd, uint32_t param, char *txt, int space, int constWidth)
 {
-	static uint16_t startPosX=0, widthX=0;
+	static uint16_t startPosX[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0}, widthX[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0};
 	int len;
 	switch(cmd)
 	{
 	case SetPos:
-		startPosX= param;
-		widthX= (param>>16);
-		return startPosX;
+		startPosX[nr]= param;
+		widthX[nr]= (param>>16);
+		return startPosX[nr];
 	case GetPos:
 	default:
 		len=LCD_GetWholeStrPxlWidth(param,txt,space,constWidth);
-		return MIDDLE(startPosX,widthX,(len>widthX?widthX:len));
+		return MIDDLE(startPosX[nr],widthX[nr],(len>widthX[nr]?widthX[nr]:len));
 	}
 }
 uint32_t SetPosAndWidth(uint16_t pos, uint16_t width){

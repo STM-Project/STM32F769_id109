@@ -525,7 +525,7 @@ void LCD_TOUCH_DeleteAllSetTouch(void)
 		Touch[i].index=0;
 }
 
-void DeleteSelectTouch(uint16_t idx)
+void LCD_TOUCH_DeleteSelectTouch(uint16_t idx)
 {
 	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i){
 		if(Touch[i].index==idx)

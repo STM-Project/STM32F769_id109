@@ -262,8 +262,8 @@ void LCD_SetSpacesBetweenFonts(void);
 
 uint16_t LCD_Ypos(StructTxtPxlLen structTemp, int cmd, int offs);
 uint16_t LCD_Xpos(StructTxtPxlLen structTemp, int cmd, int offs);
-uint16_t LCD_Ymiddle(int cmd, uint32_t val);
-uint16_t LCD_Xmiddle(int cmd, uint32_t val, char *txt, int space, int constWidth);
+uint16_t LCD_Ymiddle(int nr, int cmd, uint32_t val);
+uint16_t LCD_Xmiddle(int nr, int cmd, uint32_t val, char *txt, int space, int constWidth);
 uint32_t SetPosAndWidth(uint16_t pos, uint16_t width);
 
 void SCREEN_ResetAllParameters(void);

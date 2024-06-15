@@ -48,7 +48,7 @@ uint16_t LCD_TOUCH_GetTypeAndPosition				(XY_Touch_Struct *posXY);
 void 		LCD_TOUCH_DeleteAllSetTouch				(void);
 int 		GetTouchToTemp				(uint16_t idx);
 int 		LCD_TOUCH_SetNewPos				(uint16_t idx, uint16_t x, uint16_t y, uint16_t xLen, uint16_t yLen);
-void 		DeleteSelectTouch			(uint16_t idx);
+void 		LCD_TOUCH_DeleteSelectTouch			(uint16_t idx);
 void 		DeleteAllTouchWithout	(uint16_t idx);
 int 		LCD_TOUCH_Set				(uint16_t id, uint16_t idx, uint8_t param);
 int LCD_TOUCH_isPress(void);

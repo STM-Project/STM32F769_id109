@@ -230,6 +230,12 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define RGB_FONT 	RGB2INT(Test.font[0],Test.font[1],Test.font[2])
 #define RGB_BK    RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2])
 
+#define CHECK_TOUCH(state)			CHECK_bit(FILE_NAME(SelTouch),state-1)
+#define SET_TOUCH(state) 			SET_bit	(FILE_NAME(SelTouch),state-1)
+#define CLR_TOUCH(state) 			RST_bit	(FILE_NAME(SelTouch),state-1)
+#define CLR_ALL_TOUCH 				FILE_NAME(SelTouch) = 0
+#define IS_TOUCH_WITHOUT(state)	( FILE_NAME(SelTouch)&(~(1<<(state-1))) )
+
 typedef enum{
 	NoTouch,
 	Touch_FontColor,
@@ -253,6 +259,33 @@ typedef enum{
 }TOUCH_POINTS;
 
 typedef enum{
+	KEYBOARD_none,
+	KEYBOARD_fontRGB,
+	KEYBOARD_BkRGB,
+	KEYBOARD_fontSize,
+	KEYBOARD_fontType,
+	KEYBOARD_fontStyle
+}KEYBOARD_TYPE;
+
+typedef enum{
+	All_Block,
+	Block_1,
+	Block_2,
+	Block_3,
+	Block_4,
+	Block_5,
+	Block_6,
+	All_Block_Indirect,
+	KEY_Red_plus,
+	KEY_Red_minus,
+	KEY_Green_plus,
+	KEY_Green_minus,
+	KEY_Blue_plus,
+	KEY_Blue_minus,
+	KEY_All_release,
+}SELECT_PRESS_BLOCK;
+
+typedef enum{
 	PARAM_TYPE,
 	PARAM_SIZE,
 	PARAM_COLOR_BK,
@@ -268,17 +301,6 @@ typedef enum{
 	PARAM_MOV_TXT,
 	FONTS
 }REFRESH_DATA;
-
-typedef enum{
-	All_Block,
-	Block_1,
-	Block_2,
-	Block_3,
-	Block_4,
-	Block_5,
-	Block_6,
-	All_Block_Indirect
-}SELECT_BLOCK;
 
 static char bufTemp[50];
 static int lenTxt_prev;
@@ -612,10 +634,10 @@ static void LCD_LoadFontVar(void)
 }
 
 static void AdjustMiddle_X(void){
-	LCD_SetStrVar_x(v.FONT_VAR_Fonts,LCD_Xmiddle(GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth));
+	LCD_SetStrVar_x(v.FONT_VAR_Fonts,LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth));
 }
 static void AdjustMiddle_Y(void){
-	LCD_SetStrVar_y(v.FONT_VAR_Fonts,LCD_Ymiddle(GetPos,v.FONT_ID_Fonts));
+	LCD_SetStrVar_y(v.FONT_VAR_Fonts,LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts));
 }
 
 static void ChangeFontStyle(void)
@@ -854,10 +876,6 @@ static void DisplayFontsWithChangeColorOrNot(void){
 	RefreshAllParam();
 }
 
-#define _NONE	0,0,0,0,0,0,0
-#define KEYBOARD_RGB(FrameColor,fillColor,bkColor,blockNr)	LCD_SetKeyboard_RGB(_NONE, SHAPE_PARAM(FrameColor,fillColor,bkColor),NoTouch,NoTouch,blockNr)
-
-
 static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int frameColor,int fillColor,int bkColor)// zastanowic czy nie dac to do BasicGraphic.c
 {
 	figureShape pShape[5] = {LCD_Rectangle, LCD_BoldRectangle, LCD_RoundRectangle, LCD_BoldRoundRectangle, LCD_LittleRoundRectangle};
@@ -874,158 +892,152 @@ static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold
 		LCD_Shape(x,y,shape,w,h,frameColor,fillColor,bkColor);
 }
 
-static int LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t width,uint16_t height, uint8_t interSpace, int frameColor,int fillColor,int bkColor, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t selBlockPress)
+#define KEYBOARD_TYPE(type,key)		KeyboardTypeDisplay(type,key,0,0,0,0,0,0,0,NoTouch,NoTouch)
+
+int KeyboardTypeDisplay(KEYBOARD_TYPE type, SELECT_PRESS_BLOCK selBlockPress, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx)
 {
-	#define	_P(xPos,yPos)	LCD_DrawMainFrame(s.shape,IndDisp,  s.bold, xPos,yPos, s.width,s.height, frameColor,fillColor,bkColor)
-	#define	dx	(s.width + s.space)
-	#define	dy	(s.height + s.space)
+	#define TXT_BLOCK_Rp		"R+"
+	#define TXT_BLOCK_Rm		"R-"
+	#define TXT_BLOCK_Gp		"G+"
+	#define TXT_BLOCK_Gm		"G-"
+	#define TXT_BLOCK_Bp		"B+"
+	#define TXT_BLOCK_Bm		"B-"
+
+	int fontID 			= v.FONT_ID_Press;
+	int frameColor 	= v.COLOR_Frame;
+	int fillColor 		= v.COLOR_FillFrame;
+	int framePressColor 	= v.COLOR_FramePress;
+	int fillPressColor 	= v.COLOR_FillFramePress;
+	int bkColor 		= v.COLOR_BkScreen;
+
+	#define GET_X(txt)	LCD_Xmiddle(1,GetPos,fontID,txt,0,NoConstWidth)
+	#define GET_Y			LCD_Ymiddle(1,GetPos,fontID)
+
+	#define KEY_POS_Rp	s.interSpace, 							s.interSpace
+	#define KEY_POS_Gp	2*s.interSpace + s.widthKey, 		s.interSpace
+	#define KEY_POS_Bp	3*s.interSpace + 2*s.widthKey, 	s.interSpace
+	#define KEY_POS_Rm	s.interSpace, 				 			2*s.interSpace + s.heightKey
+	#define KEY_POS_Gm	2*s.interSpace + s.widthKey, 		2*s.interSpace + s.heightKey
+	#define KEY_POS_Bm	3*s.interSpace + 2*s.widthKey, 	2*s.interSpace + s.heightKey
+
+	uint16_t widthAll = 0;
+	uint16_t heightAll = 0;
 
 	static struct SETTINGS{
 		figureShape shape;
 		uint8_t bold;
 		uint16_t x;
 		uint16_t y;
-		uint16_t width;
-		uint16_t height;
-		uint8_t space;
-		uint8_t forTouch;
-		uint8_t startTouch;
+		uint16_t widthKey;
+		uint16_t heightKey;
+		uint8_t interSpace;
+		uint8_t forTouchIdx;
+		uint8_t startTouchIdx;
 		uint8_t nmbTouch;
-	}s;
+	}s = {0};
 
-	if(shape!=0){
+	void _Str(char *txt, uint32_t color){
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+	}
+	void _StrDisp(char *txt, uint32_t color){
+		LCD_StrDependOnColorsWindowIndirect(0, s.x, s.y, widthAll,heightAll,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+	}
+	void _TxtPos(uint16_t xPos, uint16_t yPos){
+		LCD_Xmiddle(1,SetPos,SetPosAndWidth(xPos,s.widthKey),NULL,0,NoConstWidth);
+		LCD_Ymiddle(1,SetPos,SetPosAndWidth(yPos,s.heightKey));
+	}
+	void _Key(uint16_t xPos, uint16_t yPos){
+		LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, xPos,yPos, s.widthKey,s.heightKey, SetColorBoldFrame(frameColor,s.bold),fillColor,bkColor);
+	}
+	void _KeyPress(uint16_t xPos, uint16_t yPos, char *txt, uint32_t colorTxt){
+		LCD_ShapeWindow( s.shape, 0, s.widthKey,s.heightKey, 0,0, s.widthKey,s.heightKey, SetColorBoldFrame(framePressColor,s.bold),fillPressColor,bkColor);
+		_TxtPos(0,0);
+		LCD_StrDependOnColorsWindowIndirect(0, s.x+xPos, s.y+yPos, s.widthKey, s.heightKey,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillPressColor, colorTxt,255, NoConstWidth);
+	}
+	void _SetTouch(uint16_t touchID, uint16_t xPos, uint16_t yPos){
+		touchTemp[0].x= s.x + xPos;
+		touchTemp[1].x= touchTemp[0].x + s.widthKey;
+		touchTemp[0].y= s.y + yPos;
+		touchTemp[1].y= touchTemp[0].y + s.heightKey;
+		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,touchID,TOUCH_GET_PER_X_PROBE);
+		s.nmbTouch++;
+	}
+	void _deleteTouchs(void){
+		for(int i=0; i<s.nmbTouch; ++i)
+		LCD_TOUCH_DeleteSelectTouch(s.startTouchIdx+i);
+	}
+	void _exit(void){
+		s.forTouchIdx = NoTouch;
+		s.nmbTouch = 0;
+	}
+
+	if(KEYBOARD_none == type){
+		_deleteTouchs();
+		_exit();
+		return 1;
+	}
+
+	if(shape!=0)
+	{
+		_deleteTouchs();
+
+		if(s.forTouchIdx == forTouchIdx){
+			_exit();
+			return 1;
+		}
 		s.shape = shape;
 		s.bold = bold;
 		s.x = x;
 		s.y = y;
-		s.width = width;
-		s.height = height;
-		s.space = interSpace;
-
-		for(int i=0; i<s.nmbTouch; ++i)
-			DeleteSelectTouch(s.startTouch+i);
-
-		if(s.forTouch == forTouchIdx){
-			s.forTouch = NoTouch;
-			s.nmbTouch = 0;
-			return 1;
-		}
-		s.forTouch = forTouchIdx;
-		s.startTouch = startTouchIdx;
+		s.widthKey = widthKey;
+		s.heightKey = heightKey;
+		s.interSpace = interSpace;
+		s.forTouchIdx = forTouchIdx;
+		s.startTouchIdx = startTouchIdx;
 		s.nmbTouch = 0;
-	}
-	else{
-		x=s.x;
-		y=s.y;
-	}
 
-	switch(selBlockPress){
-	case Block_1:	_P(x, y);			break;
-	case Block_2:	_P(x+dx, y);		break;
-	case Block_3:	_P(x+2*dx, y);		break;
-	case Block_4:	_P(x, y+dy);		break;
-	case Block_5:	_P(x+dx, y+dy);	break;
-	case Block_6:	_P(x+2*dx, y+dy);	break;
-	case All_Block_Indirect:
-		_P(x, y);		_P(x+dx, y); 		_P(x+2*dx, y);
-		_P(x, y+dy);	_P(x+dx, y+dy); 	_P(x+2*dx, y+dy);
-		break;
+		if(s.startTouchIdx){
+			int i=0;
+			_SetTouch(s.startTouchIdx + i++, KEY_POS_Rp);
+			_SetTouch(s.startTouchIdx + i++, KEY_POS_Rm);
+		}
 	}
 
-	if(startTouchIdx){
-		touchTemp[0].x= x;
-		touchTemp[1].x= x+width;
-		touchTemp[0].y= y;
-		touchTemp[1].y= y+height;
-		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,startTouchIdx,TOUCH_GET_PER_X_PROBE);	s.nmbTouch++;
-
-		touchTemp[0].x= x;
-		touchTemp[1].x= x+width;
-		touchTemp[0].y= y+dy;
-		touchTemp[1].y= y+dy + height;
-		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,startTouchIdx+1,TOUCH_GET_PER_X_PROBE);	s.nmbTouch++;
-	}
-
-	#undef _F
-	#undef _P
-	#undef dx
-	#undef dy
-
-	return 0;
-}
-
-typedef enum{
-	Key_fontRGB,
-	Key_fontSize,
-	Key_fontType,
-	Key_fontStyle
-
-}KEYBOARD_TYPE;
-
-void KeyboardTypeDisplay(KEYBOARD_TYPE type, figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t widthKey,uint16_t heightKey, uint8_t interSpace)
-{
-	uint16_t widthAll = 0;
-	uint16_t heightAll = 0;
-
-	int fontID 			= v.FONT_ID_Press;
-
-	int frameColor 	= v.COLOR_Frame;
-	int fillColor 		= v.COLOR_FillFrame;
-
-	int framePressColor 	= v.COLOR_FramePress;
-	int fillPressColor 	= v.COLOR_FillFramePress;
-
-	int bkColor 		= v.COLOR_BkScreen;
-
-
-	#define SET_POS(xPos,yPos)	LCD_Xmiddle(SetPos,SetPosAndWidth(xPos,widthKey),NULL,0,NoConstWidth); \
-										LCD_Ymiddle(SetPos,SetPosAndWidth(yPos,heightKey)); \
-
-	#define GET_X(txt)	LCD_Xmiddle(GetPos,fontID,txt,0,NoConstWidth)
-	#define GET_Y			LCD_Ymiddle(GetPos,fontID)
-
-	#define _Key(x,y)			LCD_ShapeWindow( shape, 0, widthAll,heightAll, x,y, widthKey,heightKey, SetColorBoldFrame(frameColor,0),fillColor,bkColor)
-	#define _Str(txt,color)			LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, color,250, NoConstWidth) //LCD_StrDependOnColors zaien na LCD_Str !!!!
-	#define _StrDisp(txt,color)	LCD_StrDependOnColorsWindowIndirect(0,x,y,widthAll,heightAll,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, color,250, NoConstWidth)
-
+	widthAll = 3*s.widthKey + 4*s.interSpace;
+	heightAll = 2*s.heightKey + 3*s.interSpace;
 
 	switch((int)type)
 	{
-	case Key_fontRGB:
-		widthAll = 3*widthKey+4*interSpace;
-		heightAll = 2*heightKey+3*interSpace;
-		LCD_ShapeWindow( shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,0), bkColor,bkColor );
-		_Key(interSpace+0*widthKey+0*interSpace, interSpace);
-		_Key(interSpace+1*widthKey+1*interSpace, interSpace);
-		_Key(interSpace+2*widthKey+2*interSpace, interSpace);
-		_Key(interSpace+0*widthKey+0*interSpace, interSpace+heightKey+interSpace);
-		_Key(interSpace+1*widthKey+1*interSpace, interSpace+heightKey+interSpace);
-		_Key(interSpace+2*widthKey+2*interSpace, interSpace+heightKey+interSpace);
+	case KEYBOARD_fontRGB:
+	case KEYBOARD_BkRGB:
+		switch((int)selBlockPress)
+		{
+		case KEY_All_release:
+			LCD_ShapeWindow( s.shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s.bold), bkColor,bkColor );
 
-		SET_POS(interSpace, interSpace);						_Str("R+",RED);
-		SET_POS(2*interSpace+widthKey, interSpace);		_Str("G+",GREEN);
-		SET_POS(3*interSpace+2*widthKey, interSpace);	_Str("B+",BLUE);
+			_Key(KEY_POS_Rp);											_Key(KEY_POS_Gp);												_Key(KEY_POS_Bp);
+			_TxtPos(KEY_POS_Rp);	_Str(TXT_BLOCK_Rp,RED);		_TxtPos(KEY_POS_Gp);	_Str(TXT_BLOCK_Gp,GREEN);		_TxtPos(KEY_POS_Bp);	_Str(TXT_BLOCK_Bp,BLUE);
 
-		SET_POS(interSpace, 2*interSpace+heightKey);						_Str("R-",RED);
-		SET_POS(2*interSpace+widthKey, 2*interSpace+heightKey);		_Str("G-",GREEN);
-		SET_POS(3*interSpace+2*widthKey, 2*interSpace+heightKey);	_StrDisp("B-",BLUE);
+			_Key(KEY_POS_Rm);											_Key(KEY_POS_Gm);												_Key(KEY_POS_Bm);
+			_TxtPos(KEY_POS_Rm);	_Str(TXT_BLOCK_Rm,RED);		_TxtPos(KEY_POS_Gm);	_Str(TXT_BLOCK_Gm,GREEN);		_TxtPos(KEY_POS_Bm);	_StrDisp(TXT_BLOCK_Bm,BLUE);
+			break;
+
+		case KEY_Red_plus:	 _KeyPress(KEY_POS_Rp, TXT_BLOCK_Rp, DARKRED);	break;
+		case KEY_Red_minus:	 _KeyPress(KEY_POS_Rm, TXT_BLOCK_Rm, DARKRED);	break;
+
+		case KEY_Green_plus:	 _KeyPress(KEY_POS_Gp, TXT_BLOCK_Gp, DARKGREEN);	break;
+		case KEY_Green_minus: _KeyPress(KEY_POS_Gm, TXT_BLOCK_Gm, DARKGREEN);	break;
+
+		case KEY_Blue_plus:	 _KeyPress(KEY_POS_Bp, TXT_BLOCK_Bp, DARKBLUE);	break;
+		case KEY_Blue_minus:  _KeyPress(KEY_POS_Bm, TXT_BLOCK_Bm, DARKBLUE);	break;
+		}
+
+	case KEYBOARD_none:
 		break;
 	}
-	StartMeasureTime_us();
-
-	LCD_ShapeWindow( shape, 0, widthKey,heightKey, 0,0, widthKey,heightKey, SetColorBoldFrame(framePressColor,0),fillPressColor,bkColor);
-	x += 2*interSpace+widthKey;
-	y += interSpace;
-	SET_POS(0,0);
-	LCD_StrDependOnColorsWindowIndirect(0,x,y,widthKey,heightKey,fontID, GET_X("G+"),GET_Y,"G+", fullHight, 0, fillPressColor, 0xFFFFFFF1,255, NoConstWidth);
-
-	StopMeasureTime_us("\r\nKeyboardTypeDisplay: ");
-
-	#undef _Key
-	#undef _Str
-	#undef SET_POS
 	#undef GET_X
 	#undef GET_Y
+	return 0;
 }
 
 void FILE_NAME(setTouch)(void)
@@ -1049,11 +1061,6 @@ void FILE_NAME(setTouch)(void)
 		DESELECT_CURRENT_FONT(FontType,	TXT_FONT_TYPE);\
 		DESELECT_CURRENT_FONT(FontSize,	TXT_FONT_SIZE);\
 		DESELECT_CURRENT_FONT(FontStyle,	TXT_FONT_STYLE)
-
-	#define CHECK_TOUCH(state)	CHECK_bit(FILE_NAME(SelTouch),state-1)
-	#define SET_TOUCH(state) 	SET_bit	(FILE_NAME(SelTouch),state-1)
-	#define CLR_TOUCH(state) 	RST_bit	(FILE_NAME(SelTouch),state-1)
-	#define CLR_ALL_TOUCH 		FILE_NAME(SelTouch) = 0
 
 	#define CASE_TOUCH_STATE(state,touchPoint, src,dst, txt,coeff) \
 		case touchPoint:\
@@ -1087,46 +1094,46 @@ void FILE_NAME(setTouch)(void)
 	switch(state)
 	{
 		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252);
-			if(LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_6,All_Block_Indirect)) //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
-				FILE_NAME(main)(1, NULL);
+			KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 300,160, 60,40, 4, state, Point_6); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
 			DisplayTouchPosXY(state,pos,"Touch_FontColor");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
-			if(LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 500,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_8,All_Block_Indirect))
-				FILE_NAME(main)(1, NULL);
+			KeyboardTypeDisplay(KEYBOARD_BkRGB, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, Point_8);
 			DisplayTouchPosXY(state,pos,"Touch_BkColor");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontType, FontType,Press, TXT_FONT_TYPE,252);
+			KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
 			DisplayTouchPosXY(state,pos,"Touch_FontType");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontSize, FontSize,Press, TXT_FONT_SIZE,252);
+			KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
 			DisplayTouchPosXY(state,pos,"Touch_FontSize");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontStyle, FontStyle,Press, TXT_FONT_STYLE,252);
+			KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
 			DisplayTouchPosXY(state,pos,"Touch_FontStyle");
 			break;
 
 		case Point_6:
 			ChangeValRGB('f', 'R', 1);
-			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
+			KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_plus );	Test.step=5;	_SaveState();
 			break;
 		case Point_7:
 			ChangeValRGB('f', 'R', -1);
-			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
+			KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_minus );	Test.step=5;	_SaveState();
 			break;
-
 
 		case Point_8:
 			ChangeValRGB('b', 'R', 1);
-			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_1);	Test.step=5;	_SaveState();
+			KEYBOARD_TYPE( KEYBOARD_BkRGB, KEY_Red_plus );	Test.step=5;	_SaveState();
 			break;
 		case Point_9:
 			ChangeValRGB('b', 'R', -1);
-			KEYBOARD_RGB(FramePress,FillFramePress,BkScreen,Block_4);	Test.step=5;	_SaveState();
+			KEYBOARD_TYPE( KEYBOARD_BkRGB, KEY_Red_minus );	Test.step=5;	_SaveState();
 			break;
 
 
@@ -1156,7 +1163,7 @@ void FILE_NAME(setTouch)(void)
 			if(_WasState(Point_6) || _WasState(Point_7) ||
 				_WasState(Point_8) || _WasState(Point_9) )
 			{
-				KEYBOARD_RGB(Frame,FillFrame,BkScreen,All_Block_Indirect);
+				KEYBOARD_TYPE( KEYBOARD_BkRGB, KEY_All_release );
 				Test.step=1;
 			}
 			break;
@@ -1243,9 +1250,6 @@ void FILE_NAME(debugRcvStr)(void)
 
 		//SCREEN_Fonts_funcSet(COLOR_FramePress, BLACK);
 
-		KeyboardTypeDisplay(Key_fontRGB,LCD_LittleRoundRectangle,0, 300,160, 60,40, 4);
-
-
 	}
 	else if(DEBUG_RcvStr("-"))
 	{
@@ -1262,9 +1266,26 @@ static void LoadFonts(int startFontID, int endFontID){
 	int j=0;
 
 	for(int i=startFontID; i<=endFontID; ++i){
-		*((int*)((int*)(&v)+i)) = LCD_LoadFont_DependOnColors( A(j),A(j+d),A(j+3*d),A(j+2*d),	FILE_NAME(GetDefaultParam)(i));
+		*((int*)((int*)(&v)+i)) = LCD_LoadFont_DependOnColors( A(j),A(j+d),A(j+3*d),A(j+2*d), FILE_NAME(GetDefaultParam)(i));
 		j++;
 	}
+/*
+	v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
+	v.FONT_ID_FontColor		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontColor),	FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
+	v.FONT_ID_BkColor 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(BkColor),  	FILE_NAME(GetDefaultParam)(FONT_ID_BkColor));
+	v.FONT_ID_FontType 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontType), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontType));
+	v.FONT_ID_FontSize 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontSize), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontSize));
+	v.FONT_ID_FontStyle  	= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontStyle),	FILE_NAME(GetDefaultParam)(FONT_ID_FontStyle));
+
+	v.FONT_ID_Coeff 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Coeff), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Coeff));
+	v.FONT_ID_LenWin 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(LenWin), 		 FILE_NAME(GetDefaultParam)(FONT_ID_LenWin));
+	v.FONT_ID_OffsWin 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(OffsWin), 	 FILE_NAME(GetDefaultParam)(FONT_ID_OffsWin));
+	v.FONT_ID_LoadFontTime = LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(LoadFontTime),FILE_NAME(GetDefaultParam)(FONT_ID_LoadFontTime));
+	v.FONT_ID_PosCursor 	= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(PosCursor), 	 FILE_NAME(GetDefaultParam)(FONT_ID_PosCursor));
+	v.FONT_ID_CPUusage 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(CPUusage), 	 FILE_NAME(GetDefaultParam)(FONT_ID_CPUusage));
+	v.FONT_ID_Speed 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Speed), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Speed));
+	v.FONT_ID_Press 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Press), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Press));
+*/
 }
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
@@ -1273,31 +1294,14 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	if(0==argNmb)
 	{
-	 SCREEN_ResetAllParameters();		//ROBIMY TU JUZ KLAWIATUTE i wprowadzanie textu dowolnego !!!!!
-	 LCD_TOUCH_DeleteAllSetTouch();  //Przyciski do zmian paranetru !!!!
-	 FONTS_LCD_ResetParam();
+		SCREEN_ResetAllParameters();		//ROBIMY TU JUZ KLAWIATUTE i wprowadzanie textu dowolnego !!!!!
+		LCD_TOUCH_DeleteAllSetTouch();  //Przyciski do zmian paranetru !!!!
+		FONTS_LCD_ResetParam();
 
-	 LCD_Clear(v.COLOR_BkScreen);
+		LCD_Clear(v.COLOR_BkScreen);
 
-	 LoadFonts(FONT_ID_Title, FONT_ID_Press);
-
-//	 v.FONT_ID_Title 	 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Title),	  	FILE_NAME(GetDefaultParam)(FONT_ID_Title));
-//	 v.FONT_ID_FontColor		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontColor),	FILE_NAME(GetDefaultParam)(FONT_ID_FontColor));
-//	 v.FONT_ID_BkColor 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(BkColor),  	FILE_NAME(GetDefaultParam)(FONT_ID_BkColor));
-//	 v.FONT_ID_FontType 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontType), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontType));
-//	 v.FONT_ID_FontSize 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontSize), 	FILE_NAME(GetDefaultParam)(FONT_ID_FontSize));
-//	 v.FONT_ID_FontStyle  	= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(FontStyle),	FILE_NAME(GetDefaultParam)(FONT_ID_FontStyle));
-//
-//	 v.FONT_ID_Coeff 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Coeff), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Coeff));
-//	 v.FONT_ID_LenWin 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(LenWin), 		 FILE_NAME(GetDefaultParam)(FONT_ID_LenWin));
-//	 v.FONT_ID_OffsWin 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(OffsWin), 	 FILE_NAME(GetDefaultParam)(FONT_ID_OffsWin));
-//	 v.FONT_ID_LoadFontTime 	= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(LoadFontTime),FILE_NAME(GetDefaultParam)(FONT_ID_LoadFontTime));
-//	 v.FONT_ID_PosCursor 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(PosCursor), 	 FILE_NAME(GetDefaultParam)(FONT_ID_PosCursor));
-//	 v.FONT_ID_CPUusage 		= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(CPUusage), 	 FILE_NAME(GetDefaultParam)(FONT_ID_CPUusage));
-//	 v.FONT_ID_Speed 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Speed), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Speed));
-//	 v.FONT_ID_Press 			= LCD_LoadFont_DependOnColors( LOAD_FONT_PARAM(Press), 		 FILE_NAME(GetDefaultParam)(FONT_ID_Press));
-
-	 LCD_LoadFontVar();
+		LoadFonts(FONT_ID_Title, FONT_ID_Press);
+		LCD_LoadFontVar();
 	}
 	//FILE_NAME(printInfo)();
 
@@ -1306,10 +1310,10 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,8), ptr,fullHight,0,255,NoConstWidth);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_Rectangle);  //zrobic mniejsza czcionka przeliczenie na hex !!!
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_Rectangle);  //zrobic mniejsza czcionka przeliczenie na hex !!!
 	if(0==argNmb) ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor, lenStr);
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_BK_COLOR,fullHight,0,	255,ConstWidth);LCD_SetBkFontShape(v.FONT_VAR_BkColor,BK_Round); //zrobic mniejsza czcionka przeliczenie na hex !!!
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(BkColor, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_BK_COLOR,fullHight,0,	255,ConstWidth);	LCD_SetBkFontShape(v.FONT_VAR_BkColor,BK_Round); //zrobic mniejsza czcionka przeliczenie na hex !!!
 	if(0==argNmb) ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontType, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_FONT_TYPE, 	fullHight,0,255,NoConstWidth);
@@ -1331,15 +1335,15 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	//if(0==argNmb)
 	//{
 	 Test.yFontsField=LCD_Ypos(lenStr,IncPos,5);
-	 LCD_Ymiddle(SetPos, Test.yFontsField|(LCD_GetYSize()-2)<<16 );
-	 LCD_Xmiddle(SetPos, Test.xFontsField|LCD_GetXSize()<<16,"",0,NoConstWidth);
+	 LCD_Ymiddle(0,SetPos, Test.yFontsField|(LCD_GetYSize()-2)<<16 );
+	 LCD_Xmiddle(0,SetPos, Test.xFontsField|LCD_GetXSize()<<16,"",0,NoConstWidth);
 
 	 LCD_SetBkFontShape(v.FONT_VAR_Fonts,BK_LittleRound);
 	 StartMeasureTime_us();    //daj mozliwosc wpisywania dowolnego textu aby korygowac odstepy miedzy kazdymi fontami jakimi sie chce !!!!!!!
 	 if(Test.type)
-		 lenStr=LCD_StrVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,v.COLOR_BkScreen,0,Test.constWidth,v.COLOR_BkScreen);
+		 lenStr=LCD_StrVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,v.COLOR_BkScreen,0,Test.constWidth,v.COLOR_BkScreen);
 	 else
-		 lenStr=LCD_StrChangeColorVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,v.COLOR_BkScreen);
+		 lenStr=LCD_StrChangeColorVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,v.COLOR_BkScreen);
 	 Test.speed=StopMeasureTime_us("");
 	//}
 
