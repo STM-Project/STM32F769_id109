@@ -117,7 +117,7 @@ uint32_t StopMeasureTime_us(char *nameTime)  //przenies w osobny plik np TIMER.c
 
 	HAL_TIM_Base_Stop(&htim5);
 	if(nameTime[0]>0)
-		DbgVar(1,100,"%s%dus ",nameTime,result);
+		DbgVar(1,100,"%s%d us ",nameTime,result);
 	return result;
 }
 

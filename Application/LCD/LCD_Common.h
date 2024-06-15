@@ -44,7 +44,7 @@ typedef enum{
 
 }COLORS_DEFINITION;
 
-typedef enum{
+typedef enum{  //DO USUNIECIA
 	NoIndDisp,
 	IndDisp
 }LCD_SHOW_INDIRECT_OR_NOT_INDIRECT;

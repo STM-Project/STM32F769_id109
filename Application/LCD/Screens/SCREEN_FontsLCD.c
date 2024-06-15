@@ -93,7 +93,7 @@ Czcionki LCD,Fonts LCD,\
 	X(62, COLOR_FillMainFrame, 	MYGRAY) \
 	X(63, COLOR_Frame,  				COLOR_GRAY(0x60)) \
 	X(64, COLOR_FillFrame, 			COLOR_GRAY(0x2C)) \
-	X(65, COLOR_FramePress, 		COLOR_GRAY(0x28)) \
+	X(65, COLOR_FramePress, 		COLOR_GRAY(0xBA)) \
 	X(66, COLOR_FillFramePress,	COLOR_GRAY(0x60)) \
 	X(67, DEBUG_ON,  	1) \
 	X(68, BK_FONT_ROUND,  	1) \
@@ -876,7 +876,6 @@ static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold
 
 static int LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t width,uint16_t height, uint8_t interSpace, int frameColor,int fillColor,int bkColor, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t selBlockPress)
 {
-	#define	_F(xPos,yPos)	LCD_DrawMainFrame(s.shape,NoIndDisp,s.bold, xPos,yPos, s.width,s.height, frameColor,fillColor,bkColor)
 	#define	_P(xPos,yPos)	LCD_DrawMainFrame(s.shape,IndDisp,  s.bold, xPos,yPos, s.width,s.height, frameColor,fillColor,bkColor)
 	#define	dx	(s.width + s.space)
 	#define	dy	(s.height + s.space)
@@ -895,7 +894,6 @@ static int LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint1
 	}s;
 
 	if(shape!=0){
-		FILE_NAME(main)(1, NULL);
 		s.shape = shape;
 		s.bold = bold;
 		s.x = x;
@@ -932,10 +930,6 @@ static int LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint1
 		_P(x, y);		_P(x+dx, y); 		_P(x+2*dx, y);
 		_P(x, y+dy);	_P(x+dx, y+dy); 	_P(x+2*dx, y+dy);
 		break;
-	case All_Block:
-		_F(x, y);		_F(x+dx, y); 		_F(x+2*dx, y);
-		_F(x, y+dy);	_F(x+dx, y+dy); 	_F(x+2*dx, y+dy);
-		break;
 	}
 
 	if(startTouchIdx){
@@ -960,70 +954,75 @@ static int LCD_SetKeyboard_RGB(figureShape shape, uint8_t bold, uint16_t x,uint1
 	return 0;
 }
 
-void NewFunction(figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t widthKey,uint16_t heightKey, uint8_t interSpace, int frameColor,int fillColor,int bkColor)
+typedef enum{
+	Key_fontRGB,
+	Key_fontSize,
+	Key_fontType,
+	Key_fontStyle
+
+}KEYBOARD_TYPE;
+
+void KeyboardTypeDisplay(KEYBOARD_TYPE type, figureShape shape, uint8_t bold, uint16_t x,uint16_t y, uint16_t widthKey,uint16_t heightKey, uint8_t interSpace)
 {
-	uint16_t widthAll = 3*widthKey+4*interSpace;
-	uint16_t heightAll = 2*heightKey+3*interSpace;
+	uint16_t widthAll = 0;
+	uint16_t heightAll = 0;
 
-	#define _Z(x,y)	LCD_ShapeWindow( shape, 0, widthAll,heightAll, x,y, widthKey,heightKey, SetColorBoldFrame(frameColor,0),fillColor,bkColor)
+	int fontID 			= v.FONT_ID_Press;
 
-	#define _S(x,y,txt)	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,v.FONT_ID_Coeff, x,y, txt, fullHight, 0, bkColor, frameColor,255, NoConstWidth)
+	int frameColor 	= v.COLOR_Frame;
+	int fillColor 		= v.COLOR_FillFrame;
 
+	int framePressColor 	= v.COLOR_FramePress;
+	int fillPressColor 	= v.COLOR_FillFramePress;
 
-//	_Z(interSpace+0*widthKey+0*interSpace, interSpace);
-//	_Z(interSpace+1*widthKey+1*interSpace, interSpace);
-//	_Z(interSpace+2*widthKey+2*interSpace, interSpace);
-//
-//	_Z(interSpace+0*widthKey+0*interSpace, interSpace+heightKey+interSpace);
-//	_Z(interSpace+1*widthKey+1*interSpace, interSpace+heightKey+interSpace);
-//	_Z(interSpace+2*widthKey+2*interSpace, interSpace+heightKey+interSpace);
+	int bkColor 		= v.COLOR_BkScreen;
 
 
-	LCD_ShapeWindow( shape,   0,widthAll ,heightAll, 0,                  0, widthAll, heightAll, SetColorBoldFrame(frameColor,0), bkColor,  	bkColor);
+	#define SET_POS(xPos,yPos)	LCD_Xmiddle(SetPos,SetPosAndWidth(xPos,widthKey),NULL,0,NoConstWidth); \
+										LCD_Ymiddle(SetPos,SetPosAndWidth(yPos,heightKey)); \
 
-	LCD_ShapeWindow( shape,   0,widthAll ,heightAll, interSpace+0*widthKey+0*interSpace, interSpace, widthKey,    heightKey,    SetColorBoldFrame(frameColor,0),  fillColor,  bkColor);
-	LCD_ShapeWindow( shape,   0,widthAll ,heightAll, interSpace+1*widthKey+1*interSpace, interSpace, widthKey,    heightKey,    SetColorBoldFrame(frameColor,0),  fillColor,  bkColor);
-	LCD_ShapeWindow( shape,   0,widthAll ,heightAll, interSpace+2*widthKey+2*interSpace, interSpace, widthKey,    heightKey,    SetColorBoldFrame(frameColor,0),  fillColor,  bkColor);
+	#define GET_X(txt)	LCD_Xmiddle(GetPos,fontID,txt,0,NoConstWidth)
+	#define GET_Y			LCD_Ymiddle(GetPos,fontID)
 
-	LCD_ShapeWindow( shape,   0,widthAll ,heightAll, interSpace+0*widthKey+0*interSpace, interSpace+heightKey+interSpace, widthKey,    heightKey,    SetColorBoldFrame(frameColor,0),  fillColor,  bkColor);
-	LCD_ShapeWindow( shape,   0,widthAll ,heightAll, interSpace+1*widthKey+1*interSpace, interSpace+heightKey+interSpace, widthKey,    heightKey,    SetColorBoldFrame(frameColor,0),  fillColor,  bkColor);
-	LCD_ShapeWindow( shape,   0,widthAll ,heightAll, interSpace+2*widthKey+2*interSpace, interSpace+heightKey+interSpace, widthKey,    heightKey,    SetColorBoldFrame(frameColor,0),  fillColor,  bkColor);
-	//LCD_ShapeWindowIndirect(x,y, shape,   0,widthAll ,heightAll, interSpace+2*width+2*interSpace, interSpace+height+interSpace, widthKey,    heightKey,    SetColorBoldFrame(frameColor,0),  fillColor,  bkColor);
-
-
-	#define SET_POS(x,y)	LCD_Xmiddle(SetPos,SetPosAndWidth(x,widthKey),NULL,0,NoConstWidth); \
-								LCD_Ymiddle(SetPos,SetPosAndWidth(y,heightKey));\
-
-	#define GET_X(txt)	LCD_Xmiddle(GetPos,v.FONT_ID_Coeff,txt,0,NoConstWidth)
-	#define GET_Y			LCD_Ymiddle(GetPos,v.FONT_ID_Coeff)
+	#define _Key(x,y)			LCD_ShapeWindow( shape, 0, widthAll,heightAll, x,y, widthKey,heightKey, SetColorBoldFrame(frameColor,0),fillColor,bkColor)
+	#define _Str(txt,color)			LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, color,250, NoConstWidth) //LCD_StrDependOnColors zaien na LCD_Str !!!!
+	#define _StrDisp(txt,color)	LCD_StrDependOnColorsWindowIndirect(0,x,y,widthAll,heightAll,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, color,250, NoConstWidth)
 
 
-//	SET_POS(interSpace, interSpace);						_S(GET_X("R+"),GET_Y,"R+");
-//	SET_POS(2*interSpace+widthKey, interSpace);		_S(GET_X("G+"),GET_Y,"G+");
-//	SET_POS(3*interSpace+2*widthKey, interSpace);	_S(GET_X("B+"),GET_Y,"B+");
-//
-//	SET_POS(interSpace, 2*interSpace+heightKey);						_S(GET_X("R-"),GET_Y,"R-");
-//	SET_POS(2*interSpace+widthKey, 2*interSpace+heightKey);		_S(GET_X("G-"),GET_Y,"G-");
-//	SET_POS(3*interSpace+2*widthKey, 2*interSpace+heightKey);	_S(GET_X("B-"),GET_Y,"B-");
+	switch((int)type)
+	{
+	case Key_fontRGB:
+		widthAll = 3*widthKey+4*interSpace;
+		heightAll = 2*heightKey+3*interSpace;
+		LCD_ShapeWindow( shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,0), bkColor,bkColor );
+		_Key(interSpace+0*widthKey+0*interSpace, interSpace);
+		_Key(interSpace+1*widthKey+1*interSpace, interSpace);
+		_Key(interSpace+2*widthKey+2*interSpace, interSpace);
+		_Key(interSpace+0*widthKey+0*interSpace, interSpace+heightKey+interSpace);
+		_Key(interSpace+1*widthKey+1*interSpace, interSpace+heightKey+interSpace);
+		_Key(interSpace+2*widthKey+2*interSpace, interSpace+heightKey+interSpace);
 
+		SET_POS(interSpace, interSpace);						_Str("R+",RED);
+		SET_POS(2*interSpace+widthKey, interSpace);		_Str("G+",GREEN);
+		SET_POS(3*interSpace+2*widthKey, interSpace);	_Str("B+",BLUE);
 
-	SET_POS(interSpace, interSpace);
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,v.FONT_ID_Coeff, GET_X("R+"),GET_Y,"R+", fullHight, 0, bkColor, frameColor,255, NoConstWidth);
-	SET_POS(2*interSpace+widthKey, interSpace);
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,v.FONT_ID_Coeff, GET_X("G+"),GET_Y,"G+", fullHight, 0, bkColor, frameColor,255, NoConstWidth);
-	SET_POS(3*interSpace+2*widthKey, interSpace);
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,v.FONT_ID_Coeff, GET_X("B+"),GET_Y,"B+", fullHight, 0, bkColor, frameColor,255, NoConstWidth);
+		SET_POS(interSpace, 2*interSpace+heightKey);						_Str("R-",RED);
+		SET_POS(2*interSpace+widthKey, 2*interSpace+heightKey);		_Str("G-",GREEN);
+		SET_POS(3*interSpace+2*widthKey, 2*interSpace+heightKey);	_StrDisp("B-",BLUE);
+		break;
+	}
+	StartMeasureTime_us();
 
-	SET_POS(interSpace, 2*interSpace+heightKey);
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,v.FONT_ID_Coeff, GET_X("R-"),GET_Y,"R-", fullHight, 0, bkColor, frameColor,255, NoConstWidth);
-	SET_POS(2*interSpace+widthKey, 2*interSpace+heightKey);
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,v.FONT_ID_Coeff, GET_X("G-"),GET_Y,"G-", fullHight, 0, bkColor, frameColor,255, NoConstWidth);
-	SET_POS(3*interSpace+2*widthKey, 2*interSpace+heightKey);
-	LCD_StrDependOnColorsWindowIndirect(x,y,0,widthAll,heightAll,v.FONT_ID_Coeff, GET_X("B-"),GET_Y,"B-", fullHight, 0, bkColor, frameColor,255, NoConstWidth);
+	LCD_ShapeWindow( shape, 0, widthKey,heightKey, 0,0, widthKey,heightKey, SetColorBoldFrame(framePressColor,0),fillPressColor,bkColor);
+	x += 2*interSpace+widthKey;
+	y += interSpace;
+	SET_POS(0,0);
+	LCD_StrDependOnColorsWindowIndirect(0,x,y,widthKey,heightKey,fontID, GET_X("G+"),GET_Y,"G+", fullHight, 0, fillPressColor, 0xFFFFFFF1,255, NoConstWidth);
 
+	StopMeasureTime_us("\r\nKeyboardTypeDisplay: ");
 
-	#undef _Z
-	#undef _S
+	#undef _Key
+	#undef _Str
 	#undef SET_POS
 	#undef GET_X
 	#undef GET_Y
@@ -1088,12 +1087,14 @@ void FILE_NAME(setTouch)(void)
 	switch(state)
 	{
 		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252);
-			LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_6,All_Block_Indirect);    //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
+			if(LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_6,All_Block_Indirect)) //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
+				FILE_NAME(main)(1, NULL);
 			DisplayTouchPosXY(state,pos,"Touch_FontColor");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
-			LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 500,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_8,All_Block_Indirect);
+			if(LCD_SetKeyboard_RGB(LCD_LittleRoundRectangle,0, 500,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen),state,Point_8,All_Block_Indirect))
+				FILE_NAME(main)(1, NULL);
 			DisplayTouchPosXY(state,pos,"Touch_BkColor");
 			break;
 
@@ -1240,9 +1241,10 @@ void FILE_NAME(debugRcvStr)(void)
 		DbgVar(DEBUG_ON,100,Clr_ Mag_"\r\nStart: %s\r\n"_X,GET_CODE_FUNCTION);
 		DisplayCoeffCalibration();
 
-		SCREEN_Fonts_funcSet(COLOR_FramePress, BLACK);
+		//SCREEN_Fonts_funcSet(COLOR_FramePress, BLACK);
 
-		NewFunction(LCD_LittleRoundRectangle,0, 550,160, 60,40, 4, SHAPE_PARAM(Frame,FillFrame,BkScreen));
+		KeyboardTypeDisplay(Key_fontRGB,LCD_LittleRoundRectangle,0, 300,160, 60,40, 4);
+
 
 	}
 	else if(DEBUG_RcvStr("-"))
@@ -1338,7 +1340,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 		 lenStr=LCD_StrVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,v.COLOR_BkScreen,0,Test.constWidth,v.COLOR_BkScreen);
 	 else
 		 lenStr=LCD_StrChangeColorVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,v.COLOR_BkScreen);
-	 Test.speed=StopMeasureTime_us("");  //dla FONTS trzeba odstepy spacji po lewekj i prawej stronie aby lepiej wygladaly bk
+	 Test.speed=StopMeasureTime_us("");
 	//}
 
 	LCD_StrDependOnColorsVar(STR_FONT_PARAM(Speed, FillMainFrame),450,0,TXT_SPEED,fullHight,0,255,ConstWidth);
