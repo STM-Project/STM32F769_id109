@@ -234,7 +234,7 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define SET_TOUCH(state) 			SET_bit	(FILE_NAME(SelTouch),state-1)
 #define CLR_TOUCH(state) 			RST_bit	(FILE_NAME(SelTouch),state-1)
 #define CLR_ALL_TOUCH 				FILE_NAME(SelTouch) = 0
-#define IS_TOUCH_WITHOUT(state)	( FILE_NAME(SelTouch)&(~(1<<(state-1))) )
+#define GET_TOUCH 					FILE_NAME(SelTouch)
 
 typedef enum{
 	NoTouch,
@@ -265,7 +265,7 @@ typedef enum{
 	KEYBOARD_fontSize,
 	KEYBOARD_fontType,
 	KEYBOARD_fontStyle
-}KEYBOARD_TYPE;
+}KEYBOARD_TYPES;
 
 typedef enum{
 	All_Block,
@@ -894,7 +894,7 @@ static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold
 
 #define KEYBOARD_TYPE(type,key)		KeyboardTypeDisplay(type,key,0,0,0,0,0,0,0,NoTouch,NoTouch)
 
-int KeyboardTypeDisplay(KEYBOARD_TYPE type, SELECT_PRESS_BLOCK selBlockPress, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx)
+int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx)
 {
 	#define TXT_BLOCK_Rp		"R+"
 	#define TXT_BLOCK_Rm		"R-"
@@ -1031,9 +1031,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPE type, SELECT_PRESS_BLOCK selBlockPress, fi
 		case KEY_Blue_plus:	 _KeyPress(KEY_POS_Bp, TXT_BLOCK_Bp, DARKBLUE);	break;
 		case KEY_Blue_minus:  _KeyPress(KEY_POS_Bm, TXT_BLOCK_Bm, DARKBLUE);	break;
 		}
-
-	case KEYBOARD_none:
-		break;
 	}
 	#undef GET_X
 	#undef GET_Y
@@ -1048,7 +1045,7 @@ void FILE_NAME(setTouch)(void)
 		LCD_SetStrVar_bkColor  	(v.FONT_VAR_##src, v.FONT_BKCOLOR_##dst);\
 		LCD_SetStrVar_coeff		(v.FONT_VAR_##src, coeff);\
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_##src, txt)
-
+/*
 	#define DESELECT_CURRENT_FONT(src,txt) \
 		LCD_SetStrVar_fontID		(v.FONT_VAR_##src, v.FONT_ID_##src);\
 		LCD_SetStrVar_fontColor	(v.FONT_VAR_##src, v.FONT_COLOR_##src);\
@@ -1061,21 +1058,23 @@ void FILE_NAME(setTouch)(void)
 		DESELECT_CURRENT_FONT(FontType,	TXT_FONT_TYPE);\
 		DESELECT_CURRENT_FONT(FontSize,	TXT_FONT_SIZE);\
 		DESELECT_CURRENT_FONT(FontStyle,	TXT_FONT_STYLE)
-
+*/
 	#define CASE_TOUCH_STATE(state,touchPoint, src,dst, txt,coeff) \
 		case touchPoint:\
 			if(0==CHECK_TOUCH(state)){\
-				DESELECT_ALL_FONTS;		CLR_ALL_TOUCH;\
+				if(GET_TOUCH){ FILE_NAME(main)(1,NULL); CLR_ALL_TOUCH; }\
 				SELECT_CURRENT_FONT(src, dst, txt, coeff);\
 				SET_TOUCH(state);\
+				SetFunc();\
 			}\
 			else{\
-				DESELECT_CURRENT_FONT(src, txt);\
-				CLR_ALL_TOUCH;\
+				FILE_NAME(main)(1,NULL);\
+				KEYBOARD_TYPE(KEYBOARD_none,0);\
+				CLR_TOUCH(state);\
 			}
 
 	static uint16_t statePrev=0;
-	uint16_t state;
+	uint16_t state, function=0;
 	XY_Touch_Struct pos;
 
 	void _SaveState(void){
@@ -1090,33 +1089,51 @@ void FILE_NAME(setTouch)(void)
 		else return 0;
 	}
 
+	void SetFunc(void){
+		function=1;
+	}
+	int IsFunc(void){
+		if(function){
+			function=0;
+			return 1;
+		}
+		return 0;
+	}
+
 	state = LCD_TOUCH_GetTypeAndPosition(&pos);
 	switch(state)
 	{
 		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252);
-			KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 300,160, 60,40, 4, state, Point_6); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
+			if(IsFunc())
+				KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 300,160, 60,40, 4, state, Point_6); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
 			DisplayTouchPosXY(state,pos,"Touch_FontColor");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
-			KeyboardTypeDisplay(KEYBOARD_BkRGB, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, Point_8);
+			if(IsFunc())
+				KeyboardTypeDisplay(KEYBOARD_BkRGB, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, Point_8);
 			DisplayTouchPosXY(state,pos,"Touch_BkColor");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontType, FontType,Press, TXT_FONT_TYPE,252);
-			KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
+			if(IsFunc())
+				KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
 			DisplayTouchPosXY(state,pos,"Touch_FontType");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontSize, FontSize,Press, TXT_FONT_SIZE,252);
-			KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
+			if(IsFunc())
+				KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
 			DisplayTouchPosXY(state,pos,"Touch_FontSize");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontStyle, FontStyle,Press, TXT_FONT_STYLE,252);
-			KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
+			if(IsFunc())
+				KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
 			DisplayTouchPosXY(state,pos,"Touch_FontStyle");
 			break;
+
+
 
 		case Point_6:
 			ChangeValRGB('f', 'R', 1);
@@ -1303,7 +1320,10 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 		LoadFonts(FONT_ID_Title, FONT_ID_Press);
 		LCD_LoadFontVar();
 	}
-	//FILE_NAME(printInfo)();
+	else{
+		LCD_Clear(v.COLOR_BkScreen);
+	}
+	/*FILE_NAME(printInfo)();*/
 
 	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,140,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen)); // dlatego daj bk color MYGRAY aby zachowac kolory przy cieniowaniu !!!!!
 
@@ -1332,8 +1352,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_StrDependOnColorsDescrVar(STR_FONT_PARAM(PosCursor,FillMainFrame),440, 40, "T: ",TXT_PosCursor(),halfHight,0,255,ConstWidth);
 	LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450, 0, 	TXT_CPU_USAGE,	 		 halfHight,0,255,ConstWidth);
 
-	//if(0==argNmb)
-	//{
+
 	 Test.yFontsField=LCD_Ypos(lenStr,IncPos,5);
 	 LCD_Ymiddle(0,SetPos, Test.yFontsField|(LCD_GetYSize()-2)<<16 );
 	 LCD_Xmiddle(0,SetPos, Test.xFontsField|LCD_GetXSize()<<16,"",0,NoConstWidth);
@@ -1345,15 +1364,11 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	 else
 		 lenStr=LCD_StrChangeColorVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,v.COLOR_BkScreen);
 	 Test.speed=StopMeasureTime_us("");
-	//}
+
 
 	LCD_StrDependOnColorsVar(STR_FONT_PARAM(Speed, FillMainFrame),450,0,TXT_SPEED,fullHight,0,255,ConstWidth);
 
 	LCD_Show();
 
-//	if(0==argNmb) LCD_Show();
-//	else LCD_Display(0,0,0,LCD_X,LCD_Y);
-
 	if(0==argNmb) DbgVar(DEBUG_ON,100,Clr_ Mag_"\r\nStart: %s\r\n"_X,GET_CODE_FUNCTION);
-
 }
