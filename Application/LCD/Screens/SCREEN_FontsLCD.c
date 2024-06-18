@@ -182,7 +182,7 @@ void FILE_NAME(printInfo)(void){
 		DbgVar(1,200,CoG2_"}%s;\r\n"_X,getName(FILE_NAME(struct)));
 	}
 }
-
+//ZROBIC szablon z macro by dla kazdego pliku szybko skopioowac !!!!!!!!!!!!!!!
 int FILE_NAME(funcGet)(int offs){
 	return *( (int*)((int*)(&v) + offs) );
 }
@@ -243,13 +243,18 @@ typedef enum{
 	Touch_FontType,
 	Touch_FontSize,
 	Touch_FontStyle,
-	Point_6,
-	Point_7,
-	Point_8,
-	Point_9,
-	Point_10,
-	Point_11,
-	Point_12,
+	Touch_fontRp,
+	Touch_fontRm,
+	Touch_fontGp,
+	Touch_fontGm,
+	Touch_fontBp,
+	Touch_fontBm,
+	Touch_bkRp,
+	Touch_bkRm,
+	Touch_bkGp,
+	Touch_bkGm,
+	Touch_bkBp,
+	Touch_bkBm,
 	Move_1,
 	Move_2,
 	Move_3,
@@ -261,21 +266,13 @@ typedef enum{
 typedef enum{
 	KEYBOARD_none,
 	KEYBOARD_fontRGB,
-	KEYBOARD_BkRGB,
+	KEYBOARD_bkRGB,
 	KEYBOARD_fontSize,
 	KEYBOARD_fontType,
 	KEYBOARD_fontStyle
 }KEYBOARD_TYPES;
 
 typedef enum{
-	All_Block,
-	Block_1,
-	Block_2,
-	Block_3,
-	Block_4,
-	Block_5,
-	Block_6,
-	All_Block_Indirect,
 	KEY_Red_plus,
 	KEY_Red_minus,
 	KEY_Green_plus,
@@ -896,13 +893,6 @@ static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold
 
 int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx)
 {
-	#define TXT_BLOCK_Rp		"R+"
-	#define TXT_BLOCK_Rm		"R-"
-	#define TXT_BLOCK_Gp		"G+"
-	#define TXT_BLOCK_Gm		"G-"
-	#define TXT_BLOCK_Bp		"B+"
-	#define TXT_BLOCK_Bm		"B-"
-
 	int fontID 			= v.FONT_ID_Press;
 	int frameColor 	= v.COLOR_Frame;
 	int fillColor 		= v.COLOR_FillFrame;
@@ -912,13 +902,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 	#define GET_X(txt)	LCD_Xmiddle(1,GetPos,fontID,txt,0,NoConstWidth)
 	#define GET_Y			LCD_Ymiddle(1,GetPos,fontID)
-
-	#define KEY_POS_Rp	s.interSpace, 							s.interSpace
-	#define KEY_POS_Gp	2*s.interSpace + s.widthKey, 		s.interSpace
-	#define KEY_POS_Bp	3*s.interSpace + 2*s.widthKey, 	s.interSpace
-	#define KEY_POS_Rm	s.interSpace, 				 			2*s.interSpace + s.heightKey
-	#define KEY_POS_Gm	2*s.interSpace + s.widthKey, 		2*s.interSpace + s.heightKey
-	#define KEY_POS_Bm	3*s.interSpace + 2*s.widthKey, 	2*s.interSpace + s.heightKey
 
 	uint16_t widthAll = 0;
 	uint16_t heightAll = 0;
@@ -936,35 +919,35 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		uint8_t nmbTouch;
 	}s = {0};
 
-	void _Str(char *txt, uint32_t color){
-		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+	void _Str(const char *txt, uint32_t color){
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
 	}
-	void _StrDisp(char *txt, uint32_t color){
-		LCD_StrDependOnColorsWindowIndirect(0, s.x, s.y, widthAll,heightAll,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+	void _StrDisp(const char *txt, uint32_t color){
+		LCD_StrDependOnColorsWindowIndirect(0, s.x, s.y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
 	}
-	void _TxtPos(uint16_t xPos, uint16_t yPos){
-		LCD_Xmiddle(1,SetPos,SetPosAndWidth(xPos,s.widthKey),NULL,0,NoConstWidth);
-		LCD_Ymiddle(1,SetPos,SetPosAndWidth(yPos,s.heightKey));
+	void _TxtPos(XY_Touch_Struct pos){
+		LCD_Xmiddle(1,SetPos,SetPosAndWidth(pos.x,s.widthKey),NULL,0,NoConstWidth);
+		LCD_Ymiddle(1,SetPos,SetPosAndWidth(pos.y,s.heightKey));
 	}
-	void _Key(uint16_t xPos, uint16_t yPos){
-		LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, xPos,yPos, s.widthKey,s.heightKey, SetColorBoldFrame(frameColor,s.bold),fillColor,bkColor);
+	void _Key(XY_Touch_Struct pos){
+		LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(frameColor,s.bold),fillColor,bkColor);
 	}
-	void _KeyPress(uint16_t xPos, uint16_t yPos, char *txt, uint32_t colorTxt){
+	void _KeyPress(XY_Touch_Struct pos, const char *txt, uint32_t colorTxt){
 		LCD_ShapeWindow( s.shape, 0, s.widthKey,s.heightKey, 0,0, s.widthKey,s.heightKey, SetColorBoldFrame(framePressColor,s.bold),fillPressColor,bkColor);
-		_TxtPos(0,0);
-		LCD_StrDependOnColorsWindowIndirect(0, s.x+xPos, s.y+yPos, s.widthKey, s.heightKey,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillPressColor, colorTxt,255, NoConstWidth);
+		_TxtPos((XY_Touch_Struct){0});
+		LCD_StrDependOnColorsWindowIndirect(0, s.x+pos.x, s.y+pos.y, s.widthKey, s.heightKey,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,255, NoConstWidth);
 	}
-	void _SetTouch(uint16_t touchID, uint16_t xPos, uint16_t yPos){
-		touchTemp[0].x= s.x + xPos;
+	void _SetTouch(uint16_t touchID, XY_Touch_Struct pos){
+		touchTemp[0].x= s.x + pos.x;
 		touchTemp[1].x= touchTemp[0].x + s.widthKey;
-		touchTemp[0].y= s.y + yPos;
+		touchTemp[0].y= s.y + pos.y;
 		touchTemp[1].y= touchTemp[0].y + s.heightKey;
 		LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,touchID,TOUCH_GET_PER_X_PROBE);
 		s.nmbTouch++;
 	}
 	void _deleteTouchs(void){
 		for(int i=0; i<s.nmbTouch; ++i)
-		LCD_TOUCH_DeleteSelectTouch(s.startTouchIdx+i);
+			LCD_TOUCH_DeleteSelectTouch(s.startTouchIdx+i);
 	}
 	void _exit(void){
 		s.forTouchIdx = NoTouch;
@@ -995,42 +978,55 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		s.forTouchIdx = forTouchIdx;
 		s.startTouchIdx = startTouchIdx;
 		s.nmbTouch = 0;
-
-		if(s.startTouchIdx){
-			int i=0;
-			_SetTouch(s.startTouchIdx + i++, KEY_POS_Rp);
-			_SetTouch(s.startTouchIdx + i++, KEY_POS_Rm);
-		}
 	}
-
-	widthAll = 3*s.widthKey + 4*s.interSpace;
-	heightAll = 2*s.heightKey + 3*s.interSpace;
 
 	switch((int)type)
 	{
-	case KEYBOARD_fontRGB:
-	case KEYBOARD_BkRGB:
-		switch((int)selBlockPress)
-		{
-		case KEY_All_release:
-			LCD_ShapeWindow( s.shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s.bold), bkColor,bkColor );
+		case KEYBOARD_fontRGB:
+		case KEYBOARD_bkRGB:
+			const char *txtKey[]								= {"R+",	  "R-", 	  "G+",		"G-", 	  "B+",	  "B-"};
+			const COLORS_DEFINITION colorTxtKey[]		= {RED,	  RED, 	  GREEN,		GREEN, 	  BLUE,	  BLUE};
+			const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, DARKGREEN,DARKGREEN, DARKBLUE,DARKBLUE};
+			const uint16_t dimKeys[] = {3,2};
 
-			_Key(KEY_POS_Rp);											_Key(KEY_POS_Gp);												_Key(KEY_POS_Bp);
-			_TxtPos(KEY_POS_Rp);	_Str(TXT_BLOCK_Rp,RED);		_TxtPos(KEY_POS_Gp);	_Str(TXT_BLOCK_Gp,GREEN);		_TxtPos(KEY_POS_Bp);	_Str(TXT_BLOCK_Bp,BLUE);
+			widthAll =  dimKeys[0]*s.widthKey +  (dimKeys[0]+1)*s.interSpace;
+			heightAll = dimKeys[1]*s.heightKey + (dimKeys[1]+1)*s.interSpace;
+			int countKey = sizeof(colorTxtKey);
+			XY_Touch_Struct posKey[]=
+			  {{s.interSpace, 						s.interSpace},
+				{s.interSpace, 						2*s.interSpace + s.heightKey},
+				{2*s.interSpace + s.widthKey, 	s.interSpace},
+				{2*s.interSpace + s.widthKey, 	2*s.interSpace + s.heightKey},
+				{3*s.interSpace + 2*s.widthKey, 	s.interSpace},
+				{3*s.interSpace + 2*s.widthKey, 	2*s.interSpace + s.heightKey}};
 
-			_Key(KEY_POS_Rm);											_Key(KEY_POS_Gm);												_Key(KEY_POS_Bm);
-			_TxtPos(KEY_POS_Rm);	_Str(TXT_BLOCK_Rm,RED);		_TxtPos(KEY_POS_Gm);	_Str(TXT_BLOCK_Gm,GREEN);		_TxtPos(KEY_POS_Bm);	_StrDisp(TXT_BLOCK_Bm,BLUE);
+			switch((int)selBlockPress)
+			{
+				case KEY_All_release:
+					LCD_ShapeWindow( s.shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s.bold), bkColor,bkColor );
+
+					for(int i=0; i<countKey; ++i){
+						_Key(posKey[i]);
+						_TxtPos(posKey[i]);	i<countKey-1 ? _Str(txtKey[i],colorTxtKey[i]) : _StrDisp(txtKey[i],colorTxtKey[i]);
+					}
+					break;
+
+				case KEY_Red_plus:	 _KeyPress(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
+				case KEY_Red_minus:	 _KeyPress(posKey[1], txtKey[1], colorTxtPressKey[1]);	break;
+				case KEY_Green_plus:	 _KeyPress(posKey[2], txtKey[2], colorTxtPressKey[2]);	break;
+				case KEY_Green_minus: _KeyPress(posKey[3], txtKey[3], colorTxtPressKey[3]);	break;
+				case KEY_Blue_plus:	 _KeyPress(posKey[4], txtKey[4], colorTxtPressKey[4]);	break;
+				case KEY_Blue_minus:  _KeyPress(posKey[5], txtKey[5], colorTxtPressKey[5]);	break;
+			}
+
+			if(s.startTouchIdx){
+				for(int i=0; i<countKey; ++i)
+					_SetTouch(s.startTouchIdx + i, posKey[i]);
+			}
 			break;
 
-		case KEY_Red_plus:	 _KeyPress(KEY_POS_Rp, TXT_BLOCK_Rp, DARKRED);	break;
-		case KEY_Red_minus:	 _KeyPress(KEY_POS_Rm, TXT_BLOCK_Rm, DARKRED);	break;
-
-		case KEY_Green_plus:	 _KeyPress(KEY_POS_Gp, TXT_BLOCK_Gp, DARKGREEN);	break;
-		case KEY_Green_minus: _KeyPress(KEY_POS_Gm, TXT_BLOCK_Gm, DARKGREEN);	break;
-
-		case KEY_Blue_plus:	 _KeyPress(KEY_POS_Bp, TXT_BLOCK_Bp, DARKBLUE);	break;
-		case KEY_Blue_minus:  _KeyPress(KEY_POS_Bm, TXT_BLOCK_Bm, DARKBLUE);	break;
-		}
+		default:
+			break;
 	}
 	#undef GET_X
 	#undef GET_Y
@@ -1105,58 +1101,45 @@ void FILE_NAME(setTouch)(void)
 	{
 		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 300,160, 60,40, 4, state, Point_6); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
+				KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 300,160, 60,40, 4, state, Touch_fontRp); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
 			DisplayTouchPosXY(state,pos,"Touch_FontColor");
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_BkRGB, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, Point_8);
+				KeyboardTypeDisplay(KEYBOARD_bkRGB, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, Touch_bkRp);
 			DisplayTouchPosXY(state,pos,"Touch_BkColor");
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontType, FontType,Press, TXT_FONT_TYPE,252);
-			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
+		case Touch_FontType:
+			ReplaceLcdStrType();
 			DisplayTouchPosXY(state,pos,"Touch_FontType");
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontSize, FontSize,Press, TXT_FONT_SIZE,252);
-			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
+		case Touch_FontSize:
+			ChangeFontBoldItalNorm();
 			DisplayTouchPosXY(state,pos,"Touch_FontSize");
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontStyle, FontStyle,Press, TXT_FONT_STYLE,252);
-			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_none, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, NoTouch);
+		case Touch_FontStyle:
+			ChangeFontStyle();
 			DisplayTouchPosXY(state,pos,"Touch_FontStyle");
 			break;
 
+		case Touch_fontRp:	ChangeValRGB('f','R', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_plus );  Test.step=5; _SaveState(); break;
+		case Touch_fontRm:	ChangeValRGB('f','R',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_minus ); Test.step=5; _SaveState(); break;
+		case Touch_fontGp:	ChangeValRGB('f','G', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Green_plus );  Test.step=5; _SaveState(); break;
+		case Touch_fontGm:	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Green_minus ); Test.step=5; _SaveState(); break;
+		case Touch_fontBp:	ChangeValRGB('f','B', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Blue_plus );  Test.step=5; _SaveState(); break;
+		case Touch_fontBm:	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Blue_minus ); Test.step=5; _SaveState(); break;
 
+		case Touch_bkRp:	ChangeValRGB('b','R', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Red_plus );  Test.step=5; _SaveState(); break;
+		case Touch_bkRm:	ChangeValRGB('b','R',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Red_minus ); Test.step=5; _SaveState(); break;
+		case Touch_bkGp:	ChangeValRGB('b','G', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_plus );  Test.step=5; _SaveState(); break;
+		case Touch_bkGm:	ChangeValRGB('b','G',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_minus ); Test.step=5; _SaveState(); break;
+		case Touch_bkBp:	ChangeValRGB('b','B', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Blue_plus );  Test.step=5; _SaveState(); break;
+		case Touch_bkBm:	ChangeValRGB('b','B',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Blue_minus ); Test.step=5; _SaveState(); break;
 
-		case Point_6:
-			ChangeValRGB('f', 'R', 1);
-			KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_plus );	Test.step=5;	_SaveState();
-			break;
-		case Point_7:
-			ChangeValRGB('f', 'R', -1);
-			KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_minus );	Test.step=5;	_SaveState();
-			break;
-
-		case Point_8:
-			ChangeValRGB('b', 'R', 1);
-			KEYBOARD_TYPE( KEYBOARD_BkRGB, KEY_Red_plus );	Test.step=5;	_SaveState();
-			break;
-		case Point_9:
-			ChangeValRGB('b', 'R', -1);
-			KEYBOARD_TYPE( KEYBOARD_BkRGB, KEY_Red_minus );	Test.step=5;	_SaveState();
-			break;
-
-
-		case Point_12:
-			Dbg(1,"\r\nTouchPoint_12");
-			break;
 		case Move_1:
 			Dbg(1,"\r\nTouchMove_1");
 			break;
@@ -1177,10 +1160,14 @@ void FILE_NAME(setTouch)(void)
 			break;
 		default:
 
-			if(_WasState(Point_6) || _WasState(Point_7) ||
-				_WasState(Point_8) || _WasState(Point_9) )
+			if(_WasState(Touch_fontRp) || _WasState(Touch_fontRm) ||
+				_WasState(Touch_fontGp) || _WasState(Touch_fontGm) ||
+				_WasState(Touch_fontBp) || _WasState(Touch_fontBm) ||
+				_WasState(Touch_bkRp) || _WasState(Touch_bkRm) ||
+				_WasState(Touch_bkGp) || _WasState(Touch_bkGm) ||
+				_WasState(Touch_bkBp) || _WasState(Touch_bkBm) )
 			{
-				KEYBOARD_TYPE( KEYBOARD_BkRGB, KEY_All_release );
+				KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_All_release );
 				Test.step=1;
 			}
 			break;
