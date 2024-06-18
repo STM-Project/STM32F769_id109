@@ -986,12 +986,12 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		case KEYBOARD_bkRGB:
 			const char *txtKey[]								= {"R+",	  "R-", 	  "G+",		"G-", 	  "B+",	  "B-"};
 			const COLORS_DEFINITION colorTxtKey[]		= {RED,	  RED, 	  GREEN,		GREEN, 	  BLUE,	  BLUE};
-			const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, DARKGREEN,DARKGREEN, DARKBLUE,DARKBLUE};
+			const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
 			const uint16_t dimKeys[] = {3,2};
 
 			widthAll =  dimKeys[0]*s.widthKey +  (dimKeys[0]+1)*s.interSpace;
 			heightAll = dimKeys[1]*s.heightKey + (dimKeys[1]+1)*s.interSpace;
-			int countKey = sizeof(colorTxtKey);
+			int countKey = STRUCT_TAB_SIZE(txtKey);
 			XY_Touch_Struct posKey[]=
 			  {{s.interSpace, 						s.interSpace},
 				{s.interSpace, 						2*s.interSpace + s.heightKey},
