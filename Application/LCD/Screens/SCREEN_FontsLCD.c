@@ -947,27 +947,41 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(pos.y,s.heightKey));
 	}
 	void _Key(XY_Touch_Struct pos){
-		LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(frameColor,s.bold),fillColor,bkColor);  //WSADZAC FUNKCJE W FUNKCCJI !!!!
+		LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(frameColor,s.bold),fillColor,bkColor);
 	}
 	void _KeyStr(XY_Touch_Struct pos,const char *txt, uint32_t color){
-		LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(frameColor,s.bold),fillColor,bkColor);
+		_Key(pos);
+		//LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(frameColor,s.bold),fillColor,bkColor);
 		_TxtPos(pos);
-		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+		_Str(txt,color);
+		//LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
 	}
 	void _KeyStrDisp(XY_Touch_Struct pos,const char *txt, uint32_t color){
-		LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(frameColor,s.bold),fillColor,bkColor);
+		_Key(pos);
+		//LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(frameColor,s.bold),fillColor,bkColor);
 		_TxtPos(pos);
-		LCD_StrDependOnColorsWindowIndirect(0, s.x, s.y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+		_StrDisp(txt,color);
+		//LCD_StrDependOnColorsWindowIndirect(0, s.x, s.y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
 	}
 	void _KeyPress(XY_Touch_Struct pos){
 		LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(framePressColor,s.bold),fillPressColor,bkColor);
 	}
 	void _KeyStrPress(XY_Touch_Struct pos, const char *txt, uint32_t colorTxt){
-		LCD_ShapeWindow( s.shape, 0, s.widthKey,s.heightKey, 0,0, s.widthKey,s.heightKey, SetColorBoldFrame(framePressColor,s.bold),fillPressColor,bkColor);
-		_TxtPos((XY_Touch_Struct){0});
-		LCD_StrDependOnColorsWindow(0, s.widthKey, s.heightKey,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,255, NoConstWidth);
+		_KeyPress(pos);
+		//LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(framePressColor,s.bold),fillPressColor,bkColor);
+		_TxtPos(pos);
+		_StrPress(txt,colorTxt);
+		//LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,250, NoConstWidth);
 	}
+
 	void _KeyStrPressDisp(XY_Touch_Struct pos, const char *txt, uint32_t colorTxt){
+		_KeyPress(pos);
+		//LCD_ShapeWindow( s.shape, 0, widthAll,heightAll, pos.x,pos.y, s.widthKey,s.heightKey, SetColorBoldFrame(framePressColor,s.bold),fillPressColor,bkColor);
+		_TxtPos(pos);
+		_StrPressDisp(txt,colorTxt);
+		//LCD_StrDependOnColorsWindowIndirect(0, s.x, s.y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,250, NoConstWidth);
+	}
+	void _KeyStrPressDisp_oneBlock(XY_Touch_Struct pos, const char *txt, uint32_t colorTxt){
 		LCD_ShapeWindow( s.shape, 0, s.widthKey,s.heightKey, 0,0, s.widthKey,s.heightKey, SetColorBoldFrame(framePressColor,s.bold),fillPressColor,bkColor);
 		_TxtPos((XY_Touch_Struct){0});
 		LCD_StrDependOnColorsWindowIndirect(0, s.x+pos.x, s.y+pos.y, s.widthKey, s.heightKey,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,255, NoConstWidth);
@@ -1018,14 +1032,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	/* ----- User Function Definitions ----- */
 	void _ServiceRGB(void)
 	{
-		const char *txtKey[]								= {"R+",	  "R-", 	  "G+",		"G-", 	  "B+",	  "B-"};
-		const COLORS_DEFINITION colorTxtKey[]		= {RED,	  RED, 	  GREEN,		GREEN, 	  BLUE,	  BLUE};
+		const char *txtKey[]								= {"R+",	  "R-", 	  "G+",		 "G-", 	    "B+",	  "B-"};
+		const COLORS_DEFINITION colorTxtKey[]		= {RED,	  RED, 	  GREEN,		 GREEN, 	    BLUE,	  BLUE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
 		const uint16_t dimKeys[] = {3,2};
+		int countKey = dimKeys[0]*dimKeys[1]; 		/* = STRUCT_TAB_SIZE(txtKey); */
 
 		widthAll =  dimKeys[0]*s.widthKey +  (dimKeys[0]+1)*s.interSpace;
 		heightAll = dimKeys[1]*s.heightKey + (dimKeys[1]+1)*s.interSpace;
-		int countKey = STRUCT_TAB_SIZE(txtKey);
 		XY_Touch_Struct posKey[]=
 		  {{s.interSpace, 						s.interSpace},
 			{s.interSpace, 						2*s.interSpace + s.heightKey},
@@ -1046,12 +1060,12 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				}
 				break;
 
-			case KEY_Red_plus:	 _KeyStrPressDisp(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
-			case KEY_Red_minus:	 _KeyStrPressDisp(posKey[1], txtKey[1], colorTxtPressKey[1]);	break;
-			case KEY_Green_plus:	 _KeyStrPressDisp(posKey[2], txtKey[2], colorTxtPressKey[2]);	break;
-			case KEY_Green_minus: _KeyStrPressDisp(posKey[3], txtKey[3], colorTxtPressKey[3]);	break;
-			case KEY_Blue_plus:	 _KeyStrPressDisp(posKey[4], txtKey[4], colorTxtPressKey[4]);	break;
-			case KEY_Blue_minus:  _KeyStrPressDisp(posKey[5], txtKey[5], colorTxtPressKey[5]);	break;
+			case KEY_Red_plus:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
+			case KEY_Red_minus:	 _KeyStrPressDisp_oneBlock(posKey[1], txtKey[1], colorTxtPressKey[1]);	break;
+			case KEY_Green_plus:	 _KeyStrPressDisp_oneBlock(posKey[2], txtKey[2], colorTxtPressKey[2]);	break;
+			case KEY_Green_minus: _KeyStrPressDisp_oneBlock(posKey[3], txtKey[3], colorTxtPressKey[3]);	break;
+			case KEY_Blue_plus:	 _KeyStrPressDisp_oneBlock(posKey[4], txtKey[4], colorTxtPressKey[4]);	break;
+			case KEY_Blue_minus:  _KeyStrPressDisp_oneBlock(posKey[5], txtKey[5], colorTxtPressKey[5]);	break;
 		}
 
 		if(s.startTouchIdx){
@@ -1066,14 +1080,16 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,	  WHITE, 	  			WHITE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,	  DARKRED, 				DARKBLUE};
 		const uint16_t dimKeys[] = {1,3};
-
-		widthAll =  dimKeys[0]*s.widthKey +  (dimKeys[0]+1)*s.interSpace;
-		heightAll = dimKeys[1]*s.heightKey + (dimKeys[1]+1)*s.interSpace;
 		int countKey = STRUCT_TAB_SIZE(txtKey);
+
+		framePressColor = frameColor;
+		widthAll  = dimKeys[0]*s.widthKey  + (dimKeys[0]+1)*s.interSpace;
+		heightAll = dimKeys[1]*s.heightKey + (dimKeys[1]+1)*s.interSpace - (countKey-1);
+
 		XY_Touch_Struct posKey[]=
 		  {{s.interSpace, s.interSpace},
-			{s.interSpace, 2*s.interSpace + s.heightKey},
-			{s.interSpace, 3*s.interSpace + 2*s.heightKey}};
+			{s.interSpace, 2*s.interSpace + s.heightKey - 1},
+			{s.interSpace, 3*s.interSpace + 2*s.heightKey - 2}};
 
 		switch((int)selBlockPress)
 		{
@@ -1086,11 +1102,11 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 						(i==1 && Test.style==Times_New_Roman) ||
 						(i==2 && Test.style==Comic_Saens_MS))
 					{
-						_KeyPress(posKey[i]); _TxtPos(posKey[i]);    i<countKey-1 ? _StrPress(txtKey[i],colorTxtPressKey[i]) : _StrPressDisp(txtKey[i],colorTxtPressKey[i]);
+							i<countKey-1 ? _KeyStrPress(posKey[i],txtKey[i],colorTxtPressKey[i]) : _KeyStrPressDisp(posKey[i],txtKey[i],colorTxtPressKey[i]);
+						/* _KeyPress(posKey[i]); _TxtPos(posKey[i]);    i<countKey-1 ? _StrPress(txtKey[i],colorTxtPressKey[i]) : _StrPressDisp(txtKey[i],colorTxtPressKey[i]); */		/* This is the same as up */
 					}
-					else{
-						i<countKey-1 ? _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
-					/* _Key(posKey[i]); 		 _TxtPos(posKey[i]);    i<countKey-1 ? _Str(txtKey[i],colorTxtKey[i]) : 	_StrDisp(txtKey[i],colorTxtKey[i]); */		/* This is the same as up */
+					else{	i<countKey-1 ? _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
+						/* _Key(posKey[i]); _TxtPos(posKey[i]);   i<countKey-1 ? _Str(txtKey[i],colorTxtKey[i]) : _StrDisp(txtKey[i],colorTxtKey[i]); */		/* This is the same as up */
 					}
 				}
 				break;
@@ -1205,11 +1221,11 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontStyle2, FontStyle,Press, TXT_FONT_STYLE,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_fontStyle, KEY_Select_one, LCD_LittleRoundRectangle,0, 400,160, 200,30, 0, state, Touch_style1); //daj nachodzenie lini dla -1 interspace = -1 !!!
+				KeyboardTypeDisplay(KEYBOARD_fontStyle, KEY_Select_one, LCD_Rectangle,0, 400,160, 200,40, 0, state, Touch_style1); //daj nachodzenie lini dla -1 interspace = -1 !!!
 			DisplayTouchPosXY(state,pos,"Touch_FontStyle2");
 			break;
 
-//		case Touch_FontStyle:
+//		case Touch_FontStyle:   //sPRAWDZIC tOUCH.IDX NA DEBUGU !!!!
 //			ChangeFontStyle();
 //			DisplayTouchPosXY(state,pos,"Touch_FontStyle");
 //		break;
