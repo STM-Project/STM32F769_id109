@@ -250,6 +250,25 @@ static uint16_t GetTouchType(int *param)
 					}
 					break;
 
+				case ID_TOUCH_POINT_WITH_HOLD:
+					if(ServiceTouch.press == press)
+					{
+						if(IS_RANGE(ServiceTouch.idx-1, 0, BUF_LCD_TOUCH_SIZE-1)){
+						if((ServiceTouch.pos[ServiceTouch.idx-1].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[ServiceTouch.idx-1].x < Touch[i].pos[1].x) &&
+							(ServiceTouch.pos[ServiceTouch.idx-1].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[ServiceTouch.idx-1].y < Touch[i].pos[1].y))
+						{
+							if(ServiceTouch.idx > Touch[i].param){
+								if(0==Touch[i].flags1){
+									Touch[i].flags1 = 1;
+									return Touch[i].index;
+								}
+							}
+						}
+						else Touch[i].flags1 = 1;
+						}
+					}
+					break;
+
 				case ID_TOUCH_GET_ANY_POINT:
 					if(ServiceTouch.press == press)
 					{
