@@ -10,6 +10,8 @@
 
 #include "stm32f7xx_hal.h"
 
+#define MAX_SIZE_TOUCHIDX_FOR_STRVAR		5
+
 #define Ą "\xA5"
 #define ą "\xB9"
 #define Ć "\xC6"
@@ -165,7 +167,7 @@ void LCD_SetStrVar_space(int idVar, int space);
 void LCD_SetStrVar_fontID(int idVar, int fontID);
 void LCD_SetStrVar_bkRoundRect(int idVar, int bkRoundRect);
 void LCD_SetStrVar_bkScreenColor(int idVar, int bkScreenColor);
-void LCD_SetStrVar_idxTouch(int idVar, int idxTouch);
+void LCD_SetStrVar_idxTouch(int idVar, int nr, int idxTouch);
 void LCD_SetStrVar_Mov_posWin(int idVar, int posWin);
 
 uint32_t LCD_GetStrVar_bkColor(int idVar);
@@ -181,7 +183,7 @@ int LCD_GetStrVar_heightPxl(int idVar);
 int LCD_GetStrVar_fontID(int idVar);
 int LCD_GetStrVar_bkScreenColor(int idVar);
 int LCD_GetStrVar_bkRoundRect(int idVar);
-int LCD_GetStrVar_idxTouch(int idVar);
+int LCD_GetStrVar_idxTouch(int idVar, int nr);
 int LCD_GetStrVar_Mov_posWin(int idVar);
 void LCD_SetBkFontShape(int idVar, int bkType);
 void LCD_DeleteAllFontAndImages(void);

@@ -62,5 +62,6 @@ void CalibrationWasDone(void);
 void DisplayCoeffCalibration(void);
 void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos, char *txt);
 void DisplayAnyTouchPosXY(void);
+uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time);
 
 #endif

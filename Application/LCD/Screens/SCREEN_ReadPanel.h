@@ -16,7 +16,7 @@ extern int startScreen;
 
 void SCREEN_ReadPanel(void);
 
-int ConfigTouchForStrVar(uint16_t ID_touch, uint16_t idx_touch, uint8_t param_touch, int idVar, StructTxtPxlLen lenStr);
-int SetTouchForNewEndPos(int idVar, StructTxtPxlLen lenStr);
+int SCREEN_ConfigTouchForStrVar(uint16_t ID_touch, uint16_t idx_touch, uint8_t param_touch, int idVar, int nrTouchIdx, StructTxtPxlLen lenStr);
+int SCREEN_SetTouchForNewEndPos(int idVar, int touchIdx, StructTxtPxlLen lenStr);
 
 #endif /* LCD_SCREENS_SCREEN_READPANEL_H_ */

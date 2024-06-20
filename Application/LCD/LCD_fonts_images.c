@@ -123,7 +123,7 @@ typedef struct{
 	uint16_t yPos_prev;
 	uint16_t widthPxl_prev;
 	uint16_t heightPxl_prev;
-	uint16_t touch_idx;
+	uint16_t touch_idx[MAX_SIZE_TOUCHIDX_FOR_STRVAR];
 	uint8_t bkRoundRect;
 	MOVABLE_FONTS_SETTING FontMov;
 } FONTS_VAR_SETTING;
@@ -1353,8 +1353,8 @@ void LCD_SetStrVar_bkRoundRect(int idVar, int bkRoundRect){
 void LCD_SetStrVar_bkScreenColor(int idVar, int bkScreenColor){
 	FontVar[idVar].bkScreenColor=bkScreenColor;
 }
-void LCD_SetStrVar_idxTouch(int idVar, int idxTouch){
-	FontVar[idVar].touch_idx=idxTouch;
+void LCD_SetStrVar_idxTouch(int idVar, int nr, int idxTouch){
+	FontVar[idVar].touch_idx[nr]=idxTouch;
 }
 void LCD_SetStrVar_Mov_posWin(int idVar, int posWin){
 	FontVar[idVar].FontMov.posWin=posWin;
@@ -1399,8 +1399,8 @@ int LCD_GetStrVar_bkScreenColor(int idVar){
 int LCD_GetStrVar_bkRoundRect(int idVar){
 	return FontVar[idVar].bkRoundRect;
 }
-int LCD_GetStrVar_idxTouch(int idVar){
-	return FontVar[idVar].touch_idx;
+int LCD_GetStrVar_idxTouch(int idVar, int nr){
+	return FontVar[idVar].touch_idx[nr];
 }
 int LCD_GetStrVar_Mov_posWin(int idVar){
 	return FontVar[idVar].FontMov.posWin;

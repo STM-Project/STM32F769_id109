@@ -560,3 +560,7 @@ void DeleteAllTouchWithout(uint16_t idx)
 	}
 }
 
+uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time){
+	return time/SERVICE_TOUCH_PROB_TIME_MS;
+}
+
