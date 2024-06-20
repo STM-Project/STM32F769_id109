@@ -246,16 +246,16 @@ typedef enum{
 	Touch_FontStyle,
 	Touch_FontStyle2,
 	Touch_fontRp,
-	Touch_fontRm,
 	Touch_fontGp,
-	Touch_fontGm,
 	Touch_fontBp,
+	Touch_fontRm,
+	Touch_fontGm,
 	Touch_fontBm,
 	Touch_bkRp,
-	Touch_bkRm,
 	Touch_bkGp,
-	Touch_bkGm,
 	Touch_bkBp,
+	Touch_bkRm,
+	Touch_bkGm,
 	Touch_bkBm,
 	Touch_style1,
 	Touch_style2,
@@ -285,10 +285,10 @@ typedef enum{
 	KEY_Select_one,
 
 	KEY_Red_plus,
-	KEY_Red_minus,
 	KEY_Green_plus,
-	KEY_Green_minus,
 	KEY_Blue_plus,
+	KEY_Red_minus,
+	KEY_Green_minus,
 	KEY_Blue_minus,
 
 	KEY_Style_1,
@@ -328,7 +328,7 @@ typedef struct{
 	int8_t size;
 	uint8_t style;
 	uint32_t time;
-	uint8_t type;
+	int8_t type;
 	char txt[200];  //!!!!!!!!!!!!!!!!! ZMIANA TEXTU NA INNY DOWOLNY
 	int16_t lenWin;
 	int16_t offsWin;
@@ -823,9 +823,9 @@ static void ChangeFontBoldItalNorm(void)
 	Data2Refresh(PARAM_SIZE);
 	Data2Refresh(PARAM_SPEED);
 }
-
-static void ReplaceLcdStrType(void)
+static void ReplaceLcdStrType(int8_t typeReq)
 {
+	GOTO_ReplaceLcdStrType:
 	INCR_WRAP(Test.type,1,0,2);
 	switch(Test.type)
 	{
@@ -837,6 +837,12 @@ static void ReplaceLcdStrType(void)
 		Test.coeff=Test.coeff_prev;
 		break;
 	}
+
+	if(typeReq<0xFF){
+		if(typeReq!=Test.type)
+			goto GOTO_ReplaceLcdStrType;
+	}
+
 	ClearCursorField();
 	LCD_LoadFontVar();
 	AdjustMiddle_X();
@@ -1027,8 +1033,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	/* ----- User Function Definitions ----- */
 	void _ServiceRGB(void)
 	{
-		const char *txtKey[]								= {"R+",	  "R-", 	  "G+",		 "G-", 	    "B+",	  "B-"};
-		const COLORS_DEFINITION colorTxtKey[]		= {RED,	  RED, 	  GREEN,		 GREEN, 	    BLUE,	  BLUE};
+		const char *txtKey[]								= {"R+",	  "G+", 	  "B+",		 "R-", 	    "G-",	  "B-"};
+		const COLORS_DEFINITION colorTxtKey[]		= {RED,	  GREEN, 	BLUE,		 RED, 	    GREEN,	 BLUE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
 		const uint16_t dimKeys[] = {3,2};
 		XY_Touch_Struct posKey[]=
@@ -1276,7 +1282,7 @@ void FILE_NAME(setTouch)(void)
 			DisplayTouchPosXY(state,pos,"Touch_FontStyle2");
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontType2, FontType,Press, TXT_FONT_STYLE,252);
+		CASE_TOUCH_STATE(state,Touch_FontType2, FontType,Press, TXT_FONT_TYPE,252);
 			if(IsFunc())
 				KeyboardTypeDisplay(KEYBOARD_fontType, KEY_Select_one, LCD_Rectangle,0, 400,160, 200,40, 0, state, Touch_type1);
 			DisplayTouchPosXY(state,pos,"Touch_FontType2");
@@ -1316,9 +1322,9 @@ void FILE_NAME(setTouch)(void)
 		case Touch_style2:	Test.style=Arial; 				ChangeFontStyle();  KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one );  break;
 		case Touch_style3:	Test.style=Times_New_Roman; 	ChangeFontStyle();  KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one );  break;
 
-		case Touch_type1:	Test.type=-1; 	ReplaceLcdStrType();  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
-		case Touch_type2:	Test.type=0; 	ReplaceLcdStrType();  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
-		case Touch_type3:	Test.type=1; 	ReplaceLcdStrType();  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
+		case Touch_type1:	ReplaceLcdStrType(0);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
+		case Touch_type2:	ReplaceLcdStrType(1);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
+		case Touch_type3:	ReplaceLcdStrType(2);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
 
 		case Move_1:
 			Dbg(1,"\r\nTouchMove_1");
@@ -1396,7 +1402,7 @@ void FILE_NAME(debugRcvStr)(void)
 		ChangeFontStyle();
 
 	else if(DEBUG_RcvStr("`"))
-		ReplaceLcdStrType();
+		ReplaceLcdStrType(255);
 
 	else if(DEBUG_RcvStr("r"))
 		ChangeFontBoldItalNorm();
@@ -1540,7 +1546,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	 }
 	 else
 	 {
-		 StartMeasureTime_us();    //daj mozliwosc wpisywania dowolnego textu aby korygowac odstepy miedzy kazdymi fontami jakimi sie chce !!!!!!!
+		 StartMeasureTime_us();
 		 if(Test.type)
 			 lenStr=LCD_StrVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,LCD_GetStrVar_bkColor(v.FONT_VAR_Fonts),0,Test.constWidth,v.COLOR_BkScreen);
 		 else
