@@ -264,6 +264,11 @@ typedef enum{
 	Touch_type1,
 	Touch_type2,
 	Touch_type3,
+	Touch_size_plus,
+	Touch_size_minus,
+	Touch_size_norm,
+	Touch_size_bold,
+	Touch_size_italic,
 	Move_1,
 	Move_2,
 	Move_3,
@@ -295,6 +300,9 @@ typedef enum{
 	KEY_Style_1,
 	KEY_Style_2,
 	KEY_Style_3,
+
+	KEY_Size_plus,
+	KEY_Size_minus
 }SELECT_PRESS_BLOCK;
 
 typedef enum{
@@ -1167,9 +1175,79 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 	void _ServiceSize(void)
 	{
+		int touch_it=0;
+
+		const char *txtKey[]								= {"Size +",	"SIze -"};
+		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,	  	WHITE};
+		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,		BLACK};
+		const uint16_t dimKeys[] = {1,2};
+		XY_Touch_Struct posKey[]=
+		  {{1*s.interSpace + 0*s.widthKey,	1*s.interSpace + 0*s.heightKey},
+			{1*s.interSpace + 0*s.widthKey,	2*s.interSpace + 1*s.heightKey}};
+
+		int countKey = dimKeys[0]*dimKeys[1]; 		/* = STRUCT_TAB_SIZE(txtKey); */
+		widthAll =  dimKeys[0]*s.widthKey +  (dimKeys[0]+1)*s.interSpace;
+		heightAll = dimKeys[1]*s.heightKey + (dimKeys[1]+1)*s.interSpace;
+
+		switch((int)selBlockPress)
+		{
+			case KEY_All_release:
+				LCD_ShapeWindow( s.shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s.bold), bkColor,bkColor );
+
+				for(int i=0; i<countKey; ++i){
+					i<countKey-1 ? _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
+				}
+				break;
+
+			case KEY_Size_plus:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
+			case KEY_Size_minus:	 _KeyStrPressDisp_oneBlock(posKey[1], txtKey[1], colorTxtPressKey[1]);	break;
+		}
+
+		if(s.startTouchIdx){
+			for(int i=0; i<countKey; ++i)
+				_SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s.startTouchIdx + touch_it++, posKey[i]);
+		}
 
 
-
+//		const char *txtKey2[]								= {"Normal", "Bold", "Italic"};
+//		const COLORS_DEFINITION colorTxtKey2[]			= {WHITE,	  WHITE,  WHITE};
+//		const COLORS_DEFINITION colorTxtPressKey2[]	= {BLACK,	  BROWN,  ORANGE};
+//		const uint16_t dimKeys2[] = {1,3};
+//
+//		XY_Touch_Struct posKey2[]=
+//		  {{s.interSpace, 1*s.interSpace + 0*s.heightKey - 0},
+//			{s.interSpace, 2*s.interSpace + 1*s.heightKey - 1},
+//			{s.interSpace, 3*s.interSpace + 2*s.heightKey - 2}};
+//
+//		int countKey2 = STRUCT_TAB_SIZE(txtKey);
+//
+//		framePressColor = frameColor;
+//		widthAll  = dimKeys2[0]*s.widthKey  + (dimKeys2[0]+1)*s.interSpace;
+//		heightAll = dimKeys2[1]*s.heightKey + (dimKeys2[1]+1)*s.interSpace - (countKey2-1);
+//
+//		switch((int)selBlockPress)
+//		{
+//			case KEY_Select_one:
+//				LCD_ShapeWindow( s.shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s.bold), bkColor,bkColor );
+//
+//				for(int i=0; i<countKey2; ++i)
+//				{
+//					if((i==0 && Test.type==0) ||
+//						(i==1 && Test.type==1) ||
+//						(i==2 && Test.type==2))
+//					{
+//							i<countKey2-1 ? _KeyStrPress(posKey2[i],txtKey2[i],colorTxtPressKey2[i]) : _KeyStrPressDisp(posKey2[i],txtKey2[i],colorTxtPressKey2[i]);
+//					}
+//					else{	i<countKey2-1 ? _KeyStr(posKey2[i],txtKey2[i],colorTxtKey2[i]) : _KeyStrDisp(posKey2[i],txtKey2[i],colorTxtKey2[i]);
+//					}
+//				}
+//				break;
+//		}
+//
+//		if(s.startTouchIdx){
+//			for(int i=0; i<countKey2; ++i)
+//				_SetTouch(ID_TOUCH_POINT, s.startTouchIdx + touch_it++, posKey2[i]);
+//		}
 
 	}
 	/* ----- End User Function Definitions ----- */
@@ -1286,22 +1364,29 @@ void FILE_NAME(setTouch)(void)
 				KeyboardTypeDisplay(KEYBOARD_fontType, KEY_Select_one, LCD_Rectangle,0, 400,160, 200,40, 0, state, Touch_type1);
 			break;
 
-//	case Touch_FontType:
-//		ReplaceLcdStrType();
-//		DisplayTouchPosXY(state,pos,"Touch_FontType");
-//		break;
+		CASE_TOUCH_STATE(state,Touch_FontSize2, FontSize,Press, TXT_FONT_TYPE,252);
+			if(IsFunc())
+				KeyboardTypeDisplay(KEYBOARD_fontSize, KEY_All_release, LCD_RoundRectangle,0, 410,170, 80,40, 0, state, Touch_size_plus);
+			break;
 
 		case Touch_FontStyle:   //sPRAWDZIC tOUCH.IDX NA DEBUGU !!!!
 			ChangeFontStyle();
 			if(CHECK_TOUCH(Touch_FontStyle2))
 				KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one );
 			_SaveState();
-		break;
+			break;
+
+		case Touch_FontType:
+			ReplaceLcdStrType(255);
+			if(CHECK_TOUCH(Touch_FontType2))
+				KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );
+			_SaveState();
+			break;
 
 		case Touch_FontSize:
 			ChangeFontBoldItalNorm();
-			if(CHECK_TOUCH(Touch_FontSize2))
-				KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Select_one );
+//			if(CHECK_TOUCH(Touch_FontSize2))
+//				KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Select_one!!!! ); //jak bedzie wybor bold italics to wtedy odkomentuje !!!!
 			break;
 
 
@@ -1326,6 +1411,9 @@ void FILE_NAME(setTouch)(void)
 		case Touch_type1:	ReplaceLcdStrType(0);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
 		case Touch_type2:	ReplaceLcdStrType(1);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
 		case Touch_type3:	ReplaceLcdStrType(2);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
+
+		case Touch_size_plus:	IncFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_plus );  break;
+		case Touch_size_minus:	DecFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_minus );  break;
 
 		case Move_1:
 			Dbg(1,"\r\nTouchMove_1");
@@ -1360,6 +1448,8 @@ void FILE_NAME(setTouch)(void)
 
 			if(_WasState(Touch_FontStyle))
 				SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontStyle,1,LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle,TXT_FONT_STYLE));
+			if(_WasState(Touch_FontType))
+				SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontType,1,LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontType,TXT_FONT_TYPE));
 
 			break;
 	}
@@ -1515,10 +1605,14 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontType, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_FONT_TYPE, 	fullHight,0,255,NoConstWidth);
-	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontType2, press, v.FONT_VAR_FontType,0, lenStr);
+	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontType, press, v.FONT_VAR_FontType,0, lenStr);
+						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, lenStr);
+	}
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontSize, FillMainFrame),  LCD_Xpos(lenStr,IncPos,20), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_SIZE, 	fullHight,0,255,NoConstWidth); LCD_SetBkFontShape(v.FONT_VAR_FontSize,BK_LittleRound);
-	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontSize, press, v.FONT_VAR_FontSize,0, lenStr);
+	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontSize, press, v.FONT_VAR_FontSize,0, lenStr);
+						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontSize2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontSize,1, lenStr);
+	}
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontStyle, FillMainFrame), LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE, 	fullHight,0,255,NoConstWidth);
 	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontStyle, press, v.FONT_VAR_FontStyle,0, lenStr);
