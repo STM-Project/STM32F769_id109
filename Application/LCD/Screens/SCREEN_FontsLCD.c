@@ -1109,7 +1109,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				}
 				break;
 
-			case KEY_Red_plus:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
+			case KEY_Red_plus:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;	/* Wykorzystac to dla przesuwu dotyku i pozostawienie sladu :) */
 			case KEY_Green_plus:	 _KeyStrPressDisp_oneBlock(posKey[1], txtKey[1], colorTxtPressKey[1]);	break;
 			case KEY_Blue_plus:	 _KeyStrPressDisp_oneBlock(posKey[2], txtKey[2], colorTxtPressKey[2]);	break;
 			case KEY_Red_minus: 	 _KeyStrPressDisp_oneBlock(posKey[3], txtKey[3], colorTxtPressKey[3]);	break;
@@ -1212,7 +1212,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 	void _ServiceSize(void)
 	{
-		int touch_it=0;
 		const char *txtKey[]								= {"Size +",	"SIze -"};
 		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,	  	WHITE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,		BLACK};
@@ -1232,7 +1231,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			{s.interSpace+ofs, 0*s.interSpace + 2*s.heightKey - 2}};
 
 		int countKey = dimKeys[0]*dimKeys[1];
-		int countKey2 = STRUCT_TAB_SIZE(txtKey2);
+		int countKey2 = dimKeys2[0]*dimKeys2[1];
 
 		widthAll =  (s.interSpace + s.widthKey + s.interSpace) + (s.widthKey + s.interSpace);
 		heightAll = dimKeys2[1]*s.heightKey + (dimKeys2[1]+1)*s.interSpace - (countKey2-1);
@@ -1267,6 +1266,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			case KEY_Size_minus:	 _KeyStrPressDisp_oneBlock(posKey[1], txtKey[1], colorTxtPressKey[1]);	break;
 		}
 
+		int touch_it=0;
 		if(s.startTouchIdx){
 			for(int i=0; i<countKey; ++i)
 				_SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s.startTouchIdx + touch_it++, posKey[i]);
@@ -1301,6 +1301,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	#undef GET_Y
 	return 0;
 }
+
+//#define aaa("sdsd", zmienna)	zmienna  //PRZEMYSLEC to !!!!!!!
 
 void FILE_NAME(setTouch)(void)
 {
@@ -1338,6 +1340,9 @@ void FILE_NAME(setTouch)(void)
 				CLR_TOUCH(state);\
 			}
 
+	#define _KEYS_RELEASE_fontRGB 		if(_WasStatePrev(Touch_fontRp,Touch_bkBm)) KEYBOARD_TYPE(KEYBOARD_fontRGB, KEY_All_release)
+	#define _KEYS_RELEASE_fontSize 		if(_WasStatePrev(Touch_size_plus,Touch_size_minus)) KEYBOARD_TYPE(KEYBOARD_fontSize, KEY_All_release_and_select_one)
+
 	static uint16_t statePrev=0;
 	uint16_t state, function=0;
 	XY_Touch_Struct pos;
@@ -1352,6 +1357,9 @@ void FILE_NAME(setTouch)(void)
 			return 1;
 		}
 		else return 0;
+	}
+	int _WasStatePrev(int rangeMin,int rangeMax){
+		return (IS_RANGE(statePrev,rangeMin,rangeMax) && statePrev!=state);
 	}
 
 	void SetFunc(void){
@@ -1415,20 +1423,19 @@ void FILE_NAME(setTouch)(void)
 			_SaveState();
 			break;
 
+		case Touch_fontRp: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','R', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_plus ); 	Test.step=5; _SaveState(); break;
+		case Touch_fontGp: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','G', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Green_plus ); 	Test.step=5; _SaveState(); break;
+		case Touch_fontBp: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','B', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Blue_plus ); 	Test.step=5; _SaveState(); break;
+		case Touch_fontRm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','R',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_minus ); 	Test.step=5; _SaveState(); break;
+		case Touch_fontGm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Green_minus ); Test.step=5; _SaveState(); break;
+		case Touch_fontBm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Blue_minus ); 	Test.step=5; _SaveState(); break;
 
-		case Touch_fontRp:	ChangeValRGB('f','R', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_plus );  Test.step=5; _SaveState(); break;
-		case Touch_fontGp:	ChangeValRGB('f','G', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Green_plus ); Test.step=5; _SaveState(); break;
-		case Touch_fontBp:	ChangeValRGB('f','B', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Blue_plus );  Test.step=5; _SaveState(); break;
-		case Touch_fontRm:	ChangeValRGB('f','R',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_minus ); Test.step=5; _SaveState(); break;
-		case Touch_fontGm:	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Green_minus );  Test.step=5; _SaveState(); break;
-		case Touch_fontBm:	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Blue_minus ); Test.step=5; _SaveState(); break;
-
-		case Touch_bkRp:	ChangeValRGB('b','R', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Red_plus );  Test.step=5; _SaveState(); break;
-		case Touch_bkGp:	ChangeValRGB('b','G', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_plus ); Test.step=5; _SaveState(); break;
-		case Touch_bkBp:	ChangeValRGB('b','B', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Blue_plus );  Test.step=5; _SaveState(); break;
-		case Touch_bkRm:	ChangeValRGB('b','R',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Red_minus ); Test.step=5; _SaveState(); break;
-		case Touch_bkGm:	ChangeValRGB('b','G',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_minus );  Test.step=5; _SaveState(); break;
-		case Touch_bkBm:	ChangeValRGB('b','B',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Blue_minus ); Test.step=5; _SaveState(); break;
+		case Touch_bkRp: _KEYS_RELEASE_fontRGB;	ChangeValRGB('b','R', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Red_plus );  	Test.step=5; _SaveState(); break;
+		case Touch_bkGp: _KEYS_RELEASE_fontRGB;	ChangeValRGB('b','G', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_plus ); Test.step=5; _SaveState(); break;
+		case Touch_bkBp: _KEYS_RELEASE_fontRGB;	ChangeValRGB('b','B', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Blue_plus );  Test.step=5; _SaveState(); break;
+		case Touch_bkRm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('b','R',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Red_minus ); 	Test.step=5; _SaveState(); break;
+		case Touch_bkGm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('b','G',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_minus );Test.step=5; _SaveState(); break;
+		case Touch_bkBm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('b','B',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Blue_minus ); Test.step=5; _SaveState(); break;
 
 		case Touch_style1:	ChangeFontStyle(Arial);  				KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one );  break;  //wyelimunuj ze 2 nacisniete buttony !!!!!!!!!!!
 		case Touch_style2:	ChangeFontStyle(Times_New_Roman);  	KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one );  break;
@@ -1438,8 +1445,8 @@ void FILE_NAME(setTouch)(void)
 		case Touch_type2:	ReplaceLcdStrType(1);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
 		case Touch_type3:	ReplaceLcdStrType(2);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
 
-		case Touch_size_plus:	IncFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_plus ); _SaveState();  break;
-		case Touch_size_minus:	DecFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_minus ); _SaveState();  break;
+		case Touch_size_plus: 	_KEYS_RELEASE_fontSize;	IncFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_plus ); _SaveState();  break;
+		case Touch_size_minus:	_KEYS_RELEASE_fontSize; DecFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_minus ); _SaveState();  break;
 		case Touch_size_norm: 	ChangeFontBoldItalNorm(0);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); break;
 		case Touch_size_bold: 	ChangeFontBoldItalNorm(1);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); break;
 		case Touch_size_italic: ChangeFontBoldItalNorm(2);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); break;
