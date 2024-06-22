@@ -1201,6 +1201,13 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					else{	i<countKey-1 ? _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
 					}
 				}
+
+//				for(int i=0; i<s.heightKey; ++i)
+//				{
+//					LCD_Display(0+i*widthAll,s.x,s.y,widthAll,heightAll-s.heightKey);
+//					vTaskDelay(150);
+//				}
+
 				break;
 		}
 
@@ -1212,7 +1219,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 	void _ServiceSize(void)
 	{
-		const char *txtKey[]								= {"Size +",	"SIze -"};
+		const char *txtKey[]								= {"Size +",	"Size -"};
 		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,	  	WHITE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,		BLACK};
 		const uint16_t dimKeys[] = {1,2};
@@ -1227,14 +1234,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		int ofs=s.interSpace + s.widthKey;
 		XY_Touch_Struct posKey2[]=
 		  {{s.interSpace+ofs, 1*s.interSpace + 0*s.heightKey - 0},
-			{s.interSpace+ofs, 0*s.interSpace + 1*s.heightKey - 1},
-			{s.interSpace+ofs, 0*s.interSpace + 2*s.heightKey - 2}};
+			{s.interSpace+ofs, 1*s.interSpace + 1*s.heightKey - 1},
+			{s.interSpace+ofs, 1*s.interSpace + 2*s.heightKey - 2}};
 
 		int countKey = dimKeys[0]*dimKeys[1];
 		int countKey2 = dimKeys2[0]*dimKeys2[1];
 
 		widthAll =  (s.interSpace + s.widthKey + s.interSpace) + (s.widthKey + s.interSpace);
-		heightAll = dimKeys2[1]*s.heightKey + (dimKeys2[1]+1)*s.interSpace - (countKey2-1);
+		heightAll = s.interSpace + dimKeys2[1]*s.heightKey + s.interSpace - (countKey2-1);
 
 		switch((int)selBlockPress)
 		{
@@ -1244,8 +1251,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				for(int i=0; i<countKey; ++i)
 					_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
 
-				c.shape = s.shape;
-				s.shape = LCD_Rectangle;
+				c.shape = s.shape;	s.shape = LCD_Rectangle;
 				framePressColor = frameColor;
 
 				for(int i=0; i<countKey2; ++i)
