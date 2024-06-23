@@ -260,6 +260,7 @@ static uint16_t GetTouchType(int *param)
 							if(ServiceTouch.idx > Touch[i].param){
 								if(0==Touch[i].flags1){
 									Touch[i].flags1 = 1;
+									*param = ServiceTouch.idx-1;
 									return Touch[i].index;
 								}
 							}
@@ -276,8 +277,10 @@ static uint16_t GetTouchType(int *param)
 						if((ServiceTouch.pos[ServiceTouch.idx-1].x >= Touch[i].pos[0].x) && (ServiceTouch.pos[ServiceTouch.idx-1].x < Touch[i].pos[1].x) &&
 							(ServiceTouch.pos[ServiceTouch.idx-1].y >= Touch[i].pos[0].y) && (ServiceTouch.pos[ServiceTouch.idx-1].y < Touch[i].pos[1].y))
 						{
-							if(0 == (ServiceTouch.idx % Touch[i].param))
+							if(0 == (ServiceTouch.idx % Touch[i].param)){
+								*param = ServiceTouch.idx-1;
 								return Touch[i].index;
+							}
 						}}
 					}
 					break;
@@ -293,6 +296,7 @@ static uint16_t GetTouchType(int *param)
 							{
 								case 0:
 									Touch[i].flags1 = 1;
+									*param = ServiceTouch.idx-1;
 									return Touch[i].index;
 
 								case 1:
@@ -305,13 +309,16 @@ static uint16_t GetTouchType(int *param)
 										Touch[i].flags2++;
 										if(Touch[i].flags2 > TIME_5000_MS_TO_NUMBER_PROBE)
 											Touch[i].flags1 = 3;
+										*param = ServiceTouch.idx-1;
 										return Touch[i].index;
 									}
 									break;
 
 								case 3:
-									if(0 == (ServiceTouch.idx % Touch[i].param/2))
+									if(0 == (ServiceTouch.idx % Touch[i].param/2)){
+										*param = ServiceTouch.idx-1;
 										return Touch[i].index;
+									}
 									break;
 							}
 						}}
@@ -329,8 +336,10 @@ static uint16_t GetTouchType(int *param)
 								for(int j=1; j<ServiceTouch.idx; ++j)
 								{
 									if( ServiceTouch.pos[j].x <= Touch[i].pos[1].x
-										&& ServiceTouch.pos[j].y >= Touch[i].pos[0].y && ServiceTouch.pos[j].y <= Touch[i].pos[1].y )
+										&& ServiceTouch.pos[j].y >= Touch[i].pos[0].y && ServiceTouch.pos[j].y <= Touch[i].pos[1].y ){
+										*param = j;
 										return Touch[i].index;
+									}
 								}
 							}
 						}
@@ -348,8 +357,10 @@ static uint16_t GetTouchType(int *param)
 								for(int j=1; j<ServiceTouch.idx; ++j)
 								{
 									if( ServiceTouch.pos[j].x >= Touch[i].pos[1].x
-										&& ServiceTouch.pos[j].y >= Touch[i].pos[0].y && ServiceTouch.pos[j].y <= Touch[i].pos[1].y )
+										&& ServiceTouch.pos[j].y >= Touch[i].pos[0].y && ServiceTouch.pos[j].y <= Touch[i].pos[1].y ){
+										*param = j;
 										return Touch[i].index;
+									}
 								}
 							}
 						}
@@ -367,8 +378,10 @@ static uint16_t GetTouchType(int *param)
 								for(int j=1; j<ServiceTouch.idx; ++j)
 								{
 									if( ServiceTouch.pos[j].y <= Touch[i].pos[1].y
-										&& ServiceTouch.pos[j].x >= Touch[i].pos[0].x && ServiceTouch.pos[j].x <= Touch[i].pos[1].x )
+										&& ServiceTouch.pos[j].x >= Touch[i].pos[0].x && ServiceTouch.pos[j].x <= Touch[i].pos[1].x ){
+										*param = j;
 										return Touch[i].index;
+									}
 								}
 							}
 						}
@@ -386,8 +399,10 @@ static uint16_t GetTouchType(int *param)
 								for(int j=1; j<ServiceTouch.idx; ++j)
 								{
 									if( ServiceTouch.pos[j].y >= Touch[i].pos[1].y
-										&& ServiceTouch.pos[j].x >= Touch[i].pos[0].x && ServiceTouch.pos[j].x <= Touch[i].pos[1].x )
+										&& ServiceTouch.pos[j].x >= Touch[i].pos[0].x && ServiceTouch.pos[j].x <= Touch[i].pos[1].x ){
+										*param = j;
 										return Touch[i].index;
+									}
 								}
 							}
 						}
@@ -440,14 +455,9 @@ uint16_t LCD_TOUCH_GetTypeAndPosition(XY_Touch_Struct *posXY)
 			ServiceTouch.idx = 0;
 	}
 
-	if(IS_RANGE(ServiceTouch.idx-1, 0, BUF_LCD_TOUCH_SIZE-1)){
-		posXY->x = ServiceTouch.pos[ServiceTouch.idx-1].x;
-		posXY->y = ServiceTouch.pos[ServiceTouch.idx-1].y;
-	}
-	else{
-		posXY->x = ServiceTouch.pos[param].x;
-		posXY->y = ServiceTouch.pos[param].y;
-	}
+	posXY->x = ServiceTouch.pos[param].x;
+	posXY->y = ServiceTouch.pos[param].y;
+
 	return touchRecognize;
 }
 
