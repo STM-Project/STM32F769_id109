@@ -11,7 +11,6 @@
 #include "LCD_Common.h"
 #include "LCD_Hardware.h"
 #include "common.h"
-#include "FreeRTOS.h"   //Po co to !!!???
 #include "ff.h"
 #include "sd_card.h"
 #include "errors_service.h"
@@ -31,6 +30,7 @@
 #define MAX_SPACE_CORRECT	100
 
 #define MAX_SIZE_CHANGECOLOR_BUFF	300
+#define LCD_XY_MIDDLE_MAX_NUMBER_USE	50
 
 static const char CharsTab_full[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-.,:;[]{}<>'~*()&#^=_$%\xB0@|?!\xA5\xB9\xC6\xE6\xCA\xEA\xA3\xB3\xD1\xF1\xD3\xF3\x8C\x9C\x8F\x9F\xAF\xBF/1234567890";
 static const char CharsTab_digits[]="+-1234567890.";
@@ -3118,7 +3118,6 @@ uint16_t LCD_Xpos(StructTxtPxlLen structTemp, int cmd, int offs)
 	}
 }
 
-#define LCD_XY_MIDDLE_MAX_NUMBER_USE	50
 uint16_t LCD_Ymiddle(int nr, int cmd, uint32_t val)
 {
 	static uint16_t startPosY[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0}, heightY[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0};
