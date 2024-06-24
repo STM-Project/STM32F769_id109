@@ -9,16 +9,12 @@ typedef enum{
 	Coeff_B1 = -26479,
 	Coeff_A2 = 1085,
 	Coeff_B2 = -26279
-//	Coeff_A1 = 1067,
-//	Coeff_B1 = -46030,
-//	Coeff_A2 = 1111,
-//	Coeff_B2 = -65544
 }DEFAULT_TOUCH_COEFF_CALIBR;
+
+#define SERVICE_TOUCH_PROB_TIME_MS	20
 
 #define TOUCH_GET_PER_X_PROBE		3
 #define TOUCH_GET_PER_ANY_PROBE		1
-
-#define SERVICE_TOUCH_PROB_TIME_MS	20
 
 enum TOUCH_TYPE{
   ID_TOUCH_POINT,
@@ -35,7 +31,8 @@ enum TOUCH_PRESS_RELEASE{
   release,
   press,
   pressRelease,
-  neverMind
+  neverMind,
+  checkPress
 };
 
 typedef struct{
@@ -65,5 +62,7 @@ void DisplayCoeffCalibration(void);
 void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos, char *txt);
 void DisplayAnyTouchPosXY(void);
 uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time);
+int LCD_TOUCH_ScrollSelService(uint8_t nr, uint8_t pressRelease, uint16_t *y);
+int LCD_TOUCH_ScrollSelCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin, uint16_t WinposY, uint16_t heightAll, uint16_t heightKey, uint16_t heightWin);
 
 #endif
