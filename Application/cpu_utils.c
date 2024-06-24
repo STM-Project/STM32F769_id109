@@ -114,7 +114,7 @@ void StartIdleMonitor (void)
 {
   if( xTaskGetCurrentTaskHandle() == xIdleHandle )
   {
-    osCPU_IdleStartTime = xTaskGetTickCount();
+    osCPU_IdleStartTime = xTaskGetTickCount(); //xTaskGetTickCountFromISR();
   }
 }
 
@@ -129,6 +129,7 @@ void EndIdleMonitor (void)
   {
     /* Store the handle to the idle task. */
     osCPU_IdleSpentTime = xTaskGetTickCount() - osCPU_IdleStartTime;
+  //osCPU_IdleSpentTime = xTaskGetTickCountFromISR() - osCPU_IdleStartTime;
     osCPU_TotalIdleTime += osCPU_IdleSpentTime;
   }
 }
