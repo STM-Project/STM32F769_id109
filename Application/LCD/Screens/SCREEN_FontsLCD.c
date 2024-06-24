@@ -1328,15 +1328,12 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 						DbgVar(1,40,"\r\nQQQQQQQQ: %d --%d--%d ", s.y, x-3000, s.y+win);
 
-						s.sel = ((x-3000)-s.y) / (s.heightKey-1);
+						x = x -3000;
+						x = x - s.y;
+						x = x + s.roll;
 
-						s.sel += (s.roll / (s.heightKey-1));
+						s.sel = x / (s.heightKey-1);
 
-						if(    (s.roll -  ((s.roll / (s.heightKey-1))*(s.heightKey-1))) > ((s.heightKey-1)/2) )  //moze ominac by automatycznie dostosowac pola !!!!
-						{
-							if(s.sel < countKey-1 )
-								s.sel++;
-						}
 
 
 
