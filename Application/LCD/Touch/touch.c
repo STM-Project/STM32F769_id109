@@ -18,6 +18,7 @@
 
 #define SCROLL_SEL__MAX_NUMBER			10
 #define SCROLL_SEL__NUMBER_PROBE2SEL	5
+#define SCROLL_SEL__SEL_SPREAD			16
 
 typedef struct{
   uint8_t press;
@@ -581,20 +582,21 @@ int LCD_TOUCH_ScrollSelService(uint8_t nr, uint8_t pressRelease, uint16_t *y)
 {
 	static struct SCROLL_SEL{
 		uint16_t posY;
-		uint16_t prevY;
+		uint16_t prevY[SCROLL_SEL__NUMBER_PROBE2SEL];
 		uint16_t countTouchProbe2Sel;
 		int delta;
 		uint8_t stateTouch;
+		uint8_t itx;
 	}roll[SCROLL_SEL__MAX_NUMBER]={0};
 
 	switch(pressRelease)
 	{
 		case press:
 			roll[nr].stateTouch = pressRelease;
-			if(roll[nr].posY > 0)
+			if( (roll[nr].posY > 0) && (roll[nr].countTouchProbe2Sel >= SCROLL_SEL__NUMBER_PROBE2SEL) )
 				roll[nr].delta = (int)roll[nr].posY - (int)(*y);
 			roll[nr].posY = *y;
-			roll[nr].prevY = *y;
+			roll[nr].prevY[ (roll[nr].itx < SCROLL_SEL__NUMBER_PROBE2SEL-1) ? roll[nr].itx++ : roll[nr].itx ] = *y;
 			roll[nr].countTouchProbe2Sel++;
 			return roll[nr].delta;
 
@@ -602,12 +604,26 @@ int LCD_TOUCH_ScrollSelService(uint8_t nr, uint8_t pressRelease, uint16_t *y)
 			roll[nr].stateTouch = pressRelease;
 			roll[nr].posY = 0;
 			roll[nr].delta = 0;
-			if(roll[nr].countTouchProbe2Sel < SCROLL_SEL__NUMBER_PROBE2SEL){
+
+			if(roll[nr].countTouchProbe2Sel < SCROLL_SEL__NUMBER_PROBE2SEL)
+			{
 				roll[nr].countTouchProbe2Sel = 0;
-				return roll[nr].prevY;
+
+				for(int i=0; i<roll[nr].itx-1; ++i)
+				{
+					if( (roll[nr].prevY[i] > roll[nr].prevY[i+1] + SCROLL_SEL__SEL_SPREAD) ||
+						 (roll[nr].prevY[i+1] > roll[nr].prevY[i] + SCROLL_SEL__SEL_SPREAD) )
+					{
+						roll[nr].itx = 0;
+						return 0;
+					}
+				}
+				roll[nr].itx = 0;
+				return roll[nr].prevY[0];
 			}
 			else{
 				roll[nr].countTouchProbe2Sel = 0;
+				roll[nr].itx = 0;
 				return 0;
 			}
 
@@ -615,11 +631,54 @@ int LCD_TOUCH_ScrollSelService(uint8_t nr, uint8_t pressRelease, uint16_t *y)
 			*y = roll[nr].stateTouch;
 			switch(roll[nr].stateTouch){
 				case press:		return roll[nr].delta;
-				case release:	return roll[nr].prevY;
+				case release:	return roll[nr].prevY[0];
 			}
 			break;
 	}
 	return 0;
+
+
+//	static struct SCROLL_SEL{
+//		uint16_t posY;
+//		uint16_t prevY;
+//		uint16_t countTouchProbe2Sel;
+//		int delta;
+//		uint8_t stateTouch;
+//	}roll[SCROLL_SEL__MAX_NUMBER]={0};
+//
+//	switch(pressRelease)
+//	{
+//		case press:
+//			roll[nr].stateTouch = pressRelease;
+//			if(roll[nr].posY > 0)
+//				roll[nr].delta = (int)roll[nr].posY - (int)(*y);
+//			roll[nr].posY = *y;
+//			roll[nr].prevY = *y;
+//			roll[nr].countTouchProbe2Sel++;
+//			return roll[nr].delta;
+//
+//		case release:
+//			roll[nr].stateTouch = pressRelease;
+//			roll[nr].posY = 0;
+//			roll[nr].delta = 0;
+//			if(roll[nr].countTouchProbe2Sel < SCROLL_SEL__NUMBER_PROBE2SEL){
+//				roll[nr].countTouchProbe2Sel = 0;
+//				return roll[nr].prevY;
+//			}
+//			else{
+//				roll[nr].countTouchProbe2Sel = 0;
+//				return 0;
+//			}
+//
+//		case checkPress:
+//			*y = roll[nr].stateTouch;
+//			switch(roll[nr].stateTouch){
+//				case press:		return roll[nr].delta;
+//				case release:	return roll[nr].prevY;
+//			}
+//			break;
+//	}
+//	return 0;
 }
 
 int LCD_TOUCH_ScrollSelCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin, uint16_t WinposY, uint16_t heightAll, uint16_t heightKey, uint16_t heightWin)
@@ -630,13 +689,12 @@ int LCD_TOUCH_ScrollSelCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin
 	switch(statePress)
 	{
 		case press:
-			if(val > 0)
-			{
+			if(val > 0){
 				if(*offsWin < ((heightAll-heightWin)+1 - val) )
 					*offsWin += val;
 			}
-			else
-			{
+			else{
+				val *= -1;
 				if(*offsWin > val)
 					*offsWin -= val;
 				else
@@ -645,7 +703,6 @@ int LCD_TOUCH_ScrollSelCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin
 			return statePress;
 
 		case release:
-			DbgVar(1,40,"\r\nQQQQQQQQ: %d --%d--%d ", WinposY, val, WinposY+heightWin);
 			*selWin = (val + *offsWin - WinposY) / (heightKey-1);
 			return statePress;
 	}

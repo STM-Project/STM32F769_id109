@@ -942,7 +942,7 @@ static void IncDec_SpaceBetweenFont(int incDec){
 		}
 	}
 }
-
+//dla DEBUG ON wlaczyc i wylaczyc caly debug dla danego pliku !!!! uregulowac to !!!
 static void DisplayFontsWithChangeColorOrNot(void){
 	TOOGLE(Test.dispChangeColorOrNot);
 	RefreshAllParam();
@@ -1321,7 +1321,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				if(shape==0)
 				{
 
-					LCD_TOUCH_ScrollSelCalculate(0, &s.roll, &s.sel, s.y, heightAll, heightKey, win);
+					LCD_TOUCH_ScrollSelCalculate(0, &s.roll, &s.sel, s.y, heightAll, s.heightKey, win);
 
 				}
 				else{
