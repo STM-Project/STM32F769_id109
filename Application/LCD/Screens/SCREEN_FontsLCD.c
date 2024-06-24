@@ -964,8 +964,7 @@ static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold
 		LCD_Shape(x,y,shape,w,h,frameColor,fillColor,bkColor);
 }
 
-#define KEYBOARD_TYPE(type,key)				KeyboardTypeDisplay(type,key,0,0,0,0,0,0,0,NoTouch,NoTouch)
-#define KEYBOAR_PARAM(type,key, param)		KeyboardTypeDisplay(type,key,0,0,param,0,0,0,0,NoTouch,NoTouch)
+#define KEYBOARD_TYPE(type,key)	KeyboardTypeDisplay(type,key,0,0,0,0,0,0,0,NoTouch,NoTouch)
 
 int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx)
 {
@@ -1319,34 +1318,11 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				LCD_ShapeWindow( s.shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s.bold), bkColor,bkColor );
 
 
-
- // #define param  x //dac!!!!
 				if(shape==0)
 				{
-					if(x>3000)
-					{
 
-						DbgVar(1,40,"\r\nQQQQQQQQ: %d --%d--%d ", s.y, x-3000, s.y+win);
+					LCD_TOUCH_ScrollSelCalculate(0, &s.roll, &s.sel, s.y, heightAll, heightKey, win);
 
-						x = x -3000;
-						x = x - s.y;
-						x = x + s.roll;
-
-						s.sel = x / (s.heightKey-1);
-
-
-
-
-					}
-					else if(x>1000)
-					{
-						if(s.roll < ((heightAll-win)+1 - (x-1000)) )   s.roll+=(x-1000);
-					}
-					else
-					{
-						if(s.roll > x)   s.roll-=x;
-						else s.roll=0;
-					}
 				}
 				else{
 					s.sel=8;
@@ -1484,9 +1460,6 @@ void FILE_NAME(setTouch)(void)
 		return 0;
 	}
 
-	static int yy=0, countt=0;
-	XY_Touch_Struct static posPrev={0};
-
 	state = LCD_TOUCH_GetTypeAndPosition(&pos);
 	switch(state)
 	{
@@ -1519,7 +1492,6 @@ void FILE_NAME(setTouch)(void)
 		CASE_TOUCH_STATE(state,Touch_FontCoeff2, Coeff,Press, TXT_COEFF,252);
 			if(IsFunc())
 				KeyboardTypeDisplay(KEYBOARD_fontCoeff, KEY_Select_one, LCD_LittleRoundRectangle,0, 410,150, 80,40, 0, state, Touch_coeff1);
-			yy=0;
 			break;
 
 		case Touch_FontStyle:   //sPRAWDZIC tOUCH.IDX NA DEBUGU !!!!
@@ -1543,7 +1515,7 @@ void FILE_NAME(setTouch)(void)
 			_SaveState();
 			break;
 
-		case Touch_FontCoeff:
+		case Touch_FontCoeff: //TEGO nie bedzie
 			INCR_WRAP(Test.usun,1,0,3);
 			if(CHECK_TOUCH(Touch_FontCoeff2))
 				KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Select_one );
@@ -1578,26 +1550,12 @@ void FILE_NAME(setTouch)(void)
 		case Touch_size_bold: 	ChangeFontBoldItalNorm(1);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); break;
 		case Touch_size_italic: ChangeFontBoldItalNorm(2);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); break;
 
+
 		case Touch_coeff1:
-			DisplayTouchPosXY(Touch_coeff1,pos,"Touch_coeff1 ");  //to trzeba ujac w touch.c !!!!
-			if(yy==0)
-				yy = pos.y;
-			else
-			{
-				if(pos.y > yy)
-				{
-					KEYBOAR_PARAM( KEYBOARD_fontCoeff, KEY_Select_one, pos.y - yy );
-					yy = pos.y;
-				}
-				else if(pos.y < yy)
-				{
-					KEYBOAR_PARAM( KEYBOARD_fontCoeff, KEY_Select_one, (yy - pos.y)+1000  );
-					yy = pos.y;
-				}
-			}
-			countt++;
-			posPrev = pos;
+			if(LCD_TOUCH_ScrollSelService(0,press, &pos.y))
+				KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Select_one);
 			_SaveState();
+			DisplayTouchPosXY(Touch_coeff1,pos,"Touch_coeff1 ");
 			break;
 //		case Touch_coeff1: Test.usun=0; 	KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Select_one );  break;
 //		case Touch_coeff2: Test.usun=1; 	KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Select_one );  break;
@@ -1639,10 +1597,8 @@ void FILE_NAME(setTouch)(void)
 				SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontSize,1,LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontSize,TXT_FONT_SIZE));
 
 			if(_WasState(Touch_coeff1)){
-					if(countt<5)
-						KEYBOAR_PARAM( KEYBOARD_fontCoeff, KEY_Select_one, posPrev.y+3000 );
-					countt=0;
-					yy = 0;
+				if(LCD_TOUCH_ScrollSelService(0,release, NULL))
+					KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Select_one);
 			}
 
 			break;
