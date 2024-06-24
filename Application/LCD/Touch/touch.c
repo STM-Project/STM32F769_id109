@@ -16,6 +16,9 @@
 #define TIME_700_MS_TO_NUMBER_PROBE	  	(700 / SERVICE_TOUCH_PROB_TIME_MS)
 #define TIME_5000_MS_TO_NUMBER_PROBE	(5000 / SERVICE_TOUCH_PROB_TIME_MS / Touch[i].param)
 
+#define SCROLL_SEL__MAX_NUMBER			10
+#define SCROLL_SEL__NUMBER_PROBE2SEL	5
+
 typedef struct{
   uint8_t press;
   uint8_t idx;
@@ -572,5 +575,80 @@ void DeleteAllTouchWithout(uint16_t idx)
 
 uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time){
 	return time/SERVICE_TOUCH_PROB_TIME_MS;
+}
+
+int LCD_TOUCH_ScrollSelService(uint8_t nr, uint8_t pressRelease, uint16_t *y)
+{
+	static struct SCROLL_SEL{
+		uint16_t posY;
+		uint16_t prevY;
+		uint16_t countTouchProbe2Sel;
+		int delta;
+		uint8_t stateTouch;
+	}roll[SCROLL_SEL__MAX_NUMBER]={0};
+
+	switch(pressRelease)
+	{
+		case press:
+			roll[nr].stateTouch = pressRelease;
+			if(roll[nr].posY > 0)
+				roll[nr].delta = (int)roll[nr].posY - (int)(*y);
+			roll[nr].posY = *y;
+			roll[nr].prevY = *y;
+			roll[nr].countTouchProbe2Sel++;
+			return roll[nr].delta;
+
+		case release:
+			roll[nr].stateTouch = pressRelease;
+			roll[nr].posY = 0;
+			roll[nr].delta = 0;
+			if(roll[nr].countTouchProbe2Sel < SCROLL_SEL__NUMBER_PROBE2SEL){
+				roll[nr].countTouchProbe2Sel = 0;
+				return roll[nr].prevY;
+			}
+			else{
+				roll[nr].countTouchProbe2Sel = 0;
+				return 0;
+			}
+
+		case checkPress:
+			*y = roll[nr].stateTouch;
+			switch(roll[nr].stateTouch){
+				case press:		return roll[nr].delta;
+				case release:	return roll[nr].prevY;
+			}
+			break;
+	}
+	return 0;
+}
+
+int LCD_TOUCH_ScrollSelCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin, uint16_t WinposY, uint16_t heightAll, uint16_t heightKey, uint16_t heightWin)
+{
+	uint16_t statePress;
+	int val = LCD_TOUCH_ScrollSelService(nr,checkPress, &statePress);
+
+	switch(statePress)
+	{
+		case press:
+			if(val > 0)
+			{
+				if(*offsWin < ((heightAll-heightWin)+1 - val) )
+					*offsWin += val;
+			}
+			else
+			{
+				if(*offsWin > val)
+					*offsWin -= val;
+				else
+					*offsWin = 0;
+			}
+			return statePress;
+
+		case release:
+			DbgVar(1,40,"\r\nQQQQQQQQ: %d --%d--%d ", WinposY, val, WinposY+heightWin);
+			*selWin = (val + *offsWin - WinposY) / (heightKey-1);
+			return statePress;
+	}
+	return neverMind;
 }
 
