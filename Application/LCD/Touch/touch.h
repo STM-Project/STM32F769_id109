@@ -62,7 +62,7 @@ void DisplayCoeffCalibration(void);
 void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos, char *txt);
 void DisplayAnyTouchPosXY(void);
 uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time);
-int LCD_TOUCH_ScrollSelService(uint8_t nr, uint8_t pressRelease, uint16_t *y);
-int LCD_TOUCH_ScrollSelCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin, uint16_t WinposY, uint16_t heightAll, uint16_t heightKey, uint16_t heightWin);
+int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y);
+int LCD_TOUCH_ScrollSel_SetCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin, uint16_t WinposY, uint16_t heightAll, uint16_t heightKey, uint16_t heightWin);
 
 #endif

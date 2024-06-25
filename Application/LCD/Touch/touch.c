@@ -18,7 +18,7 @@
 
 #define SCROLL_SEL__MAX_NUMBER			10
 #define SCROLL_SEL__NUMBER_PROBE2SEL	5
-#define SCROLL_SEL__SEL_SPREAD			16
+#define SCROLL_SEL__SEL_SPREAD			7
 
 typedef struct{
   uint8_t press;
@@ -578,7 +578,7 @@ uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time){
 	return time/SERVICE_TOUCH_PROB_TIME_MS;
 }
 
-int LCD_TOUCH_ScrollSelService(uint8_t nr, uint8_t pressRelease, uint16_t *y)
+int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y)
 {
 	static struct SCROLL_SEL{
 		uint16_t posY;
@@ -637,29 +637,47 @@ int LCD_TOUCH_ScrollSelService(uint8_t nr, uint8_t pressRelease, uint16_t *y)
 	return 0;
 }
 
-int LCD_TOUCH_ScrollSelCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin, uint16_t WinposY, uint16_t heightAll, uint16_t heightKey, uint16_t heightWin)
+int LCD_TOUCH_ScrollSel_SetCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin, uint16_t WinposY, uint16_t heightAll, uint16_t heightKey, uint16_t heightWin)
 {
+	static struct SCROLL_SEL{
+		uint16_t offsWin;
+		uint16_t selWin;
+	}roll[SCROLL_SEL__MAX_NUMBER]={0};
+
 	uint16_t statePress;
-	int val = LCD_TOUCH_ScrollSelService(nr,checkPress, &statePress);
+	int val = LCD_TOUCH_ScrollSel_Service(nr,checkPress, &statePress);
+
+	void _refreshWin(void){
+		*offsWin = roll[nr].offsWin;
+		*selWin = roll[nr].selWin;
+	}
+
+	if(0==WinposY){
+		roll[nr].offsWin = *offsWin;
+		roll[nr].selWin = *selWin;
+		return 1;
+	}
 
 	switch(statePress)
 	{
 		case press:
 			if(val > 0){
-				if(*offsWin < ((heightAll-heightWin)+1 - val) )
-					*offsWin += val;
+				if(roll[nr].offsWin < ((heightAll-heightWin)+1 - val) )
+					roll[nr].offsWin += val;
 			}
 			else{
 				val *= -1;
-				if(*offsWin > val)
-					*offsWin -= val;
+				if(roll[nr].offsWin > val)
+					roll[nr].offsWin -= val;
 				else
-					*offsWin = 0;
+					roll[nr].offsWin = 0;
 			}
+			_refreshWin();
 			return statePress;
 
 		case release:
-			*selWin = (val + *offsWin - WinposY) / (heightKey-1);
+			roll[nr].selWin  = (val + roll[nr].offsWin - WinposY) / (heightKey-1);
+			_refreshWin();
 			return statePress;
 	}
 	return neverMind;
