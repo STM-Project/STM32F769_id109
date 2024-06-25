@@ -88,12 +88,12 @@ enum FontsSize
 
 enum FontsStyle
 {
+	Arial,
+	Times_New_Roman,
+	Comic_Saens_MS,
 	Arial_Narrow,
 	Calibri_Light,
-	Bodoni_MT_Condenset,
-	Comic_Saens_MS,
-	Times_New_Roman,
-	Arial
+	Bodoni_MT_Condenset
 };
 
 enum ID_Fonts
@@ -188,6 +188,10 @@ int LCD_GetStrVar_Mov_posWin(int idVar);
 void LCD_SetBkFontShape(int idVar, int bkType);
 void LCD_DeleteAllFontAndImages(void);
 int LCD_DeleteFont(uint32_t fontID);
+int LCD_GetFontSizeMaxNmb(void);
+int LCD_GetFontStyleMaxNmb(void);
+const char *LCD_GetFontStyleStr(int fontStyle);
+const char *LCD_GetFontSizeStr(int fontSize);
 char *LCD_FontSize2Str(char *buffTemp, int fontSize);
 char *LCD_FontStyle2Str(char *buffTemp, int fontStyle);
 char *LCD_FontType2Str(char *buffTemp, int id, int idAlt);
