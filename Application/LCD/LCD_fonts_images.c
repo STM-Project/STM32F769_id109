@@ -35,6 +35,67 @@
 static const char CharsTab_full[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-.,:;[]{}<>'~*()&#^=_$%\xB0@|?!\xA5\xB9\xC6\xE6\xCA\xEA\xA3\xB3\xD1\xF1\xD3\xF3\x8C\x9C\x8F\x9F\xAF\xBF/1234567890";
 static const char CharsTab_digits[]="+-1234567890.";
 
+const char *TxtFontStyle[]={
+		"Arial",
+		"Times_New_Roman",
+		"Comic_Saens_MS"
+};
+const char *TxtFontSize[]={
+		"font_8",
+		"font_8_bold",
+		"font_8_italics",
+		"font_9",
+		"font_9_bold",
+		"font_9_italics",
+		"font_10",
+		"font_10_bold",
+		"font_10_italics",
+		"font_11",
+		"font_11_bold",
+		"font_11_italics",
+		"font_12",
+		"font_12_bold",
+		"font_12_italics",
+		"font_14",
+		"font_14_bold",
+		"font_14_italics",
+		"font_16",
+		"font_16_bold",
+		"font_16_italics",
+		"font_18",
+		"font_18_bold",
+		"font_18_italics",
+		"font_20",
+		"font_20_bold",
+		"font_20_italics",
+		"font_22",
+		"font_22_bold",
+		"font_22_italics",
+		"font_24",
+		"font_24_bold",
+		"font_24_italics",
+		"font_26",
+		"font_26_bold",
+		"font_26_italics",
+		"font_28",
+		"font_28_bold",
+		"font_28_italics",
+		"font_36",
+		"font_36_bold",
+		"font_36_italics",
+		"font_48",
+		"font_48_bold",
+		"font_48_italics",
+		"font_72",
+		"font_72_bold",
+		"font_72_italics",
+		"font_130",
+		"font_130_bold",
+		"font_130_italics"
+};
+
+const char *TxtBMP = ".bmp";
+
 extern uint32_t pLcd[];
 
 static uint32_t buffChangeColorIN[MAX_SIZE_CHANGECOLOR_BUFF]={0};
@@ -1473,64 +1534,79 @@ int LCD_DeleteFont(uint32_t fontID)
 	}
 }
 
+int LCD_GetFontStyleMaxNmb(void){
+	return STRUCT_TAB_SIZE(TxtFontStyle);
+}
+int LCD_GetFontSizeMaxNmb(void){
+	return STRUCT_TAB_SIZE(TxtFontSize);
+}
+const char *LCD_GetFontStyleStr(int fontStyle){
+	return TxtFontStyle[fontStyle];
+}
+const char *LCD_GetFontSizeStr(int fontSize){
+	return TxtFontSize[fontSize];
+}
+
 char *LCD_FontSize2Str(char *buffTemp, int fontSize)
 {
-	switch(fontSize)
-	{
-	case FONT_8:   			strcpy(buffTemp,"font_8"); break;
-	case FONT_8_bold:   		strcpy(buffTemp,"font_8_bold"); break;
-	case FONT_8_italics: 	strcpy(buffTemp,"font_8_italics"); break;
-	case FONT_9:   			strcpy(buffTemp,"font_9"); break;
-	case FONT_9_bold:   		strcpy(buffTemp,"font_9_bold"); break;
-	case FONT_9_italics: 	strcpy(buffTemp,"font_9_italics"); break;
-	case FONT_10:   			strcpy(buffTemp,"font_10"); break;
-	case FONT_10_bold:   	strcpy(buffTemp,"font_10_bold"); break;
-	case FONT_10_italics: 	strcpy(buffTemp,"font_10_italics"); break;
-	case FONT_11:   			strcpy(buffTemp,"font_11"); break;
-	case FONT_11_bold:   	strcpy(buffTemp,"font_11_bold"); break;
-	case FONT_11_italics: 	strcpy(buffTemp,"font_11_italics"); break;
-	case FONT_12:   			strcpy(buffTemp,"font_12"); break;
-	case FONT_12_bold:   	strcpy(buffTemp,"font_12_bold"); break;
-	case FONT_12_italics: 	strcpy(buffTemp,"font_12_italics"); break;
-	case FONT_14:   			strcpy(buffTemp,"font_14"); break;
-	case FONT_14_bold:   	strcpy(buffTemp,"font_14_bold"); break;
-	case FONT_14_italics: 	strcpy(buffTemp,"font_14_italics"); break;
-	case FONT_16:   			strcpy(buffTemp,"font_16"); break;
-	case FONT_16_bold:   	strcpy(buffTemp,"font_16_bold"); break;
-	case FONT_16_italics: 	strcpy(buffTemp,"font_16_italics"); break;
-	case FONT_18:   			strcpy(buffTemp,"font_18"); break;
-	case FONT_18_bold:   	strcpy(buffTemp,"font_18_bold"); break;
-	case FONT_18_italics: 	strcpy(buffTemp,"font_18_italics"); break;
-	case FONT_20:   			strcpy(buffTemp,"font_20"); break;
-	case FONT_20_bold:   	strcpy(buffTemp,"font_20_bold"); break;
-	case FONT_20_italics: 	strcpy(buffTemp,"font_20_italics"); break;
-	case FONT_22:   			strcpy(buffTemp,"font_22"); break;
-	case FONT_22_bold:   	strcpy(buffTemp,"font_22_bold"); break;
-	case FONT_22_italics: 	strcpy(buffTemp,"font_22_italics"); break;
-	case FONT_24:   			strcpy(buffTemp,"font_24"); break;
-	case FONT_24_bold:   	strcpy(buffTemp,"font_24_bold"); break;
-	case FONT_24_italics: 	strcpy(buffTemp,"font_24_italics"); break;
-	case FONT_26:   			strcpy(buffTemp,"font_26"); break;
-	case FONT_26_bold:   	strcpy(buffTemp,"font_26_bold"); break;
-	case FONT_26_italics: 	strcpy(buffTemp,"font_26_italics"); break;
-	case FONT_28:   			strcpy(buffTemp,"font_28"); break;
-	case FONT_28_bold:   	strcpy(buffTemp,"font_28_bold"); break;
-	case FONT_28_italics: 	strcpy(buffTemp,"font_28_italics"); break;
-	case FONT_36:   			strcpy(buffTemp,"font_36"); break;
-	case FONT_36_bold:   	strcpy(buffTemp,"font_36_bold"); break;
-	case FONT_36_italics: 	strcpy(buffTemp,"font_36_italics"); break;
-	case FONT_48:   			strcpy(buffTemp,"font_48"); break;
-	case FONT_48_bold:   	strcpy(buffTemp,"font_48_bold"); break;
-	case FONT_48_italics: 	strcpy(buffTemp,"font_48_italics"); break;
-	case FONT_72:   			strcpy(buffTemp,"font_72"); break;
-	case FONT_72_bold:   	strcpy(buffTemp,"font_72_bold "); break;
-	case FONT_72_italics: 	strcpy(buffTemp,"font_72_italics"); break;
-	case FONT_130:   			strcpy(buffTemp,"font_130"); break;
-	case FONT_130_bold:   	strcpy(buffTemp,"font_130_bold"); break;
-	case FONT_130_italics: 	strcpy(buffTemp,"font_130_italics"); break;
+	strcpy(buffTemp,TxtFontSize[fontSize]);
 
-	default:	buffTemp[0]=0; break;
-	}
+//	switch(fontSize)
+//	{
+//	case FONT_8:   			strcpy(buffTemp,"font_8"); break;
+//	case FONT_8_bold:   		strcpy(buffTemp,"font_8_bold"); break;
+//	case FONT_8_italics: 	strcpy(buffTemp,"font_8_italics"); break;
+//	case FONT_9:   			strcpy(buffTemp,"font_9"); break;
+//	case FONT_9_bold:   		strcpy(buffTemp,"font_9_bold"); break;
+//	case FONT_9_italics: 	strcpy(buffTemp,"font_9_italics"); break;
+//	case FONT_10:   			strcpy(buffTemp,"font_10"); break;
+//	case FONT_10_bold:   	strcpy(buffTemp,"font_10_bold"); break;
+//	case FONT_10_italics: 	strcpy(buffTemp,"font_10_italics"); break;
+//	case FONT_11:   			strcpy(buffTemp,"font_11"); break;
+//	case FONT_11_bold:   	strcpy(buffTemp,"font_11_bold"); break;
+//	case FONT_11_italics: 	strcpy(buffTemp,"font_11_italics"); break;
+//	case FONT_12:   			strcpy(buffTemp,"font_12"); break;
+//	case FONT_12_bold:   	strcpy(buffTemp,"font_12_bold"); break;
+//	case FONT_12_italics: 	strcpy(buffTemp,"font_12_italics"); break;
+//	case FONT_14:   			strcpy(buffTemp,"font_14"); break;
+//	case FONT_14_bold:   	strcpy(buffTemp,"font_14_bold"); break;
+//	case FONT_14_italics: 	strcpy(buffTemp,"font_14_italics"); break;
+//	case FONT_16:   			strcpy(buffTemp,"font_16"); break;
+//	case FONT_16_bold:   	strcpy(buffTemp,"font_16_bold"); break;
+//	case FONT_16_italics: 	strcpy(buffTemp,"font_16_italics"); break;
+//	case FONT_18:   			strcpy(buffTemp,"font_18"); break;
+//	case FONT_18_bold:   	strcpy(buffTemp,"font_18_bold"); break;
+//	case FONT_18_italics: 	strcpy(buffTemp,"font_18_italics"); break;
+//	case FONT_20:   			strcpy(buffTemp,"font_20"); break;
+//	case FONT_20_bold:   	strcpy(buffTemp,"font_20_bold"); break;
+//	case FONT_20_italics: 	strcpy(buffTemp,"font_20_italics"); break;
+//	case FONT_22:   			strcpy(buffTemp,"font_22"); break;
+//	case FONT_22_bold:   	strcpy(buffTemp,"font_22_bold"); break;
+//	case FONT_22_italics: 	strcpy(buffTemp,"font_22_italics"); break;
+//	case FONT_24:   			strcpy(buffTemp,"font_24"); break;
+//	case FONT_24_bold:   	strcpy(buffTemp,"font_24_bold"); break;
+//	case FONT_24_italics: 	strcpy(buffTemp,"font_24_italics"); break;
+//	case FONT_26:   			strcpy(buffTemp,"font_26"); break;
+//	case FONT_26_bold:   	strcpy(buffTemp,"font_26_bold"); break;
+//	case FONT_26_italics: 	strcpy(buffTemp,"font_26_italics"); break;
+//	case FONT_28:   			strcpy(buffTemp,"font_28"); break;
+//	case FONT_28_bold:   	strcpy(buffTemp,"font_28_bold"); break;
+//	case FONT_28_italics: 	strcpy(buffTemp,"font_28_italics"); break;
+//	case FONT_36:   			strcpy(buffTemp,"font_36"); break;
+//	case FONT_36_bold:   	strcpy(buffTemp,"font_36_bold"); break;
+//	case FONT_36_italics: 	strcpy(buffTemp,"font_36_italics"); break;
+//	case FONT_48:   			strcpy(buffTemp,"font_48"); break;
+//	case FONT_48_bold:   	strcpy(buffTemp,"font_48_bold"); break;
+//	case FONT_48_italics: 	strcpy(buffTemp,"font_48_italics"); break;
+//	case FONT_72:   			strcpy(buffTemp,"font_72"); break;
+//	case FONT_72_bold:   	strcpy(buffTemp,"font_72_bold "); break;
+//	case FONT_72_italics: 	strcpy(buffTemp,"font_72_italics"); break;
+//	case FONT_130:   			strcpy(buffTemp,"font_130"); break;
+//	case FONT_130_bold:   	strcpy(buffTemp,"font_130_bold"); break;
+//	case FONT_130_italics: 	strcpy(buffTemp,"font_130_italics"); break;
+//
+//	default:	buffTemp[0]=0; break;
+//	}
 	return buffTemp;
 }
 
@@ -1670,164 +1746,167 @@ int LCD_LoadFont(int fontSize, int fontStyle, uint32_t backgroundColor, uint32_t
 		break;
 	}
 
-	switch(fontSize)
-	{
-	case FONT_8:
-		strncat(fileOpenName,"font_8.bmp",10);
-		break;
-	case FONT_9:
-		strncat(fileOpenName,"font_9.bmp",10);
-		break;
-	case FONT_10:
-		strncat(fileOpenName,"font_10.bmp",11);
-		break;
-	case FONT_11:
-		strncat(fileOpenName,"font_11.bmp",11);
-		break;
-	case FONT_12:
-		strncat(fileOpenName,"font_12.bmp",11);
-		break;
-	case FONT_14:
-		strncat(fileOpenName,"font_14.bmp",11);
-		break;
-	case FONT_16:
-		strncat(fileOpenName,"font_16.bmp",11);
-		break;
-	case FONT_18:
-		strncat(fileOpenName,"font_18.bmp",11);
-		break;
-	case FONT_20:
-		strncat(fileOpenName,"font_20.bmp",11);
-		break;
-	case FONT_22:
-		strncat(fileOpenName,"font_22.bmp",11);
-		break;
-	case FONT_24:
-		strncat(fileOpenName,"font_24.bmp",11);
-		break;
-	case FONT_26:
-		strncat(fileOpenName,"font_26.bmp",11);
-		break;
-	case FONT_28:
-		strncat(fileOpenName,"font_28.bmp",11);
-		break;
-	case FONT_36:
-		strncat(fileOpenName,"font_36.bmp",11);
-		break;
-	case FONT_48:
-		strncat(fileOpenName,"font_48.bmp",11);
-		break;
-	case FONT_72:
-		strncat(fileOpenName,"font_72.bmp",11);
-		break;
-	case FONT_130:
-		strncat(fileOpenName,"font_130.bmp",12);
-		break;
-	case FONT_8_bold:
-		strncat(fileOpenName,"font_8_bold.bmp",15);
-		break;
-	case FONT_9_bold:
-		strncat(fileOpenName,"font_9_bold.bmp",15);
-		break;
-	case FONT_10_bold:
-		strncat(fileOpenName,"font_10_bold.bmp",16);
-		break;
-	case FONT_11_bold:
-		strncat(fileOpenName,"font_11_bold.bmp",16);
-		break;
-	case FONT_12_bold:
-		strncat(fileOpenName,"font_12_bold.bmp",16);
-		break;
-	case FONT_14_bold:
-		strncat(fileOpenName,"font_14_bold.bmp",16);
-		break;
-	case FONT_16_bold:
-		strncat(fileOpenName,"font_16_bold.bmp",16);
-		break;
-	case FONT_18_bold:
-		strncat(fileOpenName,"font_18_bold.bmp",16);
-		break;
-	case FONT_20_bold:
-		strncat(fileOpenName,"font_20_bold.bmp",16);
-		break;
-	case FONT_22_bold:
-		strncat(fileOpenName,"font_22_bold.bmp",16);
-		break;
-	case FONT_24_bold:
-		strncat(fileOpenName,"font_24_bold.bmp",16);
-		break;
-	case FONT_26_bold:
-		strncat(fileOpenName,"font_26_bold.bmp",16);
-		break;
-	case FONT_28_bold:
-		strncat(fileOpenName,"font_28_bold.bmp",16);
-		break;
-	case FONT_36_bold:
-		strncat(fileOpenName,"font_36_bold.bmp",16);
-		break;
-	case FONT_48_bold:
-		strncat(fileOpenName,"font_48_bold.bmp",16);
-		break;
-	case FONT_72_bold:
-		strncat(fileOpenName,"font_72_bold.bmp",16);
-		break;
-	case FONT_130_bold:
-		strncat(fileOpenName,"font_130_bold.bmp",17);
-		break;
-	case FONT_8_italics:
-		strncat(fileOpenName,"font_8_italics.bmp",18);
-		break;
-	case FONT_9_italics:
-		strncat(fileOpenName,"font_9_italics.bmp",18);
-		break;
-	case FONT_10_italics:
-		strncat(fileOpenName,"font_10_italics.bmp",19);
-		break;
-	case FONT_11_italics:
-		strncat(fileOpenName,"font_11_italics.bmp",19);
-		break;
-	case FONT_12_italics:
-		strncat(fileOpenName,"font_12_italics.bmp",19);
-		break;
-	case FONT_14_italics:
-		strncat(fileOpenName,"font_14_italics.bmp",19);
-		break;
-	case FONT_16_italics:
-		strncat(fileOpenName,"font_16_italics.bmp",19);
-		break;
-	case FONT_18_italics:
-		strncat(fileOpenName,"font_18_italics.bmp",19);
-		break;
-	case FONT_20_italics:
-		strncat(fileOpenName,"font_20_italics.bmp",19);
-		break;
-	case FONT_22_italics:
-		strncat(fileOpenName,"font_22_italics.bmp",19);
-		break;
-	case FONT_24_italics:
-		strncat(fileOpenName,"font_24_italics.bmp",19);
-		break;
-	case FONT_26_italics:
-		strncat(fileOpenName,"font_26_italics.bmp",19);
-		break;
-	case FONT_28_italics:
-		strncat(fileOpenName,"font_28_italics.bmp",19);
-		break;
-	case FONT_36_italics:
-		strncat(fileOpenName,"font_36_italics.bmp",19);
-		break;
-	case FONT_48_italics:
-		strncat(fileOpenName,"font_48_italics.bmp",19);
-		break;
-	case FONT_72_italics:
-		strncat(fileOpenName,"font_72_italics.bmp",19);
-		break;
-	case FONT_130_italics:
-		strncat(fileOpenName,"font_130_italics.bmp",20);
-		break;
-	default:
-		break;
-	}
+	strncat(fileOpenName,TxtFontSize[fontSize],strlen(TxtFontSize[fontSize]));
+	strncat(fileOpenName,TxtBMP,strlen(TxtBMP));
+
+//	switch(fontSize)
+//	{
+//	case FONT_8:
+//		strncat(fileOpenName,"font_8.bmp",10);
+//		break;
+//	case FONT_9:
+//		strncat(fileOpenName,"font_9.bmp",10);
+//		break;
+//	case FONT_10:
+//		strncat(fileOpenName,"font_10.bmp",11);
+//		break;
+//	case FONT_11:
+//		strncat(fileOpenName,"font_11.bmp",11);
+//		break;
+//	case FONT_12:
+//		strncat(fileOpenName,"font_12.bmp",11);
+//		break;
+//	case FONT_14:
+//		strncat(fileOpenName,"font_14.bmp",11);
+//		break;
+//	case FONT_16:
+//		strncat(fileOpenName,"font_16.bmp",11);
+//		break;
+//	case FONT_18:
+//		strncat(fileOpenName,"font_18.bmp",11);
+//		break;
+//	case FONT_20:
+//		strncat(fileOpenName,"font_20.bmp",11);
+//		break;
+//	case FONT_22:
+//		strncat(fileOpenName,"font_22.bmp",11);
+//		break;
+//	case FONT_24:
+//		strncat(fileOpenName,"font_24.bmp",11);
+//		break;
+//	case FONT_26:
+//		strncat(fileOpenName,"font_26.bmp",11);
+//		break;
+//	case FONT_28:
+//		strncat(fileOpenName,"font_28.bmp",11);
+//		break;
+//	case FONT_36:
+//		strncat(fileOpenName,"font_36.bmp",11);
+//		break;
+//	case FONT_48:
+//		strncat(fileOpenName,"font_48.bmp",11);
+//		break;
+//	case FONT_72:
+//		strncat(fileOpenName,"font_72.bmp",11);
+//		break;
+//	case FONT_130:
+//		strncat(fileOpenName,"font_130.bmp",12);
+//		break;
+//	case FONT_8_bold:
+//		strncat(fileOpenName,"font_8_bold.bmp",15);
+//		break;
+//	case FONT_9_bold:
+//		strncat(fileOpenName,"font_9_bold.bmp",15);
+//		break;
+//	case FONT_10_bold:
+//		strncat(fileOpenName,"font_10_bold.bmp",16);
+//		break;
+//	case FONT_11_bold:
+//		strncat(fileOpenName,"font_11_bold.bmp",16);
+//		break;
+//	case FONT_12_bold:
+//		strncat(fileOpenName,"font_12_bold.bmp",16);
+//		break;
+//	case FONT_14_bold:
+//		strncat(fileOpenName,"font_14_bold.bmp",16);
+//		break;
+//	case FONT_16_bold:
+//		strncat(fileOpenName,"font_16_bold.bmp",16);
+//		break;
+//	case FONT_18_bold:
+//		strncat(fileOpenName,"font_18_bold.bmp",16);
+//		break;
+//	case FONT_20_bold:
+//		strncat(fileOpenName,"font_20_bold.bmp",16);
+//		break;
+//	case FONT_22_bold:
+//		strncat(fileOpenName,"font_22_bold.bmp",16);
+//		break;
+//	case FONT_24_bold:
+//		strncat(fileOpenName,"font_24_bold.bmp",16);
+//		break;
+//	case FONT_26_bold:
+//		strncat(fileOpenName,"font_26_bold.bmp",16);
+//		break;
+//	case FONT_28_bold:
+//		strncat(fileOpenName,"font_28_bold.bmp",16);
+//		break;
+//	case FONT_36_bold:
+//		strncat(fileOpenName,"font_36_bold.bmp",16);
+//		break;
+//	case FONT_48_bold:
+//		strncat(fileOpenName,"font_48_bold.bmp",16);
+//		break;
+//	case FONT_72_bold:
+//		strncat(fileOpenName,"font_72_bold.bmp",16);
+//		break;
+//	case FONT_130_bold:
+//		strncat(fileOpenName,"font_130_bold.bmp",17);
+//		break;
+//	case FONT_8_italics:
+//		strncat(fileOpenName,"font_8_italics.bmp",18);
+//		break;
+//	case FONT_9_italics:
+//		strncat(fileOpenName,"font_9_italics.bmp",18);
+//		break;
+//	case FONT_10_italics:
+//		strncat(fileOpenName,"font_10_italics.bmp",19);
+//		break;
+//	case FONT_11_italics:
+//		strncat(fileOpenName,"font_11_italics.bmp",19);
+//		break;
+//	case FONT_12_italics:
+//		strncat(fileOpenName,"font_12_italics.bmp",19);
+//		break;
+//	case FONT_14_italics:
+//		strncat(fileOpenName,"font_14_italics.bmp",19);
+//		break;
+//	case FONT_16_italics:
+//		strncat(fileOpenName,"font_16_italics.bmp",19);
+//		break;
+//	case FONT_18_italics:
+//		strncat(fileOpenName,"font_18_italics.bmp",19);
+//		break;
+//	case FONT_20_italics:
+//		strncat(fileOpenName,"font_20_italics.bmp",19);
+//		break;
+//	case FONT_22_italics:
+//		strncat(fileOpenName,"font_22_italics.bmp",19);
+//		break;
+//	case FONT_24_italics:
+//		strncat(fileOpenName,"font_24_italics.bmp",19);
+//		break;
+//	case FONT_26_italics:
+//		strncat(fileOpenName,"font_26_italics.bmp",19);
+//		break;
+//	case FONT_28_italics:
+//		strncat(fileOpenName,"font_28_italics.bmp",19);
+//		break;
+//	case FONT_36_italics:
+//		strncat(fileOpenName,"font_36_italics.bmp",19);
+//		break;
+//	case FONT_48_italics:
+//		strncat(fileOpenName,"font_48_italics.bmp",19);
+//		break;
+//	case FONT_72_italics:
+//		strncat(fileOpenName,"font_72_italics.bmp",19);
+//		break;
+//	case FONT_130_italics:
+//		strncat(fileOpenName,"font_130_italics.bmp",20);
+//		break;
+//	default:
+//		break;
+//	}
 
 	if(FR_OK!=SDCardFileInfo(fileOpenName,&fontFileSize))
 		return -3;
