@@ -1585,13 +1585,13 @@ void FILE_NAME(setTouch)(void)
 		case Touch_bkGm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('b','G',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_minus );Test.step=5; _SaveState(); break;
 		case Touch_bkBm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('b','B',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Blue_minus ); Test.step=5; _SaveState(); break;
 
-		case Touch_style1: ChangeFontStyle(Arial);  				KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one );  break;
-		case Touch_style2: ChangeFontStyle(Times_New_Roman);  	KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one );  break;
-		case Touch_style3: ChangeFontStyle(Comic_Saens_MS);  	KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one );  break;
+		case Touch_style1: ChangeFontStyle(Arial);  				KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one ); _SaveState(); break;
+		case Touch_style2: ChangeFontStyle(Times_New_Roman);  	KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one ); _SaveState(); break;
+		case Touch_style3: ChangeFontStyle(Comic_Saens_MS);  	KEYBOARD_TYPE( KEYBOARD_fontStyle, KEY_Select_one ); _SaveState(); break;
 
-		case Touch_type1:	ReplaceLcdStrType(0);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
-		case Touch_type2:	ReplaceLcdStrType(1);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
-		case Touch_type3:	ReplaceLcdStrType(2);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one );  break;
+		case Touch_type1:	ReplaceLcdStrType(0);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one ); _SaveState(); break;
+		case Touch_type2:	ReplaceLcdStrType(1);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one ); _SaveState(); break;
+		case Touch_type3:	ReplaceLcdStrType(2);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one ); _SaveState(); break;
 
 //		case Touch_size_plus:  //ROLL SIZE !!!
 //			if(LCD_TOUCH_ScrollSel_Service(7,press, &pos.y))
@@ -1601,9 +1601,9 @@ void FILE_NAME(setTouch)(void)
 //			break;
 		case Touch_size_plus: 	_KEYS_RELEASE_fontSize;	IncFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_plus ); _SaveState();  break;
 		case Touch_size_minus:	_KEYS_RELEASE_fontSize; DecFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_minus ); _SaveState();  break;
-		case Touch_size_norm: 	ChangeFontBoldItalNorm(0);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); break;
-		case Touch_size_bold: 	ChangeFontBoldItalNorm(1);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); break;
-		case Touch_size_italic: ChangeFontBoldItalNorm(2);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); break;
+		case Touch_size_norm: 	ChangeFontBoldItalNorm(0);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
+		case Touch_size_bold: 	ChangeFontBoldItalNorm(1);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
+		case Touch_size_italic: ChangeFontBoldItalNorm(2);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
 
 
 		case Touch_coeff1:
@@ -1643,11 +1643,22 @@ void FILE_NAME(setTouch)(void)
 			if(_WasState(Touch_size_plus) || _WasState(Touch_size_minus))   //a to zakomentuj !!!!!!  //ROLL SIZE !!!
 				KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one );
 
-			if(_WasState(Touch_FontStyle))
+			if(_WasState(Touch_FontStyle) ||
+				_WasState(Touch_style1) ||
+				_WasState(Touch_style2) ||
+				_WasState(Touch_style3))
 				SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontStyle,1,LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle,TXT_FONT_STYLE));
-			if(_WasState(Touch_FontType))
+
+			if(_WasState(Touch_FontType) ||
+				_WasState(Touch_type1) ||
+				_WasState(Touch_type2) ||
+				_WasState(Touch_type3))
 				SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontType,1,LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontType,TXT_FONT_TYPE));
-			if(_WasState(Touch_FontSize))
+
+			if(_WasState(Touch_FontSize) ||
+				_WasState(Touch_size_norm) ||
+				_WasState(Touch_size_bold) ||
+				_WasState(Touch_size_italic))
 				SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontSize,1,LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontSize,TXT_FONT_SIZE));
 
 			if(_WasState(Touch_coeff1)){
@@ -1831,17 +1842,17 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, lenStr);
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontType, FillMainFrame),  LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,IncPos,10), TXT_FONT_TYPE, 	fullHight,0,255,NoConstWidth);
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontType, press, v.FONT_VAR_FontType,0, lenStr);
+	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontType, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontType,0, lenStr);
 						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, lenStr);
 	}
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontSize, FillMainFrame),  LCD_Xpos(lenStr,IncPos,20), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_SIZE, 	fullHight,0,255,NoConstWidth); LCD_SetBkFontShape(v.FONT_VAR_FontSize,BK_LittleRound);
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontSize, press, v.FONT_VAR_FontSize,0, lenStr);
+	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, lenStr);
 						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontSize2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontSize,1, lenStr);
 	}
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontStyle, FillMainFrame), LCD_Xpos(lenStr,SetPos,500), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_STYLE, 	fullHight,0,255,NoConstWidth);
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontStyle, press, v.FONT_VAR_FontStyle,0, lenStr);
+	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontStyle, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontStyle,0, lenStr);
 						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontStyle2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontStyle,1, lenStr);
 	}
 
