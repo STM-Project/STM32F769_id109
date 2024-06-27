@@ -1795,6 +1795,85 @@ StructTxtPxlLen LCD_StrDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *
 	else return StructTxtPxlLen_ZeroValue;
 }
 
+
+
+StructTxtPxlLen LCD_StrDescrVar__(int idVar,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor, \
+														  int fontID2, int Xpos2, int Ypos2, char *txt2, int OnlyDigits2, int space2, uint32_t bkColor2, int coeff2, int constWidth2, \
+														  int interspace, int direction)
+{
+
+ #define	_Descr	LCD_Str(fontID2,Xpos2,Ypos2,txt2,OnlyDigits2,space2,bkColor2,coeff2,constWidth2)
+ #define	_Main		LCD_StrVar(idVar,fontID,     Xpos,     Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
+
+
+
+	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
+	{
+//1
+		LCD_StrVar(idVar,fontID,     Xpos + LCD_Str(fontID2,Xpos2,Ypos2,txt2,OnlyDigits2,space2,bkColor2,coeff2,constWidth2).inPixel + interspace,     Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
+//2
+   int width_main 	= LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth);
+   int height_main 	= LCD_GetFontHeight(fontID);
+
+   int width_descr 	= LCD_GetWholeStrPxlWidth(fontID2, txt2, space2, constWidth2);
+   int height_descr 	= LCD_GetFontHeight(fontID2);
+
+
+   int Y_descr, X_descr;
+
+
+   // ------------ up -- down -----------------------
+
+   LCD_StrVar(idVar,fontID, Xpos, Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
+
+   	LCD_Xmiddle(0,SetPos,SetPosAndWidth(Xpos,width_main),NULL,0,0);
+      Y_descr = Ypos + height_main + interspace;
+      X_descr = LCD_Xmiddle(0,GetPos,fontID2,txt2,space2,constWidth2);
+      LCD_Str(fontID2,X_descr,Y_descr,txt2,OnlyDigits2,space2,bkColor2,coeff2,constWidth2);
+
+
+   	LCD_Xmiddle(0,SetPos,SetPosAndWidth(Xpos,width_main),NULL,0,0);
+      Y_descr = Ypos - interspace - height_descr;
+      X_descr = LCD_Xmiddle(0,GetPos,fontID2,txt2,space2,constWidth2);
+      LCD_Str(fontID2,X_descr,Y_descr,txt2,OnlyDigits2,space2,bkColor2,coeff2,constWidth2);
+
+//-------------------------tu next------------------------------------------
+
+      LCD_Ymiddle(0,SetPos,SetPosAndWidth(Ypos,height_main));
+      LCD_Ymiddle(0,GetPos,fontID2);
+
+      LCD_Ymiddle(0,SetPos,SetPosAndWidth(Ypos,height_main));
+      X_descr = Xpos - interspace - width_descr;
+      Y_descr = LCD_Ymiddle(0,GetPos,fontID2);
+      LCD_Str(fontID2,X_descr,Y_descr,txt2,OnlyDigits2,space2,bkColor2,coeff2,constWidth2);
+
+      //-------------------------tu up next------------------------------------------
+
+            X_descr = Xpos - interspace - width_descr;
+            Y_descr = Ypos;
+            LCD_Str(fontID2,X_descr,Y_descr,txt2,OnlyDigits2,space2,bkColor2,coeff2,constWidth2);
+
+            //-------------------------tu down next------------------------------------------
+
+                  X_descr = Xpos - interspace - width_descr;
+                  Y_descr = Ypos -(height_main-height_descr);
+                  LCD_Str(fontID2,X_descr,Y_descr,txt2,OnlyDigits2,space2,bkColor2,coeff2,constWidth2);
+
+	}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 static void LCD_DimensionBkCorrect(int idVar, StructTxtPxlLen temp, uint32_t *LcdBuffer)
 {
 	int xEnd_prev = FontVar[idVar].xPos_prev + FontVar[idVar].widthPxl_prev;
@@ -2990,13 +3069,13 @@ uint16_t LCD_Ymiddle(int nr, int cmd, uint32_t val)
 		return startPosY[nr];
 	case GetPos:
 	default:
-		return MIDDLE(startPosY[nr],heightY[nr],LCD_GetFontHeight(val));
+		int temp = MIDDLE(startPosY[nr],heightY[nr],LCD_GetFontHeight(val));
+		return temp < 0 ? 0:temp;
 	}
 }
 uint16_t LCD_Xmiddle(int nr, int cmd, uint32_t param, char *txt, int space, int constWidth)
 {
 	static uint16_t startPosX[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0}, widthX[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0};
-	int len;
 	switch(cmd)
 	{
 	case SetPos:
@@ -3005,8 +3084,9 @@ uint16_t LCD_Xmiddle(int nr, int cmd, uint32_t param, char *txt, int space, int 
 		return startPosX[nr];
 	case GetPos:
 	default:
-		len=LCD_GetWholeStrPxlWidth(param,txt,space,constWidth);
-		return MIDDLE(startPosX[nr],widthX[nr],(len>widthX[nr]?widthX[nr]:len));
+		int len=LCD_GetWholeStrPxlWidth(param,txt,space,constWidth);
+		int temp = MIDDLE(startPosX[nr],widthX[nr],len);
+		return temp < 0 ? 0:temp;
 	}
 }
 uint32_t SetPosAndWidth(uint16_t pos, uint16_t width){
