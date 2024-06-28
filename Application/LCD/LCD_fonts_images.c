@@ -1881,20 +1881,11 @@ StructTxtPxlLen LCD_StrDescrVar__(int idVar,int fontID,  int Xpos, 		 int Ypos, 
 	      Y_descr = Ypos;
 			break;
 		}
+
 		LCD_Str(fontID2,X_descr,Y_descr,txt2,OnlyDigits2,space2,bkColor2,coeff2,constWidth2);
 	}
 	return len;
 }
-
-
-
-
-
-
-
-
-
-
 
 static void LCD_DimensionBkCorrect(int idVar, StructTxtPxlLen temp, uint32_t *LcdBuffer)
 {
@@ -1974,8 +1965,8 @@ StructTxtPxlLen LCD_StrChangeColorDescrVar(int idVar,int fontID, int Xpos, int Y
 }
 
 StructTxtPxlLen LCD_StrChangeColorDescrVar__(int idVar,int fontID, int Xpos, 		int Ypos, 				char *txt, int OnlyDigits, 	int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor, \
-																		int fontID2, int interspace, int directionDescr, char *txt2, int OnlyDigits2, int space2, uint32_t bkColor2, uint32_t fontColor2,uint8_t maxVal2, int constWidth2 ){
-
+																		int fontID2, int interspace, int directionDescr, char *txt2, int OnlyDigits2, int space2, uint32_t bkColor2, uint32_t fontColor2,uint8_t maxVal2, int constWidth2 )
+{
 	StructTxtPxlLen len = {0};
 
 	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
@@ -2060,7 +2051,16 @@ StructTxtPxlLen LCD_StrChangeColorDescrVar__(int idVar,int fontID, int Xpos, 		i
 	      Y_descr = Ypos;
 			break;
 		}
-		LCD_StrChangeColor(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2, bkColor2, fontColor2,maxVal2, constWidth2);
+
+		if	((bkColor2==MYGRAY && fontColor2 == WHITE) ||
+			(bkColor2==MYGRAY && fontColor2 == MYGREEN)){
+			LCD_Str(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2,bkColor2, 1, constWidth2);
+		}
+		else if(bkColor2==WHITE  && fontColor2 == BLACK)
+			LCD_Str(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2,bkColor2, 0, constWidth2);
+		else
+			LCD_StrChangeColor(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2, bkColor2, fontColor2,maxVal2, constWidth2);
+
 	}
 	return len;
 }
