@@ -37,7 +37,7 @@ Czcionki LCD,Fonts LCD,\
 	X(10, FONT_SIZE_PosCursor,		FONT_10) \
 	X(11, FONT_SIZE_CPUusage,		FONT_10) \
 	X(12, FONT_SIZE_Speed,			FONT_10) \
-	X(13, FONT_SIZE_Descr, 	 		FONT_10) \
+	X(13, FONT_SIZE_Descr, 	 		FONT_9_bold) \
 	X(14, FONT_SIZE_Press, 	 		FONT_14_bold) \
 	X(15, FONT_SIZE_Fonts,			FONT_20) \
 	\
@@ -59,7 +59,7 @@ Czcionki LCD,Fonts LCD,\
 	X(31, FONT_STYLE_Fonts, 		Arial) \
 	\
 	X(32, FONT_COLOR_Title,  	 	WHITE) \
-	X(33, FONT_COLOR_FontColor, 	COLOR_GRAY(0xFE)) \
+	X(33, FONT_COLOR_FontColor, 	WHITE) \
 	X(34, FONT_COLOR_BkColor, 	 	WHITE) \
 	X(35, FONT_COLOR_FontType,  	WHITE) \
 	X(36, FONT_COLOR_FontSize,  	WHITE) \
@@ -71,7 +71,7 @@ Czcionki LCD,Fonts LCD,\
 	X(42, FONT_COLOR_PosCursor,	WHITE) \
 	X(43, FONT_COLOR_CPUusage,		WHITE) \
 	X(44, FONT_COLOR_Speed,			WHITE) \
-	X(45, FONT_COLOR_Descr, 		COLOR_GRAY(0x75)) \
+	X(45, FONT_COLOR_Descr, 		COLOR_GRAY(0xAF)) \
 	X(46, FONT_COLOR_Press, 		DARKRED) \
 	X(47, FONT_COLOR_Fonts,  		0xFFE1A000) \
 	\
@@ -1844,7 +1844,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 	lenStr=LCD_StrDependOnColorsDescrVar__(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-								v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 0, Left_up, "var RGB", fullHight, 0,250, ConstWidth);
+								v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 0, Left_down, "Markiel", fullHight, 0,250, ConstWidth);
 	//lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,23), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight,0, 240,ConstWidth);	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_Rectangle);  //zrobic mniejsza czcionka przeliczenie na hex !!!
 	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, lenStr);
 
@@ -1878,7 +1878,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(LenWin,FillMainFrame),400,  0, TXT_LEN_WIN,		 	 halfHight,0,255,ConstWidth);
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(OffsWin,FillMainFrame),400, 20, TXT_OFFS_WIN,	    	 halfHight,0,255,ConstWidth);
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(LoadFontTime,FillMainFrame),320, 20, TXT_LOAD_FONT_TIME,	 halfHight,0,255,ConstWidth);
-	lenStr=LCD_StrDependOnColorsDescrVar(STR_FONT_PARAM(PosCursor,FillMainFrame),440, 40, "T: ",TXT_PosCursor(),halfHight,0,255,ConstWidth);
+	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(PosCursor,FillMainFrame),440, 40,TXT_PosCursor(),halfHight,0,255,ConstWidth);
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450, 0, 	TXT_CPU_USAGE,	 		 halfHight,0,255,ConstWidth);
 
 
