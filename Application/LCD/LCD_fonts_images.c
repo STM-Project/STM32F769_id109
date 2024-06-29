@@ -1789,30 +1789,27 @@ StructTxtPxlLen LCD_StrVar(int idVar,int fontID, int Xpos, int Ypos, char *txt, 
 	}
 	else return StructTxtPxlLen_ZeroValue;
 }
-StructTxtPxlLen LCD_StrDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *txtDescr, char *txtVar, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor){
-	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
-		return LCD_StrVar(idVar,fontID, Xpos+LCD_Str(fontID,Xpos,Ypos,txtDescr,OnlyDigits,space,bkColor,coeff,0).inPixel, Ypos,txtVar,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
-	else return StructTxtPxlLen_ZeroValue;
-}
 
-StructTxtPxlLen LCD_StrDescrVar__(int idVar,int fontID,  int Xpos, 		 int Ypos, 				char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor, \
+StructTxtPxlLen LCD_StrDescrVar(int idVar,int fontID,  int Xpos, 		 int Ypos, 				char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor, \
 														  int fontID2, int interspace, int directionDescr, char *txt2,int OnlyDigits2, int space2, uint32_t bkColor2, uint32_t fontColor2, int maxVal2, int constWidth2)
 {
 	StructTxtPxlLen len = {0};
 
 	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
-		int width_main; 	//= LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth);
-		int height_main; 	//= LCD_GetFontHeight(fontID);
+		int width_main; 		/* LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth); */
+		int height_main	= LCD_GetFontHeight(fontID);
+		int heightHalf_main = LCD_GetFontHalfHeight(fontID);
 
 		int width_descr 	= LCD_GetWholeStrPxlWidth(fontID2, txt2, space2, constWidth2);
 		int height_descr 	= LCD_GetFontHeight(fontID2);
+		int heightHalf_descr = LCD_GetFontHalfHeight(fontID2);
 
 		int Y_descr, X_descr;
+		int Y_descr_correct = 0;	/* for 'Right_up'  'Left_up' */
 
 		len = LCD_StrVar(idVar,fontID, Xpos, Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
 		width_main = len.inPixel;
-		height_main = len.height;
 
 		switch(directionDescr)
 		{
@@ -1820,17 +1817,17 @@ StructTxtPxlLen LCD_StrDescrVar__(int idVar,int fontID,  int Xpos, 		 int Ypos, 
 		default:
 			LCD_Xmiddle(0,SetPos,SetPosAndWidth(Xpos,width_main),NULL,0,0);
 			X_descr = LCD_Xmiddle(0,GetPos,fontID2,txt2,space2,constWidth2);
-			Y_descr = Ypos + height_main + interspace;
+			Y_descr = Ypos + len.height + interspace;
 			break;
 
 		case Under_left:
 			X_descr = interspace >> 16;
-			Y_descr = Ypos + height_main + interspace;
+			Y_descr = Ypos + len.height + interspace;
 			break;
 
 		case Under_right:
 			X_descr = interspace >> 16;
-			Y_descr = Ypos + height_main + interspace;
+			Y_descr = Ypos + len.height + interspace;
 			break;
 
 		case Above_center:
@@ -1851,7 +1848,7 @@ StructTxtPxlLen LCD_StrDescrVar__(int idVar,int fontID,  int Xpos, 		 int Ypos, 
 
 		case Left_down:
 	      X_descr = Xpos - interspace - width_descr;
-	      Y_descr = Ypos + (height_main - height_descr);
+	      Y_descr = Ypos + (heightHalf_main - heightHalf_descr);
 			break;
 
 		case Left_mid:
@@ -1862,12 +1859,13 @@ StructTxtPxlLen LCD_StrDescrVar__(int idVar,int fontID,  int Xpos, 		 int Ypos, 
 
 		case Left_up:
 			X_descr = Xpos - interspace - width_descr;
-	      Y_descr = Ypos;
+	      Y_descr = Ypos + ABS(height_main-heightHalf_main) - ABS(height_descr-heightHalf_descr);
+			Y_descr += Y_descr_correct;
 			break;
 
 		case Right_down:
 	      X_descr = Xpos + width_main + interspace;
-	      Y_descr = Ypos + (height_main - height_descr);
+	      Y_descr = Ypos + (heightHalf_main - heightHalf_descr);
 			break;
 
 		case Right_mid:
@@ -1878,7 +1876,8 @@ StructTxtPxlLen LCD_StrDescrVar__(int idVar,int fontID,  int Xpos, 		 int Ypos, 
 
 		case Right_up:
 	      X_descr = Xpos + width_main + interspace;
-	      Y_descr = Ypos;
+	      Y_descr = Ypos + ABS(height_main-heightHalf_main) - ABS(height_descr-heightHalf_descr);
+			Y_descr += Y_descr_correct;
 			break;
 		}
 
@@ -1966,31 +1965,26 @@ StructTxtPxlLen LCD_StrChangeColorVar(int idVar,int fontID, int Xpos, int Ypos, 
 	else return StructTxtPxlLen_ZeroValue;
 }
 
-StructTxtPxlLen LCD_StrChangeColorDescrVar(int idVar,int fontID, int Xpos, int Ypos, char *txtDescr, char *txtVar, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor){
-	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
-		return LCD_StrChangeColorVar(idVar,fontID,Xpos+LCD_StrChangeColor(fontID,Xpos,Ypos,txtDescr,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth).inPixel, Ypos,txtVar,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
-	else return StructTxtPxlLen_ZeroValue;
-}
-
-StructTxtPxlLen LCD_StrChangeColorDescrVar__(int idVar,int fontID, int Xpos, 		int Ypos, 				char *txt, int OnlyDigits, 	int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor, \
+StructTxtPxlLen LCD_StrChangeColorDescrVar(int idVar,int fontID, int Xpos, 		int Ypos, 				char *txt, int OnlyDigits, 	int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor, \
 																		int fontID2, int interspace, int directionDescr, char *txt2, int OnlyDigits2, int space2, uint32_t bkColor2, uint32_t fontColor2,uint8_t maxVal2, int constWidth2 )
 {
 	StructTxtPxlLen len = {0};
 
 	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
-		int width_main; 	//= LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth);
-		int height_main; 	//= LCD_GetFontHeight(fontID);
+		int width_main; 		/* LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth); */
+		int height_main	= LCD_GetFontHeight(fontID);
+		int heightHalf_main = LCD_GetFontHalfHeight(fontID);
 
 		int width_descr 	= LCD_GetWholeStrPxlWidth(fontID2, txt2, space2, constWidth2);
 		int height_descr 	= LCD_GetFontHeight(fontID2);
+		int heightHalf_descr = LCD_GetFontHalfHeight(fontID2);
 
 		int Y_descr, X_descr;
+		int Y_descr_correct = 0;	/* for 'Right_up'  'Left_up' */
 
 		len = LCD_StrChangeColorVar(idVar,fontID, Xpos, Ypos, txt, OnlyDigits, space, bkColor, fontColor,maxVal, constWidth, bkScreenColor);
-
 		width_main = len.inPixel;
-		height_main = len.height;
 
 		switch(directionDescr)
 		{
@@ -1998,17 +1992,17 @@ StructTxtPxlLen LCD_StrChangeColorDescrVar__(int idVar,int fontID, int Xpos, 		i
 		default:
 			LCD_Xmiddle(0,SetPos,SetPosAndWidth(Xpos,width_main),NULL,0,0);
 			X_descr = LCD_Xmiddle(0,GetPos,fontID2,txt2,space2,constWidth2);
-			Y_descr = Ypos + height_main + interspace;
+			Y_descr = Ypos + len.height + interspace;
 			break;
 
 		case Under_left:
 			X_descr = interspace >> 16;
-			Y_descr = Ypos + height_main + interspace;
+			Y_descr = Ypos + len.height + interspace;
 			break;
 
 		case Under_right:
 			X_descr = interspace >> 16;
-			Y_descr = Ypos + height_main + interspace;
+			Y_descr = Ypos + len.height + interspace;
 			break;
 
 		case Above_center:
@@ -2029,7 +2023,7 @@ StructTxtPxlLen LCD_StrChangeColorDescrVar__(int idVar,int fontID, int Xpos, 		i
 
 		case Left_down:
 	      X_descr = Xpos - interspace - width_descr;
-	      Y_descr = Ypos + (height_main - height_descr);
+	      Y_descr = Ypos + (heightHalf_main - heightHalf_descr);
 			break;
 
 		case Left_mid:
@@ -2040,12 +2034,13 @@ StructTxtPxlLen LCD_StrChangeColorDescrVar__(int idVar,int fontID, int Xpos, 		i
 
 		case Left_up:
 			X_descr = Xpos - interspace - width_descr;
-	      Y_descr = Ypos;
+	      Y_descr = Ypos + ABS(height_main-heightHalf_main) - ABS(height_descr-heightHalf_descr);
+			Y_descr += Y_descr_correct;
 			break;
 
 		case Right_down:
 	      X_descr = Xpos + width_main + interspace;
-	      Y_descr = Ypos + (height_main - height_descr);
+	      Y_descr = Ypos + (heightHalf_main - heightHalf_descr);
 			break;
 
 		case Right_mid:
@@ -2056,7 +2051,8 @@ StructTxtPxlLen LCD_StrChangeColorDescrVar__(int idVar,int fontID, int Xpos, 		i
 
 		case Right_up:
 	      X_descr = Xpos + width_main + interspace;
-	      Y_descr = Ypos;
+	      Y_descr = Ypos + ABS(height_main-heightHalf_main) - ABS(height_descr-heightHalf_descr);
+			Y_descr += Y_descr_correct;
 			break;
 		}
 
@@ -3160,6 +3156,7 @@ uint16_t LCD_Ypos(StructTxtPxlLen structTemp, int cmd, int offs)
 		return yPos;
 	case GetPos:
 		return yPos+offs;
+	case IncPos:
 	default:
 		return yPos+=structTemp.height+offs;
 	}
@@ -3280,25 +3277,25 @@ StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar, int fontID, uint32_t fontCol
 	return lenStr;
 }
 
-StructTxtPxlLen LCD_StrDependOnColorsDescrVar__(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
+StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
 																			int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace, int directionDescr, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2)
 {
 	StructTxtPxlLen lenStr;
 
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
 			 (bkColor==MYGRAY && fontColor == MYGREEN)){
-		lenStr=LCD_StrDescrVar__(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, \
-												fontID2,interspace,directionDescr,txt2, OnlyDigits2,space2,bkColor2,fontColor2,maxVal2,constWidth2);
+		lenStr=LCD_StrDescrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, \
+											  fontID2,interspace,directionDescr,txt2, OnlyDigits2,space2,bkColor2,fontColor2,maxVal2,constWidth2);
 		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
 	}
 	else if(bkColor==WHITE  && fontColor == BLACK){
-		lenStr=LCD_StrDescrVar__(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor, \
-												fontID2,interspace,directionDescr,txt2, OnlyDigits2,space2,bkColor2,fontColor2,maxVal2,constWidth2);
+		lenStr=LCD_StrDescrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor, \
+											  fontID2,interspace,directionDescr,txt2, OnlyDigits2,space2,bkColor2,fontColor2,maxVal2,constWidth2);
 		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
 	}
 	else
-		lenStr=LCD_StrChangeColorDescrVar__(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor, \
-																fontID2,interspace,directionDescr,txt2, OnlyDigits2,space2,bkColor2,fontColor2,maxVal2,constWidth2);
+		lenStr=LCD_StrChangeColorDescrVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor, \
+															 fontID2,interspace,directionDescr,txt2, OnlyDigits2,space2,bkColor2,fontColor2,maxVal2,constWidth2);
 	return lenStr;
 }
 
