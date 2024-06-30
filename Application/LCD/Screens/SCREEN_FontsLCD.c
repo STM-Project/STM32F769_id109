@@ -1833,6 +1833,51 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 		LCD_Clear(v.COLOR_BkScreen);
 	}
 	/*FILE_NAME(printInfo)();*/
+//#########################################
+
+//	typedef struct{
+//		int a;
+//		int b;
+//	}AAAA;
+//
+//	AAAA aaaa(int r, int f)
+//	{
+//		AAAA p ={0};
+//		p.a= r;
+//		p.b= f;
+//
+//		return p;
+//	}
+//
+//	//AAAA sss = {0};
+//
+//	aaaa(1,2);
+//
+//	lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth ); \
+//
+//
+
+
+	lenStr=LCD_StrDependOnColorsDescrVar_array( STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+			2, LCD_SetStrDescrParam(v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth), \
+				LCD_SetStrDescrParam(v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_down, "Syra:", fullHight, 0,250, ConstWidth) );
+
+	//#######################################################
+
+
+
 
 
 	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,150,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen)); // dlatego daj bk color MYGRAY aby zachowac kolory przy cieniowaniu !!!!!

@@ -1894,6 +1894,121 @@ StructTxtPxlLen LCD_StrDescrVar(int idVar,int fontID,  int Xpos, 		 int Ypos, 		
 	return len;
 }
 
+//StructTxtPxlLen LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, 		 int Ypos, 				  char *txt, int OnlyDigits,  int space,  uint32_t bkColor,  int coeff, int constWidth, uint32_t bkScreenColor, \
+//														  	  int fontID1, int interspace1, int directionDescr1, char *txt1,int OnlyDigits1, int space1, uint32_t bkColor1, uint32_t fontColor1, int maxVal1, int constWidth1, \
+//														  	  int fontID2, int interspace2, int directionDescr2, char *txt2,int OnlyDigits2, int space2, uint32_t bkColor2, uint32_t fontColor2, int maxVal2, int constWidth2, \
+//														  	  int fontID3, int interspace3, int directionDescr3, char *txt3,int OnlyDigits3, int space3, uint32_t bkColor3, uint32_t fontColor3, int maxVal3, int constWidth3, \
+//														  	  int fontID4, int interspace4, int directionDescr4, char *txt4,int OnlyDigits4, int space4, uint32_t bkColor4, uint32_t fontColor4, int maxVal4, int constWidth4, \
+//														  	  int fontID5, int interspace5, int directionDescr5, char *txt5,int OnlyDigits5, int space5, uint32_t bkColor5, uint32_t fontColor5, int maxVal5, int constWidth5, \
+//														  	  int fontID6, int interspace6, int directionDescr6, char *txt6,int OnlyDigits6, int space6, uint32_t bkColor6, uint32_t fontColor6, int maxVal6, int constWidth6, \
+//														  	  int fontID7, int interspace7, int directionDescr7, char *txt7,int OnlyDigits7, int space7, uint32_t bkColor7, uint32_t fontColor7, int maxVal7, int constWidth7, \
+//														  	  int fontID8, int interspace8, int directionDescr8, char *txt8,int OnlyDigits8, int space8, uint32_t bkColor8, uint32_t fontColor8, int maxVal8, int constWidth8, \
+//														  	  int fontID9, int interspace9, int directionDescr9, char *txt9,int OnlyDigits9, int space9, uint32_t bkColor9, uint32_t fontColor9, int maxVal9, int constWidth9, \
+//														  	  int fontID10, int interspace10, int directionDescr10, char *txt10,int OnlyDigits10, int space10, uint32_t bkColor10, uint32_t fontColor10, int maxVal10, int constWidth10, \
+//														  	  int fontID11, int interspace11, int directionDescr11, char *txt11,int OnlyDigits11, int space11, uint32_t bkColor11, uint32_t fontColor11, int maxVal11, int constWidth11, \
+//														  	  int fontID12, int interspace12, int directionDescr12, char *txt12,int OnlyDigits12, int space12, uint32_t bkColor12, uint32_t fontColor12, int maxVal12, int constWidth12 )
+//{
+//	StructTxtPxlLen len = {0};
+//
+//	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
+//	{
+//		int width_main; 		/* LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth); */
+//		int height_main	= LCD_GetFontHeight(fontID);
+//		int heightHalf_main = LCD_GetFontHalfHeight(fontID);
+//
+//		int width_descr 	= LCD_GetWholeStrPxlWidth(fontID2, txt2, space2, constWidth2);
+//		int height_descr 	= LCD_GetFontHeight(fontID2);
+//		int heightHalf_descr = LCD_GetFontHalfHeight(fontID2);
+//
+//		int Y_descr, X_descr;
+//		int Y_descr_correct = 0;	/* for 'Right_up'  'Left_up' */
+//
+//		len = LCD_StrVar(idVar,fontID, Xpos, Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
+//		width_main = len.inPixel;
+//
+//		switch(directionDescr)
+//		{
+//		case Under_center:
+//		default:
+//			LCD_Xmiddle(0,SetPos,SetPosAndWidth(Xpos,width_main),NULL,0,0);
+//			X_descr = LCD_Xmiddle(0,GetPos,fontID2,txt2,space2,constWidth2);
+//			Y_descr = Ypos + len.height + interspace;
+//			break;
+//
+//		case Under_left:
+//			X_descr = interspace >> 16;
+//			Y_descr = Ypos + len.height + interspace;
+//			break;
+//
+//		case Under_right:
+//			X_descr = interspace >> 16;
+//			Y_descr = Ypos + len.height + interspace;
+//			break;
+//
+//		case Above_center:
+//	   	LCD_Xmiddle(0,SetPos,SetPosAndWidth(Xpos,width_main),NULL,0,0);
+//	      X_descr = LCD_Xmiddle(0,GetPos,fontID2,txt2,space2,constWidth2);
+//	      Y_descr = Ypos - interspace - height_descr;
+//			break;
+//
+//		case Above_left:
+//			X_descr = interspace >> 16;
+//			Y_descr = Ypos - interspace - height_descr;
+//			break;
+//
+//		case Above_right:
+//			X_descr = interspace >> 16;
+//			Y_descr = Ypos - interspace - height_descr;
+//			break;
+//
+//		case Left_down:
+//	      X_descr = Xpos - interspace - width_descr;
+//	      Y_descr = Ypos + (heightHalf_main - heightHalf_descr);
+//			break;
+//
+//		case Left_mid:
+//	      LCD_Ymiddle(0,SetPos,SetPosAndWidth(Ypos,height_main));
+//	      X_descr = Xpos - interspace - width_descr;
+//	      Y_descr = LCD_Ymiddle(0,GetPos,fontID2);
+//			break;
+//
+//		case Left_up:
+//			X_descr = Xpos - interspace - width_descr;
+//	      Y_descr = Ypos + ABS(height_main-heightHalf_main) - ABS(height_descr-heightHalf_descr);
+//			Y_descr += Y_descr_correct;
+//			break;
+//
+//		case Right_down:
+//	      X_descr = Xpos + width_main + interspace;
+//	      Y_descr = Ypos + (heightHalf_main - heightHalf_descr);
+//			break;
+//
+//		case Right_mid:
+//	      LCD_Ymiddle(0,SetPos,SetPosAndWidth(Ypos,height_main));
+//	      X_descr = Xpos + width_main + interspace;
+//	      Y_descr = LCD_Ymiddle(0,GetPos,fontID2);
+//			break;
+//
+//		case Right_up:
+//	      X_descr = Xpos + width_main + interspace;
+//	      Y_descr = Ypos + ABS(height_main-heightHalf_main) - ABS(height_descr-heightHalf_descr);
+//			Y_descr += Y_descr_correct;
+//			break;
+//		}
+//
+//		if	((bkColor2==MYGRAY && fontColor2 == WHITE) ||
+//			(bkColor2==MYGRAY && fontColor2 == MYGREEN)){
+//			LCD_Str(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2,bkColor2, 1, constWidth2);
+//		}
+//		else if(bkColor2==WHITE  && fontColor2 == BLACK)
+//			LCD_Str(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2,bkColor2, 0, constWidth2);
+//		else
+//			LCD_StrChangeColor(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2, bkColor2, fontColor2,maxVal2, constWidth2);
+//
+//	}
+//	return len;
+//}
+
 static void LCD_DimensionBkCorrect(int idVar, StructTxtPxlLen temp, uint32_t *LcdBuffer)
 {
 	int xEnd_prev = FontVar[idVar].xPos_prev + FontVar[idVar].widthPxl_prev;
@@ -2068,6 +2183,130 @@ StructTxtPxlLen LCD_StrChangeColorDescrVar(int idVar,int fontID, int Xpos, 		int
 	}
 	return len;
 }
+
+//StructTxtPxlLen LCD_StrChangeColorDescrVar_array( \
+//	int idVar,int fontID, int Xpos, 		 	int Ypos, 				char *txt, int OnlyDigits,  int space,  uint32_t bkColor,  int coeff, int constWidth, uint32_t bkScreenColor, \
+//				int fontID1, int interspace1, int directionDescr1, char *txt1,int OnlyDigits1, int space1, uint32_t bkColor1, uint32_t fontColor1, int maxVal1, int constWidth1, \
+//				int fontID2, int interspace2, int directionDescr2, char *txt2,int OnlyDigits2, int space2, uint32_t bkColor2, uint32_t fontColor2, int maxVal2, int constWidth2, \
+//				int fontID3, int interspace3, int directionDescr3, char *txt3,int OnlyDigits3, int space3, uint32_t bkColor3, uint32_t fontColor3, int maxVal3, int constWidth3, \
+//				int fontID4, int interspace4, int directionDescr4, char *txt4,int OnlyDigits4, int space4, uint32_t bkColor4, uint32_t fontColor4, int maxVal4, int constWidth4, \
+//				int fontID5, int interspace5, int directionDescr5, char *txt5,int OnlyDigits5, int space5, uint32_t bkColor5, uint32_t fontColor5, int maxVal5, int constWidth5, \
+//				int fontID6, int interspace6, int directionDescr6, char *txt6,int OnlyDigits6, int space6, uint32_t bkColor6, uint32_t fontColor6, int maxVal6, int constWidth6, \
+//				int fontID7, int interspace7, int directionDescr7, char *txt7,int OnlyDigits7, int space7, uint32_t bkColor7, uint32_t fontColor7, int maxVal7, int constWidth7, \
+//				int fontID8, int interspace8, int directionDescr8, char *txt8,int OnlyDigits8, int space8, uint32_t bkColor8, uint32_t fontColor8, int maxVal8, int constWidth8, \
+//				int fontID9, int interspace9, int directionDescr9, char *txt9,int OnlyDigits9, int space9, uint32_t bkColor9, uint32_t fontColor9, int maxVal9, int constWidth9, \
+//				int fontID10, int interspace10, int directionDescr10, char *txt10,int OnlyDigits10, int space10, uint32_t bkColor10, uint32_t fontColor10, int maxVal10, int constWidth10, \
+//				int fontID11, int interspace11, int directionDescr11, char *txt11,int OnlyDigits11, int space11, uint32_t bkColor11, uint32_t fontColor11, int maxVal11, int constWidth11, \
+//				int fontID12, int interspace12, int directionDescr12, char *txt12,int OnlyDigits12, int space12, uint32_t bkColor12, uint32_t fontColor12, int maxVal12, int constWidth12 )
+//{
+//	StructTxtPxlLen len = {0};
+//
+//	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
+//	{
+//		int width_descr;
+//		int height_descr;
+//		int heightHalf_descr;
+//
+//		int width_main; 		/* LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth); */
+//		int height_main	= LCD_GetFontHeight(fontID);
+//		int heightHalf_main = LCD_GetFontHalfHeight(fontID);
+//
+//		int Y_descr, X_descr;
+//		int Y_descr_correct = 0;	/* for 'Right_up'  'Left_up' */
+//
+//		len = LCD_StrVar(idVar,fontID, Xpos, Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
+//		width_main = len.inPixel;
+//
+//		for(int i=0; i<12; ++i)
+//		{
+//			width_descr 	= LCD_GetWholeStrPxlWidth(fontID2, txt2, space2, constWidth2);
+//			height_descr 	= LCD_GetFontHeight(fontID2);
+//			heightHalf_descr = LCD_GetFontHalfHeight(fontID2);
+//
+//			switch(directionDescr)
+//			{
+//			case Under_center:
+//			default:
+//				LCD_Xmiddle(0,SetPos,SetPosAndWidth(Xpos,width_main),NULL,0,0);
+//				X_descr = LCD_Xmiddle(0,GetPos,fontID2,txt2,space2,constWidth2);
+//				Y_descr = Ypos + len.height + interspace;
+//				break;
+//
+//			case Under_left:
+//				X_descr = interspace >> 16;
+//				Y_descr = Ypos + len.height + interspace;
+//				break;
+//
+//			case Under_right:
+//				X_descr = interspace >> 16;
+//				Y_descr = Ypos + len.height + interspace;
+//				break;
+//
+//			case Above_center:
+//		   	LCD_Xmiddle(0,SetPos,SetPosAndWidth(Xpos,width_main),NULL,0,0);
+//		      X_descr = LCD_Xmiddle(0,GetPos,fontID2,txt2,space2,constWidth2);
+//		      Y_descr = Ypos - interspace - height_descr;
+//				break;
+//
+//			case Above_left:
+//				X_descr = interspace >> 16;
+//				Y_descr = Ypos - interspace - height_descr;
+//				break;
+//
+//			case Above_right:
+//				X_descr = interspace >> 16;
+//				Y_descr = Ypos - interspace - height_descr;
+//				break;
+//
+//			case Left_down:
+//		      X_descr = Xpos - interspace - width_descr;
+//		      Y_descr = Ypos + (heightHalf_main - heightHalf_descr);
+//				break;
+//
+//			case Left_mid:
+//		      LCD_Ymiddle(0,SetPos,SetPosAndWidth(Ypos,height_main));
+//		      X_descr = Xpos - interspace - width_descr;
+//		      Y_descr = LCD_Ymiddle(0,GetPos,fontID2);
+//				break;
+//
+//			case Left_up:
+//				X_descr = Xpos - interspace - width_descr;
+//		      Y_descr = Ypos + ABS(height_main-heightHalf_main) - ABS(height_descr-heightHalf_descr);
+//				Y_descr += Y_descr_correct;
+//				break;
+//
+//			case Right_down:
+//		      X_descr = Xpos + width_main + interspace;
+//		      Y_descr = Ypos + (heightHalf_main - heightHalf_descr);
+//				break;
+//
+//			case Right_mid:
+//		      LCD_Ymiddle(0,SetPos,SetPosAndWidth(Ypos,height_main));
+//		      X_descr = Xpos + width_main + interspace;
+//		      Y_descr = LCD_Ymiddle(0,GetPos,fontID2);
+//				break;
+//
+//			case Right_up:
+//		      X_descr = Xpos + width_main + interspace;
+//		      Y_descr = Ypos + ABS(height_main-heightHalf_main) - ABS(height_descr-heightHalf_descr);
+//				Y_descr += Y_descr_correct;
+//				break;
+//			}
+//
+//			if	((bkColor2==MYGRAY && fontColor2 == WHITE) ||
+//				(bkColor2==MYGRAY && fontColor2 == MYGREEN)){
+//				LCD_Str(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2,bkColor2, 1, constWidth2);
+//			}
+//			else if(bkColor2==WHITE  && fontColor2 == BLACK)
+//				LCD_Str(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2,bkColor2, 0, constWidth2);
+//			else
+//				LCD_StrChangeColor(fontID2, X_descr, Y_descr, txt2, OnlyDigits2, space2, bkColor2, fontColor2,maxVal2, constWidth2);
+//
+//		}
+//	}
+//	return len;
+//}
+
 
 StructTxtPxlLen LCD_StrChangeColorVarIndirect(int idVar, char *txt){
 	StructTxtPxlLen temp;
@@ -3276,6 +3515,113 @@ StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar, int fontID, uint32_t fontCol
 		lenStr=LCD_StrChangeColorVar(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor);
 	return lenStr;
 }
+
+
+
+
+LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkColor, int interspace, int directionDescr, char *txt, int OnlyDigits, int space,int maxVal, int constWidth)
+{
+	LCD_STR_PARAM	strParam = {fontID,fontColor,bkColor,interspace,directionDescr,txt,OnlyDigits,space,maxVal,constWidth};
+	return strParam;
+}
+
+#include <stdarg.h>
+
+StructTxtPxlLen LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, int Ypos,char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor, int nmbArg, LCD_STR_PARAM *ptr )
+{
+	DbgVar(1,100,Red_"\r\nTEXT proba: %s , %s\r\n"_X,ptr[0].txt, ptr[1].txt);
+}
+
+StructTxtPxlLen LCD_StrChangeColorDescrVar_array(int idVar,int fontID, int Xpos,int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor, int nmbArg, LCD_STR_PARAM *ptr )
+{
+
+}
+
+StructTxtPxlLen LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, int nmbArg, ...)
+{
+	va_list va;
+	LCD_STR_PARAM qqq[2]={0};
+	//LCD_STR_PARAM ptr[nmbArg];
+
+//	ptr[0] = &qqq[0];
+//	ptr[1] = &qqq[1];
+
+	va_start(va,0);
+
+	for(int i=0; i<nmbArg; ++i)
+	{
+		qqq[i] = va_arg(va, LCD_STR_PARAM);
+
+		//va_copy(ptr[i],  s );
+	}
+
+	//DbgVar(1,100,Red_"\r\nTEXT proba: %s , %s\r\n"_X,qqq[0].txt, qqq[1].txt);
+
+	StructTxtPxlLen lenStr;
+
+//	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+//			 (bkColor==MYGRAY && fontColor == MYGREEN)){
+		lenStr=LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, nmbArg, qqq);
+//		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
+//	}
+//	else if(bkColor==WHITE  && fontColor == BLACK){
+//		lenStr=LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor, nmbArg, qqq);
+//		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
+//	}
+//	else
+//		lenStr=LCD_StrChangeColorDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor, nmbArg, qqq);
+//	return lenStr;
+
+
+
+//va_copy(d,s)
+
+	va_end(va);
+
+	return lenStr;
+}
+
+//void LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
+//		int fontID1, uint32_t fontColor1, uint32_t bkColor1, int interspace1, int directionDescr1, char *txt1, int OnlyDigits1, int space1,int maxVal1, int constWidth1, \
+//		int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace2, int directionDescr2, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2, \
+//		int fontID3, uint32_t fontColor3, uint32_t bkColor3, int interspace3, int directionDescr3, char *txt3, int OnlyDigits3, int space3,int maxVal3, int constWidth3, \
+//		int fontID4, uint32_t fontColor4, uint32_t bkColor4, int interspace4, int directionDescr4, char *txt4, int OnlyDigits4, int space4,int maxVal4, int constWidth4, \
+//										int fontID5, uint32_t fontColor5, uint32_t bkColor5, int interspace5, int directionDescr5, char *txt5, int OnlyDigits5, int space5,int maxVal5, int constWidth5, \
+//										int fontID6, uint32_t fontColor6, uint32_t bkColor6, int interspace6, int directionDescr6, char *txt6, int OnlyDigits6, int space6,int maxVal6, int constWidth6, \
+//										int fontID7, uint32_t fontColor7, uint32_t bkColor7, int interspace7, int directionDescr7, char *txt7, int OnlyDigits7, int space7,int maxVal7, int constWidth7, \
+//										int fontID8, uint32_t fontColor8, uint32_t bkColor8, int interspace8, int directionDescr8, char *txt8, int OnlyDigits8, int space8,int maxVal8, int constWidth8, \
+//										int fontID9, uint32_t fontColor9, uint32_t bkColor9, int interspace9, int directionDescr9, char *txt9, int OnlyDigits9, int space9,int maxVal9, int constWidth9, \
+//										int fontID10, uint32_t fontColor10, uint32_t bkColor10, int interspace10, int directionDescr10, char *txt10, int OnlyDigits10, int space10,int maxVa110, int constWidth10, \
+//										int fontID11, uint32_t fontColor11, uint32_t bkColor11, int interspace11, int directionDescr11, char *txt11, int OnlyDigits11, int space11,int maxVal11, int constWidth11, \
+//										int fontID12, uint32_t fontColor12, uint32_t bkColor12, int interspace12, int directionDescr12, char *txt12, int OnlyDigits12, int space12,int maxVal12, int constWidth12 )
+//{
+
+//	LCD_STR_PARAM strParam[12];
+//	StructTxtPxlLen lenStr;
+//
+//	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+//			 (bkColor==MYGRAY && fontColor == MYGREEN)){
+//		lenStr=LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, );
+//		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
+//	}
+//	else if(bkColor==WHITE  && fontColor == BLACK){
+//		lenStr=LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor, \
+//											  fontID2,interspace,directionDescr,txt2, OnlyDigits2,space2,bkColor2,fontColor2,maxVal2,constWidth2);
+//		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
+//	}
+//	else
+//		lenStr=LCD_StrChangeColorDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor, \
+//															 fontID2,interspace,directionDescr,txt2, OnlyDigits2,space2,bkColor2,fontColor2,maxVal2,constWidth2);
+//	return lenStr;
+
+//}
+
+
+
+
+
+
+
 
 StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
 																			int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace, int directionDescr, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2)

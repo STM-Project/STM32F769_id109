@@ -172,6 +172,19 @@ typedef struct {
 	uint16_t height;
 }StructTxtPxlLen;
 
+typedef struct {
+	int fontID;
+	uint32_t fontColor;
+	uint32_t bkColor;
+	int interspace;
+	int directionDescr;
+	char *txt;
+	int OnlyDigits;
+	int space;
+	int maxVal;
+	int constWidth;
+}LCD_STR_PARAM;
+
 void LCD_SetStrVar_bkColor(int idVar, uint32_t bkColor);
 void LCD_SetStrVar_fontColor(int idVar, uint32_t fontColor);
 void LCD_SetStrVar_x(int idVar,int x);
@@ -297,5 +310,20 @@ uint16_t LCD_Xmiddle(int nr, int cmd, uint32_t val, char *txt, int space, int co
 uint32_t SetPosAndWidth(uint16_t pos, uint16_t width);
 
 void SCREEN_ResetAllParameters(void);
+
+
+
+
+
+
+
+
+
+
+LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkColor, int interspace, int directionDescr, char *txt, int OnlyDigits, int space,int maxVal, int constWidth);
+StructTxtPxlLen LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, int nmbArg, ...);
+
+
+
 
 #endif /* LCD_LCD_FONTS_IMAGES_H_ */
