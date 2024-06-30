@@ -3573,87 +3573,77 @@ LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkCo
 //	return lenStr;
 //}
 
+//#define _STR_DESCR_PARAMS  \
+//		int fontID1, uint32_t fontColor1, uint32_t bkColor1, int interspace1, int directionDescr1, char *txt1, int OnlyDigits1, int space1,int maxVal1, int constWidth1, \
+//		int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace2, int directionDescr2, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2, \
+//		int fontID3, uint32_t fontColor3, uint32_t bkColor3, int interspace3, int directionDescr3, char *txt3, int OnlyDigits3, int space3,int maxVal3, int constWidth3, \
+//		int fontID4, uint32_t fontColor4, uint32_t bkColor4, int interspace4, int directionDescr4, char *txt4, int OnlyDigits4, int space4,int maxVal4, int constWidth4, \
+//		int fontID5, uint32_t fontColor5, uint32_t bkColor5, int interspace5, int directionDescr5, char *txt5, int OnlyDigits5, int space5,int maxVal5, int constWidth5, \
+//		int fontID6, uint32_t fontColor6, uint32_t bkColor6, int interspace6, int directionDescr6, char *txt6, int OnlyDigits6, int space6,int maxVal6, int constWidth6, \
+//		int fontID7, uint32_t fontColor7, uint32_t bkColor7, int interspace7, int directionDescr7, char *txt7, int OnlyDigits7, int space7,int maxVal7, int constWidth7, \
+//		int fontID8, uint32_t fontColor8, uint32_t bkColor8, int interspace8, int directionDescr8, char *txt8, int OnlyDigits8, int space8,int maxVal8, int constWidth8, \
+//		int fontID9, uint32_t fontColor9, uint32_t bkColor9, int interspace9, int directionDescr9, char *txt9, int OnlyDigits9, int space9,int maxVal9, int constWidth9, \
+//		int fontID10, uint32_t fontColor10, uint32_t bkColor10, int interspace10, int directionDescr10, char *txt10, int OnlyDigits10, int space10,int maxVa110, int constWidth10, \
+//		int fontID11, uint32_t fontColor11, uint32_t bkColor11, int interspace11, int directionDescr11, char *txt11, int OnlyDigits11, int space11,int maxVal11, int constWidth11, \
+//		int fontID12, uint32_t fontColor12, uint32_t bkColor12, int interspace12, int directionDescr12, char *txt12, int OnlyDigits12, int space12,int maxVal12, int constWidth12
+
+
+#define _STR_DESCR_PARAMS_INIT(_size1, _size2, _size3)  \
+		_size1 fontID1, _size2 fontColor1, _size2 bkColor1, _size1 interspace1, _size1 directionDescr1, _size3 *txt1, _size1 OnlyDigits1, _size1 space1,_size1 maxVal1, _size1 constWidth1, \
+		_size1 fontID2, _size2 fontColor2, _size2 bkColor2, _size1 interspace2, _size1 directionDescr2, _size3 *txt2, _size1 OnlyDigits2, _size1 space2,_size1 maxVal2, _size1 constWidth2, \
+		_size1 fontID3, _size2 fontColor3, _size2 bkColor3, _size1 interspace3, _size1 directionDescr3, _size3 *txt3, _size1 OnlyDigits3, _size1 space3,_size1 maxVal3, _size1 constWidth3, \
+		_size1 fontID4, _size2 fontColor4, _size2 bkColor4, _size1 interspace4, _size1 directionDescr4, _size3 *txt4, _size1 OnlyDigits4, _size1 space4,_size1 maxVal4, _size1 constWidth4, \
+		_size1 fontID5, _size2 fontColor5, _size2 bkColor5, _size1 interspace5, _size1 directionDescr5, _size3 *txt5, _size1 OnlyDigits5, _size1 space5,_size1 maxVal5, _size1 constWidth5, \
+		_size1 fontID6, _size2 fontColor6, _size2 bkColor6, _size1 interspace6, _size1 directionDescr6, _size3 *txt6, _size1 OnlyDigits6, _size1 space6,_size1 maxVal6, _size1 constWidth6, \
+		_size1 fontID7, _size2 fontColor7, _size2 bkColor7, _size1 interspace7, _size1 directionDescr7, _size3 *txt7, _size1 OnlyDigits7, _size1 space7,_size1 maxVal7, _size1 constWidth7, \
+		_size1 fontID8, _size2 fontColor8, _size2 bkColor8, _size1 interspace8, _size1 directionDescr8, _size3 *txt8, _size1 OnlyDigits8, _size1 space8,_size1 maxVal8, _size1 constWidth8, \
+		_size1 fontID9, _size2 fontColor9, _size2 bkColor9, _size1 interspace9, _size1 directionDescr9, _size3 *txt9, _size1 OnlyDigits9, _size1 space9,_size1 maxVal9, _size1 constWidth9, \
+		_size1 fontID10, _size2 fontColor10, _size2 bkColor10, _size1 interspace10, _size1 directionDescr10, _size3 *txt10, _size1 OnlyDigits10, _size1 space10,_size1 maxVa110, _size1 constWidth10, \
+		_size1 fontID11, _size2 fontColor11, _size2 bkColor11, _size1 interspace11, _size1 directionDescr11, _size3 *txt11, _size1 OnlyDigits11, _size1 space11,_size1 maxVal11, _size1 constWidth11, \
+		_size1 fontID12, _size2 fontColor12, _size2 bkColor12, _size1 interspace12, _size1 directionDescr12, _size3 *txt12, _size1 OnlyDigits12, _size1 space12,_size1 maxVal12, _size1 constWidth12
+
+#define _STR_DESCR_PARAMS \
+		 fontID1,  fontColor1,  bkColor1,  interspace1,  directionDescr1, txt1,  OnlyDigits1,  space1, maxVal1,  constWidth1, \
+		 fontID2,  fontColor2,  bkColor2,  interspace2,  directionDescr2, txt2,  OnlyDigits2,  space2, maxVal2,  constWidth2, \
+		 fontID3,  fontColor3,  bkColor3,  interspace3,  directionDescr3, txt3,  OnlyDigits3,  space3, maxVal3,  constWidth3, \
+		 fontID4,  fontColor4,  bkColor4,  interspace4,  directionDescr4, txt4,  OnlyDigits4,  space4, maxVal4,  constWidth4, \
+		 fontID5,  fontColor5,  bkColor5,  interspace5,  directionDescr5, txt5,  OnlyDigits5,  space5, maxVal5,  constWidth5, \
+		 fontID6,  fontColor6,  bkColor6,  interspace6,  directionDescr6, txt6,  OnlyDigits6,  space6, maxVal6,  constWidth6, \
+		 fontID7,  fontColor7,  bkColor7,  interspace7,  directionDescr7, txt7,  OnlyDigits7,  space7, maxVal7,  constWidth7, \
+		 fontID8,  fontColor8,  bkColor8,  interspace8,  directionDescr8, txt8,  OnlyDigits8,  space8, maxVal8,  constWidth8, \
+		 fontID9,  fontColor9,  bkColor9,  interspace9,  directionDescr9, txt9,  OnlyDigits9,  space9, maxVal9,  constWidth9, \
+		 fontID10,  fontColor10,  bkColor10,  interspace10,  directionDescr10, txt10,  OnlyDigits10,  space10, maxVa110,  constWidth10, \
+		 fontID11,  fontColor11,  bkColor11,  interspace11,  directionDescr11, txt11,  OnlyDigits11,  space11, maxVal11,  constWidth11, \
+		 fontID12,  fontColor12,  bkColor12,  interspace12,  directionDescr12, txt12,  OnlyDigits12,  space12, maxVal12,  constWidth12
 
 
 
-StructTxtPxlLen LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, int Ypos,char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor, \
-		int fontID1, uint32_t fontColor1, uint32_t bkColor1, int interspace1, int directionDescr1, char *txt1, int OnlyDigits1, int space1,int maxVal1, int constWidth1, \
-		int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace2, int directionDescr2, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2, \
-		int fontID3, uint32_t fontColor3, uint32_t bkColor3, int interspace3, int directionDescr3, char *txt3, int OnlyDigits3, int space3,int maxVal3, int constWidth3, \
-		int fontID4, uint32_t fontColor4, uint32_t bkColor4, int interspace4, int directionDescr4, char *txt4, int OnlyDigits4, int space4,int maxVal4, int constWidth4, \
-		int fontID5, uint32_t fontColor5, uint32_t bkColor5, int interspace5, int directionDescr5, char *txt5, int OnlyDigits5, int space5,int maxVal5, int constWidth5, \
-		int fontID6, uint32_t fontColor6, uint32_t bkColor6, int interspace6, int directionDescr6, char *txt6, int OnlyDigits6, int space6,int maxVal6, int constWidth6, \
-		int fontID7, uint32_t fontColor7, uint32_t bkColor7, int interspace7, int directionDescr7, char *txt7, int OnlyDigits7, int space7,int maxVal7, int constWidth7, \
-		int fontID8, uint32_t fontColor8, uint32_t bkColor8, int interspace8, int directionDescr8, char *txt8, int OnlyDigits8, int space8,int maxVal8, int constWidth8, \
-		int fontID9, uint32_t fontColor9, uint32_t bkColor9, int interspace9, int directionDescr9, char *txt9, int OnlyDigits9, int space9,int maxVal9, int constWidth9, \
-		int fontID10, uint32_t fontColor10, uint32_t bkColor10, int interspace10, int directionDescr10, char *txt10, int OnlyDigits10, int space10,int maxVa110, int constWidth10, \
-		int fontID11, uint32_t fontColor11, uint32_t bkColor11, int interspace11, int directionDescr11, char *txt11, int OnlyDigits11, int space11,int maxVal11, int constWidth11, \
-		int fontID12, uint32_t fontColor12, uint32_t bkColor12, int interspace12, int directionDescr12, char *txt12, int OnlyDigits12, int space12,int maxVal12, int constWidth12 )
+StructTxtPxlLen LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, int Ypos,char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor, _STR_DESCR_PARAMS_INIT(int, uint32_t, char) )
 {
 
 }
 
-StructTxtPxlLen LCD_StrChangeColorDescrVar_array(int idVar,int fontID, int Xpos,int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor, \
-		int fontID1, uint32_t fontColor1, uint32_t bkColor1, int interspace1, int directionDescr1, char *txt1, int OnlyDigits1, int space1,int maxVal1, int constWidth1, \
-		int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace2, int directionDescr2, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2, \
-		int fontID3, uint32_t fontColor3, uint32_t bkColor3, int interspace3, int directionDescr3, char *txt3, int OnlyDigits3, int space3,int maxVal3, int constWidth3, \
-		int fontID4, uint32_t fontColor4, uint32_t bkColor4, int interspace4, int directionDescr4, char *txt4, int OnlyDigits4, int space4,int maxVal4, int constWidth4, \
-		int fontID5, uint32_t fontColor5, uint32_t bkColor5, int interspace5, int directionDescr5, char *txt5, int OnlyDigits5, int space5,int maxVal5, int constWidth5, \
-		int fontID6, uint32_t fontColor6, uint32_t bkColor6, int interspace6, int directionDescr6, char *txt6, int OnlyDigits6, int space6,int maxVal6, int constWidth6, \
-		int fontID7, uint32_t fontColor7, uint32_t bkColor7, int interspace7, int directionDescr7, char *txt7, int OnlyDigits7, int space7,int maxVal7, int constWidth7, \
-		int fontID8, uint32_t fontColor8, uint32_t bkColor8, int interspace8, int directionDescr8, char *txt8, int OnlyDigits8, int space8,int maxVal8, int constWidth8, \
-		int fontID9, uint32_t fontColor9, uint32_t bkColor9, int interspace9, int directionDescr9, char *txt9, int OnlyDigits9, int space9,int maxVal9, int constWidth9, \
-		int fontID10, uint32_t fontColor10, uint32_t bkColor10, int interspace10, int directionDescr10, char *txt10, int OnlyDigits10, int space10,int maxVa110, int constWidth10, \
-		int fontID11, uint32_t fontColor11, uint32_t bkColor11, int interspace11, int directionDescr11, char *txt11, int OnlyDigits11, int space11,int maxVal11, int constWidth11, \
-		int fontID12, uint32_t fontColor12, uint32_t bkColor12, int interspace12, int directionDescr12, char *txt12, int OnlyDigits12, int space12,int maxVal12, int constWidth12 )
+StructTxtPxlLen LCD_StrChangeColorDescrVar_array(int idVar,int fontID, int Xpos,int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor, _STR_DESCR_PARAMS_INIT(int, uint32_t, char) )
 {
 
 }
 
-void LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
-		int fontID1, uint32_t fontColor1, uint32_t bkColor1, int interspace1, int directionDescr1, char *txt1, int OnlyDigits1, int space1,int maxVal1, int constWidth1, \
-		int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace2, int directionDescr2, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2, \
-		int fontID3, uint32_t fontColor3, uint32_t bkColor3, int interspace3, int directionDescr3, char *txt3, int OnlyDigits3, int space3,int maxVal3, int constWidth3, \
-		int fontID4, uint32_t fontColor4, uint32_t bkColor4, int interspace4, int directionDescr4, char *txt4, int OnlyDigits4, int space4,int maxVal4, int constWidth4, \
-		int fontID5, uint32_t fontColor5, uint32_t bkColor5, int interspace5, int directionDescr5, char *txt5, int OnlyDigits5, int space5,int maxVal5, int constWidth5, \
-		int fontID6, uint32_t fontColor6, uint32_t bkColor6, int interspace6, int directionDescr6, char *txt6, int OnlyDigits6, int space6,int maxVal6, int constWidth6, \
-		int fontID7, uint32_t fontColor7, uint32_t bkColor7, int interspace7, int directionDescr7, char *txt7, int OnlyDigits7, int space7,int maxVal7, int constWidth7, \
-		int fontID8, uint32_t fontColor8, uint32_t bkColor8, int interspace8, int directionDescr8, char *txt8, int OnlyDigits8, int space8,int maxVal8, int constWidth8, \
-		int fontID9, uint32_t fontColor9, uint32_t bkColor9, int interspace9, int directionDescr9, char *txt9, int OnlyDigits9, int space9,int maxVal9, int constWidth9, \
-		int fontID10, uint32_t fontColor10, uint32_t bkColor10, int interspace10, int directionDescr10, char *txt10, int OnlyDigits10, int space10,int maxVa110, int constWidth10, \
-		int fontID11, uint32_t fontColor11, uint32_t bkColor11, int interspace11, int directionDescr11, char *txt11, int OnlyDigits11, int space11,int maxVal11, int constWidth11, \
-		int fontID12, uint32_t fontColor12, uint32_t bkColor12, int interspace12, int directionDescr12, char *txt12, int OnlyDigits12, int space12,int maxVal12, int constWidth12 )
+void LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, _STR_DESCR_PARAMS_INIT(int, uint32_t, char) )
 {
-	LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, \
-			 fontID1,  fontColor1,  bkColor1,  interspace1,  directionDescr1, txt1, OnlyDigits1, space1,maxVal1, constWidth1, \
-			 fontID2,  fontColor2,  bkColor2,  interspace2,  directionDescr2, txt2, OnlyDigits2, space2,maxVal2, constWidth2, \
-			 fontID3,  fontColor3,  bkColor3,  interspace3,  directionDescr3, txt3, OnlyDigits3, space3,maxVal3, constWidth3, \
-			 fontID4,  fontColor4,  bkColor4,  interspace4,  directionDescr4, txt4, OnlyDigits4, space4,maxVal4, constWidth4, \
-			 fontID5,  fontColor5,  bkColor5,  interspace5,  directionDescr5, txt5, OnlyDigits5, space5,maxVal5, constWidth5, \
-			 fontID6,  fontColor6,  bkColor6,  interspace6,  directionDescr6, txt6, OnlyDigits6, space6,maxVal6, constWidth6, \
-			 fontID7,  fontColor7,  bkColor7,  interspace7,  directionDescr7, txt7, OnlyDigits7, space7,maxVal7, constWidth7, \
-			 fontID8,  fontColor8,  bkColor8,  interspace8,  directionDescr8, txt8, OnlyDigits8, space8,maxVal8, constWidth8, \
-			 fontID9,  fontColor9,  bkColor9,  interspace9,  directionDescr9, txt9, OnlyDigits9, space9,maxVal9, constWidth9, \
-			 fontID10,  fontColor10,  bkColor10,  interspace10,  directionDescr10, txt10, OnlyDigits10, space10,maxVa110, constWidth10, \
-			 fontID11,  fontColor11,  bkColor11,  interspace11,  directionDescr11, txt11, OnlyDigits11, space11,maxVal11, constWidth11, \
-			 fontID12,  fontColor12,  bkColor12,  interspace12,  directionDescr12, txt12, OnlyDigits12, space12, maxVal12, constWidth12 );
+	StructTxtPxlLen lenStr;
 
-
-
-	//	StructTxtPxlLen lenStr;
-//
-//	if		((bkColor==MYGRAY && fontColor == WHITE) ||
-//			 (bkColor==MYGRAY && fontColor == MYGREEN)){
-//		lenStr=LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, _STR_DESCR_PARAMETERS );
-//		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
-//	}
-//	else if(bkColor==WHITE  && fontColor == BLACK){
-//		lenStr=LCD_StrDescrVar_array(idVidVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColorar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,0,constWidth,bkScreenColor, _STR_DESCR_PARAMETERS);
-//		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
-//	}
-//	else
-//		lenStr=LCD_StrChangeColorDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor, _STR_DESCR_PARAMETERS);
-//	return lenStr;
+	if		((bkColor==MYGRAY && fontColor == WHITE) ||
+			 (bkColor==MYGRAY && fontColor == MYGREEN)){
+		lenStr=LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, _STR_DESCR_PARAMS );
+		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
+	}
+	else if(bkColor==WHITE  && fontColor == BLACK){
+		lenStr=LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, _STR_DESCR_PARAMS );
+		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
+	}
+	else
+		lenStr=LCD_StrChangeColorDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor, _STR_DESCR_PARAMS);
+	return lenStr;
 
 }
 
