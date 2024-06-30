@@ -1868,11 +1868,19 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 //			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth ); \
 //
 //
-
-
-	lenStr=LCD_StrDependOnColorsDescrVar_array( STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-			2, LCD_SetStrDescrParam(v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth), \
-				LCD_SetStrDescrParam(v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_down, "Syra:", fullHight, 0,250, ConstWidth) );
+//#define DESCR_PARAM_1	0,0,0,0,0,0,0,0,0,0
+//#define DESCR_PARAM_2	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+//#define DESCR_PARAM_3	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+//#define DESCR_PARAM_4	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+//
+//
+//#define LCD_END_STR_DESCR_PARAM(x)	DESCR_PARAM_##x
+//
+//
+//	lenStr=LCD_StrDependOnColorsDescrVar_array( STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+//				LCD_SetStrDescrParam(v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth), \
+//				LCD_SetStrDescrParam(v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_down, "Syra:", fullHight, 0,250, ConstWidth), \
+//				LCD_END_STR_DESCR_PARAM(2) );
 
 	//#######################################################
 
