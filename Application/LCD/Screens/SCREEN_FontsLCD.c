@@ -25,7 +25,7 @@ Czcionki LCD,Fonts LCD,\
 #define SCREEN_FONTS_SET_PARAMETERS \
 /* id   name							default value */ \
 	X(0, FONT_SIZE_Title, 	 		FONT_14_bold) \
-	X(1, FONT_SIZE_FontColor, 	 	FONT_14_bold) \
+	X(1, FONT_SIZE_FontColor, 	 	FONT_20_bold) \
 	X(2, FONT_SIZE_BkColor,			FONT_14_bold) \
 	X(3, FONT_SIZE_FontType,		FONT_14) \
 	X(4, FONT_SIZE_FontSize,		FONT_14) \
@@ -37,7 +37,7 @@ Czcionki LCD,Fonts LCD,\
 	X(10, FONT_SIZE_PosCursor,		FONT_10) \
 	X(11, FONT_SIZE_CPUusage,		FONT_10) \
 	X(12, FONT_SIZE_Speed,			FONT_10) \
-	X(13, FONT_SIZE_Descr, 	 		FONT_10_bold) \
+	X(13, FONT_SIZE_Descr, 	 		FONT_8) \
 	X(14, FONT_SIZE_Press, 	 		FONT_14_bold) \
 	X(15, FONT_SIZE_Fonts,			FONT_20) \
 	\
@@ -54,7 +54,7 @@ Czcionki LCD,Fonts LCD,\
 	X(26, FONT_STYLE_PosCursor,	Arial) \
 	X(27, FONT_STYLE_CPUusage,		Arial) \
 	X(28, FONT_STYLE_Speed,			Arial) \
-	X(29, FONT_STYLE_Descr, 		Arial) \
+	X(29, FONT_STYLE_Descr, 		Times_New_Roman) \
 	X(30, FONT_STYLE_Press, 		Arial) \
 	X(31, FONT_STYLE_Fonts, 		Arial) \
 	\
@@ -71,7 +71,7 @@ Czcionki LCD,Fonts LCD,\
 	X(42, FONT_COLOR_PosCursor,	WHITE) \
 	X(43, FONT_COLOR_CPUusage,		WHITE) \
 	X(44, FONT_COLOR_Speed,			WHITE) \
-	X(45, FONT_COLOR_Descr, 		COLOR_GRAY(0x90)) \
+	X(45, FONT_COLOR_Descr, 		COLOR_GRAY(0xB0)) \
 	X(46, FONT_COLOR_Press, 		DARKRED) \
 	X(47, FONT_COLOR_Fonts,  		0xFFE1A000) \
 	\
@@ -1868,13 +1868,27 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 //			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth ); \
 //
 //
-//#define DESCR_PARAM_1	0,0,0,0,0,0,0,0,0,0
-//#define DESCR_PARAM_2	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-//#define DESCR_PARAM_3	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-//#define DESCR_PARAM_4	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-//
-//
-//#define LCD_END_STR_DESCR_PARAM(x)	DESCR_PARAM_##x
+#define DESCR_PARAM_1	-1,0,0,0,0,0,0,0,0,0
+#define DESCR_PARAM_2	DESCR_PARAM_1,DESCR_PARAM_1
+#define DESCR_PARAM_3	DESCR_PARAM_2,DESCR_PARAM_1
+#define DESCR_PARAM_4	DESCR_PARAM_3,DESCR_PARAM_1
+#define DESCR_PARAM_5	DESCR_PARAM_4,DESCR_PARAM_1
+#define DESCR_PARAM_6	DESCR_PARAM_5,DESCR_PARAM_1
+#define DESCR_PARAM_7	DESCR_PARAM_6,DESCR_PARAM_1
+#define DESCR_PARAM_8	DESCR_PARAM_7,DESCR_PARAM_1
+#define DESCR_PARAM_9	DESCR_PARAM_8,DESCR_PARAM_1
+#define DESCR_PARAM_10	DESCR_PARAM_9,DESCR_PARAM_1
+#define DESCR_PARAM_11	DESCR_PARAM_10,DESCR_PARAM_1
+
+
+
+#define LCD_END_STR_DESCR_PARAM(x)	DESCR_PARAM_##x
+
+
+//	lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+//			LCD_END_STR_DESCR_PARAM(11), LCD_END_STR_DESCR_PARAM(1));
+
+
 //
 //
 //	lenStr=LCD_StrDependOnColorsDescrVar_array( STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
@@ -1895,13 +1909,16 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-	lenStr=LCD_StrDependOnColorsDescrVar(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-													 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth);  //opisy w tlumaczerniach definach
+	lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+													 v.FONT_ID_Descr, LIGHTBLUE, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth,\
+													 v.FONT_ID_Descr, LIGHTRED, v.FONT_BKCOLOR_Descr, 0|(350<<16), Under_right, "ABc:", fullHight, 0,250, ConstWidth, \
+													 v.FONT_ID_Descr, GREEN, v.FONT_BKCOLOR_Descr, 0, Under_center, "Rafal M.:", fullHight, 0,250, ConstWidth, \
+													 DESCR_PARAM_9);  //opisy w tlumaczerniach definach
 	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
 	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, lenStr);
 
 
-	_StartDrawLine(0,LCD_X, 10,LCD_Ypos(lenStr,IncPos,15));   _DrawRight(200, WHITE);
+	_StartDrawLine(0,LCD_X, 10,LCD_Ypos(lenStr,IncPos,20));   _DrawRight(200, COLOR_GRAY(0xA0));
 
 
 	lenStr=LCD_StrDependOnColorsDescrVar(STR_FONT_PARAM(BkColor, FillMainFrame), LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,15), TXT_BK_COLOR, fullHight, 0,250, ConstWidth, \
