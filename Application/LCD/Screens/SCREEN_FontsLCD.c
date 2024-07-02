@@ -20,6 +20,11 @@
 
 static const char FILE_NAME(Lang)[]="\
 Czcionki LCD,Fonts LCD,\
+Zmiana kolorow czcionki,Press to change color fonts,\
+Pierw:,First:,\
+Czer,Red,\
+Ziel,Green,\
+Nieb,Blue,\
 ";\
 
 #define SCREEN_FONTS_SET_PARAMETERS \
@@ -1350,7 +1355,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		}
 	}
 */
-	void _ServiceSizeRoll(void)
+	void _ServiceSizeRoll(void)  //Zrobic strzalki i press je powoduje automatyczne w dol albo w gore !!!!!
 	{
 		const uint16_t dimKeys[] = {1,LCD_GetFontSizeMaxNmb()};
 		const char *txtKey[dimKeys[1]];
@@ -1800,22 +1805,21 @@ static void LoadFonts(int startFontID, int endFontID){
 
 static void ELEMENT_fontRGB(int argNmb, StructTxtPxlLen *lenStr)
 {
-	char *t[]= {"Zmiana kolorow czcionki","First:","Red","Green","Blue"};    //opisy w tlumaczerniach definach LANG
 	int spaceMain_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor," ",0,ConstWidth);
 	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,INT2STR(Test.font[0]),0,ConstWidth);
-	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,txt,0,ConstWidth); }
+	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,txt,0,ConstWidth); }
 	int xPos = LCD_Xpos(*lenStr,SetPos,60);
 	int yPos = LCD_Ypos(*lenStr,SetPos,30);
 
-	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(t[2]));
-	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(t[4]));
+	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),3)));
+	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),5)));
 
 	*lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), xPos, yPos, TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Above_center, t[0], fullHight, 0,250, NoConstWidth,\
-		v.FONT_ID_Descr, COLOR_GRAY(0x0A), v.FONT_BKCOLOR_Descr, 4, Left_mid, t[1], fullHight, 0,250, NoConstWidth, \
-		v.FONT_ID_Descr, RED, v.FONT_BKCOLOR_Descr, 4|(xPos_under_left<<16), Under_left, t[2], fullHight, 0,250, NoConstWidth, \
-		v.FONT_ID_Descr, GREEN, v.FONT_BKCOLOR_Descr, 4, Under_center, t[3], fullHight, 0,250, NoConstWidth, \
-		v.FONT_ID_Descr, BLUE, v.FONT_BKCOLOR_Descr, 4|(xPos_under_right<<16), Under_right, t[4], fullHight, 0,250, NoConstWidth,\
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 								 Above_center, GetSelTxt(0,FILE_NAME(Lang),1), fullHight, 0,250, NoConstWidth,\
+		v.FONT_ID_Descr, COLOR_GRAY(0x0A), 	 v.FONT_BKCOLOR_Descr, 4, 								 Left_mid, 		GetSelTxt(40,FILE_NAME(Lang),2), fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, RED, 					 v.FONT_BKCOLOR_Descr, 4|(xPos_under_left<<16),  Under_left,	GetSelTxt(50,FILE_NAME(Lang),3), fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, GREEN, 				 v.FONT_BKCOLOR_Descr, 4, 								 Under_center, GetSelTxt(60,FILE_NAME(Lang),4), fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, BLUE, 					 v.FONT_BKCOLOR_Descr, 4|(xPos_under_right<<16), Under_right,	GetSelTxt(70,FILE_NAME(Lang),5), fullHight, 0,250, NoConstWidth,\
 		LCD_STR_DESCR_PARAM_NUMBER(5) );
 
 	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
@@ -1866,9 +1870,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-
 	ELEMENT_fontRGB(argNmb,&lenStr);
-
 
 
 	_StartDrawLine(0,LCD_X, 10,LCD_Ypos(lenStr,IncPos,20)+15);   _DrawRight(200, COLOR_GRAY(0xA0));

@@ -5,10 +5,14 @@
 #include "stm32f7xx_hal.h"
 
 typedef enum{
-	Coeff_A1 = 1070,
-	Coeff_B1 = -26479,
-	Coeff_A2 = 1085,
-	Coeff_B2 = -26279
+//	Coeff_A1 = 1070,
+//	Coeff_B1 = -26479,
+//	Coeff_A2 = 1085,
+//	Coeff_B2 = -26279
+	Coeff_A1 = 1074,
+	Coeff_B1 = -28966,
+	Coeff_A2 = 1129,
+	Coeff_B2 = -46096
 }DEFAULT_TOUCH_COEFF_CALIBR;
 
 #define SERVICE_TOUCH_PROB_TIME_MS	20

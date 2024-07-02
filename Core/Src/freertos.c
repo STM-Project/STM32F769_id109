@@ -170,7 +170,7 @@ void StartDefaultTask(void const * argument)
 	if(BSP_TS_Init(LCD_GetXSize(), LCD_GetYSize()))
 		Dbg(1,"\r\nERROR: BSP_TS_Init ");
 
-	SetLang(2,Polish);
+	SetLang(2,English);
 	LCD_SetSpacesBetweenFonts();
 	LCD_TOUCH_DeleteAllSetTouch();
 	Dbg(1,"\r\nStart ");
