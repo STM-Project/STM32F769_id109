@@ -1800,22 +1800,22 @@ static void LoadFonts(int startFontID, int endFontID){
 
 static void ELEMENT_fontRGB(int argNmb, StructTxtPxlLen *lenStr)
 {
-	char *t[]= {"R","G","B","Zmiana kolorow czcionki"};    //opisy w tlumaczerniach definach LANG
+	char *t[]= {"Zmiana kolorow czcionki","First:","Red","Green","Blue"};    //opisy w tlumaczerniach definach LANG
 	int spaceMain_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor," ",0,ConstWidth);
 	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,INT2STR(Test.font[0]),0,ConstWidth);
 	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,txt,0,ConstWidth); }
 	int xPos = LCD_Xpos(*lenStr,SetPos,60);
 	int yPos = LCD_Ypos(*lenStr,SetPos,30);
 
-	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(t[0]));
-	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(t[2]));
+	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(t[2]));
+	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(t[4]));
 
 	*lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), xPos, yPos, TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 2, Above_center, t[3], fullHight, 0,250, ConstWidth,\
-		v.FONT_ID_Descr, LIGHTRED, v.FONT_BKCOLOR_Descr, 0|(xPos_under_left<<16), Left_up, "font color", fullHight, 0,250, ConstWidth, \
-		v.FONT_ID_Descr, LIGHTRED, v.FONT_BKCOLOR_Descr, 0|(xPos_under_left<<16), Under_left, t[0], fullHight, 0,250, ConstWidth, \
-		v.FONT_ID_Descr, GREEN, v.FONT_BKCOLOR_Descr, 0, Under_center, t[1], fullHight, 0,250, ConstWidth, \
-		v.FONT_ID_Descr, LIGHTBLUE, v.FONT_BKCOLOR_Descr, 0|(xPos_under_right<<16), Under_right, t[2], fullHight, 0,250, ConstWidth,\
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Above_center, t[0], fullHight, 0,250, NoConstWidth,\
+		v.FONT_ID_Descr, COLOR_GRAY(0x0A), v.FONT_BKCOLOR_Descr, 4, Left_mid, t[1], fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, RED, v.FONT_BKCOLOR_Descr, 4|(xPos_under_left<<16), Under_left, t[2], fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, GREEN, v.FONT_BKCOLOR_Descr, 4, Under_center, t[3], fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, BLUE, v.FONT_BKCOLOR_Descr, 4|(xPos_under_right<<16), Under_right, t[4], fullHight, 0,250, NoConstWidth,\
 		LCD_STR_DESCR_PARAM_NUMBER(5) );
 
 	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
@@ -1867,38 +1867,16 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-
-//obslufa jednego elemntu w funkcji !!!!!!
-//--------------------  to dac w wfunkcji !!!!
-
 	ELEMENT_fontRGB(argNmb,&lenStr);
 
-//	int spaceMain_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor," ",0,ConstWidth);
-//	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,INT2STR(Test.font[0]),0,ConstWidth);
-//	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,txt,0,ConstWidth); }
-//	char *t[]= {"R","G","B"};
-//
-//	int xPos_under_left = MIDDLE( LCD_Xpos(lenStr,SetPos,60)+spaceMain_width, digit3main_width, _GetWidth(t[0]));
-//	int xPos_under_right = MIDDLE( LCD_Xpos(lenStr,SetPos,60) + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(t[2]));
-//
-//
-//
-//	lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, LIGHTRED, v.FONT_BKCOLOR_Descr, 0|(xPos_under_left<<16), Under_left, t[0], fullHight, 0,250, ConstWidth, \
-//													 v.FONT_ID_Descr, GREEN, v.FONT_BKCOLOR_Descr, 0, Under_center, t[1], fullHight, 0,250, ConstWidth, \
-//													 v.FONT_ID_Descr, LIGHTBLUE, v.FONT_BKCOLOR_Descr, 0|(xPos_under_right<<16), Under_right, t[2], fullHight, 0,250, ConstWidth,\
-//													 LCD_STR_DESCR_PARAM_NUMBER(3) );  //opisy w tlumaczerniach definach LANG
-//	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
-//	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, lenStr);
 
-//-------------------------
 
-	_StartDrawLine(0,LCD_X, 10,LCD_Ypos(lenStr,IncPos,20));   _DrawRight(200, COLOR_GRAY(0xA0));
+	_StartDrawLine(0,LCD_X, 10,LCD_Ypos(lenStr,IncPos,20)+15);   _DrawRight(200, COLOR_GRAY(0xA0));
 
 
 
 	lenStr=LCD_StrDependOnColorsDescrVar(STR_FONT_PARAM(BkColor, FillMainFrame), LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,15), TXT_BK_COLOR, fullHight, 0,250, ConstWidth, \
-													 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykie:", fullHight, 0,250, ConstWidth);
+													 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjyk:", fullHight, 0,250, NoConstWidth);
 	LCD_SetBkFontShape(v.FONT_VAR_BkColor,BK_LittleRound);
 	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, lenStr);
 
@@ -1933,7 +1911,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450, 0, 	TXT_CPU_USAGE,	 		 halfHight,0,255,ConstWidth);
 
 
-	 Test.yFontsField=LCD_Ypos(lenStr,IncPos,-75);
+	 Test.yFontsField=LCD_Ypos(lenStr,IncPos,-90);
 	 LCD_Ymiddle(0,SetPos, Test.yFontsField|(LCD_GetYSize()-2)<<16 );
 	 LCD_Xmiddle(0,SetPos, Test.xFontsField|LCD_GetXSize()<<16,"",0,NoConstWidth);
 
