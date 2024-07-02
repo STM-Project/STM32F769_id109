@@ -31,6 +31,19 @@
 #define Ż "\xAF"
 #define ż "\xBF"
 
+#define DESCR_PARAM_11	-1,0,0,0,0,0,0,0,0,0
+#define DESCR_PARAM_10	DESCR_PARAM_11,DESCR_PARAM_11
+#define DESCR_PARAM_9	DESCR_PARAM_10,DESCR_PARAM_11
+#define DESCR_PARAM_8	DESCR_PARAM_9,DESCR_PARAM_11
+#define DESCR_PARAM_7	DESCR_PARAM_8,DESCR_PARAM_11
+#define DESCR_PARAM_6	DESCR_PARAM_7,DESCR_PARAM_11
+#define DESCR_PARAM_5	DESCR_PARAM_6,DESCR_PARAM_11
+#define DESCR_PARAM_4	DESCR_PARAM_5,DESCR_PARAM_11
+#define DESCR_PARAM_3	DESCR_PARAM_4,DESCR_PARAM_11
+#define DESCR_PARAM_2	DESCR_PARAM_3,DESCR_PARAM_11
+#define DESCR_PARAM_1	DESCR_PARAM_2,DESCR_PARAM_11
+#define LCD_STR_DESCR_PARAM_NUMBER(x)	DESCR_PARAM_##x
+
 enum FontsSize
 {
 	FONT_8,
@@ -172,18 +185,18 @@ typedef struct {
 	uint16_t height;
 }StructTxtPxlLen;
 
-//typedef struct {  //usun to !!!!
-//	int fontID;
-//	uint32_t fontColor;
-//	uint32_t bkColor;
-//	int interspace;
-//	int directionDescr;
-//	char *txt;
-//	int OnlyDigits;
-//	int space;
-//	int maxVal;
-//	int constWidth;
-//}LCD_STR_PARAM;
+typedef struct {  	/* for further implementation */
+	int fontID;
+	uint32_t fontColor;
+	uint32_t bkColor;
+	int interspace;
+	int directionDescr;
+	char *txt;
+	int OnlyDigits;
+	int space;
+	int maxVal;
+	int constWidth;
+}LCD_STR_PARAM;
 
 void LCD_SetStrVar_bkColor(int idVar, uint32_t bkColor);
 void LCD_SetStrVar_fontColor(int idVar, uint32_t fontColor);
@@ -311,7 +324,7 @@ uint32_t SetPosAndWidth(uint16_t pos, uint16_t width);
 
 void SCREEN_ResetAllParameters(void);
 
-//LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkColor, int interspace, int directionDescr, char *txt, int OnlyDigits, int space,int maxVal, int constWidth);
+/* LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkColor, int interspace, int directionDescr, char *txt, int OnlyDigits, int space,int maxVal, int constWidth); */ 	/* for further implementation */
 StructTxtPxlLen LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
 		int fontID1, uint32_t fontColor1, uint32_t bkColor1, int interspace1, int directionDescr1, char *txt1, int OnlyDigits1, int space1,int maxVal1, int constWidth1, \
 		int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace2, int directionDescr2, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2, \
