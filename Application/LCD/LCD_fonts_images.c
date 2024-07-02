@@ -1470,7 +1470,6 @@ void LCD_SetBkFontShape(int idVar, int bkType){
 	FontVar[idVar].bkRoundRect=bkType;
 }
 
-
 void LCD_DeleteAllFontAndImages(void)
 {
 	int i;
@@ -3277,28 +3276,17 @@ StructTxtPxlLen LCD_StrDependOnColorsVar(int idVar, int fontID, uint32_t fontCol
 	return lenStr;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-//LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkColor, int interspace, int directionDescr, char *txt, int OnlyDigits, int space,int maxVal, int constWidth)
-//{
-//	LCD_STR_PARAM	strParam = {fontID,fontColor,bkColor,interspace,directionDescr,txt,OnlyDigits,space,maxVal,constWidth};
-//	return strParam;
-//}
-
+/* for further implementation *//*
+LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkColor, int interspace, int directionDescr, char *txt, int OnlyDigits, int space,int maxVal, int constWidth)
+{
+	LCD_STR_PARAM	strParam = {fontID,fontColor,bkColor,interspace,directionDescr,txt,OnlyDigits,space,maxVal,constWidth};
+	return strParam;
+}
+*/
 
 #define MAX_NUMBER_DESCR	12
 #define _STR_DESCR_PARAMS_INIT(nr) 	int fontID##nr, uint32_t fontColor##nr, uint32_t bkColor##nr, int interspace##nr, int directionDescr##nr, char *txt##nr, int OnlyDigits##nr, int space##nr,int maxVal##nr, int constWidth##nr
 #define _STR_DESCR_PARAMS(nr) 		fontID##nr, fontColor##nr, bkColor##nr, interspace##nr, directionDescr##nr, txt##nr, OnlyDigits##nr, space##nr, maxVal##nr, constWidth##nr
-
 
 static void __DescrParamFunction(int Xpos, int Ypos, StructTxtPxlLen len, int height_main, int heightHalf_main, _STR_DESCR_PARAMS_INIT())
 {
@@ -3467,19 +3455,6 @@ StructTxtPxlLen LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32
 	return lenStr;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
 																			int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace, int directionDescr, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2)
