@@ -25,7 +25,7 @@ Czcionki LCD,Fonts LCD,\
 #define SCREEN_FONTS_SET_PARAMETERS \
 /* id   name							default value */ \
 	X(0, FONT_SIZE_Title, 	 		FONT_14_bold) \
-	X(1, FONT_SIZE_FontColor, 	 	FONT_20_bold) \
+	X(1, FONT_SIZE_FontColor, 	 	FONT_14_bold) \
 	X(2, FONT_SIZE_BkColor,			FONT_14_bold) \
 	X(3, FONT_SIZE_FontType,		FONT_14) \
 	X(4, FONT_SIZE_FontSize,		FONT_14) \
@@ -37,7 +37,7 @@ Czcionki LCD,Fonts LCD,\
 	X(10, FONT_SIZE_PosCursor,		FONT_10) \
 	X(11, FONT_SIZE_CPUusage,		FONT_10) \
 	X(12, FONT_SIZE_Speed,			FONT_10) \
-	X(13, FONT_SIZE_Descr, 	 		FONT_8) \
+	X(13, FONT_SIZE_Descr, 	 		FONT_11_bold) \
 	X(14, FONT_SIZE_Press, 	 		FONT_14_bold) \
 	X(15, FONT_SIZE_Fonts,			FONT_20) \
 	\
@@ -1798,6 +1798,31 @@ static void LoadFonts(int startFontID, int endFontID){
 */
 }
 
+static void ELEMENT_fontRGB(int argNmb, StructTxtPxlLen *lenStr)
+{
+	char *t[]= {"R","G","B","Zmiana kolorow czcionki"};    //opisy w tlumaczerniach definach LANG
+	int spaceMain_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor," ",0,ConstWidth);
+	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,INT2STR(Test.font[0]),0,ConstWidth);
+	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,txt,0,ConstWidth); }
+	int xPos = LCD_Xpos(*lenStr,SetPos,60);
+	int yPos = LCD_Ypos(*lenStr,SetPos,30);
+
+	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(t[0]));
+	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(t[2]));
+
+	*lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), xPos, yPos, TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 2, Above_center, t[3], fullHight, 0,250, ConstWidth,\
+		v.FONT_ID_Descr, LIGHTRED, v.FONT_BKCOLOR_Descr, 0|(xPos_under_left<<16), Left_up, "font color", fullHight, 0,250, ConstWidth, \
+		v.FONT_ID_Descr, LIGHTRED, v.FONT_BKCOLOR_Descr, 0|(xPos_under_left<<16), Under_left, t[0], fullHight, 0,250, ConstWidth, \
+		v.FONT_ID_Descr, GREEN, v.FONT_BKCOLOR_Descr, 0, Under_center, t[1], fullHight, 0,250, ConstWidth, \
+		v.FONT_ID_Descr, LIGHTBLUE, v.FONT_BKCOLOR_Descr, 0|(xPos_under_right<<16), Under_right, t[2], fullHight, 0,250, ConstWidth,\
+		LCD_STR_DESCR_PARAM_NUMBER(5) );
+
+	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
+	if(0==argNmb)
+		SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, *lenStr);
+}
+
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
 	char *ptr=NULL;     //ODKRYJ W usrtawienia debug aby tylko wyswietlic jeden leemnet z duzej struktury np Touch[].idx !!!!!!
@@ -1830,95 +1855,46 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	}
 	else{
-		LCD_Clear(v.COLOR_BkScreen);
+		LCD_Clear(v.COLOR_BkScreen);   //ZROBIC animacje ze samo sie klioka i chmurka z info ze przytrzymac na 2 sekundy ....
 	}
 	/*FILE_NAME(printInfo)();*/
-//#########################################
 
-//	typedef struct{
-//		int a;
-//		int b;
-//	}AAAA;
-//
-//	AAAA aaaa(int r, int f)
-//	{
-//		AAAA p ={0};
-//		p.a= r;
-//		p.b= f;
-//
-//		return p;
-//	}
-//
-//	//AAAA sss = {0};
-//
-//	aaaa(1,2);
-//
-//	lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth, \
-//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth ); \
-//
-//
-#define DESCR_PARAM_1	-1,0,0,0,0,0,0,0,0,0
-#define DESCR_PARAM_2	DESCR_PARAM_1,DESCR_PARAM_1
-#define DESCR_PARAM_3	DESCR_PARAM_2,DESCR_PARAM_1
-#define DESCR_PARAM_4	DESCR_PARAM_3,DESCR_PARAM_1
-#define DESCR_PARAM_5	DESCR_PARAM_4,DESCR_PARAM_1
-#define DESCR_PARAM_6	DESCR_PARAM_5,DESCR_PARAM_1
-#define DESCR_PARAM_7	DESCR_PARAM_6,DESCR_PARAM_1
-#define DESCR_PARAM_8	DESCR_PARAM_7,DESCR_PARAM_1
-#define DESCR_PARAM_9	DESCR_PARAM_8,DESCR_PARAM_1
-#define DESCR_PARAM_10	DESCR_PARAM_9,DESCR_PARAM_1
-#define DESCR_PARAM_11	DESCR_PARAM_10,DESCR_PARAM_1
-
-
-
-#define LCD_END_STR_DESCR_PARAM(x)	DESCR_PARAM_##x
-
-
-//	lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-//			LCD_END_STR_DESCR_PARAM(11), LCD_END_STR_DESCR_PARAM(1));
-
-
-//
-//
-//	lenStr=LCD_StrDependOnColorsDescrVar_array( STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-//				LCD_SetStrDescrParam(v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth), \
-//				LCD_SetStrDescrParam(v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_down, "Syra:", fullHight, 0,250, ConstWidth), \
-//				LCD_END_STR_DESCR_PARAM(2) );
-
-	//#######################################################
-
-
-
-
-
-	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,150,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen)); // dlatego daj bk color MYGRAY aby zachowac kolory przy cieniowaniu !!!!!
+	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,180,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen)); // dlatego daj bk color MYGRAY aby zachowac kolory przy cieniowaniu !!!!!
 
 	ptr = GetSelTxt(0,FILE_NAME(Lang),0);
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,8), ptr,fullHight,0,255,NoConstWidth);
 
 
 
-	lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
-													 v.FONT_ID_Descr, LIGHTBLUE, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjykiel:", fullHight, 0,250, ConstWidth,\
-													 v.FONT_ID_Descr, LIGHTRED, v.FONT_BKCOLOR_Descr, 0|(350<<16), Under_right, "ABc:", fullHight, 0,250, ConstWidth, \
-													 v.FONT_ID_Descr, GREEN, v.FONT_BKCOLOR_Descr, 0, Under_center, "Rafal M.:", fullHight, 0,250, ConstWidth, \
-													 DESCR_PARAM_9);  //opisy w tlumaczerniach definach
-	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
-	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, lenStr);
 
+
+//obslufa jednego elemntu w funkcji !!!!!!
+//--------------------  to dac w wfunkcji !!!!
+
+	ELEMENT_fontRGB(argNmb,&lenStr);
+
+//	int spaceMain_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor," ",0,ConstWidth);
+//	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,INT2STR(Test.font[0]),0,ConstWidth);
+//	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,txt,0,ConstWidth); }
+//	char *t[]= {"R","G","B"};
+//
+//	int xPos_under_left = MIDDLE( LCD_Xpos(lenStr,SetPos,60)+spaceMain_width, digit3main_width, _GetWidth(t[0]));
+//	int xPos_under_right = MIDDLE( LCD_Xpos(lenStr,SetPos,60) + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(t[2]));
+//
+//
+//
+//	lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), LCD_Xpos(lenStr,SetPos,60), LCD_Ypos(lenStr,SetPos,8), TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+//			 	 	 	 	 	 	 	 	 	 	 v.FONT_ID_Descr, LIGHTRED, v.FONT_BKCOLOR_Descr, 0|(xPos_under_left<<16), Under_left, t[0], fullHight, 0,250, ConstWidth, \
+//													 v.FONT_ID_Descr, GREEN, v.FONT_BKCOLOR_Descr, 0, Under_center, t[1], fullHight, 0,250, ConstWidth, \
+//													 v.FONT_ID_Descr, LIGHTBLUE, v.FONT_BKCOLOR_Descr, 0|(xPos_under_right<<16), Under_right, t[2], fullHight, 0,250, ConstWidth,\
+//													 LCD_STR_DESCR_PARAM_NUMBER(3) );  //opisy w tlumaczerniach definach LANG
+//	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
+//	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, lenStr);
+
+//-------------------------
 
 	_StartDrawLine(0,LCD_X, 10,LCD_Ypos(lenStr,IncPos,20));   _DrawRight(200, COLOR_GRAY(0xA0));
+
 
 
 	lenStr=LCD_StrDependOnColorsDescrVar(STR_FONT_PARAM(BkColor, FillMainFrame), LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,15), TXT_BK_COLOR, fullHight, 0,250, ConstWidth, \
@@ -1957,7 +1933,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450, 0, 	TXT_CPU_USAGE,	 		 halfHight,0,255,ConstWidth);
 
 
-	 Test.yFontsField=LCD_Ypos(lenStr,IncPos,-55);
+	 Test.yFontsField=LCD_Ypos(lenStr,IncPos,-75);
 	 LCD_Ymiddle(0,SetPos, Test.yFontsField|(LCD_GetYSize()-2)<<16 );
 	 LCD_Xmiddle(0,SetPos, Test.xFontsField|LCD_GetXSize()<<16,"",0,NoConstWidth);
 
