@@ -3290,11 +3290,13 @@ LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkCo
 
 static void __DescrParamFunction(int Xpos, int Ypos, StructTxtPxlLen len, int height_main, int heightHalf_main, _STR_DESCR_PARAMS_INIT())
 {
+	StructFieldPos field = {0};
+
 	int width_descr 	= LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth);
 	int height_descr 	= LCD_GetFontHeight(fontID);
 	int heightHalf_descr = LCD_GetFontHalfHeight(fontID);
 
-	int Y_descr, X_descr;
+	int Y_descr = 0, X_descr = 0;
 	int Y_descr_correct = 0;	/* for 'Right_up'  'Left_up' */
 
 	switch(directionDescr)
@@ -3375,6 +3377,19 @@ static void __DescrParamFunction(int Xpos, int Ypos, StructTxtPxlLen len, int he
 		LCD_Str(fontID, X_descr, Y_descr, txt, OnlyDigits, space,bkColor, 0, constWidth);
 	else
 		LCD_StrChangeColor(fontID, X_descr, Y_descr, txt, OnlyDigits, space, bkColor, fontColor,maxVal, constWidth);
+
+	if(Xpos>X_descr)
+		field.x=X_descr;
+	else
+		field.x=Xpos;
+
+	Xpos>X_descr ? field.x=X_descr : field.x=Xpos;
+	Ypos>Y_descr ? field.y=Y_descr : field.y=Ypos;
+
+	(Xpos + len.inPixel < X_descr + width_descr)  ? (field.width = X_descr +width_descr  - field.x) : (field.width = Xpos+len.inPixel - field.x);
+	(Ypos + len.height  < Y_descr + height_descr) ? (field.height = Y_descr+height_descr - field.y) : (field.height = Ypos+len.height - field.y);
+
+
 }
 
 static StructTxtPxlLen LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, int Ypos,char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor, \

@@ -185,7 +185,14 @@ typedef struct {
 	uint16_t height;
 }StructTxtPxlLen;
 
-typedef struct {  	/* for further implementation */
+typedef struct {
+	uint16_t x;
+	uint16_t y;
+	uint16_t width;
+	uint16_t height;
+}StructFieldPos;
+/*
+typedef struct {
 	int fontID;
 	uint32_t fontColor;
 	uint32_t bkColor;
@@ -197,7 +204,7 @@ typedef struct {  	/* for further implementation */
 	int maxVal;
 	int constWidth;
 }LCD_STR_PARAM;
-
+*/
 void LCD_SetStrVar_bkColor(int idVar, uint32_t bkColor);
 void LCD_SetStrVar_fontColor(int idVar, uint32_t fontColor);
 void LCD_SetStrVar_x(int idVar,int x);

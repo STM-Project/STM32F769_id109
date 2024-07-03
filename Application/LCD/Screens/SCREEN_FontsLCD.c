@@ -20,11 +20,13 @@
 
 static const char FILE_NAME(Lang)[]="\
 Czcionki LCD,Fonts LCD,\
-Zmiana kolorow czcionki,Press to change color fonts,\
-Pierw:,First:,\
+Zmiana kolor"ó"w czcionki,Press to change color fonts,\
+1),1),\
 Czer,Red,\
 Ziel,Green,\
 Nieb,Blue,\
+Zmiana kolor"ó"w t"ł"a czcionki,Press to change color fonts background,\
+2),2),\
 ";\
 
 #define SCREEN_FONTS_SET_PARAMETERS \
@@ -76,7 +78,7 @@ Nieb,Blue,\
 	X(42, FONT_COLOR_PosCursor,	WHITE) \
 	X(43, FONT_COLOR_CPUusage,		WHITE) \
 	X(44, FONT_COLOR_Speed,			WHITE) \
-	X(45, FONT_COLOR_Descr, 		COLOR_GRAY(0xB0)) \
+	X(45, FONT_COLOR_Descr, 		COLOR_GRAY(0x99)) \
 	X(46, FONT_COLOR_Press, 		DARKRED) \
 	X(47, FONT_COLOR_Fonts,  		0xFFE1A000) \
 	\
@@ -1803,13 +1805,11 @@ static void LoadFonts(int startFontID, int endFontID){
 */
 }
 
-static void ELEMENT_fontRGB(int argNmb, StructTxtPxlLen *lenStr)
+static void ELEMENT_fontRGB(int xPos,int yPos, int argNmb, StructTxtPxlLen *lenStr)
 {
 	int spaceMain_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor," ",0,ConstWidth);
 	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,INT2STR(Test.font[0]),0,ConstWidth);
 	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,txt,0,ConstWidth); }
-	int xPos = LCD_Xpos(*lenStr,SetPos,60);
-	int yPos = LCD_Ypos(*lenStr,SetPos,30);
 
 	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),3)));
 	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),5)));
@@ -1826,6 +1826,32 @@ static void ELEMENT_fontRGB(int argNmb, StructTxtPxlLen *lenStr)
 	if(0==argNmb)
 		SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, *lenStr);
 }
+
+static void ELEMENT_fontBkRGB(int xPos,int yPos, int argNmb, StructTxtPxlLen *lenStr)
+{
+	int spaceMain_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_BkColor," ",0,ConstWidth);
+	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_BkColor,INT2STR(Test.bk[0]),0,ConstWidth);
+	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,txt,0,ConstWidth); }
+
+	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),3)));
+	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),5)));
+
+	*lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(BkColor, FillMainFrame), xPos, yPos, TXT_BK_COLOR, fullHight, 0,250, ConstWidth, \
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|xPos,  						 Above_left,   GetSelTxt(0,FILE_NAME(Lang),6), fullHight, 0,250, NoConstWidth,\
+		v.FONT_ID_Descr, COLOR_GRAY(0x0A), 	 v.FONT_BKCOLOR_Descr, 4, 								 Left_mid, 		GetSelTxt(40,FILE_NAME(Lang),7), fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4|(xPos_under_left<<16),  Under_left,	GetSelTxt(50,FILE_NAME(Lang),3), fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, RGB2INT(60,247,68), v.FONT_BKCOLOR_Descr, 4, 								 Under_center, GetSelTxt(60,FILE_NAME(Lang),4), fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, RGB2INT(51,90,245), v.FONT_BKCOLOR_Descr, 4|(xPos_under_right<<16), Under_right,	GetSelTxt(70,FILE_NAME(Lang),5), fullHight, 0,250, NoConstWidth,\
+		LCD_STR_DESCR_PARAM_NUMBER(5) );
+
+	LCD_SetBkFontShape(v.FONT_VAR_BkColor,BK_LittleRound);
+	if(0==argNmb)
+		SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, *lenStr);
+}
+
+
+
+
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
@@ -1870,17 +1896,13 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-	ELEMENT_fontRGB(argNmb,&lenStr);
+	ELEMENT_fontRGB	(LCD_Xpos(lenStr,SetPos,35), LCD_Ypos(lenStr,SetPos,30), argNmb ,&lenStr);
+
+	_StartDrawLine(0,LCD_X, 10,LCD_Ypos(lenStr,IncPos,lenStr.height+35));   _DrawRight(200, COLOR_GRAY(0xA0));
+
+	ELEMENT_fontBkRGB (LCD_Xpos(lenStr,GetPos,0),  LCD_Ypos(lenStr,IncPos,15), argNmb ,&lenStr);
 
 
-	_StartDrawLine(0,LCD_X, 10,LCD_Ypos(lenStr,IncPos,20)+15);   _DrawRight(200, COLOR_GRAY(0xA0));
-
-
-
-	lenStr=LCD_StrDependOnColorsDescrVar(STR_FONT_PARAM(BkColor, FillMainFrame), LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,15), TXT_BK_COLOR, fullHight, 0,250, ConstWidth, \
-													 v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, Left_up, "Mjyk:", fullHight, 0,250, NoConstWidth);
-	LCD_SetBkFontShape(v.FONT_VAR_BkColor,BK_LittleRound);
-	if(0==argNmb) SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, lenStr);
 
 
 
