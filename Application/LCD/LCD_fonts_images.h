@@ -190,9 +190,11 @@ typedef struct {
 	uint16_t y;
 	uint16_t width;
 	uint16_t height;
+	StructTxtPxlLen len;
 }StructFieldPos;
-/*
-typedef struct {
+
+/* for future use */
+/* typedef struct {
 	int fontID;
 	uint32_t fontColor;
 	uint32_t bkColor;
@@ -203,8 +205,8 @@ typedef struct {
 	int space;
 	int maxVal;
 	int constWidth;
-}LCD_STR_PARAM;
-*/
+}LCD_STR_PARAM; */
+
 void LCD_SetStrVar_bkColor(int idVar, uint32_t bkColor);
 void LCD_SetStrVar_fontColor(int idVar, uint32_t fontColor);
 void LCD_SetStrVar_x(int idVar,int x);
@@ -332,7 +334,7 @@ uint32_t SetPosAndWidth(uint16_t pos, uint16_t width);
 void SCREEN_ResetAllParameters(void);
 
 /* LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkColor, int interspace, int directionDescr, char *txt, int OnlyDigits, int space,int maxVal, int constWidth); */ 	/* for further implementation */
-StructTxtPxlLen LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
+StructFieldPos LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
 		int fontID1, uint32_t fontColor1, uint32_t bkColor1, int interspace1, int directionDescr1, char *txt1, int OnlyDigits1, int space1,int maxVal1, int constWidth1, \
 		int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace2, int directionDescr2, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2, \
 		int fontID3, uint32_t fontColor3, uint32_t bkColor3, int interspace3, int directionDescr3, char *txt3, int OnlyDigits3, int space3,int maxVal3, int constWidth3, \

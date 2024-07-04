@@ -1805,8 +1805,10 @@ static void LoadFonts(int startFontID, int endFontID){
 */
 }
 
-static void ELEMENT_fontRGB(int xPos,int yPos, int argNmb, StructTxtPxlLen *lenStr)
+static StructFieldPos ELEMENT_fontRGB(int xPos,int yPos, int argNmb, StructTxtPxlLen *lenStr)
 {
+	StructFieldPos field = {0};
+
 	int spaceMain_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor," ",0,ConstWidth);
 	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,INT2STR(Test.font[0]),0,ConstWidth);
 	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,txt,0,ConstWidth); }
@@ -1814,7 +1816,7 @@ static void ELEMENT_fontRGB(int xPos,int yPos, int argNmb, StructTxtPxlLen *lenS
 	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),3)));
 	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),5)));
 
-	*lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), xPos, yPos, TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+	field = LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), xPos, yPos, TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 								 Above_center, GetSelTxt(0,FILE_NAME(Lang),1), fullHight, 0,250, NoConstWidth,\
 		v.FONT_ID_Descr, COLOR_GRAY(0x0A), 	 v.FONT_BKCOLOR_Descr, 4, 								 Left_mid, 		GetSelTxt(40,FILE_NAME(Lang),2), fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4|(xPos_under_left<<16),  Under_left,	GetSelTxt(50,FILE_NAME(Lang),3), fullHight, 0,250, NoConstWidth, \
@@ -1822,13 +1824,19 @@ static void ELEMENT_fontRGB(int xPos,int yPos, int argNmb, StructTxtPxlLen *lenS
 		v.FONT_ID_Descr, RGB2INT(51,90,245), v.FONT_BKCOLOR_Descr, 4|(xPos_under_right<<16), Under_right,	GetSelTxt(70,FILE_NAME(Lang),5), fullHight, 0,250, NoConstWidth,\
 		LCD_STR_DESCR_PARAM_NUMBER(5) );
 
+	*lenStr = field.len;
+
 	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
 	if(0==argNmb)
 		SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, *lenStr);
+
+	return field;
 }
 
-static void ELEMENT_fontBkRGB(int xPos,int yPos, int argNmb, StructTxtPxlLen *lenStr)
+static StructFieldPos ELEMENT_fontBkRGB(int xPos,int yPos, int argNmb, StructTxtPxlLen *lenStr)
 {
+	StructFieldPos field = {0};
+
 	int spaceMain_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_BkColor," ",0,ConstWidth);
 	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_BkColor,INT2STR(Test.bk[0]),0,ConstWidth);
 	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,txt,0,ConstWidth); }
@@ -1836,13 +1844,15 @@ static void ELEMENT_fontBkRGB(int xPos,int yPos, int argNmb, StructTxtPxlLen *le
 	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),3)));
 	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),5)));
 
-	*lenStr=LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(BkColor, FillMainFrame), xPos, yPos, TXT_BK_COLOR, fullHight, 0,250, ConstWidth, \
+	field = LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(BkColor, FillMainFrame), xPos, yPos, TXT_BK_COLOR, fullHight, 0,250, ConstWidth, \
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|xPos,  						 Above_left,   GetSelTxt(0,FILE_NAME(Lang),6), fullHight, 0,250, NoConstWidth,\
 		v.FONT_ID_Descr, COLOR_GRAY(0x0A), 	 v.FONT_BKCOLOR_Descr, 4, 								 Left_mid, 		GetSelTxt(40,FILE_NAME(Lang),7), fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4|(xPos_under_left<<16),  Under_left,	GetSelTxt(50,FILE_NAME(Lang),3), fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(60,247,68), v.FONT_BKCOLOR_Descr, 4, 								 Under_center, GetSelTxt(60,FILE_NAME(Lang),4), fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(51,90,245), v.FONT_BKCOLOR_Descr, 4|(xPos_under_right<<16), Under_right,	GetSelTxt(70,FILE_NAME(Lang),5), fullHight, 0,250, NoConstWidth,\
 		LCD_STR_DESCR_PARAM_NUMBER(5) );
+
+	*lenStr = field.len;
 
 	LCD_SetBkFontShape(v.FONT_VAR_BkColor,BK_LittleRound);
 	if(0==argNmb)
