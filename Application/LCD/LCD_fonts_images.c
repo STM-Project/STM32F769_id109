@@ -3382,8 +3382,8 @@ static StructFieldPos __DescrParamFunction(int Xpos, int Ypos, StructTxtPxlLen l
 	(Xpos > X_descr) ? (field.x = X_descr) : (field.x = Xpos);
 	(Ypos > Y_descr) ? (field.y = Y_descr) : (field.y = Ypos);
 
-	(Xpos + len.inPixel < X_descr + width_descr)  ? (field.width  = X_descr + width_descr  - field.x) : (field.width  = Xpos + len.inPixel - field.x);
-	(Ypos + len.height  < Y_descr + height_descr) ? (field.height = Y_descr + height_descr - field.y) : (field.height = Ypos + len.height  - field.y);
+	(Xpos + len.inPixel < X_descr + width_descr)  ? (field.width  = X_descr + width_descr)  : (field.width  = Xpos + len.inPixel);
+	(Ypos + len.height  < Y_descr + height_descr) ? (field.height = Y_descr + height_descr) : (field.height = Ypos + len.height);
 
 	return field;
 }
@@ -3408,22 +3408,24 @@ static StructFieldPos LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, int
 		field.len = len;
 		field.x = Xpos;	field2.x = Xpos;
 		field.y = Ypos;	field2.y = Ypos;
-		field.width = len.inPixel;
-		field.height = len.height;
+		field.width = Xpos + len.inPixel;
+		field.height = Ypos + len.height;
 
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(3));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(4));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(5));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(6));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(7));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(8));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(9));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12));	if(-1 == fontID){ _FieldCorrect(); return field; }
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(3));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(4));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(5));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(6));	_FieldCorrect(); if(-1 == fontID)  return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(7));	_FieldCorrect(); if(-1 == fontID)  return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(8));	_FieldCorrect(); if(-1 == fontID)  return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(9));	_FieldCorrect(); if(-1 == fontID)  return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12)); _FieldCorrect(); if(-1 == fontID) return field;
 	}																																			/* MAX_NUMBER_DESCR */
+	field.width -= field.x;
+	field.height -= field.y;
 	return field;
 }
 
@@ -3447,22 +3449,24 @@ static StructFieldPos LCD_StrChangeColorDescrVar_array(int idVar,int fontID, int
 		field.len = len;
 		field.x = Xpos;	field2.x = Xpos;
 		field.y = Ypos;	field2.y = Ypos;
-		field.width = len.inPixel;
-		field.height = len.height;
+		field.width = Xpos + len.inPixel;
+		field.height = Ypos + len.height;
 
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(3));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(4));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(5));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(6));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(7));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(8));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(9));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11));	if(-1 == fontID){ _FieldCorrect(); return field; }
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12));	if(-1 == fontID){ _FieldCorrect(); return field; }
-	}																																			/* MAX_NUMBER_DESCR */
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(3));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(4));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(5));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(6));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(7));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(8));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(9));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12)); _FieldCorrect(); if(-1 == fontID) return field;
+	}
+	field.width -= field.x;
+	field.height -= field.y;																																		/* MAX_NUMBER_DESCR */
 	return field;
 }
 
@@ -3491,6 +3495,46 @@ StructFieldPos LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_
 				_STR_DESCR_PARAMS(7),_STR_DESCR_PARAMS(8),_STR_DESCR_PARAMS(9),_STR_DESCR_PARAMS(10),_STR_DESCR_PARAMS(11),_STR_DESCR_PARAMS(12) );
 
 	return field;
+}
+
+StructFieldPos LCD_StrDependOnColorsDescrVar_array_Nakladka(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
+		_STR_DESCR_PARAMS_INIT(1),_STR_DESCR_PARAMS_INIT(2),_STR_DESCR_PARAMS_INIT(3), _STR_DESCR_PARAMS_INIT(4), _STR_DESCR_PARAMS_INIT(5), _STR_DESCR_PARAMS_INIT(6), \
+		_STR_DESCR_PARAMS_INIT(7),_STR_DESCR_PARAMS_INIT(8),_STR_DESCR_PARAMS_INIT(9),_STR_DESCR_PARAMS_INIT(10),_STR_DESCR_PARAMS_INIT(11),_STR_DESCR_PARAMS_INIT(12) )
+{
+
+	if(-1<fontID1 && IS_RANGE(directionDescr1,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID1)+interspace1; goto _End_Ypos_Correct; }
+	if(-1<fontID2 && IS_RANGE(directionDescr2,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID2)+interspace2; goto _End_Ypos_Correct; }
+	if(-1<fontID3 && IS_RANGE(directionDescr3,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID3)+interspace3; goto _End_Ypos_Correct; }
+	if(-1<fontID4 && IS_RANGE(directionDescr4,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID4)+interspace4; goto _End_Ypos_Correct; }
+	if(-1<fontID5 && IS_RANGE(directionDescr5,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID5)+interspace5; goto _End_Ypos_Correct; }
+	if(-1<fontID6 && IS_RANGE(directionDescr6,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID6)+interspace6; goto _End_Ypos_Correct; }
+	if(-1<fontID7 && IS_RANGE(directionDescr7,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID7)+interspace7; goto _End_Ypos_Correct; }
+	if(-1<fontID8 && IS_RANGE(directionDescr8,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID8)+interspace8; goto _End_Ypos_Correct; }
+	if(-1<fontID9 && IS_RANGE(directionDescr9,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID9)+interspace9; goto _End_Ypos_Correct; }
+	if(-1<fontID10 && IS_RANGE(directionDescr10,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID10)+interspace10; goto _End_Ypos_Correct; }
+	if(-1<fontID11 && IS_RANGE(directionDescr11,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID10)+interspace11; goto _End_Ypos_Correct; }
+	if(-1<fontID12 && IS_RANGE(directionDescr12,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID10)+interspace12; goto _End_Ypos_Correct; }
+
+
+	_End_Ypos_Correct:
+
+	if(-1<fontID1 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
+	if(-1<fontID2 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
+	if(-1<fontID3 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
+	if(-1<fontID4 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
+	if(-1<fontID5 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
+	if(-1<fontID6 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
+	if(-1<fontID7 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
+	if(-1<fontID8 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
+	if(-1<fontID9 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
+
+	_End_Xpos_Correct:
+
+
+	return LCD_StrDependOnColorsDescrVar_array(idVar,fontID,fontColor,bkColor,bkScreenColor, Xpos,Xpos,txt,OnlyDigits,space,maxVal,constWidth, \
+			_STR_DESCR_PARAMS(1),_STR_DESCR_PARAMS(2),_STR_DESCR_PARAMS(3), _STR_DESCR_PARAMS(4), _STR_DESCR_PARAMS(5), _STR_DESCR_PARAMS(6), \
+			_STR_DESCR_PARAMS(7),_STR_DESCR_PARAMS(8),_STR_DESCR_PARAMS(9),_STR_DESCR_PARAMS(10),_STR_DESCR_PARAMS(11),_STR_DESCR_PARAMS(12) );
+
 }
 
 StructTxtPxlLen LCD_StrDependOnColorsDescrVar(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
