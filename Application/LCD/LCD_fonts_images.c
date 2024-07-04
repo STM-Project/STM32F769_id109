@@ -3370,7 +3370,7 @@ static StructFieldPos __DescrParamFunction(int Xpos, int Ypos, StructTxtPxlLen l
 	}
 
 	if	((bkColor==MYGRAY && fontColor == WHITE) ||
-		(bkColor==MYGRAY && fontColor == MYGREEN)){
+		 (bkColor==MYGRAY && fontColor == MYGREEN)){
 		LCD_Str(fontID, X_descr, Y_descr, txt, OnlyDigits, space,bkColor, 1, constWidth);
 	}
 	else if(bkColor==WHITE  && fontColor == BLACK)
@@ -3382,8 +3382,8 @@ static StructFieldPos __DescrParamFunction(int Xpos, int Ypos, StructTxtPxlLen l
 	(Xpos > X_descr) ? (field.x = X_descr) : (field.x = Xpos);
 	(Ypos > Y_descr) ? (field.y = Y_descr) : (field.y = Ypos);
 
-	(Xpos + len.inPixel < X_descr + width_descr)  ? (field.width  = X_descr +width_descr - field.x) : (field.width  = Xpos+len.inPixel - field.x);
-	(Ypos + len.height  < Y_descr + height_descr) ? (field.height = Y_descr+height_descr - field.y) : (field.height = Ypos+len.height  - field.y);
+	(Xpos + len.inPixel < X_descr + width_descr)  ? (field.width  = X_descr + width_descr  - field.x) : (field.width  = Xpos + len.inPixel - field.x);
+	(Ypos + len.height  < Y_descr + height_descr) ? (field.height = Y_descr + height_descr - field.y) : (field.height = Ypos + len.height  - field.y);
 
 	return field;
 }
@@ -3393,19 +3393,23 @@ static StructFieldPos LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, int
 		_STR_DESCR_PARAMS_INIT(7),_STR_DESCR_PARAMS_INIT(8),_STR_DESCR_PARAMS_INIT(9),_STR_DESCR_PARAMS_INIT(10),_STR_DESCR_PARAMS_INIT(11),_STR_DESCR_PARAMS_INIT(12) )
 {
 	StructTxtPxlLen len = {0};
-	StructFieldPos field = {Xpos, Ypos}, 	field2 = {Xpos, Ypos};
+	StructFieldPos field = {0}, field2 = {0};
 
 	void _FieldCorrect(void){
-		if(field2.x < field.x) field.x =field2.x;
-		if(field2.y < field.y) field.y =field2.y;
-		if(field2.width  < field.width)  field.width =field2.width;
-		if(field2.height < field.height) field.height =field2.height;
+		if(field2.x < field.x) field.x = field2.x;
+		if(field2.y < field.y) field.y = field2.y;
+		if(field2.width  > field.width)  field.width  = field2.width;
+		if(field2.height > field.height) field.height = field2.height;
 	}
 
 	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
 		len = LCD_StrVar(idVar,fontID, Xpos, Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
 		field.len = len;
+		field.x = Xpos;	field2.x = Xpos;
+		field.y = Ypos;	field2.y = Ypos;
+		field.width = len.inPixel;
+		field.height = len.height;
 
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	if(-1 == fontID){ _FieldCorrect(); return field; }
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	if(-1 == fontID){ _FieldCorrect(); return field; }
@@ -3419,7 +3423,7 @@ static StructFieldPos LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, int
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10));	if(-1 == fontID){ _FieldCorrect(); return field; }
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11));	if(-1 == fontID){ _FieldCorrect(); return field; }
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12));	if(-1 == fontID){ _FieldCorrect(); return field; }
-	}
+	}																																			/* MAX_NUMBER_DESCR */
 	return field;
 }
 
@@ -3428,19 +3432,23 @@ static StructFieldPos LCD_StrChangeColorDescrVar_array(int idVar,int fontID, int
 		_STR_DESCR_PARAMS_INIT(7),_STR_DESCR_PARAMS_INIT(8),_STR_DESCR_PARAMS_INIT(9),_STR_DESCR_PARAMS_INIT(10),_STR_DESCR_PARAMS_INIT(11),_STR_DESCR_PARAMS_INIT(12) )
 {
 	StructTxtPxlLen len = {0};
-	StructFieldPos field = {Xpos, Ypos}, 	field2 = {Xpos, Ypos};
+	StructFieldPos field = {0}, field2 = {0};
 
 	void _FieldCorrect(void){
-		if(field2.x < field.x)		field.x = field2.x;
-		if(field2.y < field.y) 		field.y = field2.y;
-		if(field2.width  < field.width)  	field.width  = field2.width;
-		if(field2.height < field.height) 	field.height = field2.height;
+		if(field2.x < field.x) field.x = field2.x;
+		if(field2.y < field.y) field.y = field2.y;
+		if(field2.width  > field.width)  field.width  = field2.width;
+		if(field2.height > field.height) field.height = field2.height;
 	}
 
 	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
 		len = LCD_StrChangeColorVar(idVar,fontID, Xpos, Ypos, txt, OnlyDigits, space, bkColor, fontColor,maxVal, constWidth, bkScreenColor);
 		field.len = len;
+		field.x = Xpos;	field2.x = Xpos;
+		field.y = Ypos;	field2.y = Ypos;
+		field.width = len.inPixel;
+		field.height = len.height;
 
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	if(-1 == fontID){ _FieldCorrect(); return field; }
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	if(-1 == fontID){ _FieldCorrect(); return field; }
@@ -3454,7 +3462,7 @@ static StructFieldPos LCD_StrChangeColorDescrVar_array(int idVar,int fontID, int
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10));	if(-1 == fontID){ _FieldCorrect(); return field; }
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11));	if(-1 == fontID){ _FieldCorrect(); return field; }
 		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12));	if(-1 == fontID){ _FieldCorrect(); return field; }
-	}
+	}																																			/* MAX_NUMBER_DESCR */
 	return field;
 }
 
@@ -3462,7 +3470,7 @@ StructFieldPos LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_
 		_STR_DESCR_PARAMS_INIT(1),_STR_DESCR_PARAMS_INIT(2),_STR_DESCR_PARAMS_INIT(3), _STR_DESCR_PARAMS_INIT(4), _STR_DESCR_PARAMS_INIT(5), _STR_DESCR_PARAMS_INIT(6), \
 		_STR_DESCR_PARAMS_INIT(7),_STR_DESCR_PARAMS_INIT(8),_STR_DESCR_PARAMS_INIT(9),_STR_DESCR_PARAMS_INIT(10),_STR_DESCR_PARAMS_INIT(11),_STR_DESCR_PARAMS_INIT(12) )
 {
-	StructFieldPos field = {Xpos, Ypos};
+	StructFieldPos field = {0};
 
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
 			 (bkColor==MYGRAY && fontColor == MYGREEN)){
