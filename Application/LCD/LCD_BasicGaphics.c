@@ -2480,6 +2480,19 @@ void _DrawArrayBuffLeftUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t inC
 	}
 }
 
+void LCD_LineH(uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold){
+	_StartDrawLine(0,LCD_X, x, y);	_DrawRight(width, color);
+	for(int i=0; i<bold; ++i){
+		_NextDrawLine(LCD_X,width);	_DrawRight(width, color);
+	}
+}
+void LCD_LineV(uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold){
+	_StartDrawLine(0,LCD_X, x, y);	_CopyDrawPos();	_DrawDown(width, color, LCD_X);
+	for(int i=0; i<bold; ++i){
+		_SetCopyDrawPos();	_IncDrawPos(1);  _DrawDown(width, color, LCD_X);
+	}
+}
+
 void LCD_Display(uint32_t posBuff, uint32_t Xpos, uint32_t Ypos, uint32_t width, uint32_t height){
 	LCD_DisplayBuff(Xpos,Ypos,width,height,  pLcd+posBuff);
 }
