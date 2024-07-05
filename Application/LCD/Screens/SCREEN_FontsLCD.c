@@ -1813,12 +1813,14 @@ static StructFieldPos ELEMENT_fontRGB(int xPos,int yPos, int argNmb)
 	int digit3main_width = LCD_GetWholeStrPxlWidth(v.FONT_ID_FontColor,INT2STR(Test.font[0]),0,ConstWidth);
 	int _GetWidth(char *txt){ return LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,txt,0,ConstWidth); }
 
-	int xPos_under_left = MIDDLE( xPos+spaceMain_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),3)));
-	int xPos_under_right = MIDDLE( xPos + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),5)));
+	int xPoss = LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,GetSelTxt(40,FILE_NAME(Lang),2),0,NoConstWidth) + 4;
 
-	int left_mid_txtPos = xPos - (LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,GetSelTxt(40,FILE_NAME(Lang),2),0,NoConstWidth) + 4);
+	int xPos_under_left = MIDDLE( xPoss+spaceMain_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),3)));
+	int xPos_under_right = MIDDLE( xPoss + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(GetSelTxt(0,FILE_NAME(Lang),5)));
 
-	field = LCD_StrDependOnColorsDescrVar_array(STR_FONT_PARAM(FontColor, FillMainFrame), xPos, yPos, TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+	int left_mid_txtPos = xPos /*- (LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,GetSelTxt(40,FILE_NAME(Lang),2),0,NoConstWidth) + 4)*/;
+
+	field = LCD_StrDependOnColorsDescrVar_array_Nakladka(STR_FONT_PARAM(FontColor, FillMainFrame), xPos, yPos, TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(left_mid_txtPos<<16),	 Above_left, 	GetSelTxt(0,FILE_NAME(Lang),1), fullHight, 0,250, NoConstWidth,\
 		v.FONT_ID_Descr, COLOR_GRAY(0x0A), 	 v.FONT_BKCOLOR_Descr, 4, 								 Left_mid, 		GetSelTxt(40,FILE_NAME(Lang),2), fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4|(xPos_under_left<<16),  Under_left,	GetSelTxt(50,FILE_NAME(Lang),3), fullHight, 0,250, NoConstWidth, \
@@ -1920,12 +1922,12 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 //	int TempY=0;
 
 
-	field = ELEMENT_fontRGB(2 + (LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,GetSelTxt(40,FILE_NAME(Lang),2),0,NoConstWidth) + 4),    2 + LCD_GetFontHeight(v.FONT_ID_Descr)+4, argNmb);
-	//LCD_Shape(field.x-3, field.y-3, LCD_RoundFrame, field.width+6, field.height+6, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+	field = ELEMENT_fontRGB(2 /*+ (LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,GetSelTxt(40,FILE_NAME(Lang),2),0,NoConstWidth) + 4)*/,    2 /*+ LCD_GetFontHeight(v.FONT_ID_Descr)+4*/, argNmb);
+	LCD_Shape(field.x-3, field.y-3, LCD_RoundFrame, field.width+6, field.height+6, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 	_StartDrawLine(0,LCD_X, field.x, field.y+field.height+15);   _DrawRight(200, COLOR_GRAY(0x80));  //jako funkcja !!
 
-	field = ELEMENT_fontBkRGB(32,    field.y+field.height+15+15   +   LCD_GetFontHeight(v.FONT_ID_Descr)+4, argNmb);
+	//field = ELEMENT_fontBkRGB(32,    field.y+field.height+15+15   +   LCD_GetFontHeight(v.FONT_ID_Descr)+4, argNmb);
 	//LCD_Shape(field.x-3, field.y-3, LCD_RoundFrame, field.width+6, field.height+6, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 
