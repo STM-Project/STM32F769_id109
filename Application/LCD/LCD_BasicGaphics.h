@@ -76,6 +76,9 @@ void _DrawArrayLeftUp(uint32_t color,uint32_t BkpSizeX, int direction, int len, 
 void _DrawArrayLeftUp_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...);
 void _DrawArrayBuffLeftUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf);
 
+void LCD_LineH(uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold);
+void LCD_LineV(uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold);
+
 void LCD_Display(uint32_t posBuff, uint32_t Xpos, uint32_t Ypos, uint32_t width, uint32_t height);
 void LCD_Show(void);
 
