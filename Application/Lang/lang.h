@@ -8,6 +8,9 @@
 #ifndef LANG_H_
 #define LANG_H_
 
+//#define Polish(x)		2*(x)
+//#define English(x)	2*(x)+1
+
 typedef enum{
 	Polish,
 	English
