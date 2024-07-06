@@ -3504,64 +3504,12 @@ StructFieldPos LCD_StrDependOnColorsDescrVar_array_xyCorrect(int idVar,int fontI
 	#define _AAAAA(nr)	if(-1<fontID##nr && IS_RANGE(directionDescr##nr,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID##nr)+(interspace##nr&0x0000FFFF); goto _End_Ypos_Correct; }
 	#define _BBBBB(nr)	if(-1<fontID##nr && IS_RANGE(directionDescr##nr,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID##nr,txt##nr,space##nr,constWidth##nr)+(interspace##nr&0x0000FFFF)); goto _End_Xpos_Correct; }
 
-	_AAAAA(1)
-	_AAAAA(2)
-	_AAAAA(3)
-	_AAAAA(4)
-	_AAAAA(5)
-	_AAAAA(6)
-	_AAAAA(7)
-	_AAAAA(8)
-	_AAAAA(9)
-	_AAAAA(10)
-	_AAAAA(11)
-	_AAAAA(12)
-
-//	if(-1<fontID1 && IS_RANGE(directionDescr1,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID1)+interspace1; goto _End_Ypos_Correct; }
-//	if(-1<fontID2 && IS_RANGE(directionDescr2,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID2)+interspace2; goto _End_Ypos_Correct; }
-//	if(-1<fontID3 && IS_RANGE(directionDescr3,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID3)+interspace3; goto _End_Ypos_Correct; }
-//	if(-1<fontID4 && IS_RANGE(directionDescr4,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID4)+interspace4; goto _End_Ypos_Correct; }
-//	if(-1<fontID5 && IS_RANGE(directionDescr5,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID5)+interspace5; goto _End_Ypos_Correct; }
-//	if(-1<fontID6 && IS_RANGE(directionDescr6,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID6)+interspace6; goto _End_Ypos_Correct; }
-//	if(-1<fontID7 && IS_RANGE(directionDescr7,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID7)+interspace7; goto _End_Ypos_Correct; }
-//	if(-1<fontID8 && IS_RANGE(directionDescr8,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID8)+interspace8; goto _End_Ypos_Correct; }
-//	if(-1<fontID9 && IS_RANGE(directionDescr9,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID9)+interspace9; goto _End_Ypos_Correct; }
-//	if(-1<fontID10 && IS_RANGE(directionDescr10,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID10)+interspace10; goto _End_Ypos_Correct; }
-//	if(-1<fontID11 && IS_RANGE(directionDescr11,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID11)+interspace11; goto _End_Ypos_Correct; }
-//	if(-1<fontID12 && IS_RANGE(directionDescr12,Above_center,Above_right)){ Ypos += LCD_GetFontHeight(fontID12)+interspace12; goto _End_Ypos_Correct; }
-//
+	_AAAAA(1)	_AAAAA(2)	_AAAAA(3)_AAAAA(4)	_AAAAA(5)	_AAAAA(6)	_AAAAA(7)	_AAAAA(8)	_AAAAA(9)	_AAAAA(10)	_AAAAA(11)	_AAAAA(12)
 
 	_End_Ypos_Correct:
-
-	_BBBBB(1)
-	_BBBBB(2)
-	_BBBBB(3)
-	_BBBBB(4)
-	_BBBBB(5)
-	_BBBBB(6)
-	_BBBBB(7)
-	_BBBBB(8)
-	_BBBBB(9)
-	_BBBBB(10)
-	_BBBBB(11)
-	_BBBBB(12)
-
-//	if(-1<fontID1 && IS_RANGE(directionDescr1,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID1,txt1,space1,constWidth1)+interspace1);	goto _End_Xpos_Correct; }
-//	if(-1<fontID2 && IS_RANGE(directionDescr2,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID2,txt2,space2,constWidth2)+interspace2);	goto _End_Xpos_Correct; }
-//	if(-1<fontID3 && IS_RANGE(directionDescr3,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID3,txt3,space3,constWidth3)+interspace3);	goto _End_Xpos_Correct; }
-//	if(-1<fontID4 && IS_RANGE(directionDescr4,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID4,txt4,space4,constWidth4)+interspace4);	goto _End_Xpos_Correct; }
-//	if(-1<fontID5 && IS_RANGE(directionDescr5,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID5,txt5,space5,constWidth5)+interspace5);	goto _End_Xpos_Correct; }
-//	if(-1<fontID6 && IS_RANGE(directionDescr6,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID6,txt6,space6,constWidth6)+interspace6);	goto _End_Xpos_Correct; }
-//	if(-1<fontID7 && IS_RANGE(directionDescr7,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID7,txt7,space7,constWidth7)+interspace7);	goto _End_Xpos_Correct; }
-//	if(-1<fontID8 && IS_RANGE(directionDescr8,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID8,txt8,space8,constWidth8)+interspace8);	goto _End_Xpos_Correct; }
-//	if(-1<fontID9 && IS_RANGE(directionDescr9,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID9,txt9,space9,constWidth9)+interspace9);	goto _End_Xpos_Correct; }
-//	if(-1<fontID10 && IS_RANGE(directionDescr10,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID10,txt10,space10,constWidth10)+interspace10);	goto _End_Xpos_Correct; }
-//	if(-1<fontID11 && IS_RANGE(directionDescr11,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID11,txt11,space11,constWidth11)+interspace11);	goto _End_Xpos_Correct; }
-//	if(-1<fontID12 && IS_RANGE(directionDescr12,Left_down,Left_up)){	Xpos+=(LCD_GetWholeStrPxlWidth(fontID12,txt12,space12,constWidth12)+interspace12);	goto _End_Xpos_Correct; }
+	_BBBBB(1)	_BBBBB(2)	_BBBBB(3)_BBBBB(4)	_BBBBB(5)	_BBBBB(6)	_BBBBB(7)	_BBBBB(8)	_BBBBB(9)	_BBBBB(10)	_BBBBB(11)	_BBBBB(12)
 
 	_End_Xpos_Correct:
-
-
 	return LCD_StrDependOnColorsDescrVar_array(idVar,fontID,fontColor,bkColor,bkScreenColor, Xpos,Ypos,txt,OnlyDigits,space,maxVal,constWidth, \
 			_STR_DESCR_PARAMS(1),_STR_DESCR_PARAMS(2),_STR_DESCR_PARAMS(3), _STR_DESCR_PARAMS(4), _STR_DESCR_PARAMS(5), _STR_DESCR_PARAMS(6), \
 			_STR_DESCR_PARAMS(7),_STR_DESCR_PARAMS(8),_STR_DESCR_PARAMS(9),_STR_DESCR_PARAMS(10),_STR_DESCR_PARAMS(11),_STR_DESCR_PARAMS(12) );

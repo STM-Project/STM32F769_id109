@@ -333,6 +333,12 @@ typedef enum{
 }SELECT_PRESS_BLOCK;
 
 typedef enum{
+	KeysAutoSize,		/* Keys auto size to fontPress size*/
+	KeysNotDel,
+	KeysDel
+}KEYBOARD_ANOTHER_PARAM;
+
+typedef enum{
 	PARAM_TYPE,
 	PARAM_SIZE,
 	PARAM_COLOR_BK,
@@ -1085,7 +1091,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	}
 	void _deleteTouchParams(void){
 		s[k].forTouchIdx = NoTouch;
-		s[k].nmbTouch = 0;  // to samo jak s=0; !!!!
+		s[k].nmbTouch = 0;
 	}
 	int _startUp(void){
 		if(KEYBOARD_none == type){
@@ -1094,7 +1100,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			return 1;
 		}
 		if(shape!=0){
-			if(eraseOther){
+			if(KeysDel == eraseOther){
 				_deleteAllTouchs();
 				_deleteAllTouchParams();
 			}
@@ -1103,13 +1109,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				_deleteTouchParams();
 			}
 
-//			if(s[k].forTouchIdx == forTouchIdx){
-//				if(eraseOther)
-//					_deleteAllTouchParams();
-//				else
-//					_deleteTouchParams();
-//				return 1;
-//			}
 			s[k].shape = shape;
 			s[k].bold = bold;
 			s[k].x = x;
@@ -1133,6 +1132,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		const COLORS_DEFINITION colorTxtKey[]		= {RED,	  GREEN, 	BLUE,		 RED, 	    GREEN,	 BLUE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
 		const uint16_t dimKeys[] = {3,2};
+
+		if(shape!=0){
+			if(KeysAutoSize == widthKey){
+				s[k].widthKey =  heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[0],0,NoConstWidth) + heightKey;		/*	space + text + space */
+				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
+			}
+		}
+
 		XY_Touch_Struct posKey[]=
 		  {{1*s[k].interSpace + 0*s[k].widthKey,	1*s[k].interSpace + 0*s[k].heightKey},
 			{2*s[k].interSpace + 1*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey},
@@ -1555,33 +1562,33 @@ void FILE_NAME(setTouch)(void)
 	{
 		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 60,40, 4, state, Touch_fontRp,1); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
+				KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, KeysAutoSize,6, 4, state, Touch_fontRp,KeysDel); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
 			/* DisplayTouchPosXY(state,pos,"Touch_FontColor"); */
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_bkRGB, KEY_All_release, LCD_RoundRectangle,0, 400,160, 60,40, 4, state, Touch_bkRp,1);
+				KeyboardTypeDisplay(KEYBOARD_bkRGB, KEY_All_release, LCD_RoundRectangle,0, 400,160, KeysAutoSize,6, 4, state, Touch_bkRp,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontStyle2, FontStyle,Press, TXT_FONT_STYLE,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_fontStyle, KEY_Select_one, LCD_Rectangle,0, 400,160, 200,40, 0, state, Touch_style1,1);
+				KeyboardTypeDisplay(KEYBOARD_fontStyle, KEY_Select_one, LCD_Rectangle,0, 400,160, 200,40, 0, state, Touch_style1,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontType2, FontType,Press, TXT_FONT_TYPE,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_fontType, KEY_Select_one, LCD_Rectangle,0, 400,160, 200,40, 0, state, Touch_type1,1);
+				KeyboardTypeDisplay(KEYBOARD_fontType, KEY_Select_one, LCD_Rectangle,0, 400,160, 200,40, 0, state, Touch_type1,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontSize2, FontSize,Press, TXT_FONT_SIZE,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_fontSize, KEY_All_release_and_select_one, LCD_RoundRectangle,0, 410,170, 80,40, 6, state, Touch_size_plus,1);
+				KeyboardTypeDisplay(KEYBOARD_fontSize, KEY_All_release_and_select_one, LCD_RoundRectangle,0, 410,170, 80,40, 6, state, Touch_size_plus,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontCoeff2, Coeff,Press, TXT_COEFF,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_fontCoeff, KEY_Select_one, LCD_LittleRoundRectangle,0, 610,30, 160,40, 0, state, Touch_coeff1,1);
+				KeyboardTypeDisplay(KEYBOARD_fontCoeff, KEY_Select_one, LCD_LittleRoundRectangle,0, 610,30, 160,40, 0, state, Touch_coeff1,KeysDel);
 			break;
 
 		case Touch_FontStyle:   //sPRAWDZIC tOUCH.IDX NA DEBUGU !!!!
@@ -1811,8 +1818,8 @@ void FILE_NAME(debugRcvStr)(void)
 
 		if(RR)
 		{
-			KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 60,40, 4, Touch_FontColor, Touch_fontRp,1);
-			KeyboardTypeDisplay(KEYBOARD_bkRGB, KEY_All_release, LCD_RoundRectangle,0, 500,160, 60,40, 4, Touch_BkColor, Touch_bkRp,0);
+			KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 60,40, 4, Touch_FontColor, Touch_fontRp,KeysDel);
+			KeyboardTypeDisplay(KEYBOARD_bkRGB, KEY_All_release, LCD_RoundRectangle,0, 500,160, 60,40, 4, Touch_BkColor, Touch_bkRp,KeysNotDel);
 		}
 		else
 		{
