@@ -49,6 +49,15 @@ int SCREEN_ConfigTouchForStrVar(uint16_t ID_touch, uint16_t idx_touch, uint8_t p
  	return LCD_TOUCH_Set(ID_touch, idx_touch, param_touch);
 }
 
+int SCREEN_ConfigTouchForStrVar_2(uint16_t ID_touch, uint16_t idx_touch, uint8_t param_touch, int idVar, int nrTouchIdx, StructFieldPos field){
+ 	LCD_SetStrVar_idxTouch(idVar,nrTouchIdx,idx_touch);
+	touchTemp[0].x = field.x;
+	touchTemp[0].y = field.y;
+ 	touchTemp[1].x = touchTemp[0].x + field.width;
+ 	touchTemp[1].y = touchTemp[0].y + field.height;
+ 	return LCD_TOUCH_Set(ID_touch, idx_touch, param_touch);
+}
+
 int SCREEN_SetTouchForNewEndPos(int idVar, int nrTouchIdx, StructTxtPxlLen lenStr){
 	return LCD_TOUCH_SetNewPos( LCD_GetStrVar_idxTouch(idVar,nrTouchIdx), LCD_GetStrVar_x(idVar), LCD_GetStrVar_y(idVar), lenStr.inPixel, lenStr.height );
 }

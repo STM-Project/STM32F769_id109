@@ -21,13 +21,15 @@
 #define SCREEN_FONTS_LANG \
 	X(LANG_nazwa_0, "Czcionki LCD", "Fonts LCD") \
 	X(LANG_nazwa_1, "Zmiana kolor"ó"w czcionki", "Press to change color fonts") \
-	X(LANG_nazwa_2, "Markielowski", "1)") \
+	X(LANG_nazwa_2, "1.", "1.") \
 	X(LANG_nazwa_3, "Czer", "Red") \
 	X(LANG_nazwa_4, "Ziel", "Green") \
 	X(LANG_nazwa_5, "Nieb", "Blue") \
 	X(LANG_nazwa_6, "Zmiana kolor"ó"w t"ł"a czcionki", "Press to change color fonts background") \
-	X(LANG_nazwa_7, "2)", "2)") \
+	X(LANG_nazwa_7, "2.", "2.") \
 	X(LANG_nazwa_8, "Klawiatura RGB", "Keyboard RGB") \
+	X(Font_Type, 	 "Zmiana typu czcionki", "Press to change type fonts") \
+	X(Count, 	 	 "3.", "3.") \
 
 
 #define SCREEN_FONTS_SET_PARAMETERS \
@@ -145,7 +147,7 @@
 	X(104, FONT_VAR_Press,  		fontVar_15) \
 /*------------ End Main Settings -----------------*/
 
-/*------------ Main Screen MACRO -----------------*/
+/*------------ Main Screen MACROs -----------------*/
 #define SL(name)	(char*)FILE_NAME(Lang)[ v.LANG_SELECT==Polish ? 2*(name) : 2*(name)+1 ]
 
 typedef enum{
@@ -373,7 +375,7 @@ typedef enum{
 
 static char bufTemp[50];
 static int lenTxt_prev;
-static StructTxtPxlLen lenStr;
+static StructTxtPxlLen lenStr, lenStr_copy;
 
 typedef struct{
 	int32_t bk[3];
@@ -409,7 +411,7 @@ static char* TXT_PosCursor(void){
 	return Test.posCursor>0 ? Int2Str(Test.posCursor-1,' ',3,Sign_none) : StrAll(1,"off");
 }
 
-static void ClearCursorField(void){         //MYGRAY,MYGRAY,MYGRAY  popraw to !!!!!!!!!!!!!!!!
+static void ClearCursorField(void){
 	LCD_ShapeIndirect(LCD_GetStrVar_x(v.FONT_VAR_Fonts),LCD_GetStrVar_y(v.FONT_VAR_Fonts)+LCD_GetFontHeight(v.FONT_ID_Fonts)+Test.spaceCoursorY,LCD_Rectangle, lenStr.inPixel,Test.heightCursor, v.COLOR_BkScreen,v.COLOR_BkScreen,v.COLOR_BkScreen);
 }
 
@@ -500,31 +502,31 @@ static void Data2Refresh(int nr)
 	case PARAM_COLOR_FONT:
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontColor,TXT_FONT_COLOR);
 		break;
-	case PARAM_LEN_WINDOW:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LenWin, TXT_LEN_WIN);
-		break;
-	case PARAM_OFFS_WINDOW:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_OffsWin, TXT_OFFS_WIN);
+//	case PARAM_LEN_WINDOW:
+//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LenWin, TXT_LEN_WIN);
+//		break;
+//	case PARAM_OFFS_WINDOW:
+//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_OffsWin, TXT_OFFS_WIN);
 		break;
 	case PARAM_STYLE:
 		lenStr=LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, TXT_FONT_STYLE);
 		SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontStyle,0, lenStr);
 		break;
-	case PARAM_COEFF:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Coeff,TXT_COEFF);
-		break;
-	case PARAM_SPEED:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Speed,TXT_SPEED);
-		break;
-	case PARAM_LOAD_FONT_TIME:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LoadFontTime, TXT_LOAD_FONT_TIME);
-		break;
-	case PARAM_POS_CURSOR:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_PosCursor,TXT_PosCursor());
-		break;
-	case PARAM_CPU_USAGE:
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_CPUusage,TXT_CPU_USAGE);
-		break;
+//	case PARAM_COEFF:
+//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Coeff,TXT_COEFF);
+//		break;
+//	case PARAM_SPEED:
+//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Speed,TXT_SPEED);
+//		break;
+//	case PARAM_LOAD_FONT_TIME:
+//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LoadFontTime, TXT_LOAD_FONT_TIME);
+//		break;
+//	case PARAM_POS_CURSOR:
+//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_PosCursor,TXT_PosCursor());
+//		break;
+//	case PARAM_CPU_USAGE:
+//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_CPUusage,TXT_CPU_USAGE);
+//		break;
 	}
 }
 
@@ -1922,6 +1924,7 @@ static StructTxtPxlLen ELEMENT_fontRGB(StructFieldPos *field, int xPos,int yPos,
 
 	if(0==argNmb)
 		SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, field->len);
+		//SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, *field);
 
 	lenStr.inPixel = field->width;
 	lenStr.height 	= field->height;
@@ -1936,7 +1939,6 @@ static StructTxtPxlLen ELEMENT_fontRGB(StructFieldPos *field, int xPos,int yPos,
 
 static StructTxtPxlLen ELEMENT_fontBkRGB(StructFieldPos *field, int xPos,int yPos, int argNmb)
 {
-
 	#define _TXT_R(x)		 SL(LANG_nazwa_3)
 	#define _TXT_G(x)		 SL(LANG_nazwa_4)
 	#define _TXT_B(x)		 SL(LANG_nazwa_5)
@@ -1976,6 +1978,36 @@ static StructTxtPxlLen ELEMENT_fontBkRGB(StructFieldPos *field, int xPos,int yPo
 	#undef _TXT_B
 	#undef _TXT_LEFT
 }
+
+static StructTxtPxlLen ELEMENT_fontType(StructFieldPos *field, int xPos,int yPos, int argNmb)
+{
+	StructTxtPxlLen lenStr = {0};
+
+	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(STR_FONT_PARAM(FontType, FillMainFrame), xPos, yPos, TXT_FONT_TYPE, fullHight, 0,255, NoConstWidth, \
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16), Above_left,   SL(LANG_nazwa_6), fullHight, 0,250, NoConstWidth,\
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 				 Left_mid, 		SL(Font_Type), 	fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4,  			 Under_center,	"Zastanowie sie :)", fullHight, 0,250, NoConstWidth, \
+		LCD_STR_DESCR_PARAM_NUMBER(3) );
+
+	LCD_SetBkFontShape(v.FONT_VAR_FontType,BK_LittleRound);
+
+//	if(0==argNmb){ SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontType,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontType,0, *field);
+//						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, *field);
+//	}
+
+	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontType,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontType,0, field->len);
+						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, 		  Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, field->len);
+	}
+
+
+	lenStr.inPixel = field->width;
+	lenStr.height 	= field->height;
+
+	return lenStr;
+
+}
+
+
 
 
 
@@ -2019,34 +2051,36 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	}
 	/*FILE_NAME(printInfo)();*/
 
-	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,180,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen)); // dlatego daj bk color MYGRAY aby zachowac kolory przy cieniowaniu !!!!!
+	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,180,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,8), SL(LANG_nazwa_0), fullHight,0,255,NoConstWidth);
-
-
+	//lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,8), SL(LANG_nazwa_0), fullHight,0,255,NoConstWidth);
 
 
 
 
-	lenStr=ELEMENT_fontRGB(&field, LCD_Xpos(lenStr,SetPos,10), LCD_Ypos(lenStr,SetPos,5), argNmb);
+
+
+	lenStr=ELEMENT_fontRGB(&field, LCD_Xpos(lenStr,SetPos,10), LCD_Ypos(lenStr,SetPos,5), argNmb);	lenStr_copy=lenStr;
 	//LCD_Shape(field.x-2, field.y-2, LCD_Frame, field.width+4, field.height+4, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
-	LCD_LineH(LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,15), 200, COLOR_GRAY(0x80), 0 );		lenStr.height=1;
+	LCD_LineH(LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,15), 200, COLOR_GRAY(0x10), 0 );		lenStr.height=1;
 
 	lenStr=ELEMENT_fontBkRGB(&field, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,15), argNmb);
 	//LCD_Shape(field.x-3, field.y-3, LCD_Frame, field.width+6, field.height+6, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
+	lenStr=ELEMENT_fontType(&field, 300, 5, argNmb);
+	LCD_Shape(field.x-3, field.y-3, LCD_Frame, field.width+6, field.height+6, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+
+//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontType, FillMainFrame),  LCD_Xpos(lenStr_copy,IncPos,20), LCD_Ypos(lenStr_copy,GetPos,0), TXT_FONT_TYPE, 	fullHight,0,255,NoConstWidth);
+//	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontType, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontType,0, lenStr);
+//						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, lenStr);
+//	}
 
 
 
 
 
 
-
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontType, FillMainFrame),  LCD_Xpos(lenStr,IncPos,7), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_TYPE, 	fullHight,0,255,NoConstWidth);
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontType, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontType,0, lenStr);
-						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, lenStr);
-	}
 
 	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(FontSize, FillMainFrame),  LCD_Xpos(lenStr,IncPos,10), LCD_Ypos(lenStr,GetPos,0), TXT_FONT_SIZE, 	fullHight,0,255,NoConstWidth); LCD_SetBkFontShape(v.FONT_VAR_FontSize,BK_LittleRound);
 	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, lenStr);
@@ -2058,16 +2092,16 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontStyle2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontStyle,1, lenStr);
 	}
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Coeff,FillMainFrame),300, 50, TXT_COEFF,  		 	fullHight,0,255,ConstWidth);
-	if(0==argNmb){ /*SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontCoeff, press, v.FONT_VAR_Coeff,0, lenStr);*/
-						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontCoeff2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_Coeff,1, lenStr);
-	}
+//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Coeff,FillMainFrame),300, 50, TXT_COEFF,  		 	fullHight,0,255,ConstWidth);
+//	if(0==argNmb){ /*SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontCoeff, press, v.FONT_VAR_Coeff,0, lenStr);*/
+//						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, Touch_FontCoeff2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_Coeff,1, lenStr);
+//	}
 
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(LenWin,FillMainFrame),400,  0, TXT_LEN_WIN,		 	 halfHight,0,255,ConstWidth);
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(OffsWin,FillMainFrame),400, 20, TXT_OFFS_WIN,	    	 halfHight,0,255,ConstWidth);
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(LoadFontTime,FillMainFrame),320, 20, TXT_LOAD_FONT_TIME,	 halfHight,0,255,ConstWidth);
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(PosCursor,FillMainFrame),440, 40,TXT_PosCursor(),halfHight,0,255,ConstWidth);
-	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450, 0, 	TXT_CPU_USAGE,	 		 halfHight,0,255,ConstWidth);
+//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(LenWin,FillMainFrame),400,  0, TXT_LEN_WIN,		 	 halfHight,0,255,ConstWidth);
+//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(OffsWin,FillMainFrame),400, 20, TXT_OFFS_WIN,	    	 halfHight,0,255,ConstWidth);
+//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(LoadFontTime,FillMainFrame),320, 20, TXT_LOAD_FONT_TIME,	 halfHight,0,255,ConstWidth);
+//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(PosCursor,FillMainFrame),440, 40,TXT_PosCursor(),halfHight,0,255,ConstWidth);
+//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450, 0, 	TXT_CPU_USAGE,	 		 halfHight,0,255,ConstWidth);
 
 
 	 Test.yFontsField=240;
@@ -2109,7 +2143,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-	 lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Speed, FillMainFrame),450,0,TXT_SPEED,fullHight,0,255,ConstWidth);
+	 //lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Speed, FillMainFrame),450,0,TXT_SPEED,fullHight,0,255,ConstWidth);
 
 	LCD_Show();
 
