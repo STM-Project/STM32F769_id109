@@ -45,9 +45,9 @@
 
 #define STRUCT_TAB_SIZE(_struct) (sizeof(_struct) / sizeof(&_struct[0]))
 
-#define SET_bit(allBits,bitNr)	(allBits |=   1<<(bitNr))
-#define RST_bit(allBits,bitNr)	(allBits &= ~(1<<(bitNr)))
-#define CHECK_bit(allBits,bitNr) ((allBits>>(bitNr>63?63:bitNr)) & 0x0000000000000001)
+#define SET_bit(allBits,bitNr)	((allBits) |=   1<<(bitNr))
+#define RST_bit(allBits,bitNr)	((allBits) &= ~(1<<(bitNr)))
+#define CHECK_bit(allBits,bitNr) (((allBits)>>((bitNr)>31?31:(bitNr))) & 0x00000001)
 
 #define SDRAM __attribute__ ((section(".sdram")))
 

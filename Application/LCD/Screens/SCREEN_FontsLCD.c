@@ -187,8 +187,8 @@ static FILE_NAME(struct) v ={
 };
 
 #define SEL_BITS_SIZE	5
-static uint64_t FILE_NAME(SelBits)[5] = {0};
-static uint64_t FILE_NAME(SelTouch) = 0;
+static uint32_t FILE_NAME(SelBits)[SEL_BITS_SIZE] = {0};
+static uint32_t FILE_NAME(SelTouch) = 0;
 /*
 static int FILE_NAME(SetDefaultParam)(int param){
 	int temp;
@@ -212,7 +212,7 @@ void FILE_NAME(printInfo)(void){
 	if(v.DEBUG_ON){
 		Dbg(1,Clr_ CoG2_"\r\ntypedef struct{\r\n"_X);
 		DbgVar2(1,200,CoGr_"%*s %*s %*s %s\r\n"_X, -8,"id", -18,"name", -15,"default value", "value");
-		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit( FILE_NAME(SelBits)[a/64], (a-64*(a/64)) )?CoR_"change to: "_X:"", v.b);
+		#define X(a,b,c) DbgVar2(1,200,CoGr_"%*d"_X	"%*s" 	CoGr_"= "_X	 	"%*s" 	"(%s0x%x)\r\n",-4,a,		-23,getName(b),	-15,getName(c), 	CHECK_bit( FILE_NAME(SelBits)[a/32], (a-32*(a/32)) )?CoR_"change to: "_X:"", v.b);
 			SCREEN_FONTS_SET_PARAMETERS
 		#undef X
 		DbgVar(1,200,CoG2_"}%s;\r\n"_X,getName(FILE_NAME(struct)));
@@ -225,7 +225,7 @@ int FILE_NAME(funcGet)(int offs){
 
 void FILE_NAME(funcSet)(int offs, int val){
 	*( (int*)((int*)(&v) + offs) ) = val;
-	SET_bit( FILE_NAME(SelBits)[offs/64], (offs-64*(offs/64)) );
+	SET_bit( FILE_NAME(SelBits)[offs/32], (offs-32*(offs/32)) );
 }
 
 void FILE_NAME(setDefaultAllParam)(int rst){
@@ -266,10 +266,10 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define RGB_FONT 	RGB2INT(Test.font[0],Test.font[1],Test.font[2])
 #define RGB_BK    RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2])
 
-#define CHECK_TOUCH(state)			CHECK_bit(FILE_NAME(SelTouch),state-1)
-#define SET_TOUCH(state) 			SET_bit	(FILE_NAME(SelTouch),state-1)
-#define CLR_TOUCH(state) 			RST_bit	(FILE_NAME(SelTouch),state-1)
-#define CLR_ALL_TOUCH 				FILE_NAME(SelTouch) = 0
+#define CHECK_TOUCH(state)			CHECK_bit(FILE_NAME(SelTouch),(state)-1)  //UWAGA zakres tylko do 32 bit !!!!!
+#define SET_TOUCH(state) 			  SET_bit(FILE_NAME(SelTouch),(state)-1)
+#define CLR_TOUCH(state) 			  RST_bit(FILE_NAME(SelTouch),(state)-1)
+#define CLR_ALL_TOUCH 				FILE_NAME(SelTouch) = 0   //tu petle jesli wiecej touch niz 32 !!!!
 #define GET_TOUCH 					FILE_NAME(SelTouch)
 
 #define NONE_TYPE_REQ	-1
@@ -284,6 +284,7 @@ typedef enum{
 	Touch_FontType2,
 	Touch_FontSize,
 	Touch_FontSize2,
+	Touch_FontSizeMove,
 	Touch_FontStyle,
 	Touch_FontStyle2,
 	Touch_FontCoeff,
@@ -311,14 +312,13 @@ typedef enum{
 	Touch_size_norm,
 	Touch_size_bold,
 	Touch_size_italic,
-	Touch_coeff1,
+	Touch_FontSizeRoll,
 	Touch_coeff2,
 	Touch_coeff3,
 	Touch_coeff4,
 	Move_1,
 	Move_2,
 	Move_3,
-	Move_4,
 	Point_1,
 	AnyPress,
 	AnyPressWithWait
@@ -329,6 +329,7 @@ typedef enum{
 	KEYBOARD_fontRGB,
 	KEYBOARD_bkRGB,
 	KEYBOARD_fontSize,
+	KEYBOARD_fontSize2,
 	KEYBOARD_fontType,
 	KEYBOARD_fontStyle,
 	KEYBOARD_fontCoeff,
@@ -520,7 +521,9 @@ static void Data2Refresh(int nr)
 		break;
 	case PARAM_STYLE:
 		lenStr=LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, TXT_FONT_STYLE);
+#ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
 		SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontStyle,0, lenStr);
+#endif
 		break;
 //	case PARAM_COEFF:
 //		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Coeff,TXT_COEFF);
@@ -1507,7 +1510,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		case KEYBOARD_fontSize:
 			_ServiceSize();
 			break;
-		case KEYBOARD_fontCoeff:
+		case KEYBOARD_fontSize2:
 			//_ServiceCoeff();
 			_ServiceSizeRoll();
 			break;
@@ -1622,6 +1625,13 @@ void FILE_NAME(setTouch)(void)
 				KeyboardTypeDisplay(KEYBOARD_fontSize, KEY_All_release_and_select_one, LCD_RoundRectangle,0, 410,170, 80,40, 6, state, Touch_size_plus,KeysDel);
 			break;
 
+		CASE_TOUCH_STATE(state,Touch_FontSizeMove, FontSize,Press, TXT_FONT_SIZE,252);
+			if(IsFunc())
+				KeyboardTypeDisplay(KEYBOARD_fontSize2, KEY_Select_one, LCD_LittleRoundRectangle,0, 610,30, 160,40, 0, state, Touch_FontSizeRoll,KeysDel);
+			else
+				_SaveState();
+			break;
+
 		case Touch_FontStyle:   //sPRAWDZIC tOUCH.IDX NA DEBUGU !!!!
 			ChangeFontStyle(NONE_TYPE_REQ);
 			if(CHECK_TOUCH(Touch_FontStyle2))
@@ -1636,11 +1646,16 @@ void FILE_NAME(setTouch)(void)
 			_SaveState();
 			break;
 
-		case Touch_FontSize:
-			ChangeFontBoldItalNorm(NONE_TYPE_REQ);
-			if(CHECK_TOUCH(Touch_FontSize2))
-				KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one );
-			_SaveState();
+		case Touch_FontSize:		/* When 'Touch_FontSizeMove' was cleared then not service for release 'Touch_FontSize' */
+
+			if(!CHECK_TOUCH(Touch_FontSizeMove) && !_WasState(Touch_FontSizeMove)){
+
+
+				ChangeFontBoldItalNorm(NONE_TYPE_REQ);
+				if(CHECK_TOUCH(Touch_FontSize2))
+					KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one );
+				_SaveState();
+			}
 			break;
 
 		case Touch_fontRp: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','R', 1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_plus ); 	Test.step=5; _SaveState(); break;
@@ -1671,13 +1686,9 @@ void FILE_NAME(setTouch)(void)
 		case Touch_size_bold: 	ChangeFontBoldItalNorm(1);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
 		case Touch_size_italic: ChangeFontBoldItalNorm(2);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
 
-		case Move_4:
-			KeyboardTypeDisplay(KEYBOARD_fontCoeff, KEY_Select_one, LCD_LittleRoundRectangle,0, 610,30, 160,40, 0, state, Touch_coeff1,KeysDel);
-			break;
-
-		case Touch_coeff1:
+		case Touch_FontSizeRoll:
 			if(LCD_TOUCH_ScrollSel_Service(7,press, &pos.y))  //magic nmb 7 !!!!
-				KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Select_one);
+				KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 			_SaveState();
 			break;
 
@@ -1707,14 +1718,16 @@ void FILE_NAME(setTouch)(void)
 				KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_All_release );
 				Test.step=1;
 			}
-			if(_WasState(Touch_size_plus) || _WasState(Touch_size_minus))   //a to zakomentuj !!!!!!  //ROLL SIZE !!!
+			if(_WasState(Touch_size_plus) || _WasState(Touch_size_minus))
 				KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one );
 
+#ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
 			if(_WasState(Touch_FontStyle) ||
 				_WasState(Touch_style1) ||
 				_WasState(Touch_style2) ||
 				_WasState(Touch_style3))
 				SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontStyle,1,LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle,TXT_FONT_STYLE));
+#endif
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
 			if(_WasState(Touch_FontType) ||
@@ -1732,11 +1745,14 @@ void FILE_NAME(setTouch)(void)
 				SCREEN_SetTouchForNewEndPos(v.FONT_VAR_FontSize,1,LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontSize,TXT_FONT_SIZE));
 #endif
 
-			if(_WasState(Touch_coeff1)){
+			if(_WasState(Touch_FontSizeRoll)){
 				if(LCD_TOUCH_ScrollSel_Service(7,release, NULL))
-					KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Select_one);
+					KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 			}
 
+			if(_WasState(Touch_FontSizeMove)){
+				asm("nop");
+			}
 			break;
 	}
 }
@@ -1819,7 +1835,8 @@ void FILE_NAME(debugRcvStr)(void)
 		DbgVar(DEBUG_ON,100,Clr_ Mag_"\r\nStart: %s\r\n"_X,GET_CODE_FUNCTION);
 		DisplayCoeffCalibration();
 
-		//SCREEN_Fonts_funcSet(COLOR_FramePress, BLACK);
+//		SCREEN_Fonts_funcSet(FONT_COLOR_LoadFontTime, BLACK);
+//		SCREEN_Fonts_funcSet(COLOR_FramePress, BLACK);
 
 	}
 	else if(DEBUG_RcvStr("-"))
@@ -1911,7 +1928,7 @@ static StructTxtPxlLen ELEMENT_fontRGB(StructFieldPos *field, int xPos,int yPos,
 	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
 
 	if(0==argNmb)
-		SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, field->len);
+		SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, field->len);   //tu tez TOUCH_MAINFONTS_WITHOUT_DESCR !!!!!
 		//SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, *field);
 
 	lenStr.inPixel = field->width;
@@ -1996,6 +2013,7 @@ static StructTxtPxlLen ELEMENT_fontType(StructFieldPos *field, int xPos,int yPos
 static StructTxtPxlLen ELEMENT_fontSize(StructFieldPos *field, int xPos,int yPos, int argNmb)
 {
 	StructTxtPxlLen lenStr = {0};
+	StructFieldPos fieldTouch = {0};
 
 	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(STR_FONT_PARAM(FontSize, FillMainFrame), xPos, yPos, TXT_FONT_SIZE, fullHight, 0,255, NoConstWidth, \
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16), Above_left,   SL(LANG_FontSizeAbove), fullHight, 0,250, NoConstWidth,\
@@ -2005,13 +2023,17 @@ static StructTxtPxlLen ELEMENT_fontSize(StructFieldPos *field, int xPos,int yPos
 
 	LCD_SetBkFontShape(v.FONT_VAR_FontSize,BK_LittleRound);
 
+	fieldTouch = *field;
+	fieldTouch.width = fieldTouch.width/3;
+	fieldTouch.x = fieldTouch.x + fieldTouch.width;
+
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
 	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, field->len);
 						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, 		  Touch_FontSize2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontSize,1, field->len); }
 #else
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, *field);
-						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontSize2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontSize,1, *field);
-						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_MOVE_DOWN, 		    		 Move_4,				press, 								  v.FONT_VAR_FontSize,2, *field); }
+	if(0==argNmb){ SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize,  	LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, *field);
+						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontSize2, 	LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontSize,1, *field);
+						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_MOVE_RIGHT, 		    	 Touch_FontSizeMove,	press, 								  v.FONT_VAR_FontSize,2, fieldTouch); }
 #endif
 
 	lenStr.inPixel = field->width;
@@ -2101,7 +2123,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 #define	_Element(name,cmdX,offsX,cmdY,offsY)		lenStr=ELEMENT_##name(&field, LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), argNmb);
 #define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x00), 0 );	lenStr.height=1;
 
-
+//zrobic stale odstepy miedzy elementami niezalezniue od dlugosci DESCR !!!!!
 	_Element(fontRGB,SetPos,5,SetPos,5)			_Element(fontType,IncPos,15,GetPos,0)		_Element(fontStyle,IncPos,15,GetPos,0)
 													 _LineH(3*lenStr.inPixel+2*15,SetPos,5,IncPos,15)
 	_Element(fontBkRGB,SetPos,5,IncPos,15)		_Element(fontSize,IncPos,15,GetPos,0)
