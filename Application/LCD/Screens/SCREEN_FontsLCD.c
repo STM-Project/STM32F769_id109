@@ -1927,9 +1927,11 @@ static StructTxtPxlLen ELEMENT_fontRGB(StructFieldPos *field, int xPos,int yPos,
 
 	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
 
-	if(0==argNmb)
-		SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, field->len);   //tu tez TOUCH_MAINFONTS_WITHOUT_DESCR !!!!!
-		//SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, *field);
+#ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
+	if(0==argNmb)	SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, field->len);
+#else
+	if(0==argNmb)	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, *field);
+#endif
 
 	lenStr.inPixel = field->width;
 	lenStr.height 	= field->height;
@@ -1970,8 +1972,11 @@ static StructTxtPxlLen ELEMENT_fontBkRGB(StructFieldPos *field, int xPos,int yPo
 
 	LCD_SetBkFontShape(v.FONT_VAR_BkColor,BK_LittleRound);
 
-	if(0==argNmb)
-		SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, field->len);
+#ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
+	if(0==argNmb)	SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, field->len);
+#else
+	if(0==argNmb)	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, *field);
+#endif
 
 	lenStr.inPixel = field->width;
 	lenStr.height 	= field->height;
@@ -2023,9 +2028,9 @@ static StructTxtPxlLen ELEMENT_fontSize(StructFieldPos *field, int xPos,int yPos
 
 	LCD_SetBkFontShape(v.FONT_VAR_FontSize,BK_LittleRound);
 
-	fieldTouch = *field;
-	fieldTouch.width = fieldTouch.width/3;
-	fieldTouch.x = fieldTouch.x + fieldTouch.width;
+	fieldTouch 			= *field;
+	fieldTouch.width 	= fieldTouch.width/3;
+	fieldTouch.x 		= fieldTouch.x + fieldTouch.width;
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
 	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, field->len);
@@ -2118,45 +2123,38 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
+	uint16_t posCalc[3], startOffs=5, offs=15;
 
 
 #define	_Element(name,cmdX,offsX,cmdY,offsY)		lenStr=ELEMENT_##name(&field, LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), argNmb);
 #define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x00), 0 );	lenStr.height=1;
 
-//zrobic stale odstepy miedzy elementami niezalezniue od dlugosci DESCR !!!!!
-	_Element(fontRGB,SetPos,5,SetPos,5)			_Element(fontType,IncPos,15,GetPos,0)		_Element(fontStyle,IncPos,15,GetPos,0)
-													 _LineH(3*lenStr.inPixel+2*15,SetPos,5,IncPos,15)
-	_Element(fontBkRGB,SetPos,5,IncPos,15)		_Element(fontSize,IncPos,15,GetPos,0)
+
+//	_Element(fontRGB,SetPos,5,SetPos,5)			_Element(fontType,IncPos,15,GetPos,0)		_Element(fontStyle,IncPos,15,GetPos,0)
+//													 _LineH(3*lenStr.inPixel+2*15,SetPos,5,IncPos,15)
+//	_Element(fontBkRGB,SetPos,5,IncPos,15)		_Element(fontSize,IncPos,15,GetPos,0)
+//
+
+
+
+	_Element(fontRGB,SetPos,startOffs,SetPos,startOffs)		posCalc[0] = field.x + field.width;
+				_LineH(lenStr.inPixel,GetPos,0,IncPos,offs)
+	_Element(fontBkRGB,GetPos,0,IncPos,offs)						posCalc[1] = field.x + field.width;
+
+
+	MAXVAL(posCalc,2,0,posCalc[3])
+	_Element(fontType,SetPos,posCalc[3]+offs,SetPos,startOffs)		posCalc[0] = field.x + field.width;
+				_LineH(lenStr.inPixel,GetPos,0,IncPos,offs)
+	_Element(fontSize,GetPos,0,IncPos,offs)								posCalc[1] = field.x + field.width;
+
+
+	MAXVAL(posCalc,2,0,posCalc[3])
+	_Element(fontStyle,SetPos,posCalc[3]+offs,SetPos,startOffs)
+				_LineH(lenStr.inPixel,GetPos,0,IncPos,offs)
 
 
 #undef _Element
 #undef _LineH
-
-
-//	lenStr=ELEMENT_fontRGB(&field, LCD_Xpos(lenStr,SetPos,5), LCD_Ypos(lenStr,SetPos,5), argNmb);
-//	LCD_Shape(field.x-2, field.y-2, LCD_Frame, field.width+4, field.height+4, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
-//
-//	lenStr=ELEMENT_fontType(&field, LCD_Xpos(lenStr,IncPos,15), LCD_Ypos(lenStr,GetPos,0), argNmb);
-//	LCD_Shape(field.x-3, field.y-3, LCD_Frame, field.width+6, field.height+6, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
-//
-//	lenStr=ELEMENT_fontStyle(&field, LCD_Xpos(lenStr,IncPos,15), LCD_Ypos(lenStr,GetPos,0), argNmb);
-//	LCD_Shape(field.x-3, field.y-3, LCD_Frame, field.width+6, field.height+6, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
-//
-//			LCD_LineH(LCD_Xpos(lenStr,SetPos,5), LCD_Ypos(lenStr,IncPos,15), 2*lenStr.inPixel+15, COLOR_GRAY(0x00), 0 );	lenStr.height=1;
-//
-//	lenStr=ELEMENT_fontBkRGB(&field, LCD_Xpos(lenStr,SetPos,5), LCD_Ypos(lenStr,IncPos,15), argNmb);
-//	LCD_Shape(field.x-3, field.y-3, LCD_Frame, field.width+6, field.height+6, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
-//
-//	lenStr=ELEMENT_fontSize(&field, LCD_Xpos(lenStr,IncPos,15), LCD_Ypos(lenStr,GetPos,0), argNmb);
-//	LCD_Shape(field.x-3, field.y-3, LCD_Frame, field.width+6, field.height+6, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
-
-
-
-
-
-
-
-
 
 
 
