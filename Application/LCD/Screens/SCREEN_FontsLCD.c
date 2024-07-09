@@ -25,7 +25,7 @@
 	X(LANG_nazwa_3, "Czer", "Red") \
 	X(LANG_nazwa_4, "Ziel", "Green") \
 	X(LANG_nazwa_5, "Nieb", "Blue") \
-	X(LANG_nazwa_6, "Zmiana kolor"ó"w t"ł"a czcionki", "Press to change color fonts background") \
+	X(LANG_nazwa_6, "Zmiana kolor"ó"w t"ł"a czcionki Markielowsk"Ó, "Press to change color fonts background") \
 	X(LANG_nazwa_7, "2.", "2.") \
 	X(LANG_nazwa_8, "Klawiatura RGB", "Keyboard RGB") \
 	X(LANG_FontTypeAbove, "Zmiana typu czcionki", "Press to change type fonts") \
@@ -45,7 +45,7 @@
 	X(2, FONT_SIZE_BkColor,			FONT_14_bold) \
 	X(3, FONT_SIZE_FontType,		FONT_14) \
 	X(4, FONT_SIZE_FontSize,		FONT_14) \
-	X(5, FONT_SIZE_FontStyle,		FONT_14_italics) \
+	X(5, FONT_SIZE_FontStyle,		FONT_14_bold) \
 	X(6, FONT_SIZE_Coeff,			FONT_10) \
 	X(7, FONT_SIZE_LenWin,			FONT_10) \
 	X(8, FONT_SIZE_OffsWin,			FONT_10) \
@@ -2117,40 +2117,50 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	}
 	/*FILE_NAME(printInfo)();*/
 
-	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,180,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 	//lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,8), SL(LANG_nazwa_0), fullHight,0,255,NoConstWidth);
 
 
 
-	uint16_t posCalc[3], startOffs=5, offs=15;
+	uint16_t startOffsX=20,startOffsY=10, offsX=20, offsY=25, tab[3];   int X_start=0;
+
+	StructFieldPos field1;
 
 
 #define	_Element(name,cmdX,offsX,cmdY,offsY)		lenStr=ELEMENT_##name(&field, LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), argNmb);
-#define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x00), 0 );	lenStr.height=1;
+#define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x55), 1 );
+#define	_LineV(width,cmdX,offsX,cmdY,offsY)		 LCD_LineV(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x55), 1 );
 
 
-//	_Element(fontRGB,SetPos,5,SetPos,5)			_Element(fontType,IncPos,15,GetPos,0)		_Element(fontStyle,IncPos,15,GetPos,0)
-//													 _LineH(3*lenStr.inPixel+2*15,SetPos,5,IncPos,15)
-//	_Element(fontBkRGB,SetPos,5,IncPos,15)		_Element(fontSize,IncPos,15,GetPos,0)
-//
+//zrob parametrycznie z bold !!!!
+
+
+	_Element(fontRGB,SetPos,X_start=startOffsX,SetPos,startOffsY)		_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
+	_Element(fontBkRGB,GetPos,0,IncPos,offsY)									_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
+	tab[0]=field1.width;
+	tab[1]=field.width;
+	MAXVAL(tab,2,0,tab[3])
+	_LineH(tab[3],GetPos,0,GetPos,-offsY/2-1)
+
+
+	_Element(fontType,SetPos,X_start+=tab[3]+offsX,SetPos,startOffsY)		_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
+	_Element(fontSize,GetPos,0,IncPos,offsY)										_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
+	tab[0]=field1.width;
+	tab[1]=field.width;
+	MAXVAL(tab,2,0,tab[3])
+	_LineH(tab[3],GetPos,0,GetPos,-offsY/2-1)
+
+
+	_Element(fontStyle,SetPos,X_start+=tab[3]+offsX,SetPos,startOffsY)	_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
+	//_Element(fontSize,GetPos,0,IncPos,offsY)										_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
+	//tab[0]=field1.width;
+	//tab[1]=field.width;
+	//MAXVAL(tab,2,0,tab[3])
+	_LineH(field1.width,GetPos,0,IncPos,offsY/2-1)
 
 
 
-	_Element(fontRGB,SetPos,startOffs,SetPos,startOffs)		posCalc[0] = field.x + field.width;
-				_LineH(lenStr.inPixel,GetPos,0,IncPos,offs)
-	_Element(fontBkRGB,GetPos,0,IncPos,offs)						posCalc[1] = field.x + field.width;
-
-
-	MAXVAL(posCalc,2,0,posCalc[3])
-	_Element(fontType,SetPos,posCalc[3]+offs,SetPos,startOffs)		posCalc[0] = field.x + field.width;
-				_LineH(lenStr.inPixel,GetPos,0,IncPos,offs)
-	_Element(fontSize,GetPos,0,IncPos,offs)								posCalc[1] = field.x + field.width;
-
-
-	MAXVAL(posCalc,2,0,posCalc[3])
-	_Element(fontStyle,SetPos,posCalc[3]+offs,SetPos,startOffs)
-				_LineH(lenStr.inPixel,GetPos,0,IncPos,offs)
 
 
 #undef _Element
