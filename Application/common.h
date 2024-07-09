@@ -49,6 +49,8 @@
 #define RST_bit(allBits,bitNr)	((allBits) &= ~(1<<(bitNr)))
 #define CHECK_bit(allBits,bitNr) (((allBits)>>((bitNr)>31?31:(bitNr))) & 0x00000001)
 
+#define MAXVAL(ptr,nmb,minVal,maxValCalc)		for(int i=0,j=(minVal); i<(nmb); (ptr[i]>j ? j=ptr[i] : 0), (maxValCalc)=j, ++i);
+
 #define SDRAM __attribute__ ((section(".sdram")))
 
 #define LCD_BUFF_XSIZE		800
