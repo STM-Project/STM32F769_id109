@@ -52,6 +52,7 @@ typedef enum{  //DO USUNIECIA
 #define LOAD_FONT_PARAM(name) 			v.FONT_SIZE_##name, v.FONT_STYLE_##name, v.FONT_BKCOLOR_##name, v.FONT_COLOR_##name
 #define STR_FONT_PARAM(name,bkScreen) 	v.FONT_VAR_##name, v.FONT_ID_##name, v.FONT_COLOR_##name, v.FONT_BKCOLOR_##name, v.COLOR_##bkScreen
 #define SHAPE_PARAM(frame,fill,bk) 		v.COLOR_##frame, v.COLOR_##fill, v.COLOR_##bk
+#define SHAPE_PARAM_BOLD(frame,fill,bk,bold) 		((v.COLOR_##frame&0xFFFFFF)|(bold)<<24), v.COLOR_##fill, v.COLOR_##bk
 
 #define COLOR_GRAY(v)	((v<<16|v<<8|v)|0xFF000000)
 #define RGB2INT(R,G,B)	((R<<16|G<<8|B)|0xFF000000)
