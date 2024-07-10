@@ -30,7 +30,8 @@
 #define MAX_SPACE_CORRECT	100
 
 #define MAX_SIZE_CHANGECOLOR_BUFF	300
-#define LCD_XY_MIDDLE_MAX_NUMBER_USE	50
+#define LCD_XY_MIDDLE_MAX_NUMBER_USE	20
+#define LCD_XY_POS_MAX_NUMBER_USE	50
 
 static const char CharsTab_full[]="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-.,:;[]{}<>'~*()&#^=_$%\xB0@|?!\xA5\xB9\xC6\xE6\xCA\xEA\xA3\xB3\xD1\xF1\xD3\xF3\x8C\x9C\x8F\x9F\xAF\xBF/1234567890";
 static const char CharsTab_digits[]="+-1234567890.";
@@ -3174,6 +3175,45 @@ uint16_t LCD_Xpos(StructTxtPxlLen structTemp, int cmd, int offs)
 	default:
 		return xPos+=structTemp.inPixel+offs;
 	}
+}
+
+uint16_t LCD_posY(int nr, StructTxtPxlLen structTemp, int cmd, int offs)
+{
+	static uint16_t yPos[LCD_XY_POS_MAX_NUMBER_USE]={0};
+	if(nr < LCD_XY_POS_MAX_NUMBER_USE)
+	{
+		switch(cmd)
+		{
+		case SetPos:
+			yPos[nr]=offs;
+			return yPos[nr];
+		case GetPos:
+			return yPos[nr]+offs;
+		case IncPos:
+		default:
+			return yPos[nr]+=structTemp.height+offs;
+		}
+	}
+	return 0;
+}
+uint16_t LCD_posX(int nr, StructTxtPxlLen structTemp, int cmd, int offs)
+{
+	static uint16_t xPos[LCD_XY_POS_MAX_NUMBER_USE]={0};
+	if(nr < LCD_XY_POS_MAX_NUMBER_USE)
+	{
+		switch(cmd)
+		{
+		case SetPos:
+			xPos[nr]=offs;
+			return xPos[nr];
+		case GetPos:
+			return xPos[nr]+offs;
+		case IncPos:
+		default:
+			return xPos[nr]+=structTemp.inPixel+offs;
+		}
+	}
+	return 0;
 }
 
 uint16_t LCD_Ymiddle(int nr, int cmd, uint32_t val)
