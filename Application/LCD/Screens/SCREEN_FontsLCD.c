@@ -2077,13 +2077,67 @@ static StructTxtPxlLen ELEMENT_fontStyle(StructFieldPos *field, int xPos,int yPo
 
 
 
+static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int offsX,int OffsY,  int bold)
+{
+	#define	_Element(name,cmdX,offsX,cmdY,offsY)		lenStr=ELEMENT_##name(&field, LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), argNmb);
+	#define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x55), bold );
+	#define	_LineV(width,cmdX,offsX,cmdY,offsY)		 LCD_LineV(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x55), bold );
+
+	StructFieldPos field={0}, field1={0};
+	uint16_t tab[3]={0};
+	int X_start=0;
+
+	_Element(fontRGB,SetPos,X_start=startOffsX,SetPos,startOffsY)		_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
+	_Element(fontBkRGB,GetPos,0,IncPos,OffsY)									_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
+	tab[0]=field1.width;
+	tab[1]=field.width;
+	MAXVAL(tab,2,0,tab[3])
+	_LineH(tab[3],GetPos,0,GetPos,-OffsY/2-1)
+
+	_Element(fontType,SetPos,X_start+=tab[3]+offsX,SetPos,startOffsY)		_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
+	_Element(fontSize,GetPos,0,IncPos,OffsY)										_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
+	tab[0]=field1.width;
+	tab[1]=field.width;
+	MAXVAL(tab,2,0,tab[3])
+	_LineH(tab[3],GetPos,0,GetPos,-OffsY/2-1)
+
+	_Element(fontStyle,SetPos,X_start+=tab[3]+offsX,SetPos,startOffsY)	_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
+	//_Element(fontSize,GetPos,0,IncPos,offsY)									_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
+	//tab[0]=field1.width;
+	//tab[1]=field.width;
+	//MAXVAL(tab,2,0,tab[3])
+	_LineH(field1.width,GetPos,0,IncPos,OffsY/2-1)
+
+	#undef _Element
+	#undef _LineH
+	#undef _LineV
+}
+
+static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int offsX,int OffsY,  int bold)
+{
+	#define	_Element(name,cmdX,offsX,cmdY,offsY)		lenStr=ELEMENT_##name(&field, LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), argNmb);
+	#define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x55), bold );
+	#define	_LineV(width,cmdX,offsX,cmdY,offsY)		 LCD_LineV(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x55), bold );
+	#define _Frame 	LCD_Shape(field.x-4, field.y-4, LCD_BoldRoundRectangle, field.width+8, field.height+8, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+	#define _SetH(x) 	height[x]=field.height;
+
+	StructFieldPos field={0};   //LCD_Xpos  zrobic jak middle [nr !!!!!!]
+	uint16_t height[3];
+
+	_Element(fontRGB,SetPos,startOffsX,SetPos,startOffsY)			 _Frame _SetH(0) 		_Element(fontType,IncPos,offsX,GetPos,0) 					 _Frame _SetH(1)			_Element(fontStyle,IncPos,offsX,GetPos,0) _Frame _SetH(2)
+	_Element(fontBkRGB,SetPos,startOffsX,GetPos,height[0]+OffsY) _Frame _SetH(0)		_Element(fontSize,IncPos,offsX,GetPos,height[1]+OffsY) _Frame _SetH(1)
+
+	#undef _Element
+	#undef _LineH
+	#undef _LineV
+}
+
 
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
 	    //ODKRYJ W usrtawienia debug aby tylko wyswietlic jeden leemnet z duzej struktury np Touch[].idx !!!!!!
 
-	StructFieldPos field = {0};
 
 	if(0==argNmb)
 	{
@@ -2123,41 +2177,8 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-	uint16_t startOffsX=20,startOffsY=10, offsX=20, offsY=25, tab[3];   int X_start=0;
-
-	StructFieldPos field1;
-
-
-#define	_Element(name,cmdX,offsX,cmdY,offsY)		lenStr=ELEMENT_##name(&field, LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), argNmb);
-#define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x55), 1 );
-#define	_LineV(width,cmdX,offsX,cmdY,offsY)		 LCD_LineV(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), width, COLOR_GRAY(0x55), 1 );
-
-
-//zrob parametrycznie z bold !!!!
-
-
-	_Element(fontRGB,SetPos,X_start=startOffsX,SetPos,startOffsY)		_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
-	_Element(fontBkRGB,GetPos,0,IncPos,offsY)									_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
-	tab[0]=field1.width;
-	tab[1]=field.width;
-	MAXVAL(tab,2,0,tab[3])
-	_LineH(tab[3],GetPos,0,GetPos,-offsY/2-1)
-
-
-	_Element(fontType,SetPos,X_start+=tab[3]+offsX,SetPos,startOffsY)		_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
-	_Element(fontSize,GetPos,0,IncPos,offsY)										_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
-	tab[0]=field1.width;
-	tab[1]=field.width;
-	MAXVAL(tab,2,0,tab[3])
-	_LineH(tab[3],GetPos,0,GetPos,-offsY/2-1)
-
-
-	_Element(fontStyle,SetPos,X_start+=tab[3]+offsX,SetPos,startOffsY)	_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
-	//_Element(fontSize,GetPos,0,IncPos,offsY)										_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
-	//tab[0]=field1.width;
-	//tab[1]=field.width;
-	//MAXVAL(tab,2,0,tab[3])
-	_LineH(field1.width,GetPos,0,IncPos,offsY/2-1)
+	FRAMES_GROUP_combined(argNmb,20,10,20,25,1);
+	//FRAMES_GROUP_separat(argNmb,20,10,20,25,1);
 
 
 
