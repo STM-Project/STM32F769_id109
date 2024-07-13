@@ -3180,10 +3180,9 @@ uint16_t LCD_Xpos(StructTxtPxlLen structTemp, int cmd, int offs)
 uint16_t LCD_posY(int nr, StructTxtPxlLen structTemp, int cmd, int offs)
 {
 	static uint16_t yPos[LCD_XY_POS_MAX_NUMBER_USE]={0};
-	if(nr < LCD_XY_POS_MAX_NUMBER_USE)
-	{
-		switch(cmd)
-		{
+
+	if(nr < LCD_XY_POS_MAX_NUMBER_USE){
+		switch(cmd){
 		case SetPos:
 			yPos[nr]=offs;
 			return yPos[nr];
@@ -3199,10 +3198,9 @@ uint16_t LCD_posY(int nr, StructTxtPxlLen structTemp, int cmd, int offs)
 uint16_t LCD_posX(int nr, StructTxtPxlLen structTemp, int cmd, int offs)
 {
 	static uint16_t xPos[LCD_XY_POS_MAX_NUMBER_USE]={0};
-	if(nr < LCD_XY_POS_MAX_NUMBER_USE)
-	{
-		switch(cmd)
-		{
+
+	if(nr < LCD_XY_POS_MAX_NUMBER_USE){
+		switch(cmd){
 		case SetPos:
 			xPos[nr]=offs;
 			return xPos[nr];
@@ -3219,33 +3217,39 @@ uint16_t LCD_posX(int nr, StructTxtPxlLen structTemp, int cmd, int offs)
 uint16_t LCD_Ymiddle(int nr, int cmd, uint32_t val)
 {
 	static uint16_t startPosY[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0}, heightY[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0};
-	switch(cmd)
-	{
-	case SetPos:
-		startPosY[nr]= val;
-		heightY[nr]= (val>>16);
-		return startPosY[nr];
-	case GetPos:
-	default:
-		int temp = MIDDLE(startPosY[nr],heightY[nr],LCD_GetFontHeight(val));
-		return temp < 0 ? 0:temp;
+
+	if(nr < LCD_XY_MIDDLE_MAX_NUMBER_USE){
+		switch(cmd){
+		case SetPos:
+			startPosY[nr]= val;
+			heightY[nr]= (val>>16);
+			return startPosY[nr];
+		case GetPos:
+		default:
+			int temp = MIDDLE(startPosY[nr],heightY[nr],LCD_GetFontHeight(val));
+			return temp < 0 ? 0:temp;
+		}
 	}
+	return 0;
 }
 uint16_t LCD_Xmiddle(int nr, int cmd, uint32_t param, char *txt, int space, int constWidth)
 {
 	static uint16_t startPosX[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0}, widthX[LCD_XY_MIDDLE_MAX_NUMBER_USE]={0};
-	switch(cmd)
-	{
-	case SetPos:
-		startPosX[nr]= param;
-		widthX[nr]= (param>>16);
-		return startPosX[nr];
-	case GetPos:
-	default:
-		int len=LCD_GetWholeStrPxlWidth(param,txt,space,constWidth);
-		int temp = MIDDLE(startPosX[nr],widthX[nr],len);
-		return temp < 0 ? 0:temp;
+
+	if(nr < LCD_XY_MIDDLE_MAX_NUMBER_USE){
+		switch(cmd){
+		case SetPos:
+			startPosX[nr]= param;
+			widthX[nr]= (param>>16);
+			return startPosX[nr];
+		case GetPos:
+		default:
+			int len=LCD_GetWholeStrPxlWidth(param,txt,space,constWidth);
+			int temp = MIDDLE(startPosX[nr],widthX[nr],len);
+			return temp < 0 ? 0:temp;
+		}
 	}
+	return 0;
 }
 uint32_t SetPosAndWidth(uint16_t pos, uint16_t width){
 	return ((uint32_t)pos&0x0000FFFF)|width<<16;
@@ -3328,7 +3332,7 @@ LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkCo
 #define _STR_DESCR_PARAMS_INIT(nr) 	int fontID##nr, uint32_t fontColor##nr, uint32_t bkColor##nr, int interspace##nr, int directionDescr##nr, char *txt##nr, int OnlyDigits##nr, int space##nr,int maxVal##nr, int constWidth##nr
 #define _STR_DESCR_PARAMS(nr) 		fontID##nr, fontColor##nr, bkColor##nr, interspace##nr, directionDescr##nr, txt##nr, OnlyDigits##nr, space##nr, maxVal##nr, constWidth##nr
 
-static StructFieldPos __DescrParamFunction(int Xpos, int Ypos, StructTxtPxlLen len, int height_main, int heightHalf_main, _STR_DESCR_PARAMS_INIT())
+static StructFieldPos __DescrParamFunction(int noDisp, int Xpos, int Ypos, StructTxtPxlLen len, int height_main, int heightHalf_main, _STR_DESCR_PARAMS_INIT())
 {
 	StructFieldPos field = {0};
 
@@ -3409,15 +3413,16 @@ static StructFieldPos __DescrParamFunction(int Xpos, int Ypos, StructTxtPxlLen l
 		break;
 	}
 
-	if	((bkColor==MYGRAY && fontColor == WHITE) ||
-		 (bkColor==MYGRAY && fontColor == MYGREEN)){
-		LCD_Str(fontID, X_descr, Y_descr, txt, OnlyDigits, space,bkColor, 1, constWidth);
+	if(0 == noDisp){
+		if	((bkColor==MYGRAY && fontColor == WHITE) ||
+			 (bkColor==MYGRAY && fontColor == MYGREEN)){
+			LCD_Str(fontID, X_descr, Y_descr, txt, OnlyDigits, space,bkColor, 1, constWidth);
+		}
+		else if(bkColor==WHITE  && fontColor == BLACK)
+			LCD_Str(fontID, X_descr, Y_descr, txt, OnlyDigits, space,bkColor, 0, constWidth);
+		else
+			LCD_StrChangeColor(fontID, X_descr, Y_descr, txt, OnlyDigits, space, bkColor, fontColor,maxVal, constWidth);
 	}
-	else if(bkColor==WHITE  && fontColor == BLACK)
-		LCD_Str(fontID, X_descr, Y_descr, txt, OnlyDigits, space,bkColor, 0, constWidth);
-	else
-		LCD_StrChangeColor(fontID, X_descr, Y_descr, txt, OnlyDigits, space, bkColor, fontColor,maxVal, constWidth);
-
 
 	(Xpos > X_descr) ? (field.x = X_descr) : (field.x = Xpos);
 	(Ypos > Y_descr) ? (field.y = Y_descr) : (field.y = Ypos);
@@ -3428,7 +3433,7 @@ static StructFieldPos __DescrParamFunction(int Xpos, int Ypos, StructTxtPxlLen l
 	return field;
 }
 
-static StructFieldPos LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, int Ypos,char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor, \
+static StructFieldPos LCD_StrDescrVar_array(int noDisp, int idVar,int fontID,  int Xpos, int Ypos,char *txt, int OnlyDigits, int space, uint32_t bkColor, int coeff, int constWidth, uint32_t bkScreenColor, \
 		_STR_DESCR_PARAMS_INIT(1),_STR_DESCR_PARAMS_INIT(2),_STR_DESCR_PARAMS_INIT(3), _STR_DESCR_PARAMS_INIT(4), _STR_DESCR_PARAMS_INIT(5), _STR_DESCR_PARAMS_INIT(6), \
 		_STR_DESCR_PARAMS_INIT(7),_STR_DESCR_PARAMS_INIT(8),_STR_DESCR_PARAMS_INIT(9),_STR_DESCR_PARAMS_INIT(10),_STR_DESCR_PARAMS_INIT(11),_STR_DESCR_PARAMS_INIT(12) )
 {
@@ -3444,32 +3449,39 @@ static StructFieldPos LCD_StrDescrVar_array(int idVar,int fontID,  int Xpos, int
 
 	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
-		len = LCD_StrVar(idVar,fontID, Xpos, Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
+		if(noDisp){
+			len.inPixel = LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth);
+			if(OnlyDigits)	len.height = LCD_GetFontHalfHeight(fontID);
+			else				len.height = LCD_GetFontHeight(fontID);
+		}
+		else
+			len = LCD_StrVar(idVar,fontID, Xpos, Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
+
 		field.len = len;
 		field.x = Xpos;	field2.x = Xpos;
 		field.y = Ypos;	field2.y = Ypos;
 		field.width = Xpos + len.inPixel;
 		field.height = Ypos + len.height;
 
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(3));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(4));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(5));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(6));	_FieldCorrect(); if(-1 == fontID)  return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(7));	_FieldCorrect(); if(-1 == fontID)  return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(8));	_FieldCorrect(); if(-1 == fontID)  return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(9));	_FieldCorrect(); if(-1 == fontID)  return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10)); _FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11)); _FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(3));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(4));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(5));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(6));	_FieldCorrect(); if(-1 == fontID)  return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(7));	_FieldCorrect(); if(-1 == fontID)  return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(8));	_FieldCorrect(); if(-1 == fontID)  return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(9));	_FieldCorrect(); if(-1 == fontID)  return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12)); _FieldCorrect(); if(-1 == fontID) return field;
 	}																																				/* MAX_NUMBER_DESCR */
 	field.width -= field.x;
 	field.height -= field.y;
 	return field;
 }
 
-static StructFieldPos LCD_StrChangeColorDescrVar_array(int idVar,int fontID, int Xpos,int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor, \
+static StructFieldPos LCD_StrChangeColorDescrVar_array(int noDisp, int idVar,int fontID, int Xpos,int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth, uint32_t bkScreenColor, \
 		_STR_DESCR_PARAMS_INIT(1),_STR_DESCR_PARAMS_INIT(2),_STR_DESCR_PARAMS_INIT(3), _STR_DESCR_PARAMS_INIT(4), _STR_DESCR_PARAMS_INIT(5), _STR_DESCR_PARAMS_INIT(6), \
 		_STR_DESCR_PARAMS_INIT(7),_STR_DESCR_PARAMS_INIT(8),_STR_DESCR_PARAMS_INIT(9),_STR_DESCR_PARAMS_INIT(10),_STR_DESCR_PARAMS_INIT(11),_STR_DESCR_PARAMS_INIT(12) )
 {
@@ -3485,32 +3497,39 @@ static StructFieldPos LCD_StrChangeColorDescrVar_array(int idVar,int fontID, int
 
 	if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1))
 	{
-		len = LCD_StrChangeColorVar(idVar,fontID, Xpos, Ypos, txt, OnlyDigits, space, bkColor, fontColor,maxVal, constWidth, bkScreenColor);
+		if(noDisp){
+			len.inPixel = LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth);
+			if(OnlyDigits)	len.height = LCD_GetFontHalfHeight(fontID);
+			else				len.height = LCD_GetFontHeight(fontID);
+		}
+		else
+			len = LCD_StrChangeColorVar(idVar,fontID, Xpos, Ypos, txt, OnlyDigits, space, bkColor, fontColor,maxVal, constWidth, bkScreenColor);
+
 		field.len = len;
 		field.x = Xpos;	field2.x = Xpos;
 		field.y = Ypos;	field2.y = Ypos;
 		field.width = Xpos + len.inPixel;
 		field.height = Ypos + len.height;
 
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(3));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(4));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(5));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(6));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(7));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(8));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(9));	_FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10)); _FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11)); _FieldCorrect(); if(-1 == fontID) return field;
-		field2 = __DescrParamFunction(Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(1));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(2));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(3));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(4));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(5));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(6));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(7));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(8));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(9));	_FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(10)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(11)); _FieldCorrect(); if(-1 == fontID) return field;
+		field2 = __DescrParamFunction(noDisp,Xpos,Ypos, len, LCD_GetFontHeight(fontID), LCD_GetFontHalfHeight(fontID),_STR_DESCR_PARAMS(12)); _FieldCorrect(); if(-1 == fontID) return field;
 	}																																				/* MAX_NUMBER_DESCR */
 	field.width -= field.x;
 	field.height -= field.y;
 	return field;
 }
 
-StructFieldPos LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
+StructFieldPos LCD_StrDependOnColorsDescrVar_array(int noDisp, int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
 		_STR_DESCR_PARAMS_INIT(1),_STR_DESCR_PARAMS_INIT(2),_STR_DESCR_PARAMS_INIT(3), _STR_DESCR_PARAMS_INIT(4), _STR_DESCR_PARAMS_INIT(5), _STR_DESCR_PARAMS_INIT(6), \
 		_STR_DESCR_PARAMS_INIT(7),_STR_DESCR_PARAMS_INIT(8),_STR_DESCR_PARAMS_INIT(9),_STR_DESCR_PARAMS_INIT(10),_STR_DESCR_PARAMS_INIT(11),_STR_DESCR_PARAMS_INIT(12) )
 {
@@ -3518,26 +3537,26 @@ StructFieldPos LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_
 
 	if		((bkColor==MYGRAY && fontColor == WHITE) ||
 			 (bkColor==MYGRAY && fontColor == MYGREEN)){
-		field=LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, \
+		field=LCD_StrDescrVar_array(noDisp,idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, \
 				_STR_DESCR_PARAMS(1),_STR_DESCR_PARAMS(2),_STR_DESCR_PARAMS(3), _STR_DESCR_PARAMS(4), _STR_DESCR_PARAMS(5), _STR_DESCR_PARAMS(6), \
 				_STR_DESCR_PARAMS(7),_STR_DESCR_PARAMS(8),_STR_DESCR_PARAMS(9),_STR_DESCR_PARAMS(10),_STR_DESCR_PARAMS(11),_STR_DESCR_PARAMS(12) );
 		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
 	}
 	else if(bkColor==WHITE  && fontColor == BLACK){
-		field=LCD_StrDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, \
+		field=LCD_StrDescrVar_array(noDisp,idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,1,constWidth,bkScreenColor, \
 				_STR_DESCR_PARAMS(1),_STR_DESCR_PARAMS(2),_STR_DESCR_PARAMS(3), _STR_DESCR_PARAMS(4), _STR_DESCR_PARAMS(5), _STR_DESCR_PARAMS(6), \
 				_STR_DESCR_PARAMS(7),_STR_DESCR_PARAMS(8),_STR_DESCR_PARAMS(9),_STR_DESCR_PARAMS(10),_STR_DESCR_PARAMS(11),_STR_DESCR_PARAMS(12) );
 		if(IS_RANGE(idVar,0,MAX_OPEN_FONTS_VAR_SIMULTANEOUSLY-1)) FontVar[idVar].fontColor = fontColor;
 	}
 	else
-		field=LCD_StrChangeColorDescrVar_array(idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor, \
+		field=LCD_StrChangeColorDescrVar_array(noDisp,idVar,fontID,Xpos,Ypos,txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth,bkScreenColor, \
 				_STR_DESCR_PARAMS(1),_STR_DESCR_PARAMS(2),_STR_DESCR_PARAMS(3), _STR_DESCR_PARAMS(4), _STR_DESCR_PARAMS(5), _STR_DESCR_PARAMS(6), \
 				_STR_DESCR_PARAMS(7),_STR_DESCR_PARAMS(8),_STR_DESCR_PARAMS(9),_STR_DESCR_PARAMS(10),_STR_DESCR_PARAMS(11),_STR_DESCR_PARAMS(12) );
 
 	return field;
 }
 
-StructFieldPos LCD_StrDependOnColorsDescrVar_array_xyCorrect(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
+StructFieldPos LCD_StrDependOnColorsDescrVar_array_xyCorrect(int noDisp, int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
 		_STR_DESCR_PARAMS_INIT(1),_STR_DESCR_PARAMS_INIT(2),_STR_DESCR_PARAMS_INIT(3), _STR_DESCR_PARAMS_INIT(4), _STR_DESCR_PARAMS_INIT(5), _STR_DESCR_PARAMS_INIT(6), \
 		_STR_DESCR_PARAMS_INIT(7),_STR_DESCR_PARAMS_INIT(8),_STR_DESCR_PARAMS_INIT(9),_STR_DESCR_PARAMS_INIT(10),_STR_DESCR_PARAMS_INIT(11),_STR_DESCR_PARAMS_INIT(12) )
 {
@@ -3550,7 +3569,7 @@ StructFieldPos LCD_StrDependOnColorsDescrVar_array_xyCorrect(int idVar,int fontI
 	_BBBBB(1)	_BBBBB(2)	_BBBBB(3)_BBBBB(4)	_BBBBB(5)	_BBBBB(6)	_BBBBB(7)	_BBBBB(8)	_BBBBB(9)	_BBBBB(10)	_BBBBB(11)	_BBBBB(12)
 
 	_End_Xpos_Correct:
-	return LCD_StrDependOnColorsDescrVar_array(idVar,fontID,fontColor,bkColor,bkScreenColor, Xpos,Ypos,txt,OnlyDigits,space,maxVal,constWidth, \
+	return LCD_StrDependOnColorsDescrVar_array(noDisp, idVar,fontID,fontColor,bkColor,bkScreenColor, Xpos,Ypos,txt,OnlyDigits,space,maxVal,constWidth, \
 			_STR_DESCR_PARAMS(1),_STR_DESCR_PARAMS(2),_STR_DESCR_PARAMS(3), _STR_DESCR_PARAMS(4), _STR_DESCR_PARAMS(5), _STR_DESCR_PARAMS(6), \
 			_STR_DESCR_PARAMS(7),_STR_DESCR_PARAMS(8),_STR_DESCR_PARAMS(9),_STR_DESCR_PARAMS(10),_STR_DESCR_PARAMS(11),_STR_DESCR_PARAMS(12) );
 

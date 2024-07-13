@@ -37,6 +37,7 @@ typedef enum{
 	TRANSPARENT   = ((uint32_t)0x00000000),
 
 	MYGRAY    	 = ((uint32_t)0xFF404040),
+	MYGRAY2    	 = ((uint32_t)0xFF414141),
 	MYBLUE    	 = ((uint32_t)0xFF50C8FF),
 	MYRED    	 = ((uint32_t)0xffff7878),
 	MYGREEN    	 = ((uint32_t)0xff50FF50),
@@ -51,6 +52,7 @@ typedef enum{  //DO USUNIECIA
 
 #define LOAD_FONT_PARAM(name) 			v.FONT_SIZE_##name, v.FONT_STYLE_##name, v.FONT_BKCOLOR_##name, v.FONT_COLOR_##name
 #define STR_FONT_PARAM(name,bkScreen) 	v.FONT_VAR_##name, v.FONT_ID_##name, v.FONT_COLOR_##name, v.FONT_BKCOLOR_##name, v.COLOR_##bkScreen
+#define STR_FONT_PARAM2(name) 	v.FONT_VAR_##name, v.FONT_ID_##name, v.FONT_COLOR_##name, v.FONT_BKCOLOR_##name, v.FONT_BKCOLOR_##name
 #define SHAPE_PARAM(frame,fill,bk) 		v.COLOR_##frame, v.COLOR_##fill, v.COLOR_##bk
 #define SHAPE_PARAM_BOLD(frame,fill,bk,bold) 		((v.COLOR_##frame&0xFFFFFF)|(bold)<<24), v.COLOR_##fill, v.COLOR_##bk
 

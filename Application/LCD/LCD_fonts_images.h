@@ -336,7 +336,7 @@ uint32_t SetPosAndWidth(uint16_t pos, uint16_t width);
 void SCREEN_ResetAllParameters(void);
 
 /* LCD_STR_PARAM LCD_SetStrDescrParam(int fontID, uint32_t fontColor, uint32_t bkColor, int interspace, int directionDescr, char *txt, int OnlyDigits, int space,int maxVal, int constWidth); */ 	/* for further implementation */
-StructFieldPos LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
+StructFieldPos LCD_StrDependOnColorsDescrVar_array(int noDisp, int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
 		int fontID1, uint32_t fontColor1, uint32_t bkColor1, int interspace1, int directionDescr1, char *txt1, int OnlyDigits1, int space1,int maxVal1, int constWidth1, \
 		int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace2, int directionDescr2, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2, \
 		int fontID3, uint32_t fontColor3, uint32_t bkColor3, int interspace3, int directionDescr3, char *txt3, int OnlyDigits3, int space3,int maxVal3, int constWidth3, \
@@ -350,7 +350,7 @@ StructFieldPos LCD_StrDependOnColorsDescrVar_array(int idVar,int fontID, uint32_
 		int fontID11, uint32_t fontColor11, uint32_t bkColor11, int interspace11, int directionDescr11, char *txt11, int OnlyDigits11, int space11,int maxVal11, int constWidth11, \
 		int fontID12, uint32_t fontColor12, uint32_t bkColor12, int interspace12, int directionDescr12, char *txt12, int OnlyDigits12, int space12,int maxVal12, int constWidth12 );
 
-StructFieldPos LCD_StrDependOnColorsDescrVar_array_xyCorrect(int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
+StructFieldPos LCD_StrDependOnColorsDescrVar_array_xyCorrect(int noDisp, int idVar,int fontID, uint32_t fontColor, uint32_t bkColor, uint32_t bkScreenColor, int Xpos, int Ypos, char *txt, int OnlyDigits, int space,int maxVal, int constWidth, \
 		int fontID1, uint32_t fontColor1, uint32_t bkColor1, int interspace1, int directionDescr1, char *txt1, int OnlyDigits1, int space1,int maxVal1, int constWidth1, \
 		int fontID2, uint32_t fontColor2, uint32_t bkColor2, int interspace2, int directionDescr2, char *txt2, int OnlyDigits2, int space2,int maxVal2, int constWidth2, \
 		int fontID3, uint32_t fontColor3, uint32_t bkColor3, int interspace3, int directionDescr3, char *txt3, int OnlyDigits3, int space3,int maxVal3, int constWidth3, \

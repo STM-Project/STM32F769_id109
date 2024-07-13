@@ -36,7 +36,7 @@
 	X(LANG_FontSizeUnder, 	 "---", "---") \
 	X(LANG_FontStyleAbove, "Zmiana stylu czcionki", "Press to change style fonts") \
 	X(LANG_FontStyleLeft, 	 "5.", "5.") \
-	X(LANG_FontStyleUnder, 	 "---", "---") \
+	X(LANG_FontStyleUnder, 	 "---1", "---2") \
 
 #define SCREEN_FONTS_SET_PARAMETERS \
 /* id   name							default value */ \
@@ -45,7 +45,7 @@
 	X(2, FONT_SIZE_BkColor,			FONT_14_bold) \
 	X(3, FONT_SIZE_FontType,		FONT_14) \
 	X(4, FONT_SIZE_FontSize,		FONT_14) \
-	X(5, FONT_SIZE_FontStyle,		FONT_14_bold) \
+	X(5, FONT_SIZE_FontStyle,		FONT_14) \
 	X(6, FONT_SIZE_Coeff,			FONT_10) \
 	X(7, FONT_SIZE_LenWin,			FONT_10) \
 	X(8, FONT_SIZE_OffsWin,			FONT_10) \
@@ -91,28 +91,28 @@
 	X(46, FONT_COLOR_Press, 		DARKRED) \
 	X(47, FONT_COLOR_Fonts,  		0xFFE1A000) \
 	\
-	X(48, FONT_BKCOLOR_Title,  	 	MYGRAY) \
-	X(49, FONT_BKCOLOR_FontColor, 	MYGRAY) \
-	X(50, FONT_BKCOLOR_BkColor, 	 	MYGRAY) \
-	X(51, FONT_BKCOLOR_FontType,  	MYGRAY) \
-	X(52, FONT_BKCOLOR_FontSize,  	MYGRAY) \
-	X(53, FONT_BKCOLOR_FontStyle,  	MYGRAY) \
-	X(54, FONT_BKCOLOR_Coeff,  		MYGRAY) \
-	X(55, FONT_BKCOLOR_LenWin,  		MYGRAY) \
-	X(56, FONT_BKCOLOR_OffsWin,  		MYGRAY) \
-	X(57, FONT_BKCOLOR_LoadFontTime,	MYGRAY) \
-	X(58, FONT_BKCOLOR_PosCursor,		MYGRAY) \
-	X(59, FONT_BKCOLOR_CPUusage,		MYGRAY) \
-	X(60, FONT_BKCOLOR_Speed,			MYGRAY) \
-	X(61, FONT_BKCOLOR_Descr, 			MYGRAY) \
+	X(48, FONT_BKCOLOR_Title,  	 	MYGRAY2) \
+	X(49, FONT_BKCOLOR_FontColor, 	MYGRAY2) \
+	X(50, FONT_BKCOLOR_BkColor, 	 	MYGRAY2) \
+	X(51, FONT_BKCOLOR_FontType,  	MYGRAY2) \
+	X(52, FONT_BKCOLOR_FontSize,  	MYGRAY2) \
+	X(53, FONT_BKCOLOR_FontStyle,  	MYGRAY2) \
+	X(54, FONT_BKCOLOR_Coeff,  		MYGRAY2) \
+	X(55, FONT_BKCOLOR_LenWin,  		MYGRAY2) \
+	X(56, FONT_BKCOLOR_OffsWin,  		MYGRAY2) \
+	X(57, FONT_BKCOLOR_LoadFontTime,	MYGRAY2) \
+	X(58, FONT_BKCOLOR_PosCursor,		MYGRAY2) \
+	X(59, FONT_BKCOLOR_CPUusage,		MYGRAY2) \
+	X(60, FONT_BKCOLOR_Speed,			MYGRAY2) \
+	X(61, FONT_BKCOLOR_Descr, 			MYGRAY2) \
 	X(62, FONT_BKCOLOR_Press, 			WHITE) \
 	X(63, FONT_BKCOLOR_Fonts,  		0x090440) \
 	\
 	X(64, COLOR_BkScreen,  			COLOR_GRAY(0x38)) \
-	X(65, COLOR_MainFrame,  		COLOR_GRAY(0xDA)) \
-	X(66, COLOR_FillMainFrame, 	MYGRAY) \
-	X(67, COLOR_Frame,  				COLOR_GRAY(0x60)) \
-	X(68, COLOR_FillFrame, 			COLOR_GRAY(0x2C)) \
+	X(65, COLOR_MainFrame,  		COLOR_GRAY(0xD0)) \
+	X(66, COLOR_FillMainFrame, 	COLOR_GRAY(0x31)) \
+	X(67, COLOR_Frame,  				COLOR_GRAY(0xD0)) \
+	X(68, COLOR_FillFrame, 			COLOR_GRAY(0x3B)) \
 	X(69, COLOR_FramePress, 		COLOR_GRAY(0xBA)) \
 	X(70, COLOR_FillFramePress,	COLOR_GRAY(0x60)) \
 	X(71, DEBUG_ON,  	1) \
@@ -1453,7 +1453,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		for(int i=0; i<countKey; ++i)
 		{
 			txtKey[i] = LCD_GetFontSizeStr(i);
-			colorTxtKey[i] = WHITE;
+			colorTxtKey[i] = COLOR_GRAY(0xEE);
 
 			posKey[i].x = s[k].interSpace;
 			posKey[i].y = (i+1)*s[k].interSpace + i*s[k].heightKey - i;
@@ -1917,7 +1917,7 @@ static StructTxtPxlLen ELEMENT_fontRGB(StructFieldPos *field, int xPos,int yPos,
 	int xPos_under_left 		= MIDDLE( xPos_main+spaceMain_width, digit3main_width, _GetWidth(_TXT_R(0)) );
 	int xPos_under_right 	= MIDDLE( xPos_main + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(_TXT_B(0)) );
 
-	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(STR_FONT_PARAM(FontColor, FillMainFrame), xPos, yPos, TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
+	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(0,STR_FONT_PARAM2(FontColor), xPos, yPos, TXT_FONT_COLOR, fullHight, 0,250, ConstWidth, \
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16),	 			 Above_left, 	SL(LANG_nazwa_1), fullHight, 0,250, NoConstWidth,\
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 								 Left_mid, 		_TXT_LEFT(0), fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4|(xPos_under_left<<16),  Under_left,	_TXT_R(20), fullHight, 0,250, NoConstWidth, \
@@ -1962,7 +1962,7 @@ static StructTxtPxlLen ELEMENT_fontBkRGB(StructFieldPos *field, int xPos,int yPo
 	int xPos_under_left 		= MIDDLE( xPos_main+spaceMain_width, digit3main_width, _GetWidth(_TXT_R(0)) );
 	int xPos_under_right 	= MIDDLE( xPos_main + 3*spaceMain_width + 2*digit3main_width, digit3main_width, _GetWidth(_TXT_B(0)) );
 
-	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(STR_FONT_PARAM(BkColor, FillMainFrame), xPos, yPos, TXT_BK_COLOR, fullHight, 0,250, ConstWidth, \
+	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(0,STR_FONT_PARAM2(BkColor), xPos, yPos, TXT_BK_COLOR, fullHight, 0,250, ConstWidth, \
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16),	 			 Above_left,   SL(LANG_nazwa_6), fullHight, 0,250, NoConstWidth,\
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 								 Left_mid, 		_TXT_LEFT(0), fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4|(xPos_under_left<<16),  Under_left,	_TXT_R(20), fullHight, 0,250, NoConstWidth, \
@@ -1993,7 +1993,7 @@ static StructTxtPxlLen ELEMENT_fontType(StructFieldPos *field, int xPos,int yPos
 {
 	StructTxtPxlLen lenStr = {0};
 
-	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(STR_FONT_PARAM(FontType, FillMainFrame), xPos, yPos, TXT_FONT_TYPE, fullHight, 0,255, NoConstWidth, \
+	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(0,STR_FONT_PARAM2(FontType), xPos, yPos, TXT_FONT_TYPE, fullHight, 0,255, NoConstWidth, \
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16), Above_left,   SL(LANG_FontTypeAbove), fullHight, 0,250, NoConstWidth,\
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 				 Left_mid, 		SL(LANG_FontTypeLeft), 	fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4,  			 Under_center,	SL(LANG_FontTypeUnder), fullHight, 0,250, NoConstWidth, \
@@ -2020,7 +2020,7 @@ static StructTxtPxlLen ELEMENT_fontSize(StructFieldPos *field, int xPos,int yPos
 	StructTxtPxlLen lenStr = {0};
 	StructFieldPos fieldTouch = {0};
 
-	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(STR_FONT_PARAM(FontSize, FillMainFrame), xPos, yPos, TXT_FONT_SIZE, fullHight, 0,255, NoConstWidth, \
+	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(0,STR_FONT_PARAM2(FontSize), xPos, yPos, TXT_FONT_SIZE, fullHight, 0,255, NoConstWidth, \
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16), Above_left,   SL(LANG_FontSizeAbove), fullHight, 0,250, NoConstWidth,\
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 				 Left_mid, 		SL(LANG_FontSizeLeft),  fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4,  			 Under_center,	SL(LANG_FontSizeUnder), fullHight, 0,250, NoConstWidth, \
@@ -2050,14 +2050,26 @@ static StructTxtPxlLen ELEMENT_fontSize(StructFieldPos *field, int xPos,int yPos
 static StructTxtPxlLen ELEMENT_fontStyle(StructFieldPos *field, int xPos,int yPos, int argNmb)
 {
 	StructTxtPxlLen lenStr = {0};
+	StructFieldPos field_copy = {0};
 
-	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(STR_FONT_PARAM(FontStyle, FillMainFrame), xPos, yPos, TXT_FONT_STYLE, fullHight, 0,255, NoConstWidth, \
+	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(1,STR_FONT_PARAM2(FontStyle), xPos, yPos, " Times_New_Roman ", fullHight, 0,255, NoConstWidth, \
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16), Above_left,   SL(LANG_FontStyleAbove), fullHight, 0,250, NoConstWidth,\
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 				 Left_mid, 		SL(LANG_FontStyleLeft),  fullHight, 0,250, NoConstWidth, \
 		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4,  			 Under_center,	SL(LANG_FontStyleUnder), fullHight, 0,250, NoConstWidth, \
 		LCD_STR_DESCR_PARAM_NUMBER(3) );
 
-	LCD_SetBkFontShape(v.FONT_VAR_FontStyle,BK_LittleRound);
+	field_copy = *field;
+
+	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(0,STR_FONT_PARAM2(FontStyle), xPos, yPos, TXT_FONT_STYLE, fullHight, 0,255, NoConstWidth, \
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16), Above_left,   SL(LANG_FontStyleAbove), fullHight, 0,250, NoConstWidth,\
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 				 Left_mid, 		SL(LANG_FontStyleLeft),  fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, RGB2INT(251,29,27), v.FONT_BKCOLOR_Descr, 4,  			 Under_center,	SL(LANG_FontStyleUnder), fullHight, 0,250, NoConstWidth, \
+		LCD_STR_DESCR_PARAM_NUMBER(3) );
+
+	field->width = field_copy.width;
+	field->height = field_copy.height;
+
+	LCD_SetBkFontShape(v.FONT_VAR_FontStyle,BK_Round);
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
 	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontStyle, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontStyle,0, field->len);
@@ -2083,9 +2095,16 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	#define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_Xpos(lenStr,cmdX,offsX)-2, LCD_Ypos(lenStr,cmdY,offsY), width+4, COLOR_GRAY(0x77), bold );
 	#define	_LineV(width,cmdX,offsX,cmdY,offsY)		 LCD_LineV(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY)-2, width+4, COLOR_GRAY(0x77), bold );
 
-
 	uint16_t tab[3]={0};
 	int X_start=0;
+
+	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+	FILE_NAME(funcSet)(FONT_BKCOLOR_Descr, v.COLOR_FillMainFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontColor, v.COLOR_FillMainFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_BkColor, v.COLOR_FillMainFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontType, v.COLOR_FillMainFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontSize, v.COLOR_FillMainFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontStyle, v.COLOR_FillMainFrame);
 
 	_Element(fontRGB,SetPos,X_start=startOffsX,SetPos,startOffsY)		_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)		field1=field;
 	_Element(fontBkRGB,GetPos,0,IncPos,offsY)									_LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0)
@@ -2113,24 +2132,35 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	#undef _LineV
 }
 
-static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int bold)
+static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int boldFrame)
 {
-	#define	_Element(name,cmdX,offsX,cmdY,offsY)		lenStr=ELEMENT_##name(&field, LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), argNmb);
-	#define _Frame 	LCD_Shape(field.x-6, field.y-6, LCD_RoundFrame, field.width+12, field.height+12, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
-	#define _SetH(x) 	height[x]=field.height;
+	//zrobic define dla fill frame koloru !!!!!!!
 
-	  //LCD_Xpos  zrobic jak middle [nr !!!!!!]
-	uint16_t height[3];
+	#define _Rectan 	LCD_Shape(field.x-fontsFrameSpace, field.y-fontsFrameSpace, LCD_RoundRectangle, field.width+2*fontsFrameSpace, field.height+2*fontsFrameSpace, SHAPE_PARAM(Frame,FillFrame,FillMainFrame))
 
-	_Element(fontRGB,SetPos,startOffsX,SetPos,startOffsY)			 _Frame _SetH(0) 		_Element(fontType,IncPos,offsX,GetPos,0) 					 _Frame _SetH(1)			_Element(fontStyle,IncPos,offsX,GetPos,0) _Frame _SetH(2)
-	_Element(fontBkRGB,SetPos,startOffsX,GetPos,height[0]+offsY) _Frame _SetH(0)		_Element(fontSize,IncPos,offsX,GetPos,height[1]+offsY) _Frame _SetH(1)				//style wychodzi poza zakres !!!!
+	#define	_Element(name,nrX,cmdX,Xoffs,nrY,cmdY,Yoffs)		\
+			lenStr=ELEMENT_##name(&field, LCD_posX(nrX,lenStr,cmdX,Xoffs), LCD_posY(nrY,lenStr,cmdY,Yoffs), argNmb); \
+			_Rectan; \
+			lenStr=ELEMENT_##name(&field, LCD_posX(nrX,lenStr,GetPos,0), 	LCD_posY(nrY,lenStr,GetPos,0), 	argNmb); \
+			LCD_posY(nrY,lenStr,IncPos,offsY);
+
+	uint8_t fontsFrameSpace = boldFrame >>8;
+	/* int bold = boldFrame&0x000000FF; */
+
+	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+	FILE_NAME(funcSet)(FONT_BKCOLOR_Descr, v.COLOR_FillFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontColor, v.COLOR_FillFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_BkColor, v.COLOR_FillFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontType, v.COLOR_FillFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontSize, v.COLOR_FillFrame);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontStyle, v.COLOR_FillFrame);
+
+	_Element(fontRGB,0,SetPos,startOffsX,0,SetPos,startOffsY) 	_Element(fontType,0,IncPos,offsX,1,SetPos,startOffsY)  _Element(fontStyle,0,IncPos,offsX,2,SetPos,startOffsY)
+	_Element(fontBkRGB,0,SetPos,startOffsX,0,GetPos,0) 		 	_Element(fontSize,0,IncPos,offsX,1,GetPos,0) 			 	//style wychodzi poza zakres !!!!
 
 	#undef _Element
-	#undef _Frame
-	#undef _SetH
+	#undef _Rectan
 }
-
-
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
@@ -2169,14 +2199,14 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	}
 	/*FILE_NAME(printInfo)();*/
 
-	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+
 
 	//lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Title, FillMainFrame),LCD_Xpos(lenStr,SetPos,600),LCD_Ypos(lenStr,SetPos,8), SL(LANG_nazwa_0), fullHight,0,255,NoConstWidth);
 
 
 
-	FRAMES_GROUP_combined(argNmb,20,10,20,25,1);
-	//FRAMES_GROUP_separat(argNmb,20,10,30,30,0);
+	//FRAMES_GROUP_combined(argNmb,20,10,20,25,1);
+	FRAMES_GROUP_separat(argNmb,20,20,30,30,0|(6<<8));
 
 
 
