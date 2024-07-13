@@ -44,6 +44,8 @@
 #define DESCR_PARAM_1	DESCR_PARAM_2,DESCR_PARAM_11
 #define LCD_STR_DESCR_PARAM_NUMBER(x)	DESCR_PARAM_##x
 
+#define LONGEST_TXT_FONTSTYLE		"Times_New_Roman"
+
 enum FontsSize
 {
 	FONT_8,
