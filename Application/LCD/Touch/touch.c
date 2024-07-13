@@ -666,6 +666,9 @@ int LCD_TOUCH_ScrollSel_SetCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *se
 		uint16_t selWin;
 	}roll[SCROLL_SEL__MAX_NUMBER]={0};
 
+	if(NULL == offsWin)
+		return roll[nr].selWin;
+
 	uint16_t statePress;
 	int val = LCD_TOUCH_ScrollSel_Service(nr,checkPress, &statePress);
 
@@ -703,5 +706,9 @@ int LCD_TOUCH_ScrollSel_SetCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *se
 			return statePress;
 	}
 	return neverMind;
+}
+
+int LCD_TOUCH_ScrollSel_GetSel(uint8_t nr){
+	return LCD_TOUCH_ScrollSel_SetCalculate(nr, NULL, NULL, 0,0,0,0);
 }
 

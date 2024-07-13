@@ -815,10 +815,19 @@ static void Dec_offsWin(void){
 	Data2Refresh(PARAM_SPEED);
 }
 
-static void IncFontSize(void)
+static void IncFontSize(int8_t typeReq)
 {
 	int sizeLimit;
-	Test.size+=3;
+
+	if(typeReq > NONE_TYPE_REQ){
+		Test.size = typeReq;
+		if(0==(typeReq%3)) Test.normBoldItal = 0;
+		else if(0==((typeReq-1)%3)) Test.normBoldItal = 1;
+		else if(0==((typeReq-2)%3)) Test.normBoldItal = 2;
+	}
+	else
+		Test.size+=3;
+
 	switch(Test.normBoldItal)
 	{
 	default:
@@ -1443,7 +1452,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 		int frameNmbVis = 10;
 		uint16_t roll = 0;
-		uint16_t selFrame = 17;
+		uint16_t selFrame = Test.size;
 
 		int countKey = dimKeys[1];
 		int win = frameNmbVis * s[k].heightKey - (frameNmbVis-1);
@@ -1647,10 +1656,7 @@ void FILE_NAME(setTouch)(void)
 			break;
 
 		case Touch_FontSize:		/* When 'Touch_FontSizeMove' was cleared then not service for release 'Touch_FontSize' */
-
 			if(!CHECK_TOUCH(Touch_FontSizeMove) && !_WasState(Touch_FontSizeMove)){
-
-
 				ChangeFontBoldItalNorm(NONE_TYPE_REQ);
 				if(CHECK_TOUCH(Touch_FontSize2))
 					KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one );
@@ -1680,7 +1686,7 @@ void FILE_NAME(setTouch)(void)
 		case Touch_type2:	ReplaceLcdStrType(1);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one ); _SaveState(); break;
 		case Touch_type3:	ReplaceLcdStrType(2);  KEYBOARD_TYPE( KEYBOARD_fontType, KEY_Select_one ); _SaveState(); break;
 
-		case Touch_size_plus: 	_KEYS_RELEASE_fontSize;	IncFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_plus ); _SaveState();  break;
+		case Touch_size_plus: 	_KEYS_RELEASE_fontSize;	IncFontSize(NONE_TYPE_REQ);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_plus ); _SaveState();  break;
 		case Touch_size_minus:	_KEYS_RELEASE_fontSize; DecFontSize();  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_minus ); _SaveState();  break;
 		case Touch_size_norm: 	ChangeFontBoldItalNorm(0);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
 		case Touch_size_bold: 	ChangeFontBoldItalNorm(1);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
@@ -1746,8 +1752,10 @@ void FILE_NAME(setTouch)(void)
 #endif
 
 			if(_WasState(Touch_FontSizeRoll)){
-				if(LCD_TOUCH_ScrollSel_Service(7,release, NULL))
+				if(LCD_TOUCH_ScrollSel_Service(7,release, NULL)){
 					KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
+					IncFontSize( LCD_TOUCH_ScrollSel_GetSel(7) );
+				}
 			}
 
 			if(_WasState(Touch_FontSizeMove)){
@@ -1791,7 +1799,7 @@ void FILE_NAME(debugRcvStr)(void)
 		DecCoeefRGB();
 
 	else if(DEBUG_RcvStr("g"))
-		IncFontSize();
+		IncFontSize(NONE_TYPE_REQ);
 	else if(DEBUG_RcvStr("b"))
 		DecFontSize();
 
