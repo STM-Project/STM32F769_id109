@@ -625,7 +625,7 @@ static void DecCoeefRGB(void){
 }
 
 static int ChangeTxt(void){ //wprowadzanie z klawiatury textu !!!!!!
-	//return CopyCharsTab(Test.txt,Test.lenWin,Test.offsWin,Test.size);
+	return CopyCharsTab(Test.txt,Test.lenWin,Test.offsWin,Test.size);
 
 	const char *pChar;
 	int i, j, lenChars;
@@ -1063,7 +1063,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	}
 	void _StrLeft(const char *txt, XY_Touch_Struct pos, uint32_t color){
 		LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(pos.y,s[k].heightKey));
-		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x,GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr, pos.x+3,GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
 	}
 	void _StrDescr(XY_Touch_Struct pos, const char *txt, uint32_t color){
 		LCD_Xmiddle(MIDDLE_NR+1,SetPos,SetPosAndWidth(pos.x,widthAll),NULL,0,NoConstWidth);
@@ -1074,7 +1074,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	}
 	void _StrPressLeft(const char *txt, XY_Touch_Struct pos, uint32_t color){
 		LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(pos.y,s[k].heightKey));
-		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x,GET_Y,(char*)txt, fullHight, 0, fillPressColor, color,250, NoConstWidth);
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr, pos.x+3,GET_Y,(char*)txt, fullHight, 0, fillPressColor, color,250, NoConstWidth);
 	}
 	void _StrDisp(const char *txt, uint32_t color){
 		LCD_StrDependOnColorsWindowIndirect(0, s[k].x, s[k].y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
@@ -1466,8 +1466,15 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		COLORS_DEFINITION colorTxtPressKey = DARKRED;
 		XY_Touch_Struct posKey[dimKeys[1]];
 
+		if(shape!=0){
+			if(KeysAutoSize == widthKey){
+				s[k].widthKey =  heightKey + LCD_GetWholeStrPxlWidth(fontID_descr,(char*)LCD_GetFontSizeStr(50),0,NoConstWidth) + heightKey;		/*	space + text + space */
+				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID_descr) + heightKey;
+			}
+		}
+
 		int frameNmbVis = 10;
-		uint16_t roll = 0;
+		uint16_t roll = 0, roll_copy = 0;
 		uint16_t selFrame = Test.size;
 
 		int countKey = dimKeys[1];
@@ -1475,10 +1482,13 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		uint16_t offsX = 0;//(s[k].interSpace + s[k].widthKey + s[k].interSpace) + (s[k].widthKey + s[k].interSpace) + s[k].interSpace;
 
 		if(shape!=0){
-			if(dimKeys[1]-selFrame <= frameNmbVis/2)	roll = dimKeys[1]-frameNmbVis;
+			if(dimKeys[1]-selFrame <= frameNmbVis/2)	roll = dimKeys[1]-frameNmbVis-1;
 			else if(		  selFrame <= frameNmbVis/2)	roll = 0;
 			else													roll = selFrame - frameNmbVis/2;
+
+			roll_copy = roll;
 			roll *= s[k].heightKey;
+			roll -= roll_copy;
 			LCD_TOUCH_ScrollSel_SetCalculate(7, &roll, &selFrame, 0,0,0,0);
 		}
 
@@ -1505,7 +1515,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					LCD_TOUCH_ScrollSel_SetCalculate(7, &roll, &selFrame, s[k].y, heightAll, s[k].heightKey, win);
 
 				for(int i=0; i<countKey; ++i)
-				{
+				{  //Naprzemienne wyszarzanie lub kolo czcionki !!!
 					if(i == selFrame)
 						_KeyStrPressLeft(posKey[i],txtKey[i],colorTxtPressKey);		/* _KeyStrPress(posKey[i],txtKey[i],colorTxtPressKey); */
 					else
@@ -1656,7 +1666,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontSizeMove, FontSize,Press, TXT_FONT_SIZE,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_fontSize2, KEY_Select_one, LCD_LittleRoundRectangle,0, 610,30, 160,40, 0, state, Touch_FontSizeRoll,KeysDel);
+				KeyboardTypeDisplay(KEYBOARD_fontSize2, KEY_Select_one, LCD_LittleRoundRectangle,0, 610,30, KeysAutoSize,3, 0, state, Touch_FontSizeRoll,KeysDel);
 			else
 				_SaveState();
 			break;
@@ -1716,7 +1726,7 @@ void FILE_NAME(setTouch)(void)
 
 			uint8_t fff=1;
 			if(GetTouchToTemp(Touch_FontSizeRoll)){
-				if( pos.x > touchTemp[0].x + 2*(touchTemp[1].x - touchTemp[0].x)/3 ) fff=5; else fff=1;
+				if( pos.x > touchTemp[0].x + 3*(touchTemp[1].x - touchTemp[0].x)/4 ) fff=5; else fff=1;
 			}
 
 			if(LCD_TOUCH_ScrollSel_Service(7,press, &pos.y, fff))  //magic nmb 7 !!!!
