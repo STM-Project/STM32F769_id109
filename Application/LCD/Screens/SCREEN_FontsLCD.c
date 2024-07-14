@@ -1458,8 +1458,13 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		int win = frameNmbVis * s[k].heightKey - (frameNmbVis-1);
 		uint16_t offsX = 0;//(s[k].interSpace + s[k].widthKey + s[k].interSpace) + (s[k].widthKey + s[k].interSpace) + s[k].interSpace;
 
-		if(shape!=0)
+		if(shape!=0){
+			if(dimKeys[1]-selFrame <= frameNmbVis/2)	roll = dimKeys[1]-frameNmbVis;
+			else if(		  selFrame <= frameNmbVis/2)	roll = 0;
+			else													roll = selFrame - frameNmbVis/2;
+			roll *= s[k].heightKey;
 			LCD_TOUCH_ScrollSel_SetCalculate(7, &roll, &selFrame, 0,0,0,0);
+		}
 
 		for(int i=0; i<countKey; ++i)
 		{
