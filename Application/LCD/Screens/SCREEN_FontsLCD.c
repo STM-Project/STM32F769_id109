@@ -1061,12 +1061,18 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	void _Str(const char *txt, uint32_t color){
 		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
 	}
+	void _StrLeft(const char *txt, XY_Touch_Struct pos, uint32_t color){
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x,pos.y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+	}
 	void _StrDescr(XY_Touch_Struct pos, const char *txt, uint32_t color){
 		LCD_Xmiddle(MIDDLE_NR+1,SetPos,SetPosAndWidth(pos.x,widthAll),NULL,0,NoConstWidth);
 		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		LCD_Xmiddle(MIDDLE_NR+1,GetPos,fontID_descr,(char*)txt,0,NoConstWidth),		s[k].interSpace,		(char*)txt, fullHight, 0, bkColor, color,250, NoConstWidth);
 	}
 	void _StrPress(const char *txt, uint32_t color){
 		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, color,250, NoConstWidth);
+	}
+	void _StrPressLeft(const char *txt, XY_Touch_Struct pos, uint32_t color){
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x,pos.y,(char*)txt, fullHight, 0, fillPressColor, color,250, NoConstWidth);
 	}
 	void _StrDisp(const char *txt, uint32_t color){
 		LCD_StrDependOnColorsWindowIndirect(0, s[k].x, s[k].y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
@@ -1086,6 +1092,10 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		_TxtPos(pos);
 		_Str(txt,color);
 	}
+	void _KeyStrleft(XY_Touch_Struct pos,const char *txt, uint32_t color){
+		_Key(pos);
+		_StrLeft(txt,pos,color);
+	}
 	void _KeyStrDisp(XY_Touch_Struct pos,const char *txt, uint32_t color){
 		_Key(pos);
 		_TxtPos(pos);
@@ -1098,6 +1108,10 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		_KeyPress(pos);
 		_TxtPos(pos);
 		_StrPress(txt,colorTxt);
+	}
+	void _KeyStrPressLeft(XY_Touch_Struct pos, const char *txt, uint32_t colorTxt){
+		_KeyPress(pos);
+		_StrPressLeft(txt,pos,colorTxt);
 	}
 	void _KeyStrPressDisp(XY_Touch_Struct pos, const char *txt, uint32_t colorTxt){
 		_KeyPress(pos);
@@ -1491,10 +1505,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				for(int i=0; i<countKey; ++i)
 				{
 					if(i == selFrame)
-						_KeyStrPress(posKey[i],txtKey[i],colorTxtPressKey);
+						_KeyStrPressLeft(posKey[i],txtKey[i],colorTxtPressKey);		/* _KeyStrPress(posKey[i],txtKey[i],colorTxtPressKey); */
 					else
-						_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
-
+						_KeyStrleft(posKey[i],txtKey[i],colorTxtKey[i]);		/*	_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]); */
 				}
 				LCD_Display(0 + roll * widthAll, s[k].x + offsX, s[k].y, widthAll, win);
 				break;
