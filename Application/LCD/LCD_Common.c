@@ -98,3 +98,21 @@ void CorrectPosIfOutRange(int16_t *pos)
 	else if(*pos>LCD_GetXSize())
 		*pos=LCD_GetXSize();
 }
+
+int BrightDecr(int color, int val)
+{
+	uint8_t _R = R_PART(color);
+	uint8_t _G = G_PART(color);
+	uint8_t _B = B_PART(color);
+
+	return RGB2INT(DECR(_R,val,0), DECR(_G,val,0), DECR(_B,val,0));
+}
+
+int BrightIncr(int color, int val)
+{
+	uint8_t _R = R_PART(color);
+	uint8_t _G = G_PART(color);
+	uint8_t _B = B_PART(color);
+
+	return RGB2INT(INCR(_R,val,255), INCR(_G,val,255), INCR(_B,val,255));
+}
