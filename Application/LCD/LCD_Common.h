@@ -57,7 +57,7 @@ typedef enum{  //DO USUNIECIA
 #define SHAPE_PARAM_BOLD(frame,fill,bk,bold) 		((v.COLOR_##frame&0xFFFFFF)|(bold)<<24), v.COLOR_##fill, v.COLOR_##bk
 
 #define COLOR_GRAY(v)	((v<<16|v<<8|v)|0xFF000000)
-#define RGB2INT(R,G,B)	((R<<16|G<<8|B)|0xFF000000)
+#define RGB2INT(R,G,B)	(((R)<<16|(G)<<8|(B))|0xFF000000)
 #define R_PART(rgb)		((rgb>>16)&0x000000FF)
 #define G_PART(rgb)		((rgb>>8)&0x000000FF)
 #define B_PART(rgb)		 (rgb&0x000000FF)
@@ -95,5 +95,8 @@ uint32_t GetTransitionColor(uint32_t colorFrom, uint32_t colorTo, float transCoe
 float GetTransitionCoeff(uint32_t colorFrom, uint32_t colorTo, uint32_t colorTrans);
 
 void CorrectPosIfOutRange(int16_t *pos);
+
+int BrightDecr(int color, int val);
+int BrightIncr(int color, int val);
 
 #endif /* LCD_LCD_COMMON_H_ */
