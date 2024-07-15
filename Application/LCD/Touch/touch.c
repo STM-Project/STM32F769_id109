@@ -600,7 +600,7 @@ uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time){
 	return time/SERVICE_TOUCH_PROB_TIME_MS;
 }
 
-int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y, uint8_t param)
+int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y, uint8_t rollRateCoeff)
 {
 	static struct SCROLL_SEL{
 		uint16_t posY;
@@ -620,7 +620,7 @@ int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y, u
 			roll[nr].posY = *y;
 			roll[nr].prevY[ (roll[nr].itx < SCROLL_SEL__NUMBER_PROBE2SEL-1) ? roll[nr].itx++ : roll[nr].itx ] = *y;
 			roll[nr].countTouchProbe2Sel++;
-			return roll[nr].delta *= param;
+			return roll[nr].delta *= rollRateCoeff;
 
 		case release:
 			roll[nr].stateTouch = pressRelease;
