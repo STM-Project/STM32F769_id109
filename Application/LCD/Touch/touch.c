@@ -600,7 +600,7 @@ uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time){
 	return time/SERVICE_TOUCH_PROB_TIME_MS;
 }
 
-int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y, uint8_t rollRateCoeff)
+int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, int *y, uint8_t rollRateCoeff)
 {
 	static struct SCROLL_SEL{
 		uint16_t posY;
@@ -614,76 +614,75 @@ int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y, u
 
 	switch(pressRelease)
 	{
+	case press:
+		roll[nr].stateTouch = pressRelease;
+		if( (roll[nr].posY > 0) && (roll[nr].countTouchProbe2Sel >= SCROLL_SEL__NUMBER_PROBE2SEL) )
+		{
+			roll[nr].delta = (int)roll[nr].posY - (int)(*y);
+			if(ABS(roll[nr].delta) > SCROLL_SEL__SEL_SPREAD)
+				roll[nr].selPoint = 1;
+		}
+		else roll[nr].selPoint = 0;
 
+		roll[nr].posY = *y;
+		roll[nr].prevY[ (roll[nr].itx < SCROLL_SEL__NUMBER_PROBE2SEL-1) ? roll[nr].itx++ : roll[nr].itx ] = *y;
+		roll[nr].countTouchProbe2Sel++;
 
+		roll[nr].delta *= rollRateCoeff;
+		return roll[nr].delta;
 
+	case release:
+		roll[nr].stateTouch = pressRelease;
+		roll[nr].posY = 0;
+		*y = roll[nr].delta;
+		roll[nr].delta = 0;
+		roll[nr].itx = 0;
+		roll[nr].countTouchProbe2Sel=0;
 
-//	case press:
-//		roll[nr].stateTouch = pressRelease;
-//		if( (roll[nr].posY > 0) && (roll[nr].countTouchProbe2Sel >= 5) )
-//		{
-//			roll[nr].delta = (int)roll[nr].posY - (int)(*y);
-//			if(roll[nr].delta > SCROLL_SEL__SEL_SPREAD+1)
-//				roll[nr].selPoint = 1;
-//		}
-//		else roll[nr].selPoint = 0;
-//
-//		roll[nr].countTouchProbe2Sel++;
-//
-//		roll[nr].posY = *y;
-//		roll[nr].delta *= rollRateCoeff;
-//		return roll[nr].delta;
-//
-//	case release:
-//		roll[nr].stateTouch = pressRelease;
-//		roll[nr].posY = 0;
-//		roll[nr].delta = 0;
-//		roll[nr].countTouchProbe2Sel=0;
-//
-//		if(roll[nr].selPoint==0){
-//			return roll[nr].posY;
-//		}
-//		else{
-//			return 0;
-//		}
+		if(roll[nr].selPoint==0){
+			return roll[nr].prevY[0];
+		}
+		else{
+			return 0;
+		}
 
 
 		//--------------------------------------------------
-
-		case press:
-			roll[nr].stateTouch = pressRelease;
-			if( (roll[nr].posY > 0) && (roll[nr].countTouchProbe2Sel >= SCROLL_SEL__NUMBER_PROBE2SEL) )
-				roll[nr].delta = (int)roll[nr].posY - (int)(*y);
-			roll[nr].posY = *y;
-			roll[nr].prevY[ (roll[nr].itx < SCROLL_SEL__NUMBER_PROBE2SEL-1) ? roll[nr].itx++ : roll[nr].itx ] = *y;
-			roll[nr].countTouchProbe2Sel++;
-			return roll[nr].delta *= rollRateCoeff;
-
-		case release:
-			roll[nr].stateTouch = pressRelease;
-			roll[nr].posY = 0;
-			roll[nr].delta = 0;
-
-			if(roll[nr].countTouchProbe2Sel < SCROLL_SEL__NUMBER_PROBE2SEL)
-			{
-				roll[nr].countTouchProbe2Sel = 0;
-
-				for(int i=0; i<roll[nr].itx; ++i){
-					for(int j=0; j<roll[nr].itx; ++j)
-					{
-						if( ABS(roll[nr].prevY[i] - roll[nr].prevY[j]) > SCROLL_SEL__SEL_SPREAD ){
-							roll[nr].itx = 0;
-							return 0;
-						}
-				}}
-				roll[nr].itx = 0;
-				return roll[nr].prevY[0];
-			}
-			else{
-				roll[nr].countTouchProbe2Sel = 0;
-				roll[nr].itx = 0;
-				return 0;
-			}
+//
+//		case press:
+//			roll[nr].stateTouch = pressRelease;
+//			if( (roll[nr].posY > 0) && (roll[nr].countTouchProbe2Sel >= SCROLL_SEL__NUMBER_PROBE2SEL) )
+//				roll[nr].delta = (int)roll[nr].posY - (int)(*y);
+//			roll[nr].posY = *y;
+//			roll[nr].prevY[ (roll[nr].itx < SCROLL_SEL__NUMBER_PROBE2SEL-1) ? roll[nr].itx++ : roll[nr].itx ] = *y;
+//			roll[nr].countTouchProbe2Sel++;
+//			return roll[nr].delta *= rollRateCoeff;
+//
+//		case release:
+//			roll[nr].stateTouch = pressRelease;
+//			roll[nr].posY = 0;
+//			roll[nr].delta = 0;
+//
+//			if(roll[nr].countTouchProbe2Sel < SCROLL_SEL__NUMBER_PROBE2SEL)
+//			{
+//				roll[nr].countTouchProbe2Sel = 0;
+//
+//				for(int i=0; i<roll[nr].itx; ++i){
+//					for(int j=0; j<roll[nr].itx; ++j)
+//					{
+//						if( ABS(roll[nr].prevY[i] - roll[nr].prevY[j]) > SCROLL_SEL__SEL_SPREAD ){
+//							roll[nr].itx = 0;
+//							return 0;
+//						}
+//				}}
+//				roll[nr].itx = 0;
+//				return roll[nr].prevY[0];
+//			}
+//			else{
+//				roll[nr].countTouchProbe2Sel = 0;
+//				roll[nr].itx = 0;
+//				return 0;
+//			}
 
 		//--------------------------------------------------
 
