@@ -15,6 +15,9 @@
 #include "TouchLcdTask.h"
 #include "stmpe811.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 /*----------------- Main Settings ------------------*/
 #define FILE_NAME(extend) SCREEN_Fonts_##extend
 
@@ -1340,9 +1343,13 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,	  	WHITE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,		BLACK};
 		const uint16_t dimKeys[] = {1,2};
+
+		XY_Touch_Struct posHead={0,0};
+		int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
+
 		XY_Touch_Struct posKey[]=
-		  {{1*s[k].interSpace + 0*s[k].widthKey,	1*s[k].interSpace + 0*s[k].heightKey},
-			{1*s[k].interSpace + 0*s[k].widthKey,	2*s[k].interSpace + 1*s[k].heightKey}};
+		  {{1*s[k].interSpace + 0*s[k].widthKey,	1*s[k].interSpace + 0*s[k].heightKey + head},
+			{1*s[k].interSpace + 0*s[k].widthKey,	2*s[k].interSpace + 1*s[k].heightKey + head}};
 
 		const char *txtKey2[]								= {"Normal", "Bold", "Italic"};
 		const COLORS_DEFINITION colorTxtKey2[]			= {WHITE,	  WHITE,  WHITE};
@@ -1350,20 +1357,21 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		const uint16_t dimKeys2[] = {1,3};
 		int ofs=s[k].interSpace + s[k].widthKey;
 		XY_Touch_Struct posKey2[]=
-		  {{s[k].interSpace+ofs, 1*s[k].interSpace + 0*s[k].heightKey - 0},
-			{s[k].interSpace+ofs, 1*s[k].interSpace + 1*s[k].heightKey - 1},
-			{s[k].interSpace+ofs, 1*s[k].interSpace + 2*s[k].heightKey - 2}};
+		  {{s[k].interSpace+ofs, 1*s[k].interSpace + 0*s[k].heightKey - 0 + head},
+			{s[k].interSpace+ofs, 1*s[k].interSpace + 1*s[k].heightKey - 1 + head},
+			{s[k].interSpace+ofs, 1*s[k].interSpace + 2*s[k].heightKey - 2 + head}};
 
 		int countKey = dimKeys[0]*dimKeys[1];
 		int countKey2 = dimKeys2[0]*dimKeys2[1];
 
 		widthAll =  (s[k].interSpace + s[k].widthKey + s[k].interSpace) + (s[k].widthKey + s[k].interSpace);
-		heightAll = s[k].interSpace + dimKeys2[1]*s[k].heightKey + s[k].interSpace - (countKey2-1);
+		heightAll = s[k].interSpace + dimKeys2[1]*s[k].heightKey + s[k].interSpace - (countKey2-1) + head;
 
 		switch((int)selBlockPress)
 		{
 			case KEY_All_release_and_select_one:
 				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
+				_StrDescr(posHead, SL(LANG_nazwa_0), v.FONT_COLOR_Descr);
 
 				for(int i=0; i<countKey; ++i)
 					_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
@@ -1460,13 +1468,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		}
 	}
 */
-	void _ServiceSizeRoll(void)  //Zrobic strzalki i press je powoduje automatyczne w dol albo w gore !!!!!
+	void _ServiceSizeRoll(void)
 	{
 		const uint16_t dimKeys[] = {1,LCD_GetFontSizeMaxNmb()};
 		const char *txtKey[dimKeys[1]];
 		COLORS_DEFINITION colorTxtKey[dimKeys[1]];
 		COLORS_DEFINITION colorTxtPressKey = DARKRED;
 		XY_Touch_Struct posKey[dimKeys[1]];
+		XY_Touch_Struct posHead={0,0};
 
 		if(shape!=0){
 			if(KeysAutoSize == widthKey){
@@ -1475,7 +1484,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			}
 		}
 
-		int frameNmbVis = 9;
+		int frameNmbVis = 7;
 		uint16_t roll = 0, roll_copy = 0;
 		uint16_t selFrame = Test.size;
 
@@ -1491,7 +1500,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			roll_copy = roll;
 			roll *= s[k].heightKey;
 			roll -= roll_copy;
-			LCD_TOUCH_ScrollSel_SetCalculate(ROLL_1, &roll, &selFrame, 0,0,0,0);
+			LCD_TOUCH_ScrollSel_SetCalculate(ROLL_1, &roll, &selFrame, 0,0,0,countKey/frameNmbVis);
 		}
 
 		for(int i=0; i<countKey; ++i)
@@ -1510,7 +1519,13 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		switch((int)selBlockPress)
 		{
 			case KEY_Select_one:
-					LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
+				if(shape!=0){
+					widthAll += 20;	heightAll += 20;
+					 	LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
+					 	_StrDescr(posHead, SL(LANG_nazwa_0), v.FONT_COLOR_Descr);
+					 	LCD_Display(0, s[k].x-10, s[k].y-10, widthAll, heightAll);
+					widthAll -= 20;	heightAll -= 20;
+				}
 
 				if(shape==0)
 					LCD_TOUCH_ScrollSel_SetCalculate(ROLL_1, &roll, &selFrame, s[k].y, heightAll, s[k].heightKey, win);
@@ -1638,6 +1653,8 @@ void FILE_NAME(setTouch)(void)
 		return 0;
 	}
 
+	int deltaForEndPress=0;
+
 	state = LCD_TOUCH_GetTypeAndPosition(&pos);
 	switch(state)
 	{
@@ -1669,7 +1686,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontSizeMove, FontSize,Press, TXT_FONT_SIZE,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_fontSize2, KEY_Select_one, LCD_Rectangle,0, 610,30, KeysAutoSize,10, 0, state, Touch_FontSizeRoll,KeysDel);
+				KeyboardTypeDisplay(KEYBOARD_fontSize2, KEY_Select_one, LCD_Rectangle,0, 610,50, KeysAutoSize,10, 0, state, Touch_FontSizeRoll,KeysDel);
 			else
 				_SaveState();
 			break;
@@ -1726,7 +1743,8 @@ void FILE_NAME(setTouch)(void)
 		case Touch_size_italic: ChangeFontBoldItalNorm(2);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
 
 		case Touch_FontSizeRoll:
-			if(LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &pos.y,	  (GetTouchToTemp(state) && IS_RANGE(pos.x, touchTemp[0].x+3*(touchTemp[1].x-touchTemp[0].x)/4, touchTemp[1].x)) ? 5:1   ))  //5 jako zmienna z 51/frameNmbVis
+			deltaForEndPress = LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &pos.y,	  (GetTouchToTemp(state) && IS_RANGE(pos.x, touchTemp[0].x+3*(touchTemp[1].x-touchTemp[0].x)/4, touchTemp[1].x)) ? LCD_TOUCH_ScrollSel_GetRateCoeff(ROLL_1) : 1   );
+			if(deltaForEndPress)
 				KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 			_SaveState();
 			break;
@@ -1785,6 +1803,9 @@ void FILE_NAME(setTouch)(void)
 #endif
 
 			if(_WasState(Touch_FontSizeRoll)){
+				if(deltaForEndPress){
+					DbgVar(DEBUG_ON,100,Red_"TEST ### -- %d -- ###"_X,deltaForEndPress);
+				}
 				if(LCD_TOUCH_ScrollSel_Service(ROLL_1,release, NULL,0)){
 					KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 					IncFontSize( LCD_TOUCH_ScrollSel_GetSel(ROLL_1) );
@@ -1792,7 +1813,7 @@ void FILE_NAME(setTouch)(void)
 			}
 
 			if(_WasState(Touch_FontSizeMove)){
-				asm("nop");
+				;
 			}
 			break;
 	}
@@ -1901,7 +1922,11 @@ void FILE_NAME(debugRcvStr)(void)
 	}
 	else if(DEBUG_RcvStr("7"))
 	{
-
+		for(uint16_t i=0;i<200; ++i){
+			if(LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &i,1))
+				KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
+			vTaskDelay(10);
+		}
 	}
 
 
@@ -2244,15 +2269,11 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
-	FRAMES_GROUP_combined(argNmb,20,10,20,25,1);
-	//FRAMES_GROUP_separat(argNmb,20,20,30,30,0|(6<<8));
+	//FRAMES_GROUP_combined(argNmb,20,10,20,25,1);
+	FRAMES_GROUP_separat(argNmb,20,20,30,30,0|(6<<8));
 
 
 
-
-
-#undef _Element
-#undef _LineH
 
 
 
