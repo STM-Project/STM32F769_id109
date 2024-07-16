@@ -609,10 +609,47 @@ int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y, u
 		int delta;
 		uint8_t stateTouch;
 		uint8_t itx;
+		uint8_t selPoint;
 	}roll[SCROLL_SEL__MAX_NUMBER]={0};
 
 	switch(pressRelease)
 	{
+
+
+
+
+//	case press:
+//		roll[nr].stateTouch = pressRelease;
+//		if( (roll[nr].posY > 0) && (roll[nr].countTouchProbe2Sel >= 5) )
+//		{
+//			roll[nr].delta = (int)roll[nr].posY - (int)(*y);
+//			if(roll[nr].delta > SCROLL_SEL__SEL_SPREAD+1)
+//				roll[nr].selPoint = 1;
+//		}
+//		else roll[nr].selPoint = 0;
+//
+//		roll[nr].countTouchProbe2Sel++;
+//
+//		roll[nr].posY = *y;
+//		roll[nr].delta *= rollRateCoeff;
+//		return roll[nr].delta;
+//
+//	case release:
+//		roll[nr].stateTouch = pressRelease;
+//		roll[nr].posY = 0;
+//		roll[nr].delta = 0;
+//		roll[nr].countTouchProbe2Sel=0;
+//
+//		if(roll[nr].selPoint==0){
+//			return roll[nr].posY;
+//		}
+//		else{
+//			return 0;
+//		}
+
+
+		//--------------------------------------------------
+
 		case press:
 			roll[nr].stateTouch = pressRelease;
 			if( (roll[nr].posY > 0) && (roll[nr].countTouchProbe2Sel >= SCROLL_SEL__NUMBER_PROBE2SEL) )
@@ -648,6 +685,8 @@ int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y, u
 				return 0;
 			}
 
+		//--------------------------------------------------
+
 		case checkPress:
 			*y = roll[nr].stateTouch;
 			switch(roll[nr].stateTouch){
@@ -664,24 +703,28 @@ int LCD_TOUCH_ScrollSel_SetCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *se
 	static struct SCROLL_SEL{
 		uint16_t offsWin;
 		uint16_t selWin;
+		uint16_t rateCoeff;
 	}roll[SCROLL_SEL__MAX_NUMBER]={0};
 
-	if(NULL == offsWin)
-		return roll[nr].selWin;
+	if(NULL == offsWin && NULL == selWin){
+		if(WinposY)	return roll[nr].rateCoeff;
+		else			return roll[nr].selWin;
+	}
 
-	uint16_t statePress;
-	int val = LCD_TOUCH_ScrollSel_Service(nr,checkPress, &statePress,0);
+	if(0==WinposY && 0==heightAll && 0==heightKey){
+		roll[nr].offsWin = *offsWin;
+		roll[nr].selWin = *selWin;
+		roll[nr].rateCoeff = heightWin;			/*	'heightWin' as param RateCoeff to write setup */
+		return 1;
+	}
 
 	void _refreshWin(void){
 		*offsWin = roll[nr].offsWin;
 		*selWin = roll[nr].selWin;
 	}
 
-	if(0==WinposY){
-		roll[nr].offsWin = *offsWin;
-		roll[nr].selWin = *selWin;
-		return 1;
-	}
+	uint16_t statePress;
+	int val = LCD_TOUCH_ScrollSel_Service(nr,checkPress, &statePress,0);
 
 	switch(statePress)
 	{
@@ -710,5 +753,8 @@ int LCD_TOUCH_ScrollSel_SetCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *se
 
 int LCD_TOUCH_ScrollSel_GetSel(uint8_t nr){
 	return LCD_TOUCH_ScrollSel_SetCalculate(nr, NULL, NULL, 0,0,0,0);
+}
+int LCD_TOUCH_ScrollSel_GetRateCoeff(uint8_t nr){
+	return LCD_TOUCH_ScrollSel_SetCalculate(nr, NULL, NULL, 1,0,0,0);
 }
 
