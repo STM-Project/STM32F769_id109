@@ -220,6 +220,48 @@ if(0==argNmb)
 	 	SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT,AnyPressWithWait,TOUCH_GET_PER_X_PROBE);  //W DEBUG FPNTS WPISZ JESZCZE JAKI LCD_STR !!!!!
 }
 
+//---------------------------------------
+
+static char *readBuffer = NULL;
+
+readBuffer = pvPortMalloc(BUFFER_SIZE);
+
+		vPortFree(readBuffer);
+		readBuffer = NULL;
+		readBuffer = pvPortMalloc(BUFFER_SIZE);
+
+//-------------------------Przekazywanioe funkcji jako argument innej funkcji--------------------
+#define _FUNC(func,a,b)	func,a,b
+
+typedef int MESSAGE_FUNCTION(int, int);
+
+int Plus(int a, int b)
+{
+	return a+b;
+}
+int Minus(int a, int b)
+{
+	return a-b;
+}
+
+int LCD_TOUCH_ScrollSel_FreeRolling(uint8_t nr, MESSAGE_FUNCTION *x1,int a1,int b1, MESSAGE_FUNCTION *x2,int a2,int b2)
+{
+	int wynik[2];
+
+	wynik[0] = (int)x1(a1,b1);
+	wynik[1] = (int)x2(a2,b2);
+
+	if(wynik[0]==300)
+		return 0;
+	if(wynik[1]==556)
+		return 1;
+
+   return -1;
+}
+
+LCD_TOUCH_ScrollSel_FreeRolling(1,_FUNC(Plus,1,2), _FUNC(Minus,5,1));
+
+
 
 
 #endif
