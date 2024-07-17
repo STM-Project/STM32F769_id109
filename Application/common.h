@@ -51,6 +51,10 @@
 
 #define MAXVAL(ptr,nmb,minVal,maxValCalc)		for(int i=0,j=(minVal); i<(nmb); (ptr[i]>j ? j=ptr[i] : 0), (maxValCalc)=j, ++i);
 
+#define FUNC1_SET(func,a,b,c,d,e,f,g,h,i,j,k,l)		func,a,b,c,d,e,f,g,h,i,j,k,l
+#define FUNC1_DEF(pfunc)		FUNC_Keyboard *pfunc,uint8_t a,uint8_t b,figureShape c,uint8_t d,uint16_t e,uint16_t f,uint16_t g,uint16_t h,uint8_t i,uint16_t j,uint16_t k,uint8_t l
+#define FUNC1_ARG		a,b,c,d,e,f,g,h,i,j,k,l
+
 #define SDRAM __attribute__ ((section(".sdram")))
 
 #define LCD_BUFF_XSIZE		800
@@ -65,5 +69,8 @@ typedef struct{
 	int x;
 	int y;
 }structPosition;
+
+typedef void(*figureShape)(uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t);
+typedef int FUNC_Keyboard(uint8_t,uint8_t,figureShape,uint8_t,uint16_t,uint16_t,uint16_t,uint16_t,uint8_t,uint16_t,uint16_t,uint8_t);
 
 #endif /* COMMON_H_ */
