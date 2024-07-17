@@ -32,8 +32,6 @@ enum CircleParam{
 extern uint32_t LCD_GetXSize(void);
 extern uint32_t LCD_GetYSize(void);
 
-typedef void(*figureShape)(uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t);
-
 void CorrectLineAA_on(void);
 void CorrectLineAA_off(void);
 void Set_AACoeff_RoundFrameRectangle(float outCoeff, float inCoeff);
