@@ -1748,7 +1748,7 @@ void FILE_NAME(setTouch)(void)
 		case Touch_size_italic: ChangeFontBoldItalNorm(2);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
 
 		case Touch_FontSizeRoll:
-			deltaForEndPress = LCD_TOUCH_ScrollSel_Service(ROLL_1,press, (int*)&pos.y,	  (GetTouchToTemp(state) && IS_RANGE(pos.x, touchTemp[0].x+3*(touchTemp[1].x-touchTemp[0].x)/4, touchTemp[1].x)) ? LCD_TOUCH_ScrollSel_GetRateCoeff(ROLL_1) : 1   );
+			deltaForEndPress = LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &pos.y,	  (GetTouchToTemp(state) && IS_RANGE(pos.x, touchTemp[0].x+3*(touchTemp[1].x-touchTemp[0].x)/4, touchTemp[1].x)) ? LCD_TOUCH_ScrollSel_GetRateCoeff(ROLL_1) : 1   );
 			if(deltaForEndPress)
 				KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 			_SaveState();
@@ -1809,66 +1809,69 @@ void FILE_NAME(setTouch)(void)
 
 			if(_WasState(Touch_FontSizeRoll)){
 
-				int rrr = 0;
-				if(LCD_TOUCH_ScrollSel_Service(ROLL_1,release, &rrr,0)){
+				//int rrr = 0;
+				if(LCD_TOUCH_ScrollSel_Service(ROLL_1,release,NULL,0)){
 					KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 					IncFontSize( LCD_TOUCH_ScrollSel_GetSel(ROLL_1) );
 				}
 				else{
-					if(rrr!=0){
-						DbgVar(DEBUG_ON,100,BkR_"\r\nTEST ### -- %d -- ###"_X,rrr);
 
-int eee=0;  int res=40;  //roznica delta nie moze przekroczyc heightAll !!!!!
-						if(rrr>0)
-						{
-							rrr = ABS(rrr)*150;
-							int j=rrr;
-							while(1)
-							{
-								if(LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &j,1))
-									KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
-
-								if(press==LCD_TOUCH_isPress())
-									break;
-
-								eee+=2;  if(res) res+=(40+eee);
-
-								if(rrr/res > 0)
-								{
-									if(j > rrr/res)
-										j -= rrr/res;
-									else
-										break;
-								}
-								else
-									break;
-							}
-						}
-						else
-						{
-							rrr = ABS(rrr)*150;
-							int j=1;
-							while(1)
-							{
-								if(LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &j,1))
-									KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
-
-								if(press==LCD_TOUCH_isPress())
-									break;
-
-								eee+=2;  if(res) res+=(40+eee);
-
-								if(rrr/res > 0)
-								{
-									if(j < rrr - rrr/res)
-											j += rrr/res;
-									else
-										break;
-								}
-								else
-									break;
-							}
-						}
+					//LCD_TOUCH_ScrollSel_FreeRolling(ROLL_1, FUNC1_SET(KeyboardTypeDisplay,KEYBOARD_fontSize2,KEY_Select_one,0,0,0,0,0,0,0,0,0,0) );
+				}
+//					if(rrr!=0){
+//						DbgVar(DEBUG_ON,100,BkR_"\r\nTEST ### -- %d -- ###"_X,rrr);
+//
+//int eee=0;  int res=40;  //wartosc  rrr/res  nie moze przekroczyc heightAll !!!!!
+//						if(rrr>0)
+//						{
+//							rrr = ABS(rrr)*150;   //150 = heightAll/16
+//							int j=rrr;
+//							while(1)
+//							{
+//								if(LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &j,1))
+//									KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
+//
+//								if(press==LCD_TOUCH_isPress())
+//									break;
+//
+//								eee+=2;  if(res) res+=(40+eee);   //40 = heightAll/50
+//
+//								if(rrr/res > 0)
+//								{
+//									if(j > rrr/res)
+//										j -= rrr/res;
+//									else
+//										break;
+//								}
+//								else
+//									break;
+//							}
+//						}
+//						else
+//						{
+//							rrr = ABS(rrr)*150;
+//							int j=1;
+//							while(1)
+//							{
+//								if(LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &j,1))
+//									KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
+//
+//								if(press==LCD_TOUCH_isPress())
+//									break;
+//
+//								eee+=2;  if(res) res+=(40+eee);
+//
+//								if(rrr/res > 0)
+//								{
+//									if(j < rrr - rrr/res)
+//											j += rrr/res;
+//									else
+//										break;
+//								}
+//								else
+//									break;
+//							}
+//						}
 
 
 
@@ -1882,15 +1885,13 @@ int eee=0;  int res=40;  //roznica delta nie moze przekroczyc heightAll !!!!!
 //							if(LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &j,1))
 //								KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 //						}
-						LCD_TOUCH_ScrollSel_Service(ROLL_1,release, &rrr,0);
+						//LCD_TOUCH_ScrollSel_Service(ROLL_1,release,NULL,0);
 
-					}
-				}
+
 			}
 
-			if(_WasState(Touch_FontSizeMove)){
-				;
-			}
+			if(_WasState(Touch_FontSizeMove));
+
 			break;
 	}
 }
@@ -1998,21 +1999,11 @@ void FILE_NAME(debugRcvStr)(void)
 	}
 	else if(DEBUG_RcvStr("7"))
 	{
-		//int j=20;
-		for(int i=0;i<50; i++){
-			if(LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &i,1))  //idzie na dol
-				KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 
-		}
 	}
 	else if(DEBUG_RcvStr("8"))
 	{
-		//int j=20;
-		for(int i=50;i>0; i--){
-			if(LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &i,1))
-				KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 
-		}
 	}
 
 
