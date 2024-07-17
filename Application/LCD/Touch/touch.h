@@ -3,6 +3,7 @@
 #define TOUCH_H_
 
 #include "stm32f7xx_hal.h"
+#include "common.h"
 
 typedef enum{
 //	Coeff_A1 = 1070,
@@ -67,9 +68,10 @@ void DisplayCoeffCalibration(void);
 void DisplayTouchPosXY(int touchIdx, XY_Touch_Struct pos, char *txt);
 void DisplayAnyTouchPosXY(void);
 uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time);
-int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, int *y, uint8_t rollRateCoeff);
+int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y, uint8_t rollRateCoeff);
 int LCD_TOUCH_ScrollSel_SetCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *selWin, uint16_t WinposY, uint16_t heightAll, uint16_t heightKey, uint16_t heightWin);
 int LCD_TOUCH_ScrollSel_GetSel(uint8_t nr);
 int LCD_TOUCH_ScrollSel_GetRateCoeff(uint8_t nr);
+void LCD_TOUCH_ScrollSel_FreeRolling(uint8_t nr, FUNC1_DEF(pFunc));
 
 #endif
