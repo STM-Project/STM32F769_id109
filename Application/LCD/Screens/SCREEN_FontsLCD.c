@@ -1285,7 +1285,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
 				_StrDescr(posHead, SL(LANG_CoeffKeyName), v.FONT_COLOR_Descr);
 
-				fillColor = BrightDecr(fillColor_copy,0x9);  // z typu _copy dac duzo wyzej aby juz to nie deklarowac albo przez funkcji np  _Copy(param); ReCopy(param !!!!!)
+				fillColor = BrightIncr(fillColor_copy,0xE);  // z typu _copy dac duzo wyzej aby juz to nie deklarowac albo przez funkcji np  _Copy(param); ReCopy(param !!!!!)
 				for(int i=0; i<countKey; ++i){
 					i<countKey-1 ? _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
 				}
