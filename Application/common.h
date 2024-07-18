@@ -51,6 +51,9 @@
 
 #define MAXVAL(ptr,nmb,minVal,maxValCalc)		for(int i=0,j=(minVal); i<(nmb); (ptr[i]>j ? j=ptr[i] : 0), (maxValCalc)=j, ++i);
 
+#define BKCOPY_VAL(dst,src,val)	dst=src; src=val
+#define BKCOPY(dst,src)	dst=src
+
 #define SDRAM __attribute__ ((section(".sdram")))
 
 #define LCD_BUFF_XSIZE		800
