@@ -195,7 +195,7 @@ static FILE_NAME(struct) v ={
 
 #define SEL_BITS_SIZE	5
 static uint32_t FILE_NAME(SelBits)[SEL_BITS_SIZE] = {0};
-static uint32_t FILE_NAME(SelTouch) = 0;
+static uint32_t FILE_NAME(SelTouch)[SEL_BITS_SIZE] = {0};
 /*
 static int FILE_NAME(SetDefaultParam)(int param){
 	int temp;
@@ -263,7 +263,7 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define TXT_FONT_TYPE	StrAll(5," ",ONEBIT(Test.type+1)," ",LCD_FontType2Str(bufTemp,0,Test.type+1)+1," ")
 #define TXT_FONT_SIZE	StrAll(3," ",LCD_FontSize2Str(bufTemp+25,Test.size)," ")
 #define TXT_FONT_STYLE	StrAll(3," ",LCD_FontStyle2Str(bufTemp,Test.style)," ")
-#define TXT_COEFF			Int2Str(Test.coeff  ,' ',3,Sign_plusMinus)
+#define TXT_COEFF			Int2Str(Test.coeff  ,' ',3,Sign_plusMinus)  ///DODAC spacje z jedne i grugie strony !!!!!
 #define TXT_LEN_WIN		Int2Str(Test.lenWin ,' ',3,Sign_none)
 #define TXT_OFFS_WIN		Int2Str(Test.offsWin,' ',3,Sign_none)
 #define TXT_LOAD_FONT_TIME		StrAll(2,INT2STR_TIME(Test.loadFontTime)," ms")
@@ -273,11 +273,11 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define RGB_FONT 	RGB2INT(Test.font[0],Test.font[1],Test.font[2])
 #define RGB_BK    RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2])
 
-#define CHECK_TOUCH(state)			CHECK_bit(FILE_NAME(SelTouch),(state)-1)  //UWAGA zakres tylko do 32 bit !!!!!
-#define SET_TOUCH(state) 			  SET_bit(FILE_NAME(SelTouch),(state)-1)
-#define CLR_TOUCH(state) 			  RST_bit(FILE_NAME(SelTouch),(state)-1)
-#define CLR_ALL_TOUCH 				FILE_NAME(SelTouch) = 0   //tu petle jesli wiecej touch niz 32 !!!!
-#define GET_TOUCH 					FILE_NAME(SelTouch)
+#define CHECK_TOUCH(state)			CHECK_bit(FILE_NAME(SelTouch)[state/32],(state-32*(state/32)-1))
+#define SET_TOUCH(state) 			  SET_bit(FILE_NAME(SelTouch)[state/32],(state-32*(state/32)-1))
+#define CLR_TOUCH(state) 			  RST_bit(FILE_NAME(SelTouch)[state/32],(state-32*(state/32)-1))
+#define CLR_ALL_TOUCH 				for(int i=0;i<SEL_BITS_SIZE;++i) FILE_NAME(SelTouch)[i]=0
+#define GET_TOUCH 					FILE_NAME(SelTouch)[0]!=0 || FILE_NAME(SelTouch)[1]!=0 || FILE_NAME(SelTouch)[2]!=0 || FILE_NAME(SelTouch)[3]!=0 || FILE_NAME(SelTouch)[4]!=0		/* determine by 'SEL_BITS_SIZE' */
 
 #define NONE_TYPE_REQ	-1
 #define MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY		20
@@ -424,6 +424,11 @@ typedef struct{
 	uint8_t constWidth;
 } RGB_BK_FONT;
 static RGB_BK_FONT Test;
+
+static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int bold);
+static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int boldFrame);
+
+int *ppPTR[2] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat};
 
 static char* TXT_PosCursor(void){
 	return Test.posCursor>0 ? Int2Str(Test.posCursor-1,' ',3,Sign_none) : StrAll(1,"off");
@@ -1669,13 +1674,13 @@ void FILE_NAME(setTouch)(void)
 	#define CASE_TOUCH_STATE(state,touchPoint, src,dst, txt,coeff) \
 		case touchPoint:\
 			if(0==CHECK_TOUCH(state)){\
-				if(GET_TOUCH){ FILE_NAME(main)(1,NULL); CLR_ALL_TOUCH; }\
+				if(GET_TOUCH){ FILE_NAME(main)(1,(char**)ppPTR); CLR_ALL_TOUCH; }\
 				SELECT_CURRENT_FONT(src, dst, txt, coeff);\
 				SET_TOUCH(state);\
 				SetFunc();\
 			}\
 			else{\
-				FILE_NAME(main)(1,NULL);\
+				FILE_NAME(main)(1,(char**)ppPTR);\
 				KEYBOARD_TYPE(KEYBOARD_none,0);\
 				CLR_TOUCH(state);\
 			}
@@ -1964,6 +1969,9 @@ void FILE_NAME(setTouch)(void)
 	}
 }
 
+
+
+
 void FILE_NAME(debugRcvStr)(void)
 {
 	if(DEBUG_RcvStr("1"))
@@ -2061,16 +2069,19 @@ void FILE_NAME(debugRcvStr)(void)
 		}
 		else
 		{
-			FILE_NAME(main)(1,NULL);
+			FILE_NAME(main)(1,(char**)ppPTR);
 			KEYBOARD_TYPE(KEYBOARD_none,0);
 		}
 	}
 	else if(DEBUG_RcvStr("7"))
 	{
-
+		*ppPTR=(int*)FRAMES_GROUP_combined;
+		FILE_NAME(main)(0,(char**)ppPTR);
 	}
 	else if(DEBUG_RcvStr("8"))
 	{
+		*ppPTR=(int*)FRAMES_GROUP_separat;
+		FILE_NAME(main)(0,(char**)ppPTR);
 
 	}
 
@@ -2332,6 +2343,7 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	FILE_NAME(funcSet)(FONT_BKCOLOR_FontType, _FILL_COLOR);
 	FILE_NAME(funcSet)(FONT_BKCOLOR_FontSize, _FILL_COLOR);
 	FILE_NAME(funcSet)(FONT_BKCOLOR_FontStyle, _FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_Coeff, _FILL_COLOR);
 
 	_Element(fontRGB,SetPos,X_start=startOffsX,SetPos,startOffsY)		/* _LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0) */	field1=field;
 	_Element(fontBkRGB,GetPos,0,IncPos,offsY)									/* _LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0) */
@@ -2352,7 +2364,7 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	tab[0]=field1.width;
 	tab[1]=field.width;
 	MAXVAL(tab,2,0,tab[3])
-	_LineH(field1.width,GetPos,0,IncPos,offsY/2-1)
+	_LineH(tab[3],GetPos,0,GetPos,-offsY/2-1)
 
 	#undef _Element
 	#undef _LineH
@@ -2363,7 +2375,7 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 
 static int FRAME_odstep()
 {
-
+	return 0;
 }
 
 
@@ -2390,6 +2402,7 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	FILE_NAME(funcSet)(FONT_BKCOLOR_FontType, _FILL_COLOR);
 	FILE_NAME(funcSet)(FONT_BKCOLOR_FontSize, _FILL_COLOR);
 	FILE_NAME(funcSet)(FONT_BKCOLOR_FontStyle, _FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_Coeff, _FILL_COLOR);
 
 	_Element(fontRGB,0,SetPos,startOffsX,0,SetPos,startOffsY) 	_Element(fontType,0,IncPos,offsX,1,SetPos,startOffsY)  _Element(fontStyle,0,IncPos,offsX,2,SetPos,startOffsY)
 	_Element(fontBkRGB,0,SetPos,startOffsX,0,GetPos,0) 		 	_Element(fontSize,0,IncPos,offsX,1,GetPos,0)				 _Element(fontCoeff,0,IncPos,offsX,2,GetPos,0)
@@ -2400,9 +2413,14 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	#undef _FILL_COLOR
 }
 
+
+
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
 	    //ODKRYJ W usrtawienia debug aby tylko wyswietlic jeden leemnet z duzej struktury np Touch[].idx !!!!!!
+
+	if(argVal==NULL)
+		argVal = (char**)ppPTR;
 
 
 	if(0==argNmb)
@@ -2440,8 +2458,11 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
-	//FRAMES_GROUP_combined(argNmb,20,10,20,25,1);
-	FRAMES_GROUP_separat(argNmb,20,20,30,30,0|(6<<8));
+
+	if(*argVal==(char*)FRAMES_GROUP_combined)
+		FRAMES_GROUP_combined(argNmb,20,10,20,25,1);
+	else if(*argVal==(char*)FRAMES_GROUP_separat)
+		FRAMES_GROUP_separat(argNmb,20,20,30,30,0|(6<<8));
 
 
 
