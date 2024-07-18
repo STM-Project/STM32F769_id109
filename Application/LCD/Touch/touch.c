@@ -655,8 +655,8 @@ int LCD_TOUCH_ScrollSel_Service(uint8_t nr, uint8_t pressRelease, uint16_t *y, u
 
 	case neverMind:
 		return roll[nr].delta_copy;
-
 	}
+
 	return 0;
 }
 
@@ -722,67 +722,64 @@ int LCD_TOUCH_ScrollSel_GetRateCoeff(uint8_t nr){
 
 void LCD_TOUCH_ScrollSel_FreeRolling(uint8_t nr, FUNC1_DEF(pFunc))
 {
-	int paramCoeff[3] = {150,40,0};
+	int delta = LCD_TOUCH_ScrollSel_Service(nr,neverMind,NULL,0);
+	if(delta!=0)
+	{
+		int paramCoeff[3] = {150,40,0};
+		int temp = 0;
+		uint16_t val = 0;
 
-	int rrr = LCD_TOUCH_ScrollSel_Service(nr,neverMind,NULL,0);
-	if(rrr!=0){
-		DbgVar(1,100,BkR_"\r\nTEST ### -- %d -- ###"_X,rrr);
-
-  int res=40;  //wartosc  rrr/res  nie moze przekroczyc heightAll !!!!!
-		if(rrr>0)
+		/* DbgVar(1,7,BkR_" %d "_X,delta); */
+		if(delta > 0)
 		{
-			rrr = ABS(rrr)*paramCoeff[0];   //150 = heightAll/16
-			uint16_t j=rrr;
+			delta *= paramCoeff[0];
+			val = delta;
 			while(1)
 			{
-				if(LCD_TOUCH_ScrollSel_Service(nr,press, &j,1))
+				if(LCD_TOUCH_ScrollSel_Service(nr,press, &val,1))
 					pFunc(FUNC1_ARG);
 
 				if(press == LCD_TOUCH_isPress())
 					break;
 
-				paramCoeff[2]+=2;  if(res) res+=(paramCoeff[1]+paramCoeff[2]);   //40 = heightAll/50
+				paramCoeff[2] += 2;
+				temp += (paramCoeff[1]+paramCoeff[2]);
 
-				if(rrr/res > 0)
+				if(temp)
 				{
-					if(j > rrr/res)
-						j -= rrr/res;
+					if(val > delta/temp)
+						val -= delta/temp;
 					else
 						break;
 				}
-				else
-					break;
 			}
 		}
 		else
 		{
-			rrr = ABS(rrr)*paramCoeff[0];
-			uint16_t j=1;
+			delta = ABS(delta)*paramCoeff[0];
+			val = 1;
 			while(1)
 			{
-				if(LCD_TOUCH_ScrollSel_Service(nr,press, &j,1))
+				if(LCD_TOUCH_ScrollSel_Service(nr,press, &val,1))
 					pFunc(FUNC1_ARG);
 
-				if(press==LCD_TOUCH_isPress())
+				if(press == LCD_TOUCH_isPress())
 					break;
 
-				paramCoeff[2]+=2;  if(res) res+=(paramCoeff[1]+paramCoeff[2]);
+				paramCoeff[2] += 2;
+				temp += (paramCoeff[1]+paramCoeff[2]);
 
-				if(rrr/res > 0)
+				if(temp)
 				{
-					if(j < rrr - rrr/res)
-							j += rrr/res;
+					if(val < delta-delta/temp)
+						val += delta/temp;
 					else
 						break;
 				}
-				else
-					break;
 			}
 		}
 	}
 
-
-
-	LCD_TOUCH_ScrollSel_Service(nr,release,NULL,0);  //sprawdzic czy trzeba !!!!
+	LCD_TOUCH_ScrollSel_Service(nr,release,NULL,0);
 }
 
