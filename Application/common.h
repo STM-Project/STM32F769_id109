@@ -56,6 +56,9 @@
 
 #define SDRAM __attribute__ ((section(".sdram")))
 
+#define PTR2CHAR(txt,ptr)	char *ptr
+#define PTR2INT(txt,ptr)	int *ptr
+
 #define LCD_BUFF_XSIZE		800
 #define LCD_BUFF_YSIZE		480
 

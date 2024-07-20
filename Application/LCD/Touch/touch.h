@@ -73,5 +73,6 @@ int LCD_TOUCH_ScrollSel_SetCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *se
 int LCD_TOUCH_ScrollSel_GetSel(uint8_t nr);
 int LCD_TOUCH_ScrollSel_GetRateCoeff(uint8_t nr);
 void LCD_TOUCH_ScrollSel_FreeRolling(uint8_t nr, FUNC1_DEF(pFunc));
+uint8_t LCD_TOUCH_ScrollSel_DetermineRateRoll(uint8_t nr, uint16_t touchState, uint16_t xPos);
 
 #endif

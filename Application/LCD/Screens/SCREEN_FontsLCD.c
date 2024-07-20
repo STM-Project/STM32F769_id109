@@ -1773,7 +1773,8 @@ void FILE_NAME(setTouch)(void)
 		case Touch_coeff_minus: _KEYS_RELEASE_fontCoeff;	DecCoeefRGB(); KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Coeff_minus );   _SaveState(); break;
 
 		case Touch_FontSizeRoll:
-			deltaForEndPress = LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &pos.y,	  (GetTouchToTemp(state) && IS_RANGE(pos.x, touchTemp[0].x+3*(touchTemp[1].x-touchTemp[0].x)/4, touchTemp[1].x)) ? LCD_TOUCH_ScrollSel_GetRateCoeff(ROLL_1) : 1   );
+			vTimerService(0,start_time,1000);
+			deltaForEndPress = LCD_TOUCH_ScrollSel_Service(ROLL_1,press, &pos.y,	LCD_TOUCH_ScrollSel_DetermineRateRoll(ROLL_1,state,pos.x) );
 			if(deltaForEndPress)
 				KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 			_SaveState();
@@ -1830,11 +1831,14 @@ void FILE_NAME(setTouch)(void)
 #endif
 
 			if(_WasState(Touch_FontSizeRoll)){
-				if(LCD_TOUCH_ScrollSel_Service(ROLL_1,release,NULL,0)){
+				if(LCD_TOUCH_ScrollSel_Service(ROLL_1,release,NULL,0) && 0==vTimerService(0,stop_time,1000)){
 					KEYBOARD_TYPE( KEYBOARD_fontSize2, KEY_Select_one);
 					IncFontSize( LCD_TOUCH_ScrollSel_GetSel(ROLL_1) );
 				}
-				else	LCD_TOUCH_ScrollSel_FreeRolling(ROLL_1, FUNC1_SET(KeyboardTypeDisplay,KEYBOARD_fontSize2,KEY_Select_one,0,0,0,0,0,0,0,0,0,0) );
+				else{
+					LCD_TOUCH_ScrollSel_FreeRolling(ROLL_1, FUNC1_SET(KeyboardTypeDisplay,KEYBOARD_fontSize2,KEY_Select_one,0,0,0,0,0,0,0,0,0,0) );
+					vTimerService(0,reset_time,paramNoUse);
+				}
 			}
 
 			if(_WasState(Touch_FontSizeMove));

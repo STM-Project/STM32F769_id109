@@ -13,6 +13,7 @@
 #include "LCD_Hardware.h"
 
 #define MAX_ELEMENTS_REFRESH_IN_SCREEN	40
+#define MAX_ELEMENTS_TIMER_SERVICE	40
 
 portTickType refreshScreenVar[MAX_ELEMENTS_REFRESH_IN_SCREEN];
 
@@ -30,6 +31,44 @@ int LCD_IsRefreshScreenTimeout(int nrRefresh, int timeout){
 	}
 	else return 0;
 }
+
+uint16_t vTimerService(int nr, int cmd, int timeout)
+{
+	static portTickType _timer[MAX_ELEMENTS_TIMER_SERVICE] = {0};
+
+	switch(cmd)
+	{
+		case start_time:
+			if(_timer[nr] == 0)
+				_timer[nr] = xTaskGetTickCount();
+			return _timer[nr];
+
+		case get_time:
+			return xTaskGetTickCount();
+
+		case check_time:
+			if((xTaskGetTickCount()-_timer[nr]) > timeout)
+				return 1;
+			else
+				return 0;
+
+		case stop_time:
+			if((xTaskGetTickCount()-_timer[nr]) > timeout){
+				_timer[nr] = 0;
+				return 1;
+			}
+			else{
+				_timer[nr] = 0;
+				return 0;
+			}
+
+		case reset_time:
+		default:
+			_timer[nr] = 0;
+			return 1;
+	}
+}
+
 
 
 

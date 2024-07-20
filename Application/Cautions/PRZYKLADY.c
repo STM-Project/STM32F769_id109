@@ -261,7 +261,15 @@ int LCD_TOUCH_ScrollSel_FreeRolling(uint8_t nr, MESSAGE_FUNCTION *x1,int a1,int 
 
 LCD_TOUCH_ScrollSel_FreeRolling(1,_FUNC(Plus,1,2), _FUNC(Minus,5,1));
 
+//------------------------------------------------------------------------------
 
+w CUBE MX dla dnp DMA2 daj nie HAL tylko LL w advence project
+
+//===================================================
+
+  dla touch task daj 50ms a nie 20ms mniej drga !!!!
+
+//
 
 
 #endif

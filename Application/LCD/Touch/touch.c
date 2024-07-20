@@ -673,7 +673,7 @@ int LCD_TOUCH_ScrollSel_SetCalculate(uint8_t nr, uint16_t *offsWin, uint16_t *se
 		else			return roll[nr].selWin;
 	}
 
-	if(0==WinposY && 0==heightAll && 0==heightKey){
+	if(0 == WinposY && 0 == heightAll && 0 == heightKey){
 		roll[nr].offsWin = *offsWin;
 		roll[nr].selWin = *selWin;
 		roll[nr].rateCoeff = heightWin;			/*	'heightWin' as param RateCoeff to write setup */
@@ -726,7 +726,7 @@ void LCD_TOUCH_ScrollSel_FreeRolling(uint8_t nr, FUNC1_DEF(pFunc))
 	if(delta!=0)
 	{
 		int paramCoeff[3] = {150,40,0};
-		int temp = 0;
+		int temp = 0, temp2 = 0;
 		uint16_t val = 0;
 
 		/* DbgVar(1,7,BkR_" %d "_X,delta); */
@@ -744,14 +744,17 @@ void LCD_TOUCH_ScrollSel_FreeRolling(uint8_t nr, FUNC1_DEF(pFunc))
 
 				paramCoeff[2] += 2;
 				temp += (paramCoeff[1]+paramCoeff[2]);
+				temp2 = delta/temp;
 
-				if(temp)
+				if(temp2 > 0)
 				{
-					if(val > delta/temp)
-						val -= delta/temp;
+					if(val > temp2)
+						val -= temp2;
 					else
 						break;
 				}
+				else
+					break;
 			}
 		}
 		else
@@ -768,18 +771,25 @@ void LCD_TOUCH_ScrollSel_FreeRolling(uint8_t nr, FUNC1_DEF(pFunc))
 
 				paramCoeff[2] += 2;
 				temp += (paramCoeff[1]+paramCoeff[2]);
+				temp2 = delta/temp;
 
-				if(temp)
+				if(temp2 > 0)
 				{
-					if(val < delta-delta/temp)
-						val += delta/temp;
+					if(val < delta-temp2)
+						val += temp2;
 					else
 						break;
 				}
+				else
+					break;
 			}
 		}
 	}
 
 	LCD_TOUCH_ScrollSel_Service(nr,release,NULL,0);
+}
+
+uint8_t LCD_TOUCH_ScrollSel_DetermineRateRoll(uint8_t nr, uint16_t touchState, uint16_t xPos){
+	 return (GetTouchToTemp(touchState) && IS_RANGE(xPos, touchTemp[0].x+3*(touchTemp[1].x-touchTemp[0].x)/4, touchTemp[1].x)) ? LCD_TOUCH_ScrollSel_GetRateCoeff(nr) : 1;
 }
 
