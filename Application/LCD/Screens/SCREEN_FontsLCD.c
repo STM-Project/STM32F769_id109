@@ -44,6 +44,7 @@
 	X(LANG_FontCoeffLeft, 	 "6.", "6.") \
 	X(LANG_FontCoeffUnder, 	 "naci"ś"nij", "press me") \
 	X(LANG_CoeffKeyName, "Wsp"ó""ł"", "Coeff") \
+	X(LANG_LenOffsWin, "Odst"ę"py mi"ę"dzy literami", "Spaces between fonts") \
 
 #define SCREEN_FONTS_SET_PARAMETERS \
 /* id   name							default value */ \
@@ -163,7 +164,7 @@
 /*------------ Main Screen MACROs -----------------*/
 #define SL(name)	(char*)FILE_NAME(Lang)[ v.LANG_SELECT==Polish ? 2*(name) : 2*(name)+1 ]
 
-typedef enum{
+typedef enum{  // to dac w jednym #include !!!!!!!
 	#define X(a,b,c) a,
 		SCREEN_FONTS_LANG
 	#undef X
@@ -325,6 +326,17 @@ typedef enum{
 	Touch_FontSizeRoll,
 	Touch_coeff_plus,
 	Touch_coeff_minus,
+	Touch_LenWin_plus,
+	Touch_LenWin_minus,
+	Touch_OffsWin_plus,
+	Touch_OffsWin_minus,
+	Touch_PosInWin_plus,
+	Touch_PosInWin_minus,
+	Touch_SpaceFonts_plus,
+	Touch_SpaceFonts_minus,
+	Touch_DispSpaces,
+	Touch_WriteSpaces,
+	Touch_ResetSpaces,
 	Move_1,
 	Move_2,
 	Move_3,
@@ -342,6 +354,7 @@ typedef enum{
 	KEYBOARD_fontType,
 	KEYBOARD_fontStyle,
 	KEYBOARD_fontCoeff,
+	KEYBOARD_LenOffsWin,
 }KEYBOARD_TYPES;	/* MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY */
 
 typedef enum{
@@ -1060,6 +1073,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	#define GET_Y			LCD_Ymiddle(MIDDLE_NR,GetPos,fontID)
 
 	int k = type-1;
+	int frameColor_c = 0, fillColor_c = 0;
 	uint16_t widthAll = 0, widthAll_c = 0;
 	uint16_t heightAll = 0, heightAll_c = 0;
 
@@ -1260,6 +1274,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				_SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
 		}
 	}
+
 	void _ServiceCoeff(void)
 	{
 		const char *txtKey[]								= {"+",	  "-"};
@@ -1308,6 +1323,91 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				_SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
 		}
 	}
+
+
+
+
+
+
+
+	void _ServiceLenOffsWin(void)
+	{
+		#define _NMB2KEY	8
+		const char *txtKey[]								= {"<-->", "-><-", "->->",	"<-<-", "__>>", "<<__", "<-||->", "->||<-", "Show Info", "Write spaces", "Reset spaces"};
+		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,	 WHITE,		WHITE,		 WHITE,			  WHITE};
+		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,  DARKRED,	DARKRED, 	 DARKRED,		  DARKRED};
+		const uint16_t dimKeys[] = {4,3};
+
+		int widthKey=0;
+		if(shape!=0){
+			if(KeysAutoSize == widthKey){
+				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey;		/*	space + text + space */
+				widthKey 	   = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey;
+				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
+			}
+		}
+		int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
+
+		XY_Touch_Struct posHead={0,0};
+		XY_Touch_Struct posKey[]=
+		  {{1*s[k].interSpace + 0*s[k].widthKey,	1*s[k].interSpace + 0*s[k].heightKey + head},
+			{2*s[k].interSpace + 1*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
+			{3*s[k].interSpace + 2*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
+			{4*s[k].interSpace + 3*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
+			\
+			{1*s[k].interSpace + 0*s[k].widthKey,	2*s[k].interSpace + 1*s[k].heightKey + head},
+			{2*s[k].interSpace + 1*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
+			{3*s[k].interSpace + 2*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
+			{4*s[k].interSpace + 3*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
+			\
+			{1*s[k].interSpace + 0*widthKey,			3*s[k].interSpace + 2*s[k].heightKey + head},
+			{2*s[k].interSpace + 1*widthKey, 		3*s[k].interSpace + 2*s[k].heightKey + head},
+			{3*s[k].interSpace + 2*widthKey, 		3*s[k].interSpace + 2*s[k].heightKey + head}};
+
+		int countKey = dimKeys[0]*dimKeys[1]; 		/* = STRUCT_TAB_SIZE(txtKey); */
+		countKey--;
+
+		widthAll 	=  dimKeys[0]*s[k].widthKey  + (dimKeys[0]+1)*s[k].interSpace;
+		widthAll_c 	=  (dimKeys[0]-1)*widthKey  + (dimKeys[0]+1)*s[k].interSpace;
+		if(widthAll_c > widthAll)	widthAll = widthAll_c;
+
+		heightAll = dimKeys[1]*s[k].heightKey + (dimKeys[1]+1)*s[k].interSpace + head;
+
+		switch((int)selBlockPress)
+		{
+			case KEY_All_release:
+				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
+				_StrDescr(posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr);
+
+				BKCOPY_VAL(fillColor_c,fillColor,BrightIncr(fillColor_c,0xE));
+				for(int i=0; i<_NMB2KEY; ++i)
+					_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
+
+				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey);
+				for(int i=_NMB2KEY; i<countKey; ++i){
+					i<countKey-1 ? _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
+				}
+				BKCOPY(s[k].widthKey,c.widthKey);
+				BKCOPY(fillColor,fillColor_c);
+				break;
+
+			//case KEY_Red_plus:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
+		}
+
+//		if(startTouchIdx){
+//			for(int i=0; i<countKey; ++i)
+//				_SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
+//		}
+		#undef _NMB2KEY
+	}
+
+
+
+
+
+
+
+
 
 	void _ServiceStyle(void)
 	{
@@ -1596,6 +1696,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		case KEYBOARD_fontSize2:
 			_ServiceSizeRoll();
 			break;
+		case KEYBOARD_LenOffsWin:
+			_ServiceLenOffsWin();
+			break;
 
 		default:
 			break;
@@ -1691,6 +1794,11 @@ void FILE_NAME(setTouch)(void)
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
 			if(IsFunc())
 				KeyboardTypeDisplay(KEYBOARD_bkRGB, KEY_All_release, LCD_RoundRectangle,0, 400,160, KeysAutoSize,12, 4, state, Touch_bkRp,KeysDel);
+			break;
+
+		CASE_TOUCH_STATE(state,Touch_FontLenOffsWin, LenWin,Press, TXT_LENOFFS_WIN,252);
+			if(IsFunc())
+				KeyboardTypeDisplay(KEYBOARD_LenOffsWin, KEY_All_release, LCD_RoundRectangle,0, 50,20, KeysAutoSize,12, 8, state, Touch_LenWin_plus,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontCoeff, Coeff,Press, TXT_COEFF,255);

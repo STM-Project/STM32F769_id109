@@ -26,5 +26,6 @@ char* Float2Str(float value, char freeSign, int maxDigits, int plusMinus, int de
 char* StrAll(int nmbStr, ...);
 
 void SwapUint16(uint16_t *a, uint16_t *b);
+int STRING_GetTheLongestTxt(int nmb, char **txt);
 
 #endif /* GENERAL_UTILITIES_STRING_OPER_H_ */

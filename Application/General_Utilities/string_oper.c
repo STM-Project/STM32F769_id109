@@ -264,3 +264,17 @@ void SwapUint16(uint16_t *a, uint16_t *b)
 	*a=b_temp;
 	*b=a_temp;
 }
+
+int STRING_GetTheLongestTxt(int nmb, char **txt)
+{
+	int maxLen=0, maxLen_temp=0, itMaxLen=0;
+
+	for(int i=0; i<nmb; ++i){
+		maxLen_temp = strlen(*txt++);
+		if(maxLen_temp > maxLen){
+			maxLen = maxLen_temp;
+			itMaxLen = i;
+		}
+	}
+	return itMaxLen;
+}
