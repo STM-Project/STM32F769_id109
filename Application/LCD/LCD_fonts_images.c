@@ -3451,8 +3451,8 @@ static StructFieldPos LCD_StrDescrVar_array(int noDisp, int idVar,int fontID,  i
 	{
 		if(noDisp){
 			len.inPixel = LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth);
-			if(OnlyDigits)	len.height = LCD_GetFontHalfHeight(fontID);
-			else				len.height = LCD_GetFontHeight(fontID);
+			if(halfHight == OnlyDigits)	len.height = LCD_GetFontHalfHeight(fontID);
+			else									len.height = LCD_GetFontHeight(fontID);
 		}
 		else
 			len = LCD_StrVar(idVar,fontID, Xpos, Ypos,txt,OnlyDigits,space,bkColor,coeff,constWidth,bkScreenColor);
@@ -3499,8 +3499,8 @@ static StructFieldPos LCD_StrChangeColorDescrVar_array(int noDisp, int idVar,int
 	{
 		if(noDisp){
 			len.inPixel = LCD_GetWholeStrPxlWidth(fontID, txt, space, constWidth);
-			if(OnlyDigits)	len.height = LCD_GetFontHalfHeight(fontID);
-			else				len.height = LCD_GetFontHeight(fontID);
+			if(halfHight == OnlyDigits)	len.height = LCD_GetFontHalfHeight(fontID);
+			else									len.height = LCD_GetFontHeight(fontID);
 		}
 		else
 			len = LCD_StrChangeColorVar(idVar,fontID, Xpos, Ypos, txt, OnlyDigits, space, bkColor, fontColor,maxVal, constWidth, bkScreenColor);

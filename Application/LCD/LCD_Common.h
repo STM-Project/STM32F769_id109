@@ -47,7 +47,9 @@ typedef enum{
 
 typedef enum{
 	NoIndDisp,
-	IndDisp
+	IndDisp,
+	NoTxtDisp,
+	TxtDisp
 }LCD_SHOW_INDIRECT_OR_NOT_INDIRECT;
 
 typedef enum{
