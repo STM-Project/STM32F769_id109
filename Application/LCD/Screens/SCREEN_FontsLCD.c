@@ -1380,8 +1380,18 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				_StrDescr(posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr);
 
 				BKCOPY_VAL(fillColor_c,fillColor,BrightIncr(fillColor_c,0xE));
-				for(int i=0; i<_NMB2KEY; ++i)
-					_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
+				for(int i=0; i<_NMB2KEY; ++i){
+					//_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
+					if(i==1){
+						_Key(posKey[i]);
+						LCD_SignXX_usun(0,widthAll,heightAll, posKey[i].x+16,posKey[i].y+16, 0xFF,0xFF, frameColor,fillColor,bkColor);
+					}
+					else{
+						_Key(posKey[i]);   //LCD_ShapeWindow( s[k].shape, 0, widthAll,heightAll, pos.x,pos.y, s[k].widthKey,s[k].heightKey, SetColorBoldFrame(frameColor,s[k].bold),fillColor,bkColor);
+
+					_TxtPos(posKey[i]);		i<countKey-1 ? _Str(txtKey[i],colorTxtKey[i]) : _StrDisp(txtKey[i],colorTxtKey[i]);
+					}
+				}
 
 				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey);
 				for(int i=_NMB2KEY; i<countKey; ++i){
@@ -1708,6 +1718,12 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	#undef GET_Y
 	return 0;
 }
+
+
+//Suwak RGB, LCD_ZNAK, i suwag okrągły !!!
+//ROLL sam skraj szybko,
+//pozniej bez select a drugie pole touch to z select,
+// blokada globalna touch !!!! tylko 1 touch zostaje
 
 void FILE_NAME(setTouch)(void)
 {
@@ -2480,9 +2496,14 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
+	LCD_SignStar(0,LCD_X,LCD_Y, 600,290, 50, 35, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 
+	LCD_SignXX(0,LCD_X,LCD_Y, 100,290, 50, 35, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
+
+	for(int i=0;i<360; i++)
+		DrawLine(0,150,320, 100, i, WHITE,LCD_X, 0.0, 0.0 ,v.COLOR_BkScreen,v.COLOR_BkScreen);
 
 
 

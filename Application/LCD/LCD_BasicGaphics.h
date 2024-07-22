@@ -106,9 +106,11 @@ void DrawLine(uint32_t posBuff,uint16_t x, uint16_t y, uint16_t len, uint16_t de
 
 
 
+/* ------- Selected Figures ------------------*/
+void LCD_SignStar(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor);
+void LCD_SignXX(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor);
 
-void LCD_Znak_XX(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor);
-
+/* ------- End Selected Figures ------------------*/
 
 void LCD_SetCircleParam(float outRatio, float inRatio, int len, ...);
 

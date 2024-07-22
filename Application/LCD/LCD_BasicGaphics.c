@@ -3104,85 +3104,8 @@ void LCD_KeyBackspace(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint
 
 }
 
-void LCD_Znak_XX(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+void LCD_SignStar(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
 {
-
-
-//	_StartLine(0,BkpSizeX,x,y);
-//	_DrawRight(30,FrameColor);
-//	_DrawDown(15,FrameColor,BkpSizeX);
-//	_DrawLeft(30,FrameColor);
-//	_DrawUp(15,FrameColor,BkpSizeX);
-	//k_p=k;
-
-
-
-//	_SetCoeff_AA(1,WHITE,-100,-85,buff_AA);
-//	_SetCoeff_AA(2,WHITE,-100,-85,buff_AA);
-//	_SetCoeff_AA(3,WHITE,-100,-55,buff_AA);
-//	_SetCoeff_AA(4,WHITE,-120,-30,buff_AA);
-//	_SetCoeff_AA(5,WHITE,-115,-23,buff_AA);
-//	_SetCoeff_AA(10,WHITE,-100,-15,buff_AA);
-//	_SetCoeff_AA(20,WHITE,-100,-5,buff_AA);
-
-
-
-	_StartDrawLine(0,BkpSizeX,x,y-100);
-
-//	for(int i=0;i<20;++i)
-//	{
-//		_SetCoeff_AA(2,WHITE,-120,-30); _DrawRightDown_AA(6,2,FrameColor,BkpSizeX);
-//		_SetCoeff_AA(3,WHITE,-120,-15); _DrawRightDown_AA(1,1,FrameColor,BkpSizeX);
-//	}
-//
-//	_StartLine(0,BkpSizeX,x,y-50);
-//	for(int i=0;i<20;++i)
-//	{
-//		_SetCoeff_AA(0,WHITE,-100,-55); _DrawRightDown_AA(6,2,FrameColor,BkpSizeX);
-//		_SetCoeff_AA(0,WHITE,-70,-35); _DrawRightDown_AA(1,1,FrameColor,BkpSizeX);
-//	}
-
-
-
-
-
-
-
-
-
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(20,WHITE,-100,-5); _DrawRightDown_AA(100,5,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(5,WHITE,-115,-23);_DrawRightDown_AA(100,20,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(2,WHITE,-100,-85);_DrawRightDown_AA(100,50,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(1,WHITE,-100,-85);_DrawRightDown_AA(100,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(2,WHITE,-100,-85);_DrawRightDown_AA(50,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(5,WHITE,-115,-23); _DrawRightDown_AA(20,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(20,WHITE,-100,-5);_DrawRightDown_AA(5,100,FrameColor,BkpSizeX);
-//
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(10,WHITE,-100,-15); _DrawRightUp_AA(100,10,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(4,WHITE,-120,-30);_DrawRightUp_AA(100,25,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(2,WHITE,-100,-85); _DrawRightUp_AA(100,50,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(1,WHITE,-100,-85);_DrawRightUp_AA(100,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(2,WHITE,-100,-85);_DrawRightUp_AA(50,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(4,WHITE,-120,-30); _DrawRightUp_AA(25,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(10,WHITE,-100,-15); _DrawRightUp_AA(10,100,FrameColor,BkpSizeX);
-//
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(10,WHITE,-100,-15); _DrawLeftUp_AA(100,10,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(4,WHITE,-120,-30);_DrawLeftUp_AA(100,25,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(2,WHITE,-100,-85);_DrawLeftUp_AA(100,50,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(1,WHITE,-100,-85); _DrawLeftUp_AA(100,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(2,WHITE,-100,-85); _DrawLeftUp_AA(50,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(4,WHITE,-120,-30);_DrawLeftUp_AA(25,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(10,WHITE,-100,-15);_DrawLeftUp_AA(10,100,FrameColor,BkpSizeX);
-//
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(10,WHITE,-100,-15);_DrawLeftDown_AA(100,10,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(4,WHITE,-120,-30);_DrawLeftDown_AA(100,25,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(2,WHITE,-100,-85); _DrawLeftDown_AA(100,50,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(1,WHITE,-100,-85); _DrawLeftDown_AA(100,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(2,WHITE,-100,-85);_DrawLeftDown_AA(50,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(4,WHITE,-120,-30);_DrawLeftDown_AA(25,100,FrameColor,BkpSizeX);
-//	_StartLine(0,BkpSizeX,x,y);  _SetCoeff_AA(10,WHITE,-100,-15);_DrawLeftDown_AA(10,100,FrameColor,BkpSizeX);
-
-
 	#define PARAM1			WHITE,MYGRAY
 	#define PARAM2		FrameColor,BkpSizeX
 
@@ -3197,6 +3120,7 @@ void LCD_Znak_XX(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t 
 	_StartDrawLine(0,BkpSizeX,x,y);  Set_AACoeff_Draw(10,WHITE,MYGRAY,0.39); _DrawRightUp_AA(100,10,FrameColor,BkpSizeX);
 	_StartDrawLine(0,BkpSizeX,x,y);  Set_AACoeff_Draw(4,WHITE,MYGRAY, 0.47);_DrawRightUp_AA(100,25,FrameColor,BkpSizeX);
 	_StartDrawLine(0,BkpSizeX,x,y);  Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39); _DrawRightUp_AA(100,50,FrameColor,BkpSizeX);
+
 	_StartDrawLine(0,BkpSizeX,x,y);  Set_AACoeff_Draw(1,WHITE,MYGRAY, 0.39);_DrawRightUp_AA(100,100,FrameColor,BkpSizeX);
 	_StartDrawLine(0,BkpSizeX,x,y);  Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39);_DrawRightUp_AA(50,100,FrameColor,BkpSizeX);
 	_StartDrawLine(0,BkpSizeX,x,y);  Set_AACoeff_Draw(4,WHITE,MYGRAY, 0.47); _DrawRightUp_AA(25,100,FrameColor,BkpSizeX);
@@ -3218,12 +3142,50 @@ void LCD_Znak_XX(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t 
 	_StartDrawLine(0,BkpSizeX,x,y);  Set_AACoeff_Draw(4,WHITE,MYGRAY, 0.47);_DrawLeftDown_AA(25,100,FrameColor,BkpSizeX);
 	_StartDrawLine(0,BkpSizeX,x,y);  Set_AACoeff_Draw(10,WHITE,MYGRAY,0.39);_DrawLeftDown_AA(10,100,FrameColor,BkpSizeX);
 
+	#undef PARAM1
+	#undef PARA2
+}
 
+void LCD_SignXX(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+{
+	#define PARAM1			WHITE,MYGRAY
+	#define PARAM2		FrameColor,BkpSizeX
 
+	_StartDrawLine(0,BkpSizeX,x,y);
+	Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39);   _DrawRightDown_AA(10,5,PARAM2);
+	Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39);   _DrawLeftDown_AA(10,5,PARAM2);
+
+	int i;
+	for(i=0; i<5; ++i){
+		_DrawRight(2*i,FrameColor); _IncDrawPos(-(2*i)-LCD_X);
+	}
+	for(int j=i; j>0; --j){
+		_DrawRight(2*j,FrameColor); _IncDrawPos(-(2*j)-LCD_X);
+	}
 
 	#undef PARAM1
 	#undef PARA2
+}
 
+void LCD_SignXX_usun(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+{
+	#define PARAM1			WHITE,MYGRAY
+	#define PARAM2		FrameColor,BkpSizeX
+
+	_StartDrawLine(0,BkpSizeX,x,y);
+	Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39);   _DrawRightDown_AA(20,10,PARAM2);
+	Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39);   _DrawLeftDown_AA(20,10,PARAM2);
+
+	int i;
+	for(i=0; i<10; ++i){
+		_DrawRight(2*i,FrameColor); _IncDrawPos(-(2*i)-BkpSizeX);
+	}
+	for(int j=i; j>0; --j){
+		_DrawRight(2*j,FrameColor); _IncDrawPos(-(2*j)-BkpSizeX);
+	}
+
+	#undef PARAM1
+	#undef PARA2
 }
 
 
