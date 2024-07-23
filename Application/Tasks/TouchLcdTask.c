@@ -35,4 +35,6 @@ void Create_TouchLcd_Task(void)
 void Delete_TouchLcd_Task(void)
 {
 	vTaskDelete(vtask_TouchLcd_Handle);
+	/* vTaskSuspend(vtask_TouchLcd_Handle); */
+	/* xTaskResumeFromISR(vtask_TouchLcd_Handle); */
 }
