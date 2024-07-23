@@ -1384,7 +1384,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					//_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
 					if(i==1){
 						_Key(posKey[i]);
-						LCD_SignXX_usun(0,widthAll,heightAll, posKey[i].x+16,posKey[i].y+16, 0xFF,0xFF, frameColor,fillColor,bkColor);
+						LCD_SimpleTriangle(0,widthAll, posKey[i].x+16,posKey[i].y+16, 26/2,26, frameColor,fillColor,bkColor,Right);
+
 					}
 					else{
 						_Key(posKey[i]);   //LCD_ShapeWindow( s[k].shape, 0, widthAll,heightAll, pos.x,pos.y, s[k].widthKey,s[k].heightKey, SetColorBoldFrame(frameColor,s[k].bold),fillColor,bkColor);
@@ -2499,11 +2500,17 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_SignStar(0,LCD_X,LCD_Y, 600,290, 50, 35, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 
-	LCD_SignXX(0,LCD_X,LCD_Y, 100,290, 50, 35, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+	LCD_SimpleTriangle(0,LCD_X, 100,290, 50,25, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen),Right);
+	LCD_SimpleTriangle(0,LCD_X, 150,290, 25,50, v.COLOR_MainFrame,0,v.COLOR_BkScreen,Left);
+	LCD_SimpleTriangle(0,LCD_X, 200,290, 10,5, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen),Up);
+	LCD_SimpleTriangle(0,LCD_X, 230,290, 9,18, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen),Down);
+	LCD_SimpleTriangle(0,LCD_X, 260,290, 5,50, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen),Right);
+	LCD_SimpleTriangle(0,LCD_X, 320,290, 20,20, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen),Right);
 
 
-	for(int i=0;i<360; i++)
-		DrawLine(0,150,320, 100, i, WHITE,LCD_X, 0.0, 0.0 ,v.COLOR_BkScreen,v.COLOR_BkScreen);
+	for(int i=0;i<360; i+=10)
+		DrawLine(0,150,320, 100, i, WHITE,LCD_X, 1.0, 1.0 ,v.COLOR_BkScreen,v.COLOR_BkScreen);
+
 
 
 
