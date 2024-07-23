@@ -3105,7 +3105,7 @@ void LCD_KeyBackspace(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint
 }
 
 void LCD_SignStar(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
-{
+{																												/*	'width/height' or 'height/width'  must be divisible */
 	#define PARAM1			WHITE,MYGRAY
 	#define PARAM2		FrameColor,BkpSizeX
 
@@ -3146,47 +3146,71 @@ void LCD_SignStar(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t
 	#undef PARA2
 }
 
-void LCD_SignXX(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
-{
-	#define PARAM1			WHITE,MYGRAY
-	#define PARAM2		FrameColor,BkpSizeX
-
+void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t halfWidth,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct)
+{																										/*	'halfWidth/height' or 'height/halfWidth'  must be divisible */
+	Set_AACoeff_Draw(2,FrameColor,BkpColor, 0.39);
 	_StartDrawLine(0,BkpSizeX,x,y);
-	Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39);   _DrawRightDown_AA(10,5,PARAM2);
-	Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39);   _DrawLeftDown_AA(10,5,PARAM2);
 
-	int i;
-	for(i=0; i<5; ++i){
-		_DrawRight(2*i,FrameColor); _IncDrawPos(-(2*i)-LCD_X);
-	}
-	for(int j=i; j>0; --j){
-		_DrawRight(2*j,FrameColor); _IncDrawPos(-(2*j)-LCD_X);
-	}
+	switch(direct)
+	{
+		case Right:
+			_DrawRightDown_AA(halfWidth,height,FrameColor,BkpSizeX);
+			_DrawLeftDown_AA(halfWidth,height,FrameColor,BkpSizeX);
+			if(FillColor != 0){
+				int i;
+				for(i=0; i<height; ++i){
+					_DrawRight(2*i,FillColor); _IncDrawPos(-(2*i)-BkpSizeX);
+				}
+				for(int j=i; j>0; --j){
+					_DrawRight(2*j,FillColor); _IncDrawPos(-(2*j)-BkpSizeX);
+				}
+			}
+			break;
 
-	#undef PARAM1
-	#undef PARA2
+		case Left:
+			_DrawLeftDown_AA(halfWidth,height,FrameColor,BkpSizeX);
+			_DrawRightDown_AA(halfWidth,height,FrameColor,BkpSizeX);
+			if(FillColor != 0){
+				int i;
+				for(i=0; i<height; ++i){
+					_DrawLeft(2*i,FillColor); _IncDrawPos((2*i)-BkpSizeX);
+				}
+				for(int j=i; j>0; --j){
+					_DrawLeft(2*j,FillColor); _IncDrawPos((2*j)-BkpSizeX);
+				}
+			}
+			break;
+
+		case Up:
+			_DrawRightUp_AA(halfWidth,height,FrameColor,BkpSizeX);
+			_DrawRightDown_AA(halfWidth,height,FrameColor,BkpSizeX);
+			if(FillColor != 0){
+				int i;
+				for(i=0; i<height; ++i){
+					_DrawUp(2*i,FillColor,BkpSizeX); _IncDrawPos((2*i)*BkpSizeX-1);
+				}
+				for(int j=i; j>0; --j){
+					_DrawUp(2*j,FillColor,BkpSizeX); _IncDrawPos((2*j)*BkpSizeX-1);
+				}
+			}
+			break;
+
+		case Down:
+			_DrawRightDown_AA(halfWidth,height,FrameColor,BkpSizeX);
+			_DrawRightUp_AA(halfWidth,height,FrameColor,BkpSizeX);
+			if(FillColor != 0){
+				int i;
+				for(i=0; i<height; ++i){
+					_DrawDown(2*i,FillColor,BkpSizeX); _IncDrawPos(-(2*i)*BkpSizeX-1);
+				}
+				for(int j=i; j>0; --j){
+					_DrawDown(2*j,FillColor,BkpSizeX); _IncDrawPos(-(2*j)*BkpSizeX-1);
+				}
+			}
+			break;
+	}
 }
 
-void LCD_SignXX_usun(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
-{
-	#define PARAM1			WHITE,MYGRAY
-	#define PARAM2		FrameColor,BkpSizeX
-
-	_StartDrawLine(0,BkpSizeX,x,y);
-	Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39);   _DrawRightDown_AA(20,10,PARAM2);
-	Set_AACoeff_Draw(2,WHITE,MYGRAY, 0.39);   _DrawLeftDown_AA(20,10,PARAM2);
-
-	int i;
-	for(i=0; i<10; ++i){
-		_DrawRight(2*i,FrameColor); _IncDrawPos(-(2*i)-BkpSizeX);
-	}
-	for(int j=i; j>0; --j){
-		_DrawRight(2*j,FrameColor); _IncDrawPos(-(2*j)-BkpSizeX);
-	}
-
-	#undef PARAM1
-	#undef PARA2
-}
 
 
 
