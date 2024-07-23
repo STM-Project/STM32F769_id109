@@ -3146,67 +3146,122 @@ void LCD_SignStar(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t
 	#undef PARA2
 }
 
-void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t halfWidth,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct)
-{																										/*	'halfWidth/height' or 'height/halfWidth'  must be divisible */
-	Set_AACoeff_Draw(2,FrameColor,BkpColor, 0.39);
+void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t halfBaseWidth,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct)
+{																										/*	'halfBaseWidth/height' or 'height/halfBaseWidth'  must be divisible */
+	int i;
+	int coeff = halfBaseWidth > height ? halfBaseWidth/height : height/halfBaseWidth;
+
+	Set_AACoeff_Draw(coeff,FrameColor,BkpColor, 0.1);
 	_StartDrawLine(0,BkpSizeX,x,y);
 
 	switch(direct)
 	{
 		case Right:
-			_DrawRightDown_AA(halfWidth,height,FrameColor,BkpSizeX);
-			_DrawLeftDown_AA(halfWidth,height,FrameColor,BkpSizeX);
-			if(FillColor != 0){
-				int i;
-				for(i=0; i<height; ++i){
-					_DrawRight(2*i,FillColor); _IncDrawPos(-(2*i)-BkpSizeX);
+			_DrawRightDown_AA(height,halfBaseWidth,FrameColor,BkpSizeX);
+			_DrawLeftDown_AA(height,halfBaseWidth,FrameColor,BkpSizeX);
+			if(FillColor != 0)
+			{
+				if(halfBaseWidth > height)
+				{
+					for(i=coeff; i<halfBaseWidth; ++i){
+						_DrawRight(i/coeff+1,FillColor); _IncDrawPos(-(i/coeff+1)-BkpSizeX);
+					}
+					for(int j=i; j>0; --j){
+						_DrawRight(j/coeff+1,FillColor); _IncDrawPos(-(j/coeff+1)-BkpSizeX);
+					}
 				}
-				for(int j=i; j>0; --j){
-					_DrawRight(2*j,FillColor); _IncDrawPos(-(2*j)-BkpSizeX);
+				else
+				{
+					for(i=0; i<halfBaseWidth; ++i){
+						_DrawRight(coeff*i,FillColor); _IncDrawPos(-(coeff*i)-BkpSizeX);
+					}
+					for(int j=i; j>0; --j){
+						_DrawRight(coeff*j,FillColor); _IncDrawPos(-(coeff*j)-BkpSizeX);
+					}
 				}
 			}
+			else _DrawUp(2*halfBaseWidth,FrameColor,BkpSizeX);
 			break;
 
 		case Left:
-			_DrawLeftDown_AA(halfWidth,height,FrameColor,BkpSizeX);
-			_DrawRightDown_AA(halfWidth,height,FrameColor,BkpSizeX);
-			if(FillColor != 0){
-				int i;
-				for(i=0; i<height; ++i){
-					_DrawLeft(2*i,FillColor); _IncDrawPos((2*i)-BkpSizeX);
+			_DrawLeftDown_AA(height,halfBaseWidth,FrameColor,BkpSizeX);
+			_DrawRightDown_AA(height,halfBaseWidth,FrameColor,BkpSizeX);
+			if(FillColor != 0)
+			{
+				if(halfBaseWidth > height)
+				{
+					for(i=coeff; i<halfBaseWidth; ++i){
+						_DrawLeft(i/coeff+1,FillColor); _IncDrawPos((i/coeff+1)-BkpSizeX);
+					}
+					for(int j=i; j>0; --j){
+						_DrawLeft(j/coeff+1,FillColor); _IncDrawPos((j/coeff+1)-BkpSizeX);
+					}
 				}
-				for(int j=i; j>0; --j){
-					_DrawLeft(2*j,FillColor); _IncDrawPos((2*j)-BkpSizeX);
+				else
+				{
+					for(i=0; i<halfBaseWidth; ++i){
+						_DrawLeft(coeff*i,FillColor); _IncDrawPos((coeff*i)-BkpSizeX);
+					}
+					for(int j=i; j>0; --j){
+						_DrawLeft(coeff*j,FillColor); _IncDrawPos((coeff*j)-BkpSizeX);
+					}
 				}
 			}
+			else _DrawUp(2*halfBaseWidth,FrameColor,BkpSizeX);
 			break;
 
 		case Up:
-			_DrawRightUp_AA(halfWidth,height,FrameColor,BkpSizeX);
-			_DrawRightDown_AA(halfWidth,height,FrameColor,BkpSizeX);
-			if(FillColor != 0){
-				int i;
-				for(i=0; i<height; ++i){
-					_DrawUp(2*i,FillColor,BkpSizeX); _IncDrawPos((2*i)*BkpSizeX-1);
+			_DrawRightUp_AA(halfBaseWidth,height,FrameColor,BkpSizeX);
+			_DrawRightDown_AA(halfBaseWidth,height,FrameColor,BkpSizeX);
+			if(FillColor != 0)
+			{
+				if(halfBaseWidth > height)
+				{
+					for(i=coeff; i<halfBaseWidth; ++i){
+						_DrawUp(i/coeff+1,FillColor,BkpSizeX); _IncDrawPos((i/coeff+1)*BkpSizeX-1);
+					}
+					for(int j=i; j>0; --j){
+						_DrawUp(j/coeff+1,FillColor,BkpSizeX); _IncDrawPos((j/coeff+1)*BkpSizeX-1);
+					}
 				}
-				for(int j=i; j>0; --j){
-					_DrawUp(2*j,FillColor,BkpSizeX); _IncDrawPos((2*j)*BkpSizeX-1);
+				else
+				{
+					for(i=0; i<halfBaseWidth; ++i){
+						_DrawUp(coeff*i,FillColor,BkpSizeX); _IncDrawPos((coeff*i)*BkpSizeX-1);
+					}
+					for(int j=i; j>0; --j){
+						_DrawUp(coeff*j,FillColor,BkpSizeX); _IncDrawPos((coeff*j)*BkpSizeX-1);
+					}
 				}
 			}
+			else _DrawLeft(2*halfBaseWidth,FrameColor);
 			break;
 
 		case Down:
-			_DrawRightDown_AA(halfWidth,height,FrameColor,BkpSizeX);
-			_DrawRightUp_AA(halfWidth,height,FrameColor,BkpSizeX);
-			if(FillColor != 0){
-				int i;
-				for(i=0; i<height; ++i){
-					_DrawDown(2*i,FillColor,BkpSizeX); _IncDrawPos(-(2*i)*BkpSizeX-1);
+			_DrawRightDown_AA(halfBaseWidth,height,FrameColor,BkpSizeX);
+			_DrawRightUp_AA(halfBaseWidth,height,FrameColor,BkpSizeX);
+			if(FillColor != 0)
+			{
+				if(halfBaseWidth > height)
+				{
+					for(i=coeff; i<halfBaseWidth; ++i){
+						_DrawDown(i/coeff+1,FillColor,BkpSizeX); _IncDrawPos(-(i/coeff+1)*BkpSizeX-1);
+					}
+					for(int j=i; j>0; --j){
+						_DrawDown(j/coeff+1,FillColor,BkpSizeX); _IncDrawPos(-(j/coeff+1)*BkpSizeX-1);
+					}
 				}
-				for(int j=i; j>0; --j){
-					_DrawDown(2*j,FillColor,BkpSizeX); _IncDrawPos(-(2*j)*BkpSizeX-1);
+				else
+				{
+					for(i=0; i<halfBaseWidth; ++i){
+						_DrawDown(coeff*i,FillColor,BkpSizeX); _IncDrawPos(-(coeff*i)*BkpSizeX-1);
+					}
+					for(int j=i; j>0; --j){
+						_DrawDown(coeff*j,FillColor,BkpSizeX); _IncDrawPos(-(coeff*j)*BkpSizeX-1);
+					}
 				}
 			}
+			else _DrawLeft(2*halfBaseWidth,FrameColor);
 			break;
 	}
 }
