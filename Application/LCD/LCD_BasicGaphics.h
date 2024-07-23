@@ -29,6 +29,13 @@ enum CircleParam{
 	Degree_Circle
 };
 
+typedef enum{
+	Up,
+	Down,
+	Right,
+	Left,
+}DIRECTIONS;
+
 extern uint32_t LCD_GetXSize(void);
 extern uint32_t LCD_GetYSize(void);
 
@@ -108,7 +115,7 @@ void DrawLine(uint32_t posBuff,uint16_t x, uint16_t y, uint16_t len, uint16_t de
 
 /* ------- Selected Figures ------------------*/
 void LCD_SignStar(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor);
-void LCD_SignXX(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor);
+void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t halfWidth,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct);
 
 /* ------- End Selected Figures ------------------*/
 
