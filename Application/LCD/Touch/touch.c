@@ -206,6 +206,7 @@ void CalibrationWasDone(void)
 
 static uint8_t GetTouchPos(XY_Touch_Struct *pos)
 {
+ /* if(HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_4)==0) */
   if(touchDetect)
   {
 	 touchDetect=0;

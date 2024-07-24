@@ -2082,11 +2082,25 @@ void FILE_NAME(debugRcvStr)(void)
 	{
 		*ppPTR=(int*)FRAMES_GROUP_combined;
 		FILE_NAME(main)(0,(char**)ppPTR);
+
 	}
 	else if(DEBUG_RcvStr("8"))
 	{
 		*ppPTR=(int*)FRAMES_GROUP_separat;
 		FILE_NAME(main)(0,(char**)ppPTR);
+
+	}
+	else if(DEBUG_RcvStr("A"))
+	{
+
+		static int incF = 2;
+
+		*ppPTR=(int*)FRAMES_GROUP_combined;
+		FILE_NAME(main)(incF++,(char**)ppPTR);
+
+	}
+	else if(DEBUG_RcvStr("Z"))
+	{
 
 	}
 
@@ -2444,8 +2458,6 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	#undef _FILL_COLOR
 }
 
-//touch detekt nie przerwanie tylko inpuyt i odczyt pinu !!! może nie bedei drgac
-//i jest GPIO_MODE_IT_RISING_FALLING może wystarczy tylko failing !!!!!!!!!!!!!
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
@@ -2501,22 +2513,37 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	//LCD_SignStar(0,LCD_X,LCD_Y, 600,290, 50, 35, SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 
-	LCD_SimpleTriangle(0,LCD_X, 20+70,300, 20,60, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
-	LCD_SimpleTriangle(0,LCD_X, 120+20,225, 60,15, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
-	LCD_SimpleTriangle(0,LCD_X, 220+20,225, 20,60, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
-	LCD_SimpleTriangle(0,LCD_X, 320+20,225, 15,60, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
-	LCD_SimpleTriangle(0,LCD_X, 420+20,250, 20,120, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
-	LCD_SimpleTriangle(0,LCD_X, 580+20,225, 15,45, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
-	LCD_SimpleTriangle(0,LCD_X, 640+20,225, 45,15, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
-	LCD_SimpleTriangle(0,LCD_X, 690+30,225, 50,50, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
-	LCD_SimpleTriangle(0,LCD_X, 720+20,330, 25,50, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
-
-
-
-
+//	LCD_SimpleTriangle(0,LCD_X, 20+70,300, 20,60, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
+//	LCD_SimpleTriangle(0,LCD_X, 120+20,225, 60,15, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
+//	LCD_SimpleTriangle(0,LCD_X, 220+20,225, 20,60, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
+//	LCD_SimpleTriangle(0,LCD_X, 320+20,225, 15,60, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
+//	LCD_SimpleTriangle(0,LCD_X, 420+20,250, 20,120, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
+//	LCD_SimpleTriangle(0,LCD_X, 580+20,225, 15,45, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
+//	LCD_SimpleTriangle(0,LCD_X, 640+20,225, 45,15, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
+//	LCD_SimpleTriangle(0,LCD_X, 690+30,225, 50,50, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
+//	LCD_SimpleTriangle(0,LCD_X, 720+20,330, 25,50, v.COLOR_MainFrame,0x00000000,v.COLOR_BkScreen,Down);
 
 //	for(int i=0;i<360; i+=10)
 //		DrawLine(0,150,320, 100, i, WHITE,LCD_X, 1.0, 1.0 ,v.COLOR_BkScreen,v.COLOR_BkScreen);
+
+
+
+
+	if(argNmb > 1)
+	{
+
+		structPosition pos={150,350}, pos1={650,350};
+
+		  for(int i=argNmb; i<360+argNmb; i+=45)
+			  pos = DrawLine(0,pos.x,pos.y, 50, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);
+
+
+		  for(int i=argNmb; i<360+argNmb; i+=45){
+			   pos = DrawLine(0,pos1.x,pos1.y, 50, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);   DrawLine(0,pos1.x,pos1.y, 51, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);  i+=45;
+			  	pos1 = DrawLine(0,pos.x,pos.y, 50, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);   DrawLine(0,pos.x,pos.y, 51, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);
+		  }
+	}
+
 
 
 
