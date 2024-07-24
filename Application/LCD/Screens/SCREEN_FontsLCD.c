@@ -2444,7 +2444,8 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	#undef _FILL_COLOR
 }
 
-
+//touch detekt nie przerwanie tylko inpuyt i odczyt pinu !!! może nie bedei drgac
+//i jest GPIO_MODE_IT_RISING_FALLING może wystarczy tylko failing !!!!!!!!!!!!!
 
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
