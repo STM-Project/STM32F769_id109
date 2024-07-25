@@ -3268,6 +3268,14 @@ void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t 
 	}
 }
 
+structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t lineLen, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, int angleInclination)
+{
+	structPosition pos={x,y};
+	 for(int i=angleInclination; i<360+angleInclination; i+=45)
+		 pos = DrawLine(0,pos.x,pos.y, lineLen, i, FrameColor,BkpSizeX, 0.1, 0.1 ,BkpColor,BkpColor);
+	 return pos;
+}
+
 
 
 
