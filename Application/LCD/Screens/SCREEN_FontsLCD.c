@@ -23,7 +23,7 @@
 
 #define SCREEN_FONTS_LANG \
 	X(LANG_nazwa_0, "Czcionki LCD", "Fonts LCD") \
-	X(LANG_nazwa_1, "Zmiana kolor"ó"w", "Press to change color fonts") \
+	X(LANG_nazwa_1, "Zmiana kolor"ó"w czcionki", "Press to change color fonts") \
 	X(LANG_nazwa_2, "1.", "1.") \
 	X(LANG_nazwa_3, "Czer", "Red") \
 	X(LANG_nazwa_4, "Ziel", "Green") \
@@ -355,6 +355,8 @@ typedef enum{
 	KEYBOARD_fontStyle,
 	KEYBOARD_fontCoeff,
 	KEYBOARD_LenOffsWin,
+	KEYBOARD_sliderRGB,
+	KEYBOARD_sliderBkRGB,
 }KEYBOARD_TYPES;	/* MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY */
 
 typedef enum{
@@ -1419,7 +1421,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 
 
-
 	void _ServiceStyle(void)
 	{
 		const char *txtKey[]								= {"Arial", "Times_New_Roman", "Comic_Saens_MS"};
@@ -1684,6 +1685,58 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			s[k].nmbTouch++;
 		}
 	}
+
+	void _ServiceSliderRGB(void)
+	{
+		const char *txtSliders[]							= {"Red","Green","Blue"};
+		const COLORS_DEFINITION colorTxtSliders[]		= {RED, GREEN, BLUE};
+		const uint16_t dimSlider[] = {1,3};
+		const uint16_t paramSlider[] = {10,10,10,100};		/* {leftSideSize, ptrSize, rightSideSize, lenSlider} */
+
+//		if(shape!=0){
+//			if(KeysAutoSize == widthKey){
+//				s[k].widthKey =  heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[0],0,NoConstWidth) + heightKey;		/*	space + text + space */
+//				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
+//			}
+//		}
+		int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
+
+		XY_Touch_Struct posHead={0,0};
+		XY_Touch_Struct posSlider[]=
+		  {{1*s[k].interSpace,	1*s[k].interSpace + 0*s[k].heightKey + head},
+			{1*s[k].interSpace,	2*s[k].interSpace + 1*s[k].heightKey + head},
+			{1*s[k].interSpace, 	3*s[k].interSpace + 2*s[k].heightKey + head}};
+
+		int countKey = STRUCT_TAB_SIZE(txtSliders);
+
+		widthAll =  dimSlider[0]*s[k].widthKey  + (dimSlider[0]+1)*s[k].interSpace;
+		heightAll = dimSlider[1]*s[k].heightKey + (dimSlider[1]+1)*s[k].interSpace + head;
+
+		switch((int)selBlockPress)
+		{
+			case KEY_All_release:
+				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
+				_StrDescr(posHead, SL(LANG_nazwa_1), v.FONT_COLOR_Descr);
+
+				for(int i=0; i<countKey; ++i){
+
+				}
+				break;
+		}
+
+		if(startTouchIdx){
+			for(int i=0; i<countKey; ++i)
+				//_SetTouch(ID_TOUCH_GET_ANY_POINT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
+				if(startTouchIdx){
+					//touchTemp[0].x= s[k].x + posSlider[0].x;
+					touchTemp[1].x= touchTemp[0].x + s[k].widthKey;
+					touchTemp[0].y= s[k].y + posSlider[0].y;
+					//touchTemp[1].y= touchTemp[0].y + win;
+					LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT, s[k].startTouchIdx, TOUCH_GET_PER_ANY_PROBE);
+					s[k].nmbTouch++;
+				}
+		}
+	}
 	/* ----- End User Function Definitions ----- */
 
 	switch((int)type)
@@ -1709,6 +1762,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			break;
 		case KEYBOARD_LenOffsWin:
 			_ServiceLenOffsWin();
+			break;
+		case KEYBOARD_sliderRGB:
+			_ServiceSliderRGB();
 			break;
 
 		default:
@@ -2078,21 +2134,18 @@ void FILE_NAME(debugRcvStr)(void)
 			KEYBOARD_TYPE(KEYBOARD_none,0);
 		}
 	}
-	else if(DEBUG_RcvStr("7"))
-	{
+	else if(DEBUG_RcvStr("7")){
 		*ppPTR=(int*)FRAMES_GROUP_combined;
 		FILE_NAME(main)(0,(char**)ppPTR);
 
 	}
-	else if(DEBUG_RcvStr("8"))
-	{
+	else if(DEBUG_RcvStr("8")){
 		*ppPTR=(int*)FRAMES_GROUP_separat;
 		FILE_NAME(main)(0,(char**)ppPTR);
 
 	}
 	else if(DEBUG_RcvStr("A"))
 	{
-
 		static int incF = 2;
 
 		*ppPTR=(int*)FRAMES_GROUP_combined;
@@ -2531,17 +2584,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	if(argNmb > 1)
 	{
-
-		structPosition pos={150,350}, pos1={650,350};
-
-		  for(int i=argNmb; i<360+argNmb; i+=45)
-			  pos = DrawLine(0,pos.x,pos.y, 50, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);
-
-
-		  for(int i=argNmb; i<360+argNmb; i+=45){
-			   pos = DrawLine(0,pos1.x,pos1.y, 50, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);   DrawLine(0,pos1.x,pos1.y, 51, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);  i+=45;
-			  	pos1 = DrawLine(0,pos.x,pos.y, 50, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);   DrawLine(0,pos.x,pos.y, 51, i, WHITE,LCD_X, 0.1, 0.1 ,v.COLOR_BkScreen,v.COLOR_BkScreen);
-		  }
+		LCD_ShapeExample(0,LCD_X, 150,350, 50, WHITE, 0, v.COLOR_BkScreen, argNmb);
 	}
 
 
