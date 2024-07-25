@@ -3276,7 +3276,27 @@ structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,u
 	 return pos;
 }
 
+void LCD_Slider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+{
+	int triang_Height = height/4;
+	int triang_Width = height;
 
+	int line_Bold = triang_Width/10 ? triang_Width/10 : 1;
+	int line_width = width-2*triang_Height-1;
+	int line_posX = x+triang_Height+1;
+
+	int ptr_height = triang_Width - triang_Width/4;
+	int ptr_width = ptr_height/2;
+	int ptr_posX = line_width/2;
+
+	LCD_SimpleTriangle(posBuff,BkpSizeX, x+triang_Height, MIDDLE(y,height,triang_Width), triang_Width/2,triang_Height, FrameColor, FrameColor, BkpColor, Left);
+
+	LCD_LineH(line_posX, MIDDLE(y,height,line_Bold), line_width, FillColor, line_Bold );  // w LCD_LineH dac BkpSizeX !!!!!
+
+	LCD_Rectangle(posBuff,BkpSizeX,BkpSizeY, line_posX+ptr_posX-ptr_width/2, MIDDLE(y,height,ptr_height), ptr_width,ptr_height, FrameColor, FrameColor, BkpColor);
+
+	LCD_SimpleTriangle(posBuff,BkpSizeX, x+width-triang_Height, MIDDLE(y,height,triang_Width), triang_Width/2,triang_Height, FrameColor, FrameColor, BkpColor, Right);
+}
 
 
 

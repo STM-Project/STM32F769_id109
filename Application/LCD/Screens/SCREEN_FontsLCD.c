@@ -2588,7 +2588,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	}
 
 
-
+	LCD_Slider(0, LCD_X,LCD_Y, 500,240, 150, 30, v.COLOR_MainFrame, RED, v.COLOR_BkScreen);
 
 
 
