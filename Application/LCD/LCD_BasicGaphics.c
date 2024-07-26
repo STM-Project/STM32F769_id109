@@ -2480,16 +2480,16 @@ void _DrawArrayBuffLeftUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t inC
 	}
 }
 
-void LCD_LineH(uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold){
-	_StartDrawLine(0,LCD_X, x, y);	_DrawRight(width, color);
+void LCD_LineH(uint32_t BkpSizeX, uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold){
+	_StartDrawLine(0,BkpSizeX, x, y);	_DrawRight(width, color);
 	for(int i=0; i<bold; ++i){
-		_NextDrawLine(LCD_X,width);	_DrawRight(width, color);
+		_NextDrawLine(BkpSizeX,width);	_DrawRight(width, color);
 	}
 }
-void LCD_LineV(uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold){
-	_StartDrawLine(0,LCD_X, x, y);	_CopyDrawPos();	_DrawDown(width, color, LCD_X);
+void LCD_LineV(uint32_t BkpSizeX, uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold){
+	_StartDrawLine(0,BkpSizeX, x, y);	_CopyDrawPos();	_DrawDown(width, color, BkpSizeX);
 	for(int i=0; i<bold; ++i){
-		_SetCopyDrawPos();	_IncDrawPos(1);  _DrawDown(width, color, LCD_X);
+		_SetCopyDrawPos();	_IncDrawPos(1);  _DrawDown(width, color, BkpSizeX);
 	}
 }
 
@@ -3276,26 +3276,41 @@ structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,u
 	 return pos;
 }
 
-void LCD_Slider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+void LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, int percent)
 {
-	int triang_Height = height/4;
-	int triang_Width = height;
+	#define TRIANG_HEIGHT	height/2
+	#define LINE_BOLD			height/10
+	#define PTR_HEIGHT		height-height/4
+	#define PTR_WIDTH			PTR_HEIGHT/2
 
-	int line_Bold = triang_Width/10 ? triang_Width/10 : 1;
-	int line_width = width-2*triang_Height-1;
-	int line_posX = x+triang_Height+1;
+	int triang_Height = TRIANG_HEIGHT;
+	int triang_Width 	= height;
 
-	int ptr_height = triang_Width - triang_Width/4;
-	int ptr_width = ptr_height/2;
-	int ptr_posX = line_width/2;
+	int ptr_height = PTR_HEIGHT;
+	int ptr_width 	= PTR_WIDTH;
 
-	LCD_SimpleTriangle(posBuff,BkpSizeX, x+triang_Height, MIDDLE(y,height,triang_Width), triang_Width/2,triang_Height, FrameColor, FrameColor, BkpColor, Left);
+	int line_Bold 	= LINE_BOLD ? LINE_BOLD : 1;
+	int line_width = width-2*triang_Height;
 
-	LCD_LineH(line_posX, MIDDLE(y,height,line_Bold), line_width, FillColor, line_Bold );  // w LCD_LineH dac BkpSizeX !!!!!
+	int width_sel 	= (percent*line_width)/100;
 
-	LCD_Rectangle(posBuff,BkpSizeX,BkpSizeY, line_posX+ptr_posX-ptr_width/2, MIDDLE(y,height,ptr_height), ptr_width,ptr_height, FrameColor, FrameColor, BkpColor);
+	int lineSel_posX 		= x+triang_Height;
+	int lineSel_width 	= width_sel-ptr_width/2;
+	int lineUnSel_posX 	= lineSel_posX+width_sel+ptr_width/2;
+	int lineUnSel_width 	= line_width-width_sel-ptr_width/2;
 
-	LCD_SimpleTriangle(posBuff,BkpSizeX, x+width-triang_Height, MIDDLE(y,height,triang_Width), triang_Width/2,triang_Height, FrameColor, FrameColor, BkpColor, Right);
+	int ptr_posX = lineSel_posX+width_sel-ptr_width/2;
+
+	LCD_SimpleTriangle	(posBuff,BkpSizeX, 				lineSel_posX, 				MIDDLE(y,height,triang_Width), 	triang_Width/2,   triang_Height, 	ElementsColor, ElementsColor, BkpColor, 	Left);
+		LCD_LineH			(			BkpSizeX, 				lineSel_posX+1, 			MIDDLE(y,height,line_Bold), 		lineSel_width-1, 							LineSelColor, 										line_Bold );
+			LCD_Rectangle	(posBuff,BkpSizeX, BkpSizeY, 	ptr_posX, 					MIDDLE(y,height,ptr_height), 		ptr_width, 		   ptr_height, 		ElementsColor, ElementsColor, BkpColor);
+		LCD_LineH			(			BkpSizeX, 				lineUnSel_posX, 			MIDDLE(y,height,line_Bold), 		lineUnSel_width-1, 						LineColor, 											line_Bold );
+	LCD_SimpleTriangle	(posBuff,BkpSizeX, 				x+width-triang_Height, 	MIDDLE(y,height,triang_Width), 	triang_Width/2,   triang_Height, 	ElementsColor, ElementsColor, BkpColor, 	Right);
+
+	#undef TRIANG_HEIGHT
+	#undef LINE_BOLD
+	#undef PTR_HEIGHT
+	#undef PTR_WIDTH
 }
 
 
