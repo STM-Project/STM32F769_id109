@@ -290,6 +290,7 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 typedef enum{
 	NoTouch,//UWAZJA na MAX_OPEN_TOUCH_SIMULTANEOUSLY!!!! zeby nie przkroczyc !!!!
 	Touch_FontColor,
+	Touch_FontColor2,
 	Touch_BkColor,
 	Touch_FontType,
 	Touch_FontType2,
@@ -306,6 +307,9 @@ typedef enum{
 	Touch_fontRm,
 	Touch_fontGm,
 	Touch_fontBm,
+	Touch_fontSliderR,
+	Touch_fontSliderG,
+	Touch_fontSliderB,
 	Touch_bkRp,
 	Touch_bkGp,
 	Touch_bkBp,
@@ -1724,18 +1728,18 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				break;
 		}
 
-		if(startTouchIdx){
-			for(int i=0; i<countKey; ++i)
-				//_SetTouch(ID_TOUCH_GET_ANY_POINT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
-				if(startTouchIdx){
-					//touchTemp[0].x= s[k].x + posSlider[0].x;
-					touchTemp[1].x= touchTemp[0].x + s[k].widthKey;
-					touchTemp[0].y= s[k].y + posSlider[0].y;
-					//touchTemp[1].y= touchTemp[0].y + win;
-					LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT, s[k].startTouchIdx, TOUCH_GET_PER_ANY_PROBE);
-					s[k].nmbTouch++;
-				}
-		}
+//		if(startTouchIdx){
+//			for(int i=0; i<countKey; ++i)
+//				_SetTouch(ID_TOUCH_GET_ANY_POINT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
+//				if(startTouchIdx){
+//					touchTemp[0].x= s[k].x + posSlider[0].x;
+//					touchTemp[1].x= touchTemp[0].x + s[k].widthKey;
+//					touchTemp[0].y= s[k].y + posSlider[0].y;
+//					touchTemp[1].y= touchTemp[0].y + win;
+//					LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT, s[k].startTouchIdx, TOUCH_GET_PER_ANY_PROBE);
+//					s[k].nmbTouch++;
+//				}
+//		}
 	}
 	/* ----- End User Function Definitions ----- */
 
@@ -1862,6 +1866,11 @@ void FILE_NAME(setTouch)(void)
 			if(IsFunc())
 				KeyboardTypeDisplay(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, KeysAutoSize,12, 4, state, Touch_fontRp,KeysDel); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
 			/* DisplayTouchPosXY(state,pos,"Touch_FontColor"); */
+			break;
+
+		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252);
+			if(IsFunc())
+				KeyboardTypeDisplay(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 200,50, 4, state, Touch_fontSliderR,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
@@ -2224,8 +2233,11 @@ static StructTxtPxlLen ELEMENT_fontRGB(StructFieldPos *field, int xPos,int yPos,
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
 	if(0==argNmb)	SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, field->len);
 #else
-	if(0==argNmb)	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, *field);
+	if(0==argNmb){	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontColor, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontColor,0, *field);
+						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontColor2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontColor,1, *field);
+	}
 #endif
+
 
 	lenStr.inPixel = field->width;
 	lenStr.height 	= field->height;
@@ -2422,8 +2434,8 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	#define _FILL_COLOR		v.COLOR_FillMainFrame
 
 	#define	_Element(name,cmdX,offsX,cmdY,offsY)		lenStr=ELEMENT_##name(&field, LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY), argNmb);
-	#define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_Xpos(lenStr,cmdX,offsX)-2, LCD_Ypos(lenStr,cmdY,offsY), width+4, _LINES_COLOR, bold );
-	#define	_LineV(width,cmdX,offsX,cmdY,offsY)		 LCD_LineV(LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY)-2, width+4, _LINES_COLOR, bold );
+	#define	_LineH(width,cmdX,offsX,cmdY,offsY)		 LCD_LineH(LCD_X,LCD_Xpos(lenStr,cmdX,offsX)-2, LCD_Ypos(lenStr,cmdY,offsY), width+4, _LINES_COLOR, bold );
+	#define	_LineV(width,cmdX,offsX,cmdY,offsY)		 LCD_LineV(LCD_X,LCD_Xpos(lenStr,cmdX,offsX), LCD_Ypos(lenStr,cmdY,offsY)-2, width+4, _LINES_COLOR, bold );
 
 	StructFieldPos field={0}, field1={0};
 	uint16_t tab[4]={0};
@@ -2588,7 +2600,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	}
 
 
-	LCD_Slider(0, LCD_X,LCD_Y, 500,240, 150, 30, v.COLOR_MainFrame, RED, v.COLOR_BkScreen);
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 500,240, 150, 30, v.COLOR_MainFrame, LIGHTGRAY ,RED, v.COLOR_BkScreen, 37);
 
 
 
