@@ -62,6 +62,9 @@
 #define LCD_BUFF_XSIZE		800
 #define LCD_BUFF_YSIZE		480
 
+
+#define STRUCT_SIZE_SHAPE_POS		3
+
 typedef struct{
 	char *pData;
 	uint32_t len;
@@ -71,6 +74,16 @@ typedef struct{
 	int x;
 	int y;
 }structPosition;
+
+typedef struct{
+	int w;
+	int h;
+}structSize;
+
+typedef struct{
+	structPosition pos[STRUCT_SIZE_SHAPE_POS];
+	structSize size[STRUCT_SIZE_SHAPE_POS];
+}SHAPE_POS;
 
 /* ----------- Functions Definitations ----------- */
 typedef void(*figureShape)(uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t);

@@ -23,14 +23,14 @@ typedef enum{
 
 enum TOUCH_TYPE{
   ID_TOUCH_POINT,
-  ID_TOUCH_POINT_WITH_HOLD,
+  ID_TOUCH_POINT_WITH_HOLD,				/* if press at least specific time */
   ID_TOUCH_POINT_RELEASE_WITH_HOLD,		/* if press and release in only specific range time */
   ID_TOUCH_MOVE_LEFT,
   ID_TOUCH_MOVE_RIGHT,
   ID_TOUCH_MOVE_UP,
   ID_TOUCH_MOVE_DOWN,
   ID_TOUCH_GET_ANY_POINT,
-  ID_TOUCH_GET_ANY_POINT_WITH_WAIT
+  ID_TOUCH_GET_ANY_POINT_WITH_WAIT		/* buttons touch for counting */
 };
 
 enum TOUCH_PRESS_RELEASE{

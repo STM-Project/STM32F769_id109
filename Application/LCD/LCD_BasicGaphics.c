@@ -3276,15 +3276,20 @@ structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,u
 	 return pos;
 }
 
-void LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, int percent)
+int ElemSelSlider(SEL_ELEM_SLIDER sel, uint32_t color){
+	return ((color&0xFFFFFF) | sel<<24);
+}
+
+SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, int percent, int elemSel)
 {
-	#define TRIANG_HEIGHT	height/2
+	#define TRIANG_HEIGHT	(height/2)  //zastanowic sie czy /2 i /4 nie dac jako param w width czy height !!!!!!!!!!!
 	#define LINE_BOLD			height/10
-	#define PTR_HEIGHT		height-height/4
-	#define PTR_WIDTH			PTR_HEIGHT/2
+	#define PTR_HEIGHT		(height-height/4)
+	#define PTR_WIDTH			(PTR_HEIGHT/4)
 
 	int triang_Height = TRIANG_HEIGHT;
 	int triang_Width 	= height;
+	int triangRight_posX = x + width - triang_Height;
 
 	int ptr_height = PTR_HEIGHT;
 	int ptr_width 	= PTR_WIDTH;
@@ -3294,23 +3299,50 @@ void LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uin
 
 	int width_sel 	= (percent*line_width)/100;
 
-	int lineSel_posX 		= x+triang_Height;
-	int lineSel_width 	= width_sel-ptr_width/2;
-	int lineUnSel_posX 	= lineSel_posX+width_sel+ptr_width/2;
-	int lineUnSel_width 	= line_width-width_sel-ptr_width/2;
+	int lineSel_posX 		= x + triang_Height;
+	int lineSel_width 	= width_sel - ptr_width/2;
+	int lineUnSel_posX 	= lineSel_posX + width_sel + ptr_width/2;
+	int lineUnSel_width 	= line_width - width_sel - ptr_width/2;
 
 	int ptr_posX = lineSel_posX+width_sel-ptr_width/2;
 
-	LCD_SimpleTriangle	(posBuff,BkpSizeX, 				lineSel_posX, 				MIDDLE(y,height,triang_Width), 	triang_Width/2,   triang_Height, 	ElementsColor, ElementsColor, BkpColor, 	Left);
+	uint32_t elemColor[NMB_SLIDER_ELEMENTS] = { ElementsColor, ElementsColor, ElementsColor };
+
+	switch(elemSel>>24){
+		case LeftSel:	elemColor[0] = (elemSel&0xFFFFFF)|0xFF000000;  break;
+		case PtrSel:	elemColor[1] = (elemSel&0xFFFFFF)|0xFF000000;  break;
+		case RightSel:	elemColor[2] = (elemSel&0xFFFFFF)|0xFF000000;  break;
+	}
+
+	SHAPE_POS elements;
+
+	elements.pos[0].x = x;
+	elements.pos[0].y = y;
+	elements.size[0].w = triang_Height;
+	elements.size[0].h = triang_Width;
+
+	elements.pos[1].x = lineSel_posX;
+	elements.pos[1].y = y;
+	elements.size[1].w = line_width;
+	elements.size[1].h = height;
+
+	elements.pos[2].x = triangRight_posX;
+	elements.pos[2].y = y;
+	elements.size[2].w = triang_Height;
+	elements.size[2].h = triang_Width;
+
+	LCD_SimpleTriangle	(posBuff,BkpSizeX, 				lineSel_posX, 				MIDDLE(y,height,triang_Width), 	triang_Width/2,   triang_Height, 	elemColor[0], elemColor[0], BkpColor, 	Left);
 		LCD_LineH			(			BkpSizeX, 				lineSel_posX+1, 			MIDDLE(y,height,line_Bold), 		lineSel_width-1, 							LineSelColor, 										line_Bold );
-			LCD_Rectangle	(posBuff,BkpSizeX, BkpSizeY, 	ptr_posX, 					MIDDLE(y,height,ptr_height), 		ptr_width, 		   ptr_height, 		ElementsColor, ElementsColor, BkpColor);
-		LCD_LineH			(			BkpSizeX, 				lineUnSel_posX, 			MIDDLE(y,height,line_Bold), 		lineUnSel_width-1, 						LineColor, 											line_Bold );
-	LCD_SimpleTriangle	(posBuff,BkpSizeX, 				x+width-triang_Height, 	MIDDLE(y,height,triang_Width), 	triang_Width/2,   triang_Height, 	ElementsColor, ElementsColor, BkpColor, 	Right);
+			LCD_Rectangle	(posBuff,BkpSizeX, BkpSizeY, 	ptr_posX, 					MIDDLE(y,height,ptr_height), 		ptr_width, 		   ptr_height, 		elemColor[1], elemColor[1], BkpColor);
+		LCD_LineH			(			BkpSizeX, 				lineUnSel_posX+1,			MIDDLE(y,height,line_Bold), 		lineUnSel_width-1, 						LineColor, 											line_Bold );
+	LCD_SimpleTriangle	(posBuff,BkpSizeX, 				triangRight_posX, 		MIDDLE(y,height,triang_Width), 	triang_Width/2,   triang_Height, 	elemColor[2], elemColor[2], BkpColor, 	Right);
 
 	#undef TRIANG_HEIGHT
 	#undef LINE_BOLD
 	#undef PTR_HEIGHT
 	#undef PTR_WIDTH
+
+	return elements;
 }
 
 

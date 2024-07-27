@@ -307,9 +307,15 @@ typedef enum{
 	Touch_fontRm,
 	Touch_fontGm,
 	Touch_fontBm,
+	Touch_fontSliderR_left,
 	Touch_fontSliderR,
+	Touch_fontSliderR_right,
+	Touch_fontSliderG_left,
 	Touch_fontSliderG,
+	Touch_fontSliderG_right,
+	Touch_fontSliderB_left,
 	Touch_fontSliderB,
+	Touch_fontSliderB_right,
 	Touch_bkRp,
 	Touch_bkGp,
 	Touch_bkBp,
@@ -1221,7 +1227,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		return 0;
 	}
 
-	if(_startUp()) return 1;  //DAC mozliwosc wyswietlenia jednoczesnie wszystkie Keyboardy !!!!!
+	if(_startUp()) return 1;
 
 	/* ----- User Function Definitions ----- */
 	void _ServiceRGB(void)
@@ -1575,7 +1581,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		}
 
 		if(startTouchIdx){
-			int touch_it=0;
+			int touch_it=0;  // touch_it and  s[k].nmbTouch is the same  !!!!
 			for(int i=0; i<countKey; ++i)
 				_SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + touch_it++, TOUCH_GET_PER_X_PROBE, posKey[i]);
 
@@ -1690,19 +1696,35 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		}
 	}
 
+
+
+
+
+
+	void _SetTouchSlider(uint16_t idx, SHAPE_POS posElemSlider){
+		for(int i=0; i<NMB_SLIDER_ELEMENTS; ++i){
+			touchTemp[0].x= s[k].x + posElemSlider.pos[i].x;
+			touchTemp[1].x= touchTemp[0].x + posElemSlider.size[i].w;
+			touchTemp[0].y= s[k].y + posElemSlider.pos[i].y;
+			touchTemp[1].y= touchTemp[0].y + posElemSlider.size[i].h;
+
+			switch(i){ case 0: case 2: LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, idx + s[k].nmbTouch++, TOUCH_GET_PER_X_PROBE   ); break;
+						  case 1:			LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT,				idx + s[k].nmbTouch++, TOUCH_GET_PER_ANY_PROBE ); break; }
+		}
+	}
+
+	void _ElemSliderPressDisp_oneBlock(XY_Touch_Struct posSlider, uint32_t colorSel, SEL_ELEM_SLIDER sel, int percent){
+		LCD_SimpleSlider(0, s[k].widthKey, s[k].heightKey, 0,0, s[k].widthKey, s[k].heightKey, colorSel, COLOR_GRAY(0x77) ,DARKYELLOW, bkColor, percent, sel);
+		LCD_Display(0, s[k].x+posSlider.x, s[k].y+posSlider.y, s[k].widthKey, s[k].heightKey);
+	}
+
 	void _ServiceSliderRGB(void)
 	{
 		const char *txtSliders[]							= {"Red","Green","Blue"};
 		const COLORS_DEFINITION colorTxtSliders[]		= {RED, GREEN, BLUE};
 		const uint16_t dimSlider[] = {1,3};
-		const uint16_t paramSlider[] = {10,10,10,100};		/* {leftSideSize, ptrSize, rightSideSize, lenSlider} */
+		//const uint16_t paramSlider[] = {10,10,10,100};		/* {leftSideSize, ptrSize, rightSideSize, lenSlider} */
 
-//		if(shape!=0){
-//			if(KeysAutoSize == widthKey){
-//				s[k].widthKey =  heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[0],0,NoConstWidth) + heightKey;		/*	space + text + space */
-//				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
-//			}
-//		}
 		int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
 
 		XY_Touch_Struct posHead={0,0};
@@ -1712,6 +1734,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			{1*s[k].interSpace, 	3*s[k].interSpace + 2*s[k].heightKey + head}};
 
 		int countKey = STRUCT_TAB_SIZE(txtSliders);
+		SHAPE_POS elemSliderPos[countKey];
 
 		widthAll =  dimSlider[0]*s[k].widthKey  + (dimSlider[0]+1)*s[k].interSpace;
 		heightAll = dimSlider[1]*s[k].heightKey + (dimSlider[1]+1)*s[k].interSpace + head;
@@ -1722,25 +1745,33 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
 				_StrDescr(posHead, SL(LANG_nazwa_1), v.FONT_COLOR_Descr);
 
-				for(int i=0; i<countKey; ++i){
-
-				}
+				for(int i=0; i<countKey; ++i)
+					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, s[k].widthKey, s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,DARKYELLOW, bkColor, 38, NoSel);
+				LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 				break;
+
+			case KEY_Red_minus:		_ElemSliderPressDisp_oneBlock(posSlider[0], RED, 	LeftSel,  37);	 break;
+			case KEY_Red_plus:		_ElemSliderPressDisp_oneBlock(posSlider[0], RED, 	RightSel, 37);	 break;
+			case KEY_Green_minus:	_ElemSliderPressDisp_oneBlock(posSlider[1], GREEN, LeftSel,  37);	 break;
+			case KEY_Green_plus:		_ElemSliderPressDisp_oneBlock(posSlider[1], GREEN, RightSel, 67);	 break;
+			case KEY_Blue_minus:		_ElemSliderPressDisp_oneBlock(posSlider[2], GREEN, LeftSel,  37);	 break;
+			case KEY_Blue_plus:		_ElemSliderPressDisp_oneBlock(posSlider[2], GREEN, RightSel, 37);	 break;
 		}
 
-//		if(startTouchIdx){
-//			for(int i=0; i<countKey; ++i)
-//				_SetTouch(ID_TOUCH_GET_ANY_POINT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
-//				if(startTouchIdx){
-//					touchTemp[0].x= s[k].x + posSlider[0].x;
-//					touchTemp[1].x= touchTemp[0].x + s[k].widthKey;
-//					touchTemp[0].y= s[k].y + posSlider[0].y;
-//					touchTemp[1].y= touchTemp[0].y + win;
-//					LCD_TOUCH_Set(ID_TOUCH_GET_ANY_POINT, s[k].startTouchIdx, TOUCH_GET_PER_ANY_PROBE);
-//					s[k].nmbTouch++;
-//				}
-//		}
+
+		if(startTouchIdx){
+			for(int i=0; i<countKey; ++i)
+				_SetTouchSlider(s[k].startTouchIdx, elemSliderPos[i]);
+		}
 	}
+
+
+
+
+
+
+
+
 	/* ----- End User Function Definitions ----- */
 
 	switch((int)type)
@@ -1870,7 +1901,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 200,50, 4, state, Touch_fontSliderR,KeysDel);
+				KeyboardTypeDisplay(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 200,32, 4, state, Touch_fontSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
@@ -1939,6 +1970,16 @@ void FILE_NAME(setTouch)(void)
 		case Touch_fontRm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','R',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Red_minus ); 	Test.step=5; _SaveState(); break;
 		case Touch_fontGm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Green_minus ); Test.step=5; _SaveState(); break;
 		case Touch_fontBm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Blue_minus ); 	Test.step=5; _SaveState(); break;
+
+		case Touch_fontSliderR:  		DisplayTouchPosXY(state,pos,"Touch_fontSliderR"); break;
+		case Touch_fontSliderR_left:  DisplayTouchPosXY(state,pos,"Touch_fontSliderR_left"); break;
+		case Touch_fontSliderR_right: DisplayTouchPosXY(state,pos,"Touch_fontSliderR_right"); break;
+		case Touch_fontSliderG:  		DisplayTouchPosXY(state,pos,"Touch_fontSliderG"); break;
+		case Touch_fontSliderG_left:  DisplayTouchPosXY(state,pos,"Touch_fontSliderG_left"); break;
+		case Touch_fontSliderG_right: DisplayTouchPosXY(state,pos,"Touch_fontSliderG_right"); break;
+		case Touch_fontSliderB:  		DisplayTouchPosXY(state,pos,"Touch_fontSliderB"); break;
+		case Touch_fontSliderB_left:  DisplayTouchPosXY(state,pos,"Touch_fontSliderB_left"); break;
+		case Touch_fontSliderB_right: DisplayTouchPosXY(state,pos,"Touch_fontSliderB_right"); break;
 
 		case Touch_bkRp: _KEYS_RELEASE_fontBk;	ChangeValRGB('b','R', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Red_plus );  	Test.step=5; _SaveState(); break;
 		case Touch_bkGp: _KEYS_RELEASE_fontBk;	ChangeValRGB('b','G', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_plus ); Test.step=5; _SaveState(); break;
@@ -2233,7 +2274,7 @@ static StructTxtPxlLen ELEMENT_fontRGB(StructFieldPos *field, int xPos,int yPos,
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
 	if(0==argNmb)	SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, field->len);
 #else
-	if(0==argNmb){	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontColor, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontColor,0, *field);
+	if(0==argNmb){	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontColor,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontColor,0, *field);
 						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontColor2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontColor,1, *field);
 	}
 #endif
@@ -2600,9 +2641,9 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	}
 
 
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 500,240, 150, 30, v.COLOR_MainFrame, LIGHTGRAY ,RED, v.COLOR_BkScreen, 37);
 
-
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,240, 200, 40, WHITE, COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 10, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,240, 200, 40, WHITE, COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 49, ElemSelSlider(PtrSel, RED));
 
 
 
