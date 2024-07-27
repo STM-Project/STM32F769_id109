@@ -1746,7 +1746,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				_StrDescr(posHead, SL(LANG_nazwa_1), v.FONT_COLOR_Descr);
 
 				for(int i=0; i<countKey; ++i)
-					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, s[k].widthKey, s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,DARKYELLOW, bkColor, 38, NoSel);
+					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, s[k].widthKey, s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,DARKYELLOW, bkColor, 30*i, ElemSelSlider(PtrSel, RED));
 				LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 				break;
 
@@ -1901,7 +1901,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 200,32, 4, state, Touch_fontSliderR_left,KeysDel);
+				KeyboardTypeDisplay(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 200,20, 12, state, Touch_fontSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
@@ -2642,8 +2642,17 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,240, 200, 40, WHITE, COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 10, ElemSelSlider(PtrSel, RED));
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,240, 200, 40, WHITE, COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 49, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,202, 200, 33, COLOR_GRAY(0x88), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 10, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,250, 200, 35, COLOR_GRAY(0x99), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 11, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,300, 200, 37, COLOR_GRAY(0x55), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 12, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,350, 200, 39, COLOR_GRAY(0x66), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 13, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,400, 200, 42, COLOR_GRAY(0x77), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 14, ElemSelSlider(PtrSel, RED));
+
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,202, 200, 45, COLOR_GRAY(0xaa), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 85, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,250, 200, 48, COLOR_GRAY(0xbb), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 89, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,300, 200, 51, COLOR_GRAY(0xcc), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 90, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 250,350, 400, 53, COLOR_GRAY(0xdd), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 93, ElemSelSlider(PtrSel, RED));
+	LCD_SimpleSlider(0, LCD_X,LCD_Y, 250,400, 400, 55, COLOR_GRAY(0xee), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 95, ElemSelSlider(PtrSel, RED));
 
 
 
