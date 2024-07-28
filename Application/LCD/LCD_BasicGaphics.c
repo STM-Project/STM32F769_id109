@@ -3279,7 +3279,7 @@ structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,u
 int ElemSelSlider(SEL_ELEM_SLIDER sel, uint32_t color){
 	return ((color&0xFFFFFF) | sel<<24);
 }
-
+// DAC bez triangle !!!! z opcją
 SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, int percent, int elemSel)
 {
 	#define TRIANG_HEIGHT	height  //zastanowic sie czy /2 i /4 nie dac jako param w width czy height !!!!!!!!!!!

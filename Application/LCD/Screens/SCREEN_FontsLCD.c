@@ -381,6 +381,10 @@ typedef enum{
 	KEY_Green_minus,
 	KEY_Blue_minus,
 
+	KEY_Red_slider,
+	KEY_Green_slider,
+	KEY_Blue_slider,
+
 	KEY_Style_1,
 	KEY_Style_2,
 	KEY_Style_3,
@@ -1350,11 +1354,11 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,  DARKRED,	DARKRED, 	 DARKRED,		  DARKRED};
 		const uint16_t dimKeys[] = {4,3};
 
-		int widthKey=0;
+		int widthKey=0;/*	!!!!!!*/
 		if(shape!=0){
 			if(KeysAutoSize == widthKey){
 				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey;		/*	space + text + space */
-				widthKey 	   = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey;
+/*	!!!!!!*/	widthKey 	   = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey;
 				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
 			}
 		}
@@ -1372,9 +1376,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			{3*s[k].interSpace + 2*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
 			{4*s[k].interSpace + 3*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
 			\
-			{1*s[k].interSpace + 0*widthKey,			3*s[k].interSpace + 2*s[k].heightKey + head},
-			{2*s[k].interSpace + 1*widthKey, 		3*s[k].interSpace + 2*s[k].heightKey + head},
-			{3*s[k].interSpace + 2*widthKey, 		3*s[k].interSpace + 2*s[k].heightKey + head}};
+/*	!!!!!!*/{1*s[k].interSpace + 0*widthKey,		3*s[k].interSpace + 2*s[k].heightKey + head},
+/*	!!!!!!*/{2*s[k].interSpace + 1*widthKey, 		3*s[k].interSpace + 2*s[k].heightKey + head},
+/*	!!!!!!*/{3*s[k].interSpace + 2*widthKey, 		3*s[k].interSpace + 2*s[k].heightKey + head}};
 
 		int countKey = dimKeys[0]*dimKeys[1]; 		/* = STRUCT_TAB_SIZE(txtKey); */
 		countKey--;
@@ -1713,8 +1717,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		}
 	}
 
-	void _ElemSliderPressDisp_oneBlock(XY_Touch_Struct posSlider, uint32_t colorSel, SEL_ELEM_SLIDER sel, int percent){
-		LCD_SimpleSlider(0, s[k].widthKey, s[k].heightKey, 0,0, s[k].widthKey, s[k].heightKey, colorSel, COLOR_GRAY(0x77) ,DARKYELLOW, bkColor, percent, sel);
+	void _ElemSliderPressDisp_oneBlock(XY_Touch_Struct posSlider, int selElem, int percent){
+		LCD_ShapeWindow(LCD_Rectangle,0,s[k].widthKey,s[k].heightKey, 0,0, s[k].widthKey,s[k].heightKey, bkColor, bkColor,bkColor);
+		LCD_SimpleSlider(0, s[k].widthKey, s[k].heightKey, 0,0, s[k].widthKey, s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,DARKYELLOW, bkColor, percent, selElem);
 		LCD_Display(0, s[k].x+posSlider.x, s[k].y+posSlider.y, s[k].widthKey, s[k].heightKey);
 	}
 
@@ -1746,18 +1751,20 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				_StrDescr(posHead, SL(LANG_nazwa_1), v.FONT_COLOR_Descr);
 
 				for(int i=0; i<countKey; ++i)
-					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, s[k].widthKey, s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,DARKYELLOW, bkColor, 30*i, ElemSelSlider(PtrSel, RED));
+					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, s[k].widthKey, s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,colorTxtSliders[i], bkColor, 30*i, NoSel);
 				LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 				break;
 
-			case KEY_Red_minus:		_ElemSliderPressDisp_oneBlock(posSlider[0], RED, 	LeftSel,  37);	 break;
-			case KEY_Red_plus:		_ElemSliderPressDisp_oneBlock(posSlider[0], RED, 	RightSel, 37);	 break;
-			case KEY_Green_minus:	_ElemSliderPressDisp_oneBlock(posSlider[1], GREEN, LeftSel,  37);	 break;
-			case KEY_Green_plus:		_ElemSliderPressDisp_oneBlock(posSlider[1], GREEN, RightSel, 67);	 break;
-			case KEY_Blue_minus:		_ElemSliderPressDisp_oneBlock(posSlider[2], GREEN, LeftSel,  37);	 break;
-			case KEY_Blue_plus:		_ElemSliderPressDisp_oneBlock(posSlider[2], GREEN, RightSel, 37);	 break;
+			case KEY_Red_slider:		_ElemSliderPressDisp_oneBlock(posSlider[0], ElemSelSlider(PtrSel,  RED),   50);	 break;
+			case KEY_Green_slider:	_ElemSliderPressDisp_oneBlock(posSlider[1], ElemSelSlider(PtrSel,  GREEN), 50);	 break;
+			case KEY_Blue_slider:	_ElemSliderPressDisp_oneBlock(posSlider[2], ElemSelSlider(PtrSel,  BLUE),  50);	 break;
+			case KEY_Red_minus:		_ElemSliderPressDisp_oneBlock(posSlider[0], ElemSelSlider(LeftSel, RED),   10);	 break;
+			case KEY_Red_plus:		_ElemSliderPressDisp_oneBlock(posSlider[0], ElemSelSlider(RightSel,RED),   90);	 break;
+			case KEY_Green_minus:	_ElemSliderPressDisp_oneBlock(posSlider[1], ElemSelSlider(LeftSel, GREEN), 10);	 break;
+			case KEY_Green_plus:		_ElemSliderPressDisp_oneBlock(posSlider[1], ElemSelSlider(RightSel,GREEN), 90);	 break;
+			case KEY_Blue_minus:		_ElemSliderPressDisp_oneBlock(posSlider[2], ElemSelSlider(LeftSel, BLUE),  10);	 break;
+			case KEY_Blue_plus:		_ElemSliderPressDisp_oneBlock(posSlider[2], ElemSelSlider(RightSel,BLUE),  90);	 break;
 		}
-
 
 		if(startTouchIdx){
 			for(int i=0; i<countKey; ++i)
@@ -1857,6 +1864,7 @@ void FILE_NAME(setTouch)(void)
 	#define _KEYS_RELEASE_fontBk 			if(_WasStatePrev(Touch_fontRp,     Touch_bkBm)) 		 KEYBOARD_TYPE(KEYBOARD_bkRGB,     KEY_All_release)
 	#define _KEYS_RELEASE_fontSize 		if(_WasStatePrev(Touch_size_plus,  Touch_size_minus))	 KEYBOARD_TYPE(KEYBOARD_fontSize,  KEY_All_release_and_select_one)
 	#define _KEYS_RELEASE_fontCoeff 		if(_WasStatePrev(Touch_coeff_plus, Touch_coeff_minus)) KEYBOARD_TYPE(KEYBOARD_fontCoeff, KEY_All_release)
+	#define _KEYS_RELEASE_fontSliderRGB if(_WasStatePrev(Touch_fontSliderR, Touch_fontSliderB_right)) KEYBOARD_TYPE(KEYBOARD_sliderRGB, KEY_All_release)
 
 	static uint16_t statePrev=0;
 	uint16_t state, function=0;
@@ -1971,15 +1979,15 @@ void FILE_NAME(setTouch)(void)
 		case Touch_fontGm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Green_minus ); Test.step=5; _SaveState(); break;
 		case Touch_fontBm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Blue_minus ); 	Test.step=5; _SaveState(); break;
 
-		case Touch_fontSliderR:  		DisplayTouchPosXY(state,pos,"Touch_fontSliderR"); break;
-		case Touch_fontSliderR_left:  DisplayTouchPosXY(state,pos,"Touch_fontSliderR_left"); break;
-		case Touch_fontSliderR_right: DisplayTouchPosXY(state,pos,"Touch_fontSliderR_right"); break;
-		case Touch_fontSliderG:  		DisplayTouchPosXY(state,pos,"Touch_fontSliderG"); break;
-		case Touch_fontSliderG_left:  DisplayTouchPosXY(state,pos,"Touch_fontSliderG_left"); break;
-		case Touch_fontSliderG_right: DisplayTouchPosXY(state,pos,"Touch_fontSliderG_right"); break;
-		case Touch_fontSliderB:  		DisplayTouchPosXY(state,pos,"Touch_fontSliderB"); break;
-		case Touch_fontSliderB_left:  DisplayTouchPosXY(state,pos,"Touch_fontSliderB_left"); break;
-		case Touch_fontSliderB_right: DisplayTouchPosXY(state,pos,"Touch_fontSliderB_right"); break;
+		case Touch_fontSliderR:  		_KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Red_slider );  _SaveState(); break;
+		case Touch_fontSliderG:  		_KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Green_slider );  _SaveState(); break;
+		case Touch_fontSliderB:  		_KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Blue_slider );  _SaveState(); break;
+		case Touch_fontSliderR_left:  _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Red_minus ); Test.step=5; _SaveState(); break;
+		case Touch_fontSliderR_right: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Red_plus ); 	Test.step=5; _SaveState(); break;
+		case Touch_fontSliderG_left: 	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Green_minus ); Test.step=5; _SaveState();  break;
+		case Touch_fontSliderG_right: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','G', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Green_plus ); Test.step=5; _SaveState();  break;
+		case Touch_fontSliderB_left:  _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Blue_minus ); Test.step=5; _SaveState();  break;
+		case Touch_fontSliderB_right: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Blue_plus ); Test.step=5; _SaveState();  break;
 
 		case Touch_bkRp: _KEYS_RELEASE_fontBk;	ChangeValRGB('b','R', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Red_plus );  	Test.step=5; _SaveState(); break;
 		case Touch_bkGp: _KEYS_RELEASE_fontBk;	ChangeValRGB('b','G', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_plus ); Test.step=5; _SaveState(); break;
@@ -2024,6 +2032,13 @@ void FILE_NAME(setTouch)(void)
 				_WasState(Touch_fontBp) || _WasState(Touch_fontBm) )
 			{
 				KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_All_release );
+				Test.step=1;
+			}
+			if(_WasState(Touch_fontSliderR) || _WasState(Touch_fontSliderR_right) || _WasState(Touch_fontSliderR_left) ||
+				_WasState(Touch_fontSliderG) || _WasState(Touch_fontSliderG_right) || _WasState(Touch_fontSliderG_left) ||
+				_WasState(Touch_fontSliderB) || _WasState(Touch_fontSliderB_right) || _WasState(Touch_fontSliderB_left) )
+			{
+				KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_All_release );
 				Test.step=1;
 			}
 			if(_WasState(Touch_bkRp) || _WasState(Touch_bkRm) ||
@@ -2642,17 +2657,17 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,202, 200, 33, COLOR_GRAY(0x88), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 10, ElemSelSlider(PtrSel, RED));
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,250, 200, 35, COLOR_GRAY(0x99), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 11, ElemSelSlider(PtrSel, RED));
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,300, 200, 37, COLOR_GRAY(0x55), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 12, ElemSelSlider(PtrSel, RED));
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,350, 200, 39, COLOR_GRAY(0x66), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 13, ElemSelSlider(PtrSel, RED));
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,400, 200, 42, COLOR_GRAY(0x77), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 14, ElemSelSlider(PtrSel, RED));
-
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,202, 200, 45, COLOR_GRAY(0xaa), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 85, ElemSelSlider(PtrSel, RED));
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,250, 200, 48, COLOR_GRAY(0xbb), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 89, ElemSelSlider(PtrSel, RED));
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,300, 200, 51, COLOR_GRAY(0xcc), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 90, ElemSelSlider(PtrSel, RED));
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 250,350, 400, 53, COLOR_GRAY(0xdd), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 93, ElemSelSlider(PtrSel, RED));
-	LCD_SimpleSlider(0, LCD_X,LCD_Y, 250,400, 400, 55, COLOR_GRAY(0xee), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 95, ElemSelSlider(PtrSel, RED));
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,202, 200, 33, COLOR_GRAY(0x88), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 10, ElemSelSlider(PtrSel, RED));
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,250, 200, 35, COLOR_GRAY(0x99), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 11, ElemSelSlider(PtrSel, RED));
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,300, 200, 37, COLOR_GRAY(0x55), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 12, ElemSelSlider(PtrSel, RED));
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,350, 200, 39, COLOR_GRAY(0x66), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 13, ElemSelSlider(PtrSel, RED));
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,400, 200, 42, COLOR_GRAY(0x77), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 14, ElemSelSlider(PtrSel, RED));
+//
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,202, 200, 45, COLOR_GRAY(0xaa), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 85, ElemSelSlider(PtrSel, RED));
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,250, 200, 48, COLOR_GRAY(0xbb), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 89, ElemSelSlider(PtrSel, RED));
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 450,300, 200, 51, COLOR_GRAY(0xcc), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 90, ElemSelSlider(PtrSel, RED));
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 250,350, 400, 53, COLOR_GRAY(0xdd), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 93, ElemSelSlider(PtrSel, RED));
+//	LCD_SimpleSlider(0, LCD_X,LCD_Y, 250,400, 400, 55, COLOR_GRAY(0xee), COLOR_GRAY(0x77) ,DARKYELLOW, v.COLOR_BkScreen, 95, ElemSelSlider(PtrSel, RED));
 
 
 
