@@ -3153,7 +3153,8 @@ void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t 
 	int i;
 	int coeff = halfBaseWidth > height ? halfBaseWidth/height : height/halfBaseWidth;
 
-	Set_AACoeff_Draw(coeff,FrameColor,BkpColor, 0.1);
+	if(FillColor != 0) FrameColor=FillColor;
+	Set_AACoeff_Draw(coeff,FrameColor,BkpColor, 0.6);
 	_StartDrawLine(0,BkpSizeX,x,y);
 
 	switch(direct)
@@ -3276,16 +3277,26 @@ structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,u
 	 return pos;
 }
 
-int ElemSelSlider(SEL_ELEM_SLIDER sel, uint32_t color){
+int ChangeElemSliderColor(SEL_ELEM_SLIDER sel, uint32_t color){
 	return ((color&0xFFFFFF) | sel<<24);
 }
+uint32_t ChangeElemSliderSize(uint16_t width, uint8_t coeffHeightTriang, uint8_t coeffLineBold, uint8_t coeffHeightPtr, uint8_t coeffWidthPtr){
+	return ((coeffHeightTriang<<28) | (coeffLineBold<<24) | (coeffHeightPtr<<20) | (coeffWidthPtr<<16) | width);
+}
 // DAC bez triangle !!!! z opcją
-SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, int percent, int elemSel)
+SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t height, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, int percent, int elemSel)
 {
-	#define TRIANG_HEIGHT	height  //zastanowic sie czy /2 i /4 nie dac jako param w width czy height !!!!!!!!!!!
-	#define LINE_BOLD			height/6
-	#define PTR_HEIGHT		(height-height/4)
-	#define PTR_WIDTH			(PTR_HEIGHT/2)
+	#define TRIANG_HEIGHT	(height / heightTriang_coeff)
+	#define LINE_BOLD			(height / lineBold_coeff)
+	#define PTR_HEIGHT		(height - height / heightPtr_coeff)
+	#define PTR_WIDTH			(PTR_HEIGHT / widthPtr_coeff)
+
+	int width = GET_SHIFT_VAL(widthParam,0,FFFF);
+
+	int heightTriang_coeff = GET_IF_VAL(GET_SHIFT_VAL(widthParam,28,F), GET_SHIFT_VAL(widthParam,28,F), 2);
+	int lineBold_coeff 	  = GET_IF_VAL(GET_SHIFT_VAL(widthParam,24,F), GET_SHIFT_VAL(widthParam,24,F), 6);
+	int heightPtr_coeff 	  = GET_IF_VAL(GET_SHIFT_VAL(widthParam,20,F), GET_SHIFT_VAL(widthParam,20,F), 4);
+	int widthPtr_coeff 	  = GET_IF_VAL(GET_SHIFT_VAL(widthParam,16,F), GET_SHIFT_VAL(widthParam,16,F), 2);
 
 	int triang_Height = TRIANG_HEIGHT;
 	int triang_Width 	= height;
@@ -3294,7 +3305,7 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 	int ptr_height = PTR_HEIGHT;
 	int ptr_width 	= PTR_WIDTH;
 
-	int line_Bold 	= LINE_BOLD ? LINE_BOLD : 1;
+	int line_Bold 	= GET_IF_VAL(LINE_BOLD,LINE_BOLD,1);
 	int line_width = width-2*triang_Height;
 
 	int width_sel 	= (percent*line_width)/100;
@@ -3305,7 +3316,6 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 	int lineUnSel_width 	= line_width - width_sel - ptr_width/2;
 
 	int ptr_posX = lineSel_posX+width_sel-ptr_width/2;
-
 
 	int _ChaeckRange(int val, int min, int max){
 		if		 (val < min) return min;
