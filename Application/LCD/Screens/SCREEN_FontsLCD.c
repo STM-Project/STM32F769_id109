@@ -1723,7 +1723,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 	void _ElemSliderPressDisp_oneBlock(XY_Touch_Struct posSlider, int selElem, int percent){
 		LCD_ShapeWindow(LCD_Rectangle,0,s[k].widthKey,s[k].heightKey, 0,0, s[k].widthKey,s[k].heightKey, bkColor, bkColor,bkColor);
-		LCD_SimpleSlider(0, s[k].widthKey, s[k].heightKey, 0,0, ChangeElemSliderSize(s[k].widthKey,1,6,2,1), s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,DARKYELLOW, bkColor, percent, selElem);
+		LCD_SimpleSlider(0, s[k].widthKey, s[k].heightKey, 0,0, ChangeElemSliderSize(s[k].widthKey,1,6,2,1), SetSpaceTriangLineSlider(s[k].heightKey,s[k].heightKey-5), frameColor, COLOR_GRAY(0x77) ,DARKYELLOW, bkColor, percent, selElem);
 		LCD_Display(0, s[k].x+posSlider.x, s[k].y+posSlider.y, s[k].widthKey, s[k].heightKey);
 	}
 
@@ -1754,22 +1754,22 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				_StrDescr(posHead, SL(LANG_nazwa_1), v.FONT_COLOR_Descr);
 
 				for(int i=0; i<countKey; ++i){
-					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, ChangeElemSliderSize(s[k].widthKey,1,6,2,1), s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,colorTxtSliders[i], bkColor, 30*i+5, NoSel);
+					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, ChangeElemSliderSize(s[k].widthKey,1,6,2,1), SetSpaceTriangLineSlider(s[k].heightKey,s[k].heightKey-5), frameColor, COLOR_GRAY(0x77) ,colorTxtSliders[i], bkColor, 30*i+9, NoSel);
 					_StrDescr_Xmidd_Yoffs(posSlider[i],- LCD_GetFontHeight(fontID_descr), txtSliders[i], colorTxtSliders[i]);
 
 				}
 				LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 				break;
 
-			case KEY_Red_slider:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(PtrSel,  RED),   50);	 break;
-			case KEY_Green_slider:	_ElemSliderPressDisp_oneBlock(posSlider[1], ChangeElemSliderColor(PtrSel,  GREEN), 50);	 break;
-			case KEY_Blue_slider:	_ElemSliderPressDisp_oneBlock(posSlider[2], ChangeElemSliderColor(PtrSel,  BLUE),  50);	 break;
-			case KEY_Red_minus:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(LeftSel, RED),   10);	 break;
-			case KEY_Red_plus:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(RightSel,RED),   90);	 break;
-			case KEY_Green_minus:	_ElemSliderPressDisp_oneBlock(posSlider[1], ChangeElemSliderColor(LeftSel, GREEN), 10);	 break;
-			case KEY_Green_plus:		_ElemSliderPressDisp_oneBlock(posSlider[1], ChangeElemSliderColor(RightSel,GREEN), 90);	 break;
-			case KEY_Blue_minus:		_ElemSliderPressDisp_oneBlock(posSlider[2], ChangeElemSliderColor(LeftSel, BLUE),  10);	 break;
-			case KEY_Blue_plus:		_ElemSliderPressDisp_oneBlock(posSlider[2], ChangeElemSliderColor(RightSel,BLUE),  90);	 break;
+			case KEY_Red_slider:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(PtrSel,  colorTxtSliders[0]),  50);	 break;
+			case KEY_Green_slider:	_ElemSliderPressDisp_oneBlock(posSlider[1], ChangeElemSliderColor(PtrSel,  colorTxtSliders[1]),  50);	 break;
+			case KEY_Blue_slider:	_ElemSliderPressDisp_oneBlock(posSlider[2], ChangeElemSliderColor(PtrSel,  colorTxtSliders[2]),  50);	 break;
+			case KEY_Red_minus:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(LeftSel, colorTxtSliders[0]),  10);	 break;
+			case KEY_Red_plus:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(RightSel,colorTxtSliders[0]),  90);	 break;
+			case KEY_Green_minus:	_ElemSliderPressDisp_oneBlock(posSlider[1], ChangeElemSliderColor(LeftSel, colorTxtSliders[1]), 10);	 break;
+			case KEY_Green_plus:		_ElemSliderPressDisp_oneBlock(posSlider[1], ChangeElemSliderColor(RightSel,colorTxtSliders[1]), 90);	 break;
+			case KEY_Blue_minus:		_ElemSliderPressDisp_oneBlock(posSlider[2], ChangeElemSliderColor(LeftSel, colorTxtSliders[2]), 10);	 break;
+			case KEY_Blue_plus:		_ElemSliderPressDisp_oneBlock(posSlider[2], ChangeElemSliderColor(RightSel,colorTxtSliders[2]), 90);	 break;
 		}
 
 		if(startTouchIdx){
@@ -1915,7 +1915,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 545,160, 200,22, 16, state, Touch_fontSliderR_left,KeysDel);
+				KeyboardTypeDisplay(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 545,160, 200,37, 16, state, Touch_fontSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);

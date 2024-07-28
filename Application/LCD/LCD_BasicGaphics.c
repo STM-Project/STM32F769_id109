@@ -3283,8 +3283,11 @@ int ChangeElemSliderColor(SEL_ELEM_SLIDER sel, uint32_t color){
 uint32_t ChangeElemSliderSize(uint16_t width, uint8_t coeffHeightTriang, uint8_t coeffLineBold, uint8_t coeffHeightPtr, uint8_t coeffWidthPtr){
 	return ((coeffHeightTriang<<28) | (coeffLineBold<<24) | (coeffHeightPtr<<20) | (coeffWidthPtr<<16) | width);
 }
-// DAC bez triangle !!!! z opcją
-SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t height, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, int percent, int elemSel)
+uint32_t SetSpaceTriangLineSlider(uint16_t heightParam, uint16_t param){
+	return ((heightParam&0xFFFF) | param<<16);
+}
+//Zrobic ze dla spaceTriangLine=0 byl zerowy odstep a nie brak left i right !!!!!!!!!!!
+SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t heightParam, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, int percent, int elemSel)
 {
 	#define TRIANG_HEIGHT	(height / heightTriang_coeff)
 	#define LINE_BOLD			(height / lineBold_coeff)
@@ -3292,30 +3295,32 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 	#define PTR_WIDTH			(PTR_HEIGHT / widthPtr_coeff)
 
 	int width = GET_SHIFT_VAL(widthParam,0,FFFF);
+	int height = GET_SHIFT_VAL(heightParam,0,FFFF);
+	int spaceTriangLine = GET_IF_VAL(  0==GET_SHIFT_VAL(heightParam,16,FF),  0,  height-GET_SHIFT_VAL(heightParam,16,FF)  );
 
 	int heightTriang_coeff = GET_IF_VAL(GET_SHIFT_VAL(widthParam,28,F), GET_SHIFT_VAL(widthParam,28,F), 2);
 	int lineBold_coeff 	  = GET_IF_VAL(GET_SHIFT_VAL(widthParam,24,F), GET_SHIFT_VAL(widthParam,24,F), 6);
 	int heightPtr_coeff 	  = GET_IF_VAL(GET_SHIFT_VAL(widthParam,20,F), GET_SHIFT_VAL(widthParam,20,F), 4);
 	int widthPtr_coeff 	  = GET_IF_VAL(GET_SHIFT_VAL(widthParam,16,F), GET_SHIFT_VAL(widthParam,16,F), 2);
 
-	int triang_Height = TRIANG_HEIGHT;
-	int triang_Width 	= height;
+	int triang_Height = GET_IF_VAL(0==GET_SHIFT_VAL(heightParam,16,FF), 0, TRIANG_HEIGHT);
+	int triang_Width 	= GET_IF_VAL(0==GET_SHIFT_VAL(heightParam,16,FF), 0, height);
 	int triangRight_posX = x + width - triang_Height;
 
 	int ptr_height = PTR_HEIGHT;
 	int ptr_width 	= PTR_WIDTH;
 
 	int line_Bold 	= GET_IF_VAL(LINE_BOLD,LINE_BOLD,1);
-	int line_width = width-2*triang_Height;
+	int line_width = width-2*triang_Height - 2*spaceTriangLine;
 
 	int width_sel 	= (percent*line_width)/100;
 
-	int lineSel_posX 		= x + triang_Height;
+	int lineSel_posX 		= x + triang_Height + spaceTriangLine;
 	int lineSel_width 	= width_sel - ptr_width/2;
 	int lineUnSel_posX 	= lineSel_posX + width_sel + ptr_width/2;
 	int lineUnSel_width 	= line_width - width_sel - ptr_width/2;
 
-	int ptr_posX = lineSel_posX+width_sel-ptr_width/2;
+	int ptr_posX = lineSel_posX + width_sel - ptr_width/2;
 
 	int _ChaeckRange(int val, int min, int max){
 		if		 (val < min) return min;
@@ -3327,7 +3332,6 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 	lineSel_width = _ChaeckRange(lineSel_width, 0, line_width-ptr_width+1 );
 	lineUnSel_posX = _ChaeckRange(lineUnSel_posX, lineSel_posX+ptr_width-1, triangRight_posX );
 	lineUnSel_width = _ChaeckRange(lineUnSel_width, 0, line_width-ptr_width );
-
 
 	uint32_t elemColor[NMB_SLIDER_ELEMENTS] = { ElementsColor, ElementsColor, ElementsColor };
 
@@ -3354,12 +3358,14 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 	elements.size[2].w = triang_Height;
 	elements.size[2].h = triang_Width;
 
-	LCD_SimpleTriangle			(posBuff,BkpSizeX, 				lineSel_posX, 			MIDDLE(y,height,triang_Width), 	triang_Width/2,   triang_Height, 	elemColor[0], elemColor[0], BkpColor, 	Left);
-		LCD_LineH					(			BkpSizeX, 				lineSel_posX+1,		MIDDLE(y,height,line_Bold), 		lineSel_width, 							LineSelColor, 									line_Bold );
-		LCD_LittleRoundRectangle(posBuff,BkpSizeX, BkpSizeY, 	ptr_posX+1, 			MIDDLE(y,height,ptr_height), 		ptr_width, 		   ptr_height, 		elemColor[1], elemColor[1], BkpColor);
-		if(lineUnSel_width)
-			LCD_LineH				(			BkpSizeX, 				ptr_posX+1+ptr_width,MIDDLE(y,height,line_Bold), 		lineUnSel_width, 							LineColor, 										line_Bold );
-	LCD_SimpleTriangle			(posBuff,BkpSizeX, 				triangRight_posX, 	MIDDLE(y,height,triang_Width), 	triang_Width/2,   triang_Height, 	elemColor[2], elemColor[2], BkpColor, 	Right);
+	if(GET_SHIFT_VAL(heightParam,16,FF))
+		LCD_SimpleTriangle	(posBuff,BkpSizeX, 				lineSel_posX-spaceTriangLine, MIDDLE(y,height,triang_Width), 	triang_Width/2,    triang_Height, 	elemColor[0], elemColor[0], BkpColor, 	Left);
+	LCD_LineH					(			BkpSizeX, 				lineSel_posX+1,					MIDDLE(y,height,line_Bold), 		lineSel_width, 							LineSelColor, 									line_Bold );
+	LCD_LittleRoundRectangle(posBuff,BkpSizeX, BkpSizeY, 	ptr_posX+1, 						MIDDLE(y,height,ptr_height), 		ptr_width, 		    ptr_height, 		elemColor[1], elemColor[1], BkpColor);
+	if(lineUnSel_width)
+		LCD_LineH				(			BkpSizeX, 				ptr_posX+1+ptr_width,			MIDDLE(y,height,line_Bold), 		lineUnSel_width-2, 						LineColor, 										line_Bold );
+	if(GET_SHIFT_VAL(heightParam,16,FF))
+		LCD_SimpleTriangle	(posBuff,BkpSizeX, 				triangRight_posX-1, 				MIDDLE(y,height,triang_Width), 	triang_Width/2,  	 triang_Height, 	elemColor[2], elemColor[2], BkpColor, 	Right);
 
 	#undef TRIANG_HEIGHT
 	#undef LINE_BOLD
