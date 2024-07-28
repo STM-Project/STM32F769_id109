@@ -1111,7 +1111,11 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	}
 	void _StrLeft(const char *txt, XY_Touch_Struct pos, uint32_t color){
 		LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(pos.y,s[k].heightKey));
-		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x+10,GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x+10, GET_Y, (char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+	}
+	void _StrDescr_Xmidd_Yoffs(XY_Touch_Struct pos,int offsY, const char *txt, uint32_t color){
+		LCD_Xmiddle(MIDDLE_NR+1,SetPos,SetPosAndWidth(0,widthAll),NULL,0,NoConstWidth);
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		LCD_Xmiddle(MIDDLE_NR+1,GetPos,fontID_descr,(char*)txt,0,NoConstWidth),	pos.y+offsY, 	(char*)txt, fullHight, 0, bkColor, color,250, NoConstWidth);
 	}
 	void _StrDescr(XY_Touch_Struct pos, const char *txt, uint32_t color){
 		LCD_Xmiddle(MIDDLE_NR+1,SetPos,SetPosAndWidth(pos.x,widthAll),NULL,0,NoConstWidth);
@@ -1728,7 +1732,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		const char *txtSliders[]							= {"Red","Green","Blue"};
 		const COLORS_DEFINITION colorTxtSliders[]		= {RED, GREEN, BLUE};
 		const uint16_t dimSlider[] = {1,3};
-		//const uint16_t paramSlider[] = {10,10,10,100};		/* {leftSideSize, ptrSize, rightSideSize, lenSlider} */
 
 		int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
 
@@ -1750,8 +1753,11 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
 				_StrDescr(posHead, SL(LANG_nazwa_1), v.FONT_COLOR_Descr);
 
-				for(int i=0; i<countKey; ++i)
-					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, ChangeElemSliderSize(s[k].widthKey,1,6,2,1), s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,colorTxtSliders[i], bkColor, 30*i, NoSel);
+				for(int i=0; i<countKey; ++i){
+					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, ChangeElemSliderSize(s[k].widthKey,1,6,2,1), s[k].heightKey, frameColor, COLOR_GRAY(0x77) ,colorTxtSliders[i], bkColor, 30*i+5, NoSel);
+					_StrDescr_Xmidd_Yoffs(posSlider[i],- LCD_GetFontHeight(fontID_descr), txtSliders[i], colorTxtSliders[i]);
+
+				}
 				LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 				break;
 
@@ -1909,7 +1915,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				KeyboardTypeDisplay(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 200,20, 12, state, Touch_fontSliderR_left,KeysDel);
+				KeyboardTypeDisplay(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 545,160, 200,22, 16, state, Touch_fontSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);

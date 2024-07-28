@@ -3154,7 +3154,7 @@ void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t 
 	int coeff = halfBaseWidth > height ? halfBaseWidth/height : height/halfBaseWidth;
 
 	if(FillColor != 0) FrameColor=FillColor;
-	Set_AACoeff_Draw(coeff,FrameColor,BkpColor, 0.6);
+	Set_AACoeff_Draw(coeff,FrameColor,BkpColor, 0.4);
 	_StartDrawLine(0,BkpSizeX,x,y);
 
 	switch(direct)
