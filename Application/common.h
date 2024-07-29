@@ -62,8 +62,10 @@
 #define LCD_BUFF_XSIZE		800
 #define LCD_BUFF_YSIZE		480
 
-#define GET_SHIFT_VAL(val,shift,hexMask)		((val>>shift)&0x##hexMask)
-#define GET_IF_VAL(condition,val1,val2)	(condition ? val1 : val2)
+#define LEFT_SHIFT(val,shift,hexMask)		((val>>shift)&0x##hexMask)
+#define CONDITION(condition,val1,val2)	(condition ? val1 : val2)
+
+#define PERCENT_SCALE(val,maxVal)	((((val)+1)*100)/maxVal)
 
 #define STRUCT_SIZE_SHAPE_POS		3
 
