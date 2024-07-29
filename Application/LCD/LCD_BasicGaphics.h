@@ -38,7 +38,9 @@ typedef enum{
 	Left,
 }DIRECTIONS;
 
+#define NORMAL_SLIDER_PARAM	1,6,2,1
 typedef enum{
+	DelTriang = -1,
 	NoSel,
 	LeftSel,
 	PtrSel,
@@ -129,7 +131,7 @@ structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,u
 SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t heightParam, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, int percent, int elemSel);
 int ChangeElemSliderColor(SEL_ELEM_SLIDER sel, uint32_t color);
 uint32_t ChangeElemSliderSize(uint16_t width, uint8_t coeffHeightTriang, uint8_t coeffLineBold, uint8_t coeffHeightPtr, uint8_t coeffWidthPtr);
-uint32_t SetSpaceTriangLineSlider(uint16_t heightParam, uint16_t param);
+uint32_t SetSpaceTriangLineSlider(uint16_t height, uint16_t param);
 
 /* ------- End Selected Figures ------------------*/
 
