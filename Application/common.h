@@ -65,7 +65,7 @@
 #define LEFT_SHIFT(val,shift,hexMask)		((val>>shift)&0x##hexMask)
 #define CONDITION(condition,val1,val2)	(condition ? val1 : val2)
 
-#define PERCENT_SCALE(val,maxVal)	((((val)+1)*100)/maxVal)
+#define PERCENT_SCALE(val,maxVal)	(((val)*100)/maxVal)
 
 #define STRUCT_SIZE_SHAPE_POS		3
 

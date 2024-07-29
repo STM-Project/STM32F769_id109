@@ -3296,15 +3296,15 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 
 	int width = LEFT_SHIFT(widthParam,0,FFFF);
 	int height = LEFT_SHIFT(heightParam,0,FFFF);
-	int spaceTriangLine = CONDITION(  DelTriang==LEFT_SHIFT(heightParam,16,FF),  0,  LEFT_SHIFT(heightParam,16,FF)  );
+	int spaceTriangLine = CONDITION(  DelTriang==(int8_t)LEFT_SHIFT(heightParam,16,FF),  0,  LEFT_SHIFT(heightParam,16,FF)  );
 
 	int heightTriang_coeff = CONDITION(LEFT_SHIFT(widthParam,28,F), LEFT_SHIFT(widthParam,28,F), 2);
 	int lineBold_coeff 	  = CONDITION(LEFT_SHIFT(widthParam,24,F), LEFT_SHIFT(widthParam,24,F), 6);
 	int heightPtr_coeff 	  = CONDITION(LEFT_SHIFT(widthParam,20,F), LEFT_SHIFT(widthParam,20,F), 4);
 	int widthPtr_coeff 	  = CONDITION(LEFT_SHIFT(widthParam,16,F), LEFT_SHIFT(widthParam,16,F), 2);
 
-	int triang_Height = CONDITION(DelTriang==LEFT_SHIFT(heightParam,16,FF), 0, TRIANG_HEIGHT);
-	int triang_Width 	= CONDITION(DelTriang==LEFT_SHIFT(heightParam,16,FF), 0, height);
+	int triang_Height = CONDITION(DelTriang==(int8_t)LEFT_SHIFT(heightParam,16,FF), 0, TRIANG_HEIGHT);
+	int triang_Width 	= CONDITION(DelTriang==(int8_t)LEFT_SHIFT(heightParam,16,FF), 0, height);
 	int triangRight_posX = x + width - triang_Height;
 
 	int ptr_height = PTR_HEIGHT;
@@ -3328,7 +3328,7 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 		else					 return val;
 	}
 
-	ptr_posX  = _ChaeckRange(ptr_posX, lineSel_posX, triangRight_posX-ptr_width );
+	ptr_posX  = _ChaeckRange(ptr_posX, lineSel_posX, triangRight_posX-ptr_width-spaceTriangLine-2 );
 	lineSel_width = _ChaeckRange(lineSel_width, 0, line_width-ptr_width+1 );
 	lineUnSel_posX = _ChaeckRange(lineUnSel_posX, lineSel_posX+ptr_width-1, triangRight_posX );
 	lineUnSel_width = _ChaeckRange(lineUnSel_width, 0, line_width-ptr_width );
@@ -3358,13 +3358,13 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 	elements.size[2].w = triang_Height;
 	elements.size[2].h = triang_Width;
 
-	if(DelTriang!=LEFT_SHIFT(heightParam,16,FF))
+	if(DelTriang!=(int8_t)LEFT_SHIFT(heightParam,16,FF))
 		LCD_SimpleTriangle	(posBuff,BkpSizeX, 				lineSel_posX-spaceTriangLine, MIDDLE(y,height,triang_Width), 	triang_Width/2,    triang_Height, 	elemColor[0], elemColor[0], BkpColor, 	Left);
 	LCD_LineH					(			BkpSizeX, 				lineSel_posX+1,					MIDDLE(y,height,line_Bold), 		lineSel_width, 							LineSelColor, 									line_Bold );
 	LCD_LittleRoundRectangle(posBuff,BkpSizeX, BkpSizeY, 	ptr_posX+1, 						MIDDLE(y,height,ptr_height), 		ptr_width, 		    ptr_height, 		elemColor[1], elemColor[1], BkpColor);
-	if(lineUnSel_width)
+	if(0<lineUnSel_width-2)
 		LCD_LineH				(			BkpSizeX, 				ptr_posX+1+ptr_width,			MIDDLE(y,height,line_Bold), 		lineUnSel_width-2, 						LineColor, 										line_Bold );
-	if(DelTriang!=LEFT_SHIFT(heightParam,16,FF))
+	if(DelTriang!=(int8_t)LEFT_SHIFT(heightParam,16,FF))
 		LCD_SimpleTriangle	(posBuff,BkpSizeX, 				triangRight_posX-1, 				MIDDLE(y,height,triang_Width), 	triang_Width/2,  	 triang_Height, 	elemColor[2], elemColor[2], BkpColor, 	Right);
 
 	#undef TRIANG_HEIGHT

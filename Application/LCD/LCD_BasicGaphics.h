@@ -38,7 +38,8 @@ typedef enum{
 	Left,
 }DIRECTIONS;
 
-#define NORMAL_SLIDER_PARAM	1,6,2,1
+#define NORMAL_SLIDER_PARAM	2,8,2,2
+#define NORMAL_SLIDER_PARAM2	2,6,2,1
 typedef enum{
 	DelTriang = -1,
 	NoSel,
