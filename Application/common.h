@@ -41,7 +41,9 @@
 #define DECR_FLOAT_WRAP(x,step,min,max)  ((x<step/2) ?     (x=max)   : (x-=step))
 
 #define MIDDLE(startPos,widthBk,width)	startPos+(widthBk-width)/2
-#define IS_RANGE(x,min,max) (x>=min)&&(x<=max)
+#define IS_RANGE(val,min,max) (val>=min)&&(val<=max)
+
+#define SET_IN_RANGE(val,min,max) ((val<min)?min:(((val>max))?max:val))
 
 #define STRUCT_TAB_SIZE(_struct) (sizeof(_struct) / sizeof(&_struct[0]))
 
@@ -62,7 +64,7 @@
 #define LCD_BUFF_XSIZE		800
 #define LCD_BUFF_YSIZE		480
 
-#define LEFT_SHIFT(val,shift,hexMask)		((val>>shift)&0x##hexMask)
+#define SHIFT_RIGHT(val,shift,hexMask)		((val>>shift)&0x##hexMask)
 #define CONDITION(condition,val1,val2)	(condition ? val1 : val2)
 
 #define PERCENT_SCALE(val,maxVal)	(((val)*100)/maxVal)
