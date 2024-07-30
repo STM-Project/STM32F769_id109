@@ -64,6 +64,7 @@
 #define LCD_BUFF_XSIZE		800
 #define LCD_BUFF_YSIZE		480
 
+#define MASK(val,hexMask)		((val)&0x##hexMask)
 #define SHIFT_RIGHT(val,shift,hexMask)		((val>>shift)&0x##hexMask)
 #define CONDITION(condition,val1,val2)	(condition ? val1 : val2)
 

@@ -3290,7 +3290,7 @@ uint32_t SetValType(uint16_t slidPos, uint16_t param){
 	return ((slidPos&0xFFFF) | param<<16);
 }
 
-SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t heightParam, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, uint16_t slidPos, int elemSel)
+SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t heightParam, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, uint32_t slidPos, int elemSel)
 {
 	#define TRIANG_HEIGHT	(height / heightTriang_coeff)
 	#define LINE_BOLD			(height / lineBold_coeff)
@@ -3317,7 +3317,14 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 	int line_Bold 	= CONDITION(LINE_BOLD,LINE_BOLD,1);
 	int line_width = width-2*triang_Height - 2*spaceTriangLine;
 	int lineSel_posX 		= x + triang_Height + spaceTriangLine;
-	int width_sel 	= CONDITION(	Percent==SHIFT_RIGHT(slidPos,16,FF), (slidPos*line_width)/100, SET_IN_RANGE(slidPos-lineSel_posX,0,triangRight_posX-spaceTriangLine)	);
+
+
+//	int ssss = SHIFT_RIGHT(slidPos,16,FF);
+//	int ffff = (slidPos*line_width)/100;
+//	int oooo = SET_IN_RANGE(slidPos-lineSel_posX,0,triangRight_posX-spaceTriangLine);
+	int width_sel 	= CONDITION(	Percent==SHIFT_RIGHT(slidPos,16,FF), (MASK(slidPos,FFFF)*line_width)/100, SET_IN_RANGE(MASK(slidPos,FFFF)-lineSel_posX,0,triangRight_posX-spaceTriangLine)	);
+
+	//int width_sel 	= CONDITION(	Percent==SHIFT_RIGHT(slidPos,16,FF), (MASK(slidPos,FFFF)*line_width)/100, SET_IN_RANGE(MASK(slidPos,FFFF),0,line_width)	);  // tu nigdy ponizej 0!!!!!!
 	int lineSel_width 	= width_sel - ptr_width/2;
 	int lineUnSel_posX 	= lineSel_posX + width_sel + ptr_width/2;
 	int lineUnSel_width 	= line_width - width_sel - ptr_width/2;
