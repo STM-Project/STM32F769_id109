@@ -3318,13 +3318,8 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 	int line_width = width-2*triang_Height - 2*spaceTriangLine;
 	int lineSel_posX 		= x + triang_Height + spaceTriangLine;
 
-
-//	int ssss = SHIFT_RIGHT(slidPos,16,FF);
-//	int ffff = (slidPos*line_width)/100;
-//	int oooo = SET_IN_RANGE(slidPos-lineSel_posX,0,triangRight_posX-spaceTriangLine);
 	int width_sel 	= CONDITION(	Percent==SHIFT_RIGHT(slidPos,16,FF), (MASK(slidPos,FFFF)*line_width)/100, SET_IN_RANGE(MASK(slidPos,FFFF)-lineSel_posX,0,triangRight_posX-spaceTriangLine)	);
 
-	//int width_sel 	= CONDITION(	Percent==SHIFT_RIGHT(slidPos,16,FF), (MASK(slidPos,FFFF)*line_width)/100, SET_IN_RANGE(MASK(slidPos,FFFF),0,line_width)	);  // tu nigdy ponizej 0!!!!!!
 	int lineSel_width 	= width_sel - ptr_width/2;
 	int lineUnSel_posX 	= lineSel_posX + width_sel + ptr_width/2;
 	int lineUnSel_width 	= line_width - width_sel - ptr_width/2;
