@@ -1763,13 +1763,13 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 				for(int i=0; i<countKey; ++i)
 				{
-//					if(shape==0){
-//						if(x!=0)
-//							percPosX = SetValType(PERCENT_SCALE(Test.font[i]+1,256));
+//					if(0==shape){
+//						if(0!=x)
+//							percPosX = SetValType(CONDITION(0>x-s[k].x-s[k].interSpace,0,x-s[k].x-s[k].interSpace),PosX);
 //						else
-//							percPosX = SetValType(PERCENT_SCALE(Test.font[i]+1,256));
+//							percPosX = SetValType(PERCENT_SCALE(Test.font[0]+1,256),Percent);
 //					}
-//					else
+//					else percPosX = SetValType(PERCENT_SCALE(Test.font[0]+1,256),Percent);			(256*width_sel)/max_width
 
 					percPosX = SetValType(PERCENT_SCALE(Test.font[i]+1,256),Percent);
 					elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posSlider[i].x, posSlider[i].y, ChangeElemSliderSize(s[k].widthKey,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[k].heightKey,11 /*DelTriang*/), frameColor, COLOR_GRAY(0x77) ,colorTxtSliders[i], bkColor, percPosX, NoSel);
@@ -1779,9 +1779,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 				break;
 
-			case KEY_Red_slider:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(PtrSel,  colorTxtSliders[0]), SetValType(x-s[k].x-s[k].interSpace < 0 ? 0 : x-s[k].x-s[k].interSpace, PosX));	 break;
-			case KEY_Green_slider:	_ElemSliderPressDisp_oneBlock(posSlider[1], ChangeElemSliderColor(PtrSel,  colorTxtSliders[1]), SetValType(x-s[k].x-s[k].interSpace < 0 ? 0 : x-s[k].x-s[k].interSpace, PosX));	 break;
-			case KEY_Blue_slider:	_ElemSliderPressDisp_oneBlock(posSlider[2], ChangeElemSliderColor(PtrSel,  colorTxtSliders[2]), SetValType(x-s[k].x-s[k].interSpace < 0 ? 0 : x-s[k].x-s[k].interSpace, PosX));	 break;
+			case KEY_Red_slider:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(PtrSel,  colorTxtSliders[0]), SetValType(CONDITION(0>x-s[k].x-s[k].interSpace,0,x-s[k].x-s[k].interSpace),PosX));	 break;
+			case KEY_Green_slider:	_ElemSliderPressDisp_oneBlock(posSlider[1], ChangeElemSliderColor(PtrSel,  colorTxtSliders[1]), SetValType(CONDITION(0>x-s[k].x-s[k].interSpace,0,x-s[k].x-s[k].interSpace),PosX));	 break;
+			case KEY_Blue_slider:	_ElemSliderPressDisp_oneBlock(posSlider[2], ChangeElemSliderColor(PtrSel,  colorTxtSliders[2]), SetValType(CONDITION(0>x-s[k].x-s[k].interSpace,0,x-s[k].x-s[k].interSpace),PosX));	 break;
 			case KEY_Red_minus:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(LeftSel, colorTxtSliders[0]), SetValType(PERCENT_SCALE(Test.font[0]+1,256),Percent));	 break;
 			case KEY_Red_plus:		_ElemSliderPressDisp_oneBlock(posSlider[0], ChangeElemSliderColor(RightSel,colorTxtSliders[0]), SetValType(PERCENT_SCALE(Test.font[0]+1,256),Percent));	 break;
 			case KEY_Green_minus:	_ElemSliderPressDisp_oneBlock(posSlider[1], ChangeElemSliderColor(LeftSel, colorTxtSliders[1]), SetValType(PERCENT_SCALE(Test.font[1]+1,256),Percent));	 break;
