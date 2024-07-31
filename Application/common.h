@@ -43,7 +43,8 @@
 #define MIDDLE(startPos,widthBk,width)	startPos+(widthBk-width)/2
 #define IS_RANGE(val,min,max) (val>=min)&&(val<=max)
 
-#define SET_IN_RANGE(val,min,max) ((val<min)?min:(((val>max))?max:val))
+#define SET_IN_RANGE(val,min,max) (((val)<(min))?(min):(((val)>(max))?(max):(val)))
+#define SET_NEW_RANGE(val,min,max,newMin,newMax) (((val)<(min))?(newMin):(((val)>(max))?(newMax):(val)))
 
 #define STRUCT_TAB_SIZE(_struct) (sizeof(_struct) / sizeof(&_struct[0]))
 
@@ -65,10 +66,10 @@
 #define LCD_BUFF_YSIZE		480
 
 #define MASK(val,hexMask)		((val)&0x##hexMask)
-#define SHIFT_RIGHT(val,shift,hexMask)		((val>>shift)&0x##hexMask)
-#define CONDITION(condition,val1,val2)	(condition ? val1 : val2)
+#define SHIFT_RIGHT(val,shift,hexMask)		(((val)>>(shift))&0x##hexMask)
+#define CONDITION(condition,val1,val2)	((condition) ? (val1) : (val2))
 
-#define PERCENT_SCALE(val,maxVal)	(((val)*100)/maxVal)
+#define PERCENT_SCALE(val,maxVal)	(((val)*100)/(maxVal))
 
 #define STRUCT_SIZE_SHAPE_POS		3
 
@@ -90,6 +91,7 @@ typedef struct{
 typedef struct{
 	structPosition pos[STRUCT_SIZE_SHAPE_POS];
 	structSize size[STRUCT_SIZE_SHAPE_POS];
+	uint16_t param[STRUCT_SIZE_SHAPE_POS];
 }SHAPE_POS;
 
 /* ----------- Functions Definitations ----------- */

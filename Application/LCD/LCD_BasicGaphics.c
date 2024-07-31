@@ -3353,6 +3353,10 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 	elements.size[2].w = triang_Height;
 	elements.size[2].h = triang_Width;
 
+	elements.param[0] = width_sel;
+	elements.param[1] = line_width;
+	elements.param[2] = ptr_width/2;
+
 	if(DelTriang!=(int8_t)SHIFT_RIGHT(heightParam,16,FF))
 		LCD_SimpleTriangle	(posBuff,BkpSizeX, 				lineSel_posX-spaceTriangLine, MIDDLE(y,height,triang_Width), 	triang_Width/2,    triang_Height, 	elemColor[0], elemColor[0], BkpColor, 	Left);
 	LCD_LineH					(			BkpSizeX, 				lineSel_posX+1,					MIDDLE(y,height,line_Bold), 		lineSel_width, 							LineSelColor, 									line_Bold );
