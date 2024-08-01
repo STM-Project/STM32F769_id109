@@ -67,7 +67,7 @@ typedef enum{
 #define SHAPE_PARAM(frame,fill,bk) 		v.COLOR_##frame, v.COLOR_##fill, v.COLOR_##bk
 #define SHAPE_PARAM_BOLD(frame,fill,bk,bold) 		((v.COLOR_##frame&0xFFFFFF)|(bold)<<24), v.COLOR_##fill, v.COLOR_##bk
 
-#define COLOR_GRAY(v)	((v<<16|v<<8|v)|0xFF000000)
+#define COLOR_GRAY(v)	(((v)<<16|(v)<<8|(v))|0xFF000000)
 #define RGB2INT(R,G,B)	(((R)<<16|(G)<<8|(B))|0xFF000000)
 #define R_PART(rgb)		((rgb>>16)&0x000000FF)
 #define G_PART(rgb)		((rgb>>8)&0x000000FF)
