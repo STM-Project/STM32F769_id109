@@ -102,6 +102,8 @@ typedef int FUNC_Keyboard(uint8_t,uint8_t,figureShape,uint8_t,uint16_t,uint16_t,
 #define FUNC1_DEF(pfunc)		FUNC_Keyboard *pfunc,uint8_t a,uint8_t b,figureShape c,uint8_t d,uint16_t e,uint16_t f,uint16_t g,uint16_t h,uint8_t i,uint16_t j,uint16_t k,uint8_t l
 #define FUNC1_ARG		a,b,c,d,e,f,g,h,i,j,k,l
 
+typedef void VOID_FUNCTION(void);
+
 
 /* --------- End Functions Definitations ----------- */
 

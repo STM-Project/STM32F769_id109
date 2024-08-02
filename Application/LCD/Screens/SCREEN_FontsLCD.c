@@ -467,7 +467,11 @@ static RGB_BK_FONT Test;
 static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int bold);
 static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int boldFrame);
 
-int *ppPTR[2] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat};
+static int incH = 50;  ///do usuniecia !!!
+static int incW = 200;
+static int incP = 50;
+
+int *ppPTR[7] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat,(int*)"Rafal", (int*)&Test, &incH, &incW, &incP };
 
 static char* TXT_PosCursor(void){
 	return Test.posCursor>0 ? Int2Str(Test.posCursor-1,' ',3,Sign_none) : StrAll(1,"off");
@@ -2124,8 +2128,7 @@ void FILE_NAME(setTouch)(void)
 }
 
 
-static int incH = 50;  ///do usuniecia !!!
-static int incW = 200;
+
 
 void FILE_NAME(debugRcvStr)(void)
 {
@@ -2229,28 +2232,37 @@ void FILE_NAME(debugRcvStr)(void)
 		}
 	}
 	else if(DEBUG_RcvStr("7")){
-		INCR(incH,1,255);
 		*ppPTR=(int*)FRAMES_GROUP_separat;
+		INCR(incH,1,255);
 		FILE_NAME(main)(2,(char**)ppPTR);
 
 	}
 	else if(DEBUG_RcvStr("8")){
+		*ppPTR=(int*)FRAMES_GROUP_combined;
 		DECR(incH,1,20);
-		*ppPTR=(int*)FRAMES_GROUP_separat;
 		FILE_NAME(main)(2,(char**)ppPTR);
 
 	}
 	else if(DEBUG_RcvStr("A"))
 	{
 		INCR(incW,1,600);
-		*ppPTR=(int*)FRAMES_GROUP_combined;
 		FILE_NAME(main)(2,(char**)ppPTR);
 
 	}
 	else if(DEBUG_RcvStr("Z"))
 	{
 		DECR(incW,1,50);
-		*ppPTR=(int*)FRAMES_GROUP_combined;
+		FILE_NAME(main)(2,(char**)ppPTR);
+	}
+	else if(DEBUG_RcvStr("S"))
+	{
+		INCR(incP,1,600);
+		FILE_NAME(main)(2,(char**)ppPTR);
+
+	}
+	else if(DEBUG_RcvStr("X"))
+	{
+		DECR(incP,1,0);
 		FILE_NAME(main)(2,(char**)ppPTR);
 	}
 
@@ -2642,17 +2654,17 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 
-	if		 (*argVal==(char*)FRAMES_GROUP_combined)
+	if		 (*(argVal+0)==(char*)FRAMES_GROUP_combined)
 		FRAMES_GROUP_combined(argNmb,15,15,25,25,1);
-	else if(*argVal==(char*)FRAMES_GROUP_separat)
+	else if(*(argVal+0)==(char*)FRAMES_GROUP_separat)
 		FRAMES_GROUP_separat(argNmb,20,20,25,25,0|(6<<8));
 
 
+	//int *ppPTR[7] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat,(int*)"Rafal", (int*)&Test, &incH, &incW, &incP };
 
-
-	if(argNmb > 1)
+	if(argNmb == 2)
 	{
-		LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,211, ChangeElemSliderSize(incW,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(incH,27), COLOR_GRAY(0x60), COLOR_GRAY(0x60) ,YELLOW, v.COLOR_BkScreen, SetValType(50,Percent), NoSel);
+		LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,211, ChangeElemSliderSize(**(argVal+5),NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(**(argVal+4),8), COLOR_GRAY(0x60), COLOR_GRAY(0x60) ,YELLOW, v.COLOR_BkScreen, SetValType(**(argVal+6),Percent), NoSel);
 	}
 
 
