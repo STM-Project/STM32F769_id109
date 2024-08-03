@@ -3277,6 +3277,36 @@ structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,u
 	 return pos;
 }
 
+void LCD_Arrow(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct)
+{
+	int heightShape = MASK(height,FFFF);
+	int widthTiang = height;
+	int heightTiang;
+
+	switch(SHIFT_RIGHT(height,16,F))
+	{	default: case 0: heightTiang = height;   break;
+					case 2: heightTiang = height*2; break;
+					case 3: heightTiang = height*3; break;
+					case 4: heightTiang = height/2; break;
+					case 5: heightTiang = height/3; break; }
+
+	int lenLine = width>heightTiang ? width-heightTiang : 1;
+	int boldLine = heightShape/10 ? heightShape/10 : 1;
+
+	int posLineY = MIDDLE(y,heightShape,boldLine);
+
+	int posTriangY = MIDDLE(y,heightShape,widthTiang);
+
+	LCD_LineH(BkpSizeX, x, posLineY, lenLine,  FrameColor, boldLine);
+	LCD_SimpleTriangle(posBuff,BkpSizeX, x+lenLine, y, widthTiang/2,heightTiang, FrameColor, FillColor, BkpColor, direct);
+}
+
+
+
+
+
+
+
 int ChangeElemSliderColor(SLIDER_PARAMS sel, uint32_t color){
 	return ((color&0xFFFFFF) | sel<<24);
 }
@@ -3290,14 +3320,14 @@ uint32_t SetValType(uint16_t slidPos, uint16_t param){
 	return ((slidPos&0xFFFF) | param<<16);
 }
 
-SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t heightParam, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, uint32_t slidPos, int elemSel)
+SHAPE_PARAMS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t heightParam, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, uint32_t slidPos, int elemSel)
 {
 	#define TRIANG_HEIGHT	(height / heightTriang_coeff)
 	#define LINE_BOLD			(height / lineBold_coeff)
 	#define PTR_HEIGHT		(height / heightPtr_coeff)
 	#define PTR_WIDTH			(PTR_HEIGHT / widthPtr_coeff)
 
-	SHAPE_POS elements;
+	SHAPE_PARAMS elements;
 	int width = SHIFT_RIGHT(widthParam,0,FFFF);
 	int height = SHIFT_RIGHT(heightParam,0,FFFF);
 	int spaceTriangLine = CONDITION(  DelTriang==(int8_t)SHIFT_RIGHT(heightParam,16,FF),  0,  SHIFT_RIGHT(heightParam,16,FF)  );
@@ -3373,6 +3403,21 @@ SHAPE_POS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY
 
 	return elements;
 }
+
+void LCDSHAPE_Window(uint32_t posBuff, figureShape pShape, SHAPE_PARAMS shape)
+{
+
+}
+
+void LCDSHAPE_SimpleTriangle(SHAPE_PARAMS shape)
+{
+
+}
+
+
+
+
+
 
 
 

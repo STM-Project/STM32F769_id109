@@ -1196,7 +1196,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		_TxtPos((XY_Touch_Struct){0});
 		LCD_StrDependOnColorsWindowIndirect(0, s[k].x+pos.x, s[k].y+pos.y, s[k].widthKey, s[k].heightKey,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,255, NoConstWidth);
 	}
-	void _SetTouchSlider(uint16_t idx, SHAPE_POS posElemSlider){
+	void _SetTouchSlider(uint16_t idx, SHAPE_PARAMS posElemSlider){
 		for(int i=0; i<NMB_SLIDER_ELEMENTS; ++i){
 			touchTemp[0].x= s[k].x + posElemSlider.pos[i].x;
 			touchTemp[1].x= touchTemp[0].x + posElemSlider.size[i].w;
@@ -1215,7 +1215,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			case Percent:	value = SetValType(PERCENT_SCALE(*pVal+1,maxSlidVal+1),Percent);  			  					  break;
 		}
 		LCD_ShapeWindow(LCD_Rectangle,0,s[k].widthKey,s[k].heightKey, 0,0, s[k].widthKey,s[k].heightKey, bkColor, bkColor,bkColor);
-		SHAPE_POS slid = LCD_SimpleSlider(0, s[k].widthKey, s[k].heightKey, 0,0, ChangeElemSliderSize(s[k].widthKey,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[k].heightKey,spaceTringLine), lineColor, lineSelColor ,selElem|0xFF000000, bkColor, value, selElem);
+		SHAPE_PARAMS slid = LCD_SimpleSlider(0, s[k].widthKey, s[k].heightKey, 0,0, ChangeElemSliderSize(s[k].widthKey,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[k].heightKey,spaceTringLine), lineColor, lineSelColor ,selElem|0xFF000000, bkColor, value, selElem);
 		LCD_Display(0, s[k].x+posSlider.x, s[k].y+posSlider.y, s[k].widthKey, s[k].heightKey);
 		if(PtrSel==SHIFT_RIGHT(selElem,24,F))
 			*pVal = SET_NEW_RANGE( ((maxSlidVal+1)*slid.param[0])/slid.param[1], slid.param[2],maxSlidVal-slid.param[2], 0,maxSlidVal );
@@ -1450,7 +1450,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					//_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
 					if(i==1){
 						_Key(posKey[i]);
-						LCD_SimpleTriangle(0,widthAll, posKey[i].x+6,posKey[i].y+16, 9,18, frameColor,frameColor,bkColor,Right);
+						LCD_SimpleTriangle(0,widthAll, MIDDLE(posKey[i].x,s[k].widthKey,12),MIDDLE(posKey[i].y,s[k].heightKey,12), 6,12, frameColor,frameColor,bkColor,Right);
 
 					}
 					else{
@@ -1771,7 +1771,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			{1*s[k].interSpace, 	3*s[k].interSpace + 2*s[k].heightKey + head}};
 
 		int countKey = STRUCT_TAB_SIZE(txtSliders);
-		SHAPE_POS elemSliderPos[countKey];
+		SHAPE_PARAMS elemSliderPos[countKey];
 
 		widthAll =  dimSlider[0]*s[k].widthKey  + (dimSlider[0]+1)*s[k].interSpace;
 		heightAll = dimSlider[1]*s[k].heightKey + (dimSlider[1]+1)*s[k].interSpace + head;
@@ -2231,6 +2231,8 @@ void FILE_NAME(debugRcvStr)(void)
 			KEYBOARD_TYPE(KEYBOARD_none,0);
 		}
 	}
+
+	//- Zrobic szablon na TEST SHAPE -------!!!!
 	else if(DEBUG_RcvStr("7")){
 		*ppPTR=(int*)FRAMES_GROUP_separat;
 		INCR(incH,1,255);
@@ -2265,8 +2267,7 @@ void FILE_NAME(debugRcvStr)(void)
 		DECR(incP,1,0);
 		FILE_NAME(main)(2,(char**)ppPTR);
 	}
-
-
+	//- Zrobic szablon na TEST SHAPE -------!!!!
 
 
 
@@ -2664,7 +2665,8 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 	if(argNmb == 2)
 	{
-		LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,211, ChangeElemSliderSize(**(argVal+5),NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(**(argVal+4),8), COLOR_GRAY(0x60), COLOR_GRAY(0x60) ,YELLOW, v.COLOR_BkScreen, SetValType(**(argVal+6),Percent), NoSel);
+		//LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,211, ChangeElemSliderSize(**(argVal+5),NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(**(argVal+4),8), COLOR_GRAY(0x60), COLOR_GRAY(0x60) ,YELLOW, v.COLOR_BkScreen, SetValType(**(argVal+6),Percent), NoSel);
+		LCD_Arrow(0,LCD_X,  50,211, **(argVal+5),**(argVal+4), v.COLOR_MainFrame,0,v.COLOR_BkScreen, Right);
 	}
 
 

@@ -89,10 +89,23 @@ typedef struct{
 }structSize;
 
 typedef struct{
+	int frame;
+	int fill;
+	int bk;
+}structColor;
+
+typedef struct{
+	int bkpSizeX;
+	int bkpSizeY;
+}structBkSize;
+
+typedef struct{
+	structBkSize 	bkSize;
 	structPosition pos[STRUCT_SIZE_SHAPE_POS];
-	structSize size[STRUCT_SIZE_SHAPE_POS];
-	uint16_t param[STRUCT_SIZE_SHAPE_POS];
-}SHAPE_POS;
+	structSize 		size[STRUCT_SIZE_SHAPE_POS];
+	structColor 	color[STRUCT_SIZE_SHAPE_POS];
+	uint16_t 		param[STRUCT_SIZE_SHAPE_POS];
+}SHAPE_PARAMS;
 
 /* ----------- Functions Definitations ----------- */
 typedef void(*figureShape)(uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t);
