@@ -3280,24 +3280,23 @@ structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,u
 void LCD_Arrow(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct)
 {
 	int heightShape = MASK(height,FFFF);
-	int widthTiang = height;
+	int widthShape = MASK(width,FFFF);
+
+	int lineCoeff = SHIFT_RIGHT(width,16,FF);
+	int widthTiang = heightShape;
 	int heightTiang;
 
-	switch(SHIFT_RIGHT(height,16,F))
-	{	default: case 0: heightTiang = height;   break;
-					case 2: heightTiang = height*2; break;
-					case 3: heightTiang = height*3; break;
-					case 4: heightTiang = height/2; break;
-					case 5: heightTiang = height/3; break; }
+	switch(SHIFT_RIGHT(height,16,FF))
+	{	default: case 0: heightTiang = widthTiang;   break;
+					case 1: heightTiang = widthTiang*2; break;
+					case 2: heightTiang = widthTiang*3; break;
+					case 3: heightTiang = widthTiang/2; break;
+					case 4: heightTiang = widthTiang/4; break; }
 
-	int lenLine = width>heightTiang ? width-heightTiang : 1;
-	int boldLine = heightShape/10 ? heightShape/10 : 1;
+	int lenLine = widthShape>heightTiang ? widthShape-heightTiang : 1;
+	int boldLine = heightShape/lineCoeff ? heightShape/lineCoeff : 1;
 
-	int posLineY = MIDDLE(y,heightShape,boldLine);
-
-	int posTriangY = MIDDLE(y,heightShape,widthTiang);
-
-	LCD_LineH(BkpSizeX, x, posLineY, lenLine,  FrameColor, boldLine);
+	LCD_LineH(BkpSizeX, x,  MIDDLE(y,heightShape,boldLine), lenLine,  FrameColor, boldLine);
 	LCD_SimpleTriangle(posBuff,BkpSizeX, x+lenLine, y, widthTiang/2,heightTiang, FrameColor, FillColor, BkpColor, direct);
 }
 
