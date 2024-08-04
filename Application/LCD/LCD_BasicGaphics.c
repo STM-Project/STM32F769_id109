@@ -3154,7 +3154,7 @@ void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t 
 	int coeff = halfBaseWidth > height ? halfBaseWidth/height : height/halfBaseWidth;
 
 	if(FillColor != 0) FrameColor=FillColor;
-	Set_AACoeff_Draw(coeff,FrameColor,BkpColor, 0.4);
+	Set_AACoeff_Draw(coeff,FrameColor,BkpColor, 0.1);
 	_StartDrawLine(0,BkpSizeX,x,y);
 
 	switch(direct)
@@ -3277,12 +3277,18 @@ structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,u
 	 return pos;
 }
 
+uint32_t SetLineBold(uint32_t width, uint8_t bold){
+	return SHIFT_LEFT(width,bold,16);
+}
+uint32_t SetTriangHeightCoeff(uint32_t height, uint8_t coeff){
+	return SHIFT_LEFT(height,coeff,16);
+}
 void LCD_Arrow(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct)
 {
 	int heightShape = MASK(height,FFFF);
 	int widthShape = MASK(width,FFFF);
 
-	int lineCoeff = SHIFT_RIGHT(width,16,FF);
+	int boldLine = SHIFT_RIGHT(width,16,FF);
 	int widthTiang = heightShape;
 	int heightTiang;
 
@@ -3293,12 +3299,62 @@ void LCD_Arrow(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32
 					case 3: heightTiang = widthTiang/2; break;
 					case 4: heightTiang = widthTiang/4; break; }
 
-	int lenLine = widthShape>heightTiang ? widthShape-heightTiang : 1;
-	int boldLine = heightShape/lineCoeff ? heightShape/lineCoeff : 1;
+	int lenLine = CONDITION(widthShape>heightTiang, widthShape-heightTiang, 1);
 
 	LCD_LineH(BkpSizeX, x,  MIDDLE(y,heightShape,boldLine), lenLine,  FrameColor, boldLine);
 	LCD_SimpleTriangle(posBuff,BkpSizeX, x+lenLine, y, widthTiang/2,heightTiang, FrameColor, FillColor, BkpColor, direct);
 }
+
+//typedef struct{
+//	structBkSize 	bkSize;
+//	structPosition pos[STRUCT_SIZE_SHAPE_POS];
+//	structSize 		size[STRUCT_SIZE_SHAPE_POS];
+//	structColor 	color[STRUCT_SIZE_SHAPE_POS];
+//	uint16_t 		param[STRUCT_SIZE_SHAPE_POS];
+//}SHAPE_PARAMS;
+
+SHAPE_PARAMS SETSHAPE_Arrow(uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct)
+{
+	SHAPE_PARAMS params;
+	params.bkSize.x = BkpSizeX;
+	params.pos[0].x = x;
+	params.pos[0].y = y;
+	params.size[0].w = MASK(width,FFFF);
+	params.size[0].h = MASK(height,FFFF);
+	params.color[0].frame = FrameColor;
+	params.color[0].fill = FillColor;
+	params.color[0].bk = BkpColor;
+	params.param[0] = SHIFT_RIGHT(width,16,FF);
+	params.param[1] = SHIFT_RIGHT(height,16,FF);
+	params.param[2] = direct;
+	return params;
+
+}
+
+void LCDSHAPE_Arrow(uint32_t posBuff,	SHAPE_PARAMS params)		/* param: [boldLine], [heightTriangCoeff], [direction] */
+{
+	int nr = 0;
+	int heightShape = params.size[nr].h;
+	int widthShape  =	params.size[nr].w;
+
+	int boldLine = params.param[0];
+	int widthTiang = heightShape;
+	int heightTiang;
+
+	switch(params.param[1])
+	{	default: case 0: heightTiang = widthTiang;   break;
+					case 1: heightTiang = widthTiang*2; break;
+					case 2: heightTiang = widthTiang*3; break;
+					case 3: heightTiang = widthTiang/2; break;
+					case 4: heightTiang = widthTiang/4; break; }
+
+	int lenLine = CONDITION(widthShape>heightTiang, widthShape-heightTiang, 1);
+
+	LCD_LineH(params.bkSize.x, params.pos[nr].x,  MIDDLE(params.pos[nr].y,heightShape,boldLine), lenLine,  params.color[nr].frame, boldLine);
+	LCD_SimpleTriangle(posBuff,params.bkSize.x, params.pos[nr].x+lenLine, params.pos[nr].y, widthTiang/2,heightTiang, params.color[nr].frame, params.color[nr].fill, params.color[nr].bk, params.param[2]);
+}
+
+
 
 
 

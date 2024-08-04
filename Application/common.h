@@ -67,6 +67,7 @@
 
 #define MASK(val,hexMask)		((val)&0x##hexMask)
 #define SHIFT_RIGHT(val,shift,hexMask)		(((val)>>(shift))&0x##hexMask)
+#define SHIFT_LEFT(val,val2,shift)		((val)|((val2)<<(shift)))
 #define CONDITION(condition,val1,val2)	((condition) ? (val1) : (val2))
 
 #define PERCENT_SCALE(val,maxVal)	(((val)*100)/(maxVal))
@@ -95,8 +96,8 @@ typedef struct{
 }structColor;
 
 typedef struct{
-	int bkpSizeX;
-	int bkpSizeY;
+	int x;
+	int y;
 }structBkSize;
 
 typedef struct{

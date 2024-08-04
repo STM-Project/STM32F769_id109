@@ -2666,11 +2666,18 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	if(argNmb == 2)
 	{
 		//LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,211, ChangeElemSliderSize(**(argVal+5),NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(**(argVal+4),8), COLOR_GRAY(0x60), COLOR_GRAY(0x60) ,YELLOW, v.COLOR_BkScreen, SetValType(**(argVal+6),Percent), NoSel);
-		LCD_Arrow(0,LCD_X,  0,231, **(argVal+5)| (20<<16),   **(argVal+4) | 0x00000, v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Right);
-		LCD_Arrow(0,LCD_X,  150,231, **(argVal+5)| (17<<16),  **(argVal+4) | 0x10000, v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Right);
-		LCD_Arrow(0,LCD_X,  300,231, **(argVal+5)| (13<<16),  **(argVal+4) | 0x20000, v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Right);
-		LCD_Arrow(0,LCD_X,  450,231, **(argVal+5)| (10<<16),  **(argVal+4) | 0x30000, v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Right);
-		LCD_Arrow(0,LCD_X,  600,231, **(argVal+5)| (5<<16),  **(argVal+4) | 0x40000, v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right);
+
+//		LCD_Arrow(0,LCD_X,  0,231,   SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Right);
+//		LCD_Arrow(0,LCD_X,  150,231, SHIFT_LEFT(**(argVal+5),2,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Right);
+//		LCD_Arrow(0,LCD_X,  300,231, SetLineBold(**(argVal+5),3),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Right);
+//		LCD_Arrow(0,LCD_X,  450,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Right);
+//		LCD_Arrow(0,LCD_X,  600,231, SHIFT_LEFT(**(argVal+5),5,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right);
+
+		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,  0,231,   SHIFT_LEFT(**(argVal+5),0,16),  SHIFT_LEFT(**(argVal+4),0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,  150,231, SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,  300,231, SetLineBold(**(argVal+5),2),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,  450,231, SHIFT_LEFT(**(argVal+5),3,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,  600,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right));
 	}
 
 

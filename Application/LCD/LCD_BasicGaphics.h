@@ -137,6 +137,11 @@ int ChangeElemSliderColor(SLIDER_PARAMS sel, uint32_t color);
 uint32_t ChangeElemSliderSize(uint16_t width, uint8_t coeffHeightTriang, uint8_t coeffLineBold, uint8_t coeffHeightPtr, uint8_t coeffWidthPtr);
 uint32_t SetSpaceTriangLineSlider(uint16_t height, uint16_t param);
 uint32_t SetValType(uint16_t slidPos, uint16_t param);
+uint32_t SetLineBold(uint32_t width, uint8_t bold);
+uint32_t SetTriangHeightCoeff(uint32_t height, uint8_t coeff);
+
+SHAPE_PARAMS SETSHAPE_Arrow(uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct);
+void LCDSHAPE_Arrow(uint32_t posBuff,	SHAPE_PARAMS params);
 
 /* ------- End Selected Figures ------------------*/
 
