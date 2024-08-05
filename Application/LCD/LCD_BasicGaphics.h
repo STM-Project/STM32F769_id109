@@ -131,7 +131,7 @@ structPosition DrawLine(uint32_t posBuff,uint16_t x, uint16_t y, uint16_t len, u
 void LCD_SignStar(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor);
 void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t halfWidth,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct);
 structPosition LCD_ShapeExample(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t lineLen, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, int angleInclination);
-void LCD_Arrow(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct);
+void LCD_Arrow(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct);
 SHAPE_PARAMS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t heightParam, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, uint32_t slidPos, int elemSel);
 int ChangeElemSliderColor(SLIDER_PARAMS sel, uint32_t color);
 uint32_t ChangeElemSliderSize(uint16_t width, uint8_t coeffHeightTriang, uint8_t coeffLineBold, uint8_t coeffHeightPtr, uint8_t coeffWidthPtr);
@@ -140,7 +140,8 @@ uint32_t SetValType(uint16_t slidPos, uint16_t param);
 uint32_t SetLineBold(uint32_t width, uint8_t bold);
 uint32_t SetTriangHeightCoeff(uint32_t height, uint8_t coeff);
 
-SHAPE_PARAMS SETSHAPE_Arrow(uint32_t BkpSizeX, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct);
+void LCDSHAPE_Window(ShapeFunc pShape, uint32_t posBuff, SHAPE_PARAMS shape);
+SHAPE_PARAMS SETSHAPE_Arrow(uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct);
 void LCDSHAPE_Arrow(uint32_t posBuff,	SHAPE_PARAMS params);
 
 /* ------- End Selected Figures ------------------*/
