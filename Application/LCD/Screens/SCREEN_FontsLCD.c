@@ -2587,7 +2587,7 @@ static int FRAME_odstep()
 {
 	return 0;
 }
-
+// ... i iwyswietli ci sie lista w argumentach sprawdz je bo coeikawe !!!!!
 
 static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int boldFrame)		/* Parameters ..Offs.. is counted from STR (not from FRAME) */
 {
@@ -2673,19 +2673,19 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 		LCD_Arrow(0,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Down);
 		LCD_Arrow(0,LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),5,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right);
 
-//		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,LCD_Y,  0,231,   SHIFT_LEFT(**(argVal+5),0,16),  SHIFT_LEFT(**(argVal+4),0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Right));
-//		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,LCD_Y,  150,231, SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Right));
-//		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,LCD_Y,  300,231, SetLineBold(**(argVal+5),2),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Right));
-//		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),3,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Right));
-//		LCDSHAPE_Arrow(0,SETSHAPE_Arrow(LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  0,231,   SHIFT_LEFT(**(argVal+5),0,16),  SHIFT_LEFT(**(argVal+4),0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  300,231, SetLineBold(**(argVal+5),2),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),3,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right));
 
 
-//
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,SETSHAPE_Arrow(LCD_X,LCD_Y,  0,231,   SHIFT_LEFT(**(argVal+5),0,16),  SHIFT_LEFT(**(argVal+4),0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Left));
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,SETSHAPE_Arrow(LCD_X,LCD_Y,  150,231, SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Up));
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,SETSHAPE_Arrow(LCD_X,LCD_Y,  300,231, SetLineBold(**(argVal+5),2),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Down));
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,SETSHAPE_Arrow(LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),3,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Right));
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,SETSHAPE_Arrow(LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right));
+
+		LCDSHAPE_Window(LCD_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  0,231,   SHIFT_LEFT(**(argVal+5),0,16),  SHIFT_LEFT(**(argVal+4),0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Left));
+		LCDSHAPE_Window(LCD_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Up));
+		LCDSHAPE_Window(LCD_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  300,231, SetLineBold(**(argVal+5),2),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Down));
+		LCDSHAPE_Window(LCD_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),3,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Window(LCD_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right));
 	}
 	else
 	{
