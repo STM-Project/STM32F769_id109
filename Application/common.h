@@ -109,7 +109,7 @@ typedef struct{
 }SHAPE_PARAMS;
 
 /* ----------- Functions Definitations ----------- */
-typedef void(*figureShape)(uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t);
+typedef void (*figureShape)(uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t);
 
 typedef int FUNC_Keyboard(uint8_t,uint8_t,figureShape,uint8_t,uint16_t,uint16_t,uint16_t,uint16_t,uint8_t,uint16_t,uint16_t,uint8_t);
 #define FUNC1_SET(func,a,b,c,d,e,f,g,h,i,j,k,l)		func,a,b,c,d,e,f,g,h,i,j,k,l
@@ -118,7 +118,7 @@ typedef int FUNC_Keyboard(uint8_t,uint8_t,figureShape,uint8_t,uint16_t,uint16_t,
 
 typedef void VOID_FUNCTION(void);
 
-typedef SHAPE_PARAMS(*ShapeFunc)(uint32_t,SHAPE_PARAMS);
+typedef SHAPE_PARAMS (*ShapeFunc)(uint32_t,SHAPE_PARAMS);
 
 
 /* --------- End Functions Definitations ----------- */

@@ -2489,7 +2489,7 @@ void LCD_LineH(uint32_t BkpSizeX, uint16_t x, uint16_t y, uint16_t width,  uint3
 void LCD_LineV(uint32_t BkpSizeX, uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold){
 	_StartDrawLine(0,BkpSizeX, x, y);	_CopyDrawPos();	_DrawDown(width, color, BkpSizeX);
 	for(int i=0; i<bold; ++i){
-		_SetCopyDrawPos();	_IncDrawPos(1);  _DrawDown(width, color, BkpSizeX);
+		_SetCopyDrawPos();	_IncDrawPos(1); _CopyDrawPos();  _DrawDown(width, color, BkpSizeX);
 	}
 }
 
@@ -3397,44 +3397,53 @@ SHAPE_PARAMS LCD_Arrow(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uin
 	if(ToShapeAndReturn == posBuff)
 		return params;
 
-
 	posBuff = posBuff & 0x7FFFFFFF;
 
 	int heightShape = MASK(height,FFFF);
 	int widthShape = MASK(width,FFFF);
 
 	int boldLine = SHIFT_RIGHT(width,16,FF);
-	int widthTiang = heightShape;
-	int heightTiang = 0, lenLine = 0;
+	int widthTiang = 0, heightTiang = 0, lenLine = 0;
 
-	switch(SHIFT_RIGHT(height,16,FF))
-	{	default: case 0: heightTiang = widthTiang;   break;
-					case 1: heightTiang = widthTiang*2; break;
-					case 2: heightTiang = widthTiang*3; break;
-					case 3: heightTiang = widthTiang/2; break;
-					case 4: heightTiang = widthTiang/4; break; }
+	void _CalcHeightTriang(void){
+		switch(SHIFT_RIGHT(height,16,FF))
+		{	default:
+			case 0: heightTiang = widthTiang;   break;
+			case 1: heightTiang = widthTiang*2; break;
+			case 2: heightTiang = widthTiang*3; break;
+			case 3: heightTiang = widthTiang/2; break;
+			case 4: heightTiang = widthTiang/4; break; }
+	}
 
 	switch((int)direct)
 	{
 		case Right:
+			widthTiang = heightShape;
+			_CalcHeightTriang();
 			lenLine = CONDITION(widthShape>heightTiang, widthShape-heightTiang, 1);
 			LCD_LineH(bkpSizeX, x,  MIDDLE(y,widthTiang,boldLine), lenLine,  frameColor, boldLine);
 			LCD_SimpleTriangle(posBuff,bkpSizeX, x+lenLine, y, widthTiang/2,heightTiang, frameColor, fillColor, bkpColor, direct);
 			break;
 
 		case Left:
+			widthTiang = heightShape;
+			_CalcHeightTriang();
 			lenLine = CONDITION(widthShape>heightTiang, widthShape-heightTiang, 1);
 			LCD_LineH(bkpSizeX, x+heightTiang,  MIDDLE(y,widthTiang,boldLine), lenLine,  frameColor, boldLine);
 			LCD_SimpleTriangle(posBuff,bkpSizeX, x+heightTiang, y, widthTiang/2,heightTiang, frameColor, fillColor, bkpColor, direct);
 			break;
 
 		case Up:
+			widthTiang = widthShape;
+			_CalcHeightTriang();
 			lenLine = CONDITION(heightShape>heightTiang, heightShape-heightTiang, 1);
 			LCD_LineV(bkpSizeX, MIDDLE(x,widthTiang,boldLine),  y+heightTiang, lenLine,  frameColor, boldLine);
 			LCD_SimpleTriangle(posBuff,bkpSizeX, x, y+heightTiang, widthTiang/2,heightTiang, frameColor, fillColor, bkpColor, direct);
 			break;
 
 		case Down:
+			widthTiang = widthShape;
+			_CalcHeightTriang();
 			lenLine = CONDITION(heightShape>heightTiang, heightShape-heightTiang, 1);
 			LCD_LineV(bkpSizeX, MIDDLE(x,widthTiang,boldLine),  y, lenLine,  frameColor, boldLine);
 			LCD_SimpleTriangle(posBuff,bkpSizeX, x, y+lenLine, widthTiang/2,heightTiang, frameColor, fillColor, bkpColor, direct);
