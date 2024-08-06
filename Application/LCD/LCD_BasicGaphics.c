@@ -3390,26 +3390,15 @@ uint32_t SetLineBold(uint32_t width, uint8_t bold){
 uint32_t SetTriangHeightCoeff(uint32_t height, uint8_t coeff){
 	return SHIFT_LEFT(height,coeff,16);
 }
-void LCD_Arrow(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct)
+SHAPE_PARAMS LCD_Arrow(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t frameColor, uint32_t fillColor, uint32_t bkpColor, DIRECTIONS direct)
 {
-//	int heightShape = MASK(height,FFFF);
-//	int widthShape = MASK(width,FFFF);
-//
-//	int boldLine = SHIFT_RIGHT(width,16,FF);
-//	int widthTiang = heightShape;
-//	int heightTiang;
-//
-//	switch(SHIFT_RIGHT(height,16,FF))
-//	{	default: case 0: heightTiang = widthTiang;   break;
-//					case 1: heightTiang = widthTiang*2; break;
-//					case 2: heightTiang = widthTiang*3; break;
-//					case 3: heightTiang = widthTiang/2; break;
-//					case 4: heightTiang = widthTiang/4; break; }
-//
-//	int lenLine = CONDITION(widthShape>heightTiang, widthShape-heightTiang, 1);
-//
-//	LCD_LineH(BkpSizeX, x,  MIDDLE(y,heightShape,boldLine), lenLine,  FrameColor, boldLine);
-//	LCD_SimpleTriangle(posBuff,BkpSizeX, x+lenLine, y, widthTiang/2,heightTiang, FrameColor, FillColor, BkpColor, direct);
+	SHAPE_PARAMS params = {.bkSize.x=bkpSizeX, .bkSize.y=bkpSizeY, .pos[0].x=x, .pos[0].y=y, .size[0].w=width, .size[0].h=height, .color[0].frame=frameColor, .color[0].fill=fillColor, .color[0].bk=bkpColor, .param[0]=direct};
+
+	if(ToShapeAndReturn == posBuff)
+		return params;
+
+
+	posBuff = posBuff & 0x7FFFFFFF;
 
 	int heightShape = MASK(height,FFFF);
 	int widthShape = MASK(width,FFFF);
@@ -3429,91 +3418,43 @@ void LCD_Arrow(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,
 	{
 		case Right:
 			lenLine = CONDITION(widthShape>heightTiang, widthShape-heightTiang, 1);
-			LCD_LineH(BkpSizeX, x,  MIDDLE(y,widthTiang,boldLine), lenLine,  FrameColor, boldLine);
-			LCD_SimpleTriangle(posBuff,BkpSizeX, x+lenLine, y, widthTiang/2,heightTiang, FrameColor, FillColor, BkpColor, direct);
+			LCD_LineH(bkpSizeX, x,  MIDDLE(y,widthTiang,boldLine), lenLine,  frameColor, boldLine);
+			LCD_SimpleTriangle(posBuff,bkpSizeX, x+lenLine, y, widthTiang/2,heightTiang, frameColor, fillColor, bkpColor, direct);
 			break;
 
 		case Left:
 			lenLine = CONDITION(widthShape>heightTiang, widthShape-heightTiang, 1);
-			LCD_LineH(BkpSizeX, x+heightTiang,  MIDDLE(y,widthTiang,boldLine), lenLine,  FrameColor, boldLine);
-			LCD_SimpleTriangle(posBuff,BkpSizeX, x+heightTiang, y, widthTiang/2,heightTiang, FrameColor, FillColor, BkpColor, direct);
+			LCD_LineH(bkpSizeX, x+heightTiang,  MIDDLE(y,widthTiang,boldLine), lenLine,  frameColor, boldLine);
+			LCD_SimpleTriangle(posBuff,bkpSizeX, x+heightTiang, y, widthTiang/2,heightTiang, frameColor, fillColor, bkpColor, direct);
 			break;
 
 		case Up:
 			lenLine = CONDITION(heightShape>heightTiang, heightShape-heightTiang, 1);
-			LCD_LineV(BkpSizeX, MIDDLE(x,widthTiang,boldLine),  y+heightTiang, lenLine,  FrameColor, boldLine);
-			LCD_SimpleTriangle(posBuff,BkpSizeX, x, y+heightTiang, widthTiang/2,heightTiang, FrameColor, FillColor, BkpColor, direct);
+			LCD_LineV(bkpSizeX, MIDDLE(x,widthTiang,boldLine),  y+heightTiang, lenLine,  frameColor, boldLine);
+			LCD_SimpleTriangle(posBuff,bkpSizeX, x, y+heightTiang, widthTiang/2,heightTiang, frameColor, fillColor, bkpColor, direct);
 			break;
 
 		case Down:
 			lenLine = CONDITION(heightShape>heightTiang, heightShape-heightTiang, 1);
-			LCD_LineV(BkpSizeX, MIDDLE(x,widthTiang,boldLine),  y, lenLine,  FrameColor, boldLine);
-			LCD_SimpleTriangle(posBuff,BkpSizeX, x, y+lenLine, widthTiang/2,heightTiang, FrameColor, FillColor, BkpColor, direct);
+			LCD_LineV(bkpSizeX, MIDDLE(x,widthTiang,boldLine),  y, lenLine,  frameColor, boldLine);
+			LCD_SimpleTriangle(posBuff,bkpSizeX, x, y+lenLine, widthTiang/2,heightTiang, frameColor, fillColor, bkpColor, direct);
 			break;
 	}
-}
-
-SHAPE_PARAMS SETSHAPE_Arrow(uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, DIRECTIONS direct)
-{
-	SHAPE_PARAMS params;
-	params.bkSize.x = BkpSizeX;
-	params.pos[0].x = x;
-	params.pos[0].y = y;
-	params.size[0].w = MASK(width,FFFF);
-	params.size[0].h = MASK(height,FFFF);
-	params.color[0].frame = FrameColor;
-	params.color[0].fill = FillColor;
-	params.color[0].bk = BkpColor;
-	params.param[0] = SHIFT_RIGHT(width,16,FF);
-	params.param[1] = SHIFT_RIGHT(height,16,FF);
-	params.param[2] = direct;
 	return params;
 }
 
-void LCDSHAPE_Arrow(uint32_t posBuff,	SHAPE_PARAMS params)		/* param: [boldLine], [heightTriangCoeff], [direction] */
-{
-	int bkSizeX 	= params.bkSize.x;
-	int linePosX 	= params.pos[0].x;
-	int linePosY 	= params.pos[0].y;
-
-	int heightShape = params.size[0].h;
-	int widthShape  =	params.size[0].w;
-
-	int frameColor	 = params.color[0].frame;
-	int fillColor 	 = params.color[0].fill;
-	int bkColor 	 = params.color[0].bk;
-
-	int boldLine 			 = params.param[0];
-	int heightTriangCoeff = params.param[1];
-	int direction 			 = params.param[2];
-
-	int widthTiang = heightShape;
-	int heightTiang;
-
-	switch(heightTriangCoeff)
-	{	default: case 0: heightTiang = widthTiang;   break;
-					case 1: heightTiang = widthTiang*2; break;
-					case 2: heightTiang = widthTiang*3; break;
-					case 3: heightTiang = widthTiang/2; break;
-					case 4: heightTiang = widthTiang/4; break; }
-
-	int lenLine = CONDITION(widthShape>heightTiang, widthShape-heightTiang, 1);
-
-	LCD_LineH(bkSizeX, linePosX,  MIDDLE(linePosY,heightShape,boldLine), lenLine,  frameColor, boldLine);
-	LCD_SimpleTriangle(posBuff,params.bkSize.x, linePosX+lenLine, linePosY, widthTiang/2,heightTiang, frameColor, fillColor, bkColor, direction);
+SHAPE_PARAMS LCDSHAPE_Arrow(uint32_t posBuff, SHAPE_PARAMS param){
+	return LCD_Arrow(posBuff,param.bkSize.x,param.bkSize.y, param.pos[0].x,param.pos[0].y, param.size[0].w,param.size[0].h, param.color[0].frame, param.color[0].fill, param.color[0].bk, param.param[0]);
 }
 
-void LCDSHAPE_Window(ShapeFunc pShape, uint32_t posBuff, SHAPE_PARAMS shape){
-	pShape(posBuff,shape);
+SHAPE_PARAMS LCDSHAPE_Window(ShapeFunc pShape, uint32_t posBuff, SHAPE_PARAMS param){
+	return pShape(posBuff,param);
 }
 
 void LCDSHAPE_SimpleTriangle(SHAPE_PARAMS shape)
 {
 
 }
-
-
-
 
 
 
