@@ -431,6 +431,12 @@ typedef enum{
 	FONTS
 }REFRESH_DATA;
 
+typedef enum{
+	LoadWholeScreen,
+	LoadPartScreen,
+	LoadUserScreen
+}LOAD_SCREEN;
+
 static char bufTemp[50];
 static int lenTxt_prev;
 static StructTxtPxlLen lenStr;
@@ -471,12 +477,12 @@ static int incH = 30;  ///do usuniecia !!!
 static int incW = 50;
 static int incP = 50;
 
-int *ppPTR[7] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat,(int*)"Rafal", (int*)&Test, &incH, &incW, &incP };
-
+static int *ppMain[7] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat,(int*)"Rafal", (int*)&Test, &incH, &incW, &incP };
+/*
 static char* TXT_PosCursor(void){
 	return Test.posCursor>0 ? Int2Str(Test.posCursor-1,' ',3,Sign_none) : StrAll(1,"off");
 }
-
+*/
 static void ClearCursorField(void){
 	LCD_ShapeIndirect(LCD_GetStrVar_x(v.FONT_VAR_Fonts),LCD_GetStrVar_y(v.FONT_VAR_Fonts)+LCD_GetFontHeight(v.FONT_ID_Fonts)+Test.spaceCoursorY,LCD_Rectangle, lenStr.inPixel,Test.heightCursor, v.COLOR_BkScreen,v.COLOR_BkScreen,v.COLOR_BkScreen);
 }
@@ -1450,7 +1456,11 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					//_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
 					if(i==1){
 						_Key(posKey[i]);
-						LCD_SimpleTriangle(0,widthAll, MIDDLE(posKey[i].x,s[k].widthKey,12),MIDDLE(posKey[i].y,s[k].heightKey,12), 6,12, frameColor,frameColor,bkColor,Right);
+						//LCD_SimpleTriangle(0,widthAll, MIDDLE(posKey[i].x,s[k].widthKey,12),MIDDLE(posKey[i].y,s[k].heightKey,12), 6,12, frameColor,frameColor,bkColor,Right);
+
+LCD_Arrow(0,widthAll,heightAll,  posKey[i].x+5,posKey[i].y+5, SetLineBold(20,2),  SetTriangHeightCoeff(15,3), frameColor,frameColor,bkColor, Left);
+StructTxtPxlLen len = LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, posKey[i].x+5+20,posKey[i].y+5,"...", fullHight, 0, fillColor, frameColor,250, NoConstWidth);
+LCD_Arrow(0,widthAll,heightAll,   posKey[i].x+5+20+len.inPixel,posKey[i].y+5, SetLineBold(20,2),  SetTriangHeightCoeff(15,3), frameColor,frameColor,bkColor, Right);
 
 					}
 					else{
@@ -1883,13 +1893,13 @@ void FILE_NAME(setTouch)(void)
 	#define CASE_TOUCH_STATE(state,touchPoint, src,dst, txt,coeff) \
 		case touchPoint:\
 			if(0==CHECK_TOUCH(state)){\
-				if(GET_TOUCH){ FILE_NAME(main)(1,(char**)ppPTR); CLR_ALL_TOUCH; }\
+				if(GET_TOUCH){ FILE_NAME(main)(LoadPartScreen,(char**)ppMain); CLR_ALL_TOUCH; }\
 				SELECT_CURRENT_FONT(src, dst, txt, coeff);\
 				SET_TOUCH(state);\
 				SetFunc();\
 			}\
 			else{\
-				FILE_NAME(main)(1,(char**)ppPTR);\
+				FILE_NAME(main)(LoadPartScreen,(char**)ppMain);\
 				KEYBOARD_TYPE(KEYBOARD_none,0);\
 				CLR_TOUCH(state);\
 			}
@@ -2227,45 +2237,45 @@ void FILE_NAME(debugRcvStr)(void)
 		}
 		else
 		{
-			FILE_NAME(main)(1,(char**)ppPTR);
+			FILE_NAME(main)(LoadPartScreen,(char**)ppMain);
 			KEYBOARD_TYPE(KEYBOARD_none,0);
 		}
 	}
 
 	//- Zrobic szablon na TEST SHAPE -------!!!!
 	else if(DEBUG_RcvStr("7")){
-		*ppPTR=(int*)FRAMES_GROUP_separat;
+		*ppMain=(int*)FRAMES_GROUP_separat;
 		INCR(incH,1,255);
-		FILE_NAME(main)(2,(char**)ppPTR);
+		FILE_NAME(main)(LoadUserScreen,(char**)ppMain);
 
 	}
 	else if(DEBUG_RcvStr("8")){
-		*ppPTR=(int*)FRAMES_GROUP_combined;
+		*ppMain=(int*)FRAMES_GROUP_combined;
 		DECR(incH,1,20);
-		FILE_NAME(main)(2,(char**)ppPTR);
+		FILE_NAME(main)(LoadUserScreen,(char**)ppMain);
 
 	}
 	else if(DEBUG_RcvStr("A"))
 	{
 		INCR(incW,1,600);
-		FILE_NAME(main)(2,(char**)ppPTR);
+		FILE_NAME(main)(LoadUserScreen,(char**)ppMain);
 
 	}
 	else if(DEBUG_RcvStr("Z"))
 	{
 		DECR(incW,1,50);
-		FILE_NAME(main)(2,(char**)ppPTR);
+		FILE_NAME(main)(LoadUserScreen,(char**)ppMain);
 	}
 	else if(DEBUG_RcvStr("S"))
 	{
 		INCR(incP,1,600);
-		FILE_NAME(main)(2,(char**)ppPTR);
+		FILE_NAME(main)(LoadUserScreen,(char**)ppMain);
 
 	}
 	else if(DEBUG_RcvStr("X"))
 	{
 		DECR(incP,1,0);
-		FILE_NAME(main)(2,(char**)ppPTR);
+		FILE_NAME(main)(LoadUserScreen,(char**)ppMain);
 	}
 	//- Zrobic szablon na TEST SHAPE -------!!!!
 
@@ -2332,10 +2342,10 @@ static StructTxtPxlLen ELEMENT_fontRGB(StructFieldPos *field, int xPos,int yPos,
 	LCD_SetBkFontShape(v.FONT_VAR_FontColor,BK_LittleRound);
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
-	if(0==argNmb)	SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, field->len);
+	if(LoadWholeScreen==argNmb)	SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_FontColor, press, v.FONT_VAR_FontColor,0, field->len);
 #else
-	if(0==argNmb){	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontColor,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontColor,0, *field);
-						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontColor2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontColor,1, *field);
+	if(LoadWholeScreen==argNmb){	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontColor,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontColor,0, *field);
+											SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontColor2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontColor,1, *field);
 	}
 #endif
 
@@ -2380,9 +2390,9 @@ static StructTxtPxlLen ELEMENT_fontBkRGB(StructFieldPos *field, int xPos,int yPo
 	LCD_SetBkFontShape(v.FONT_VAR_BkColor,BK_LittleRound);
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
-	if(0==argNmb)	SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, field->len);
+	if(LoadWholeScreen==argNmb)	SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, field->len);
 #else
-	if(0==argNmb)	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, *field);
+	if(LoadWholeScreen==argNmb)	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_BkColor, press, v.FONT_VAR_BkColor,0, *field);
 #endif
 
 	lenStr.inPixel = field->width;
@@ -2408,7 +2418,7 @@ static StructTxtPxlLen ELEMENT_fontLenOffsWin(StructFieldPos *field, int xPos,in
 
 	LCD_SetBkFontShape(v.FONT_VAR_LenWin,BK_LittleRound);
 
-	if(0==argNmb)	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_FontLenOffsWin, press, v.FONT_VAR_LenWin,0, *field);
+	if(LoadWholeScreen==argNmb)	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_FontLenOffsWin, press, v.FONT_VAR_LenWin,0, *field);
 
 	lenStr.inPixel = field->width;
 	lenStr.height 	= field->height;
@@ -2428,7 +2438,7 @@ static StructTxtPxlLen ELEMENT_fontCoeff(StructFieldPos *field, int xPos,int yPo
 
 	LCD_SetBkFontShape(v.FONT_VAR_Coeff,BK_LittleRound);
 
-	if(0==argNmb)	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_FontCoeff, press, v.FONT_VAR_Coeff,0, *field);
+	if(LoadWholeScreen==argNmb)	SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT, Touch_FontCoeff, press, v.FONT_VAR_Coeff,0, *field);
 
 	lenStr.inPixel = field->width;
 	lenStr.height 	= field->height;
@@ -2449,11 +2459,11 @@ static StructTxtPxlLen ELEMENT_fontType(StructFieldPos *field, int xPos,int yPos
 	LCD_SetBkFontShape(v.FONT_VAR_FontType,BK_LittleRound);
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontType,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontType,0, field->len);
-						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, 		  Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, field->len); }
+	if(LoadWholeScreen==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontType,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontType,0, field->len);
+										  SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, 		  Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, field->len); }
 #else
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontType,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontType,0, *field);
-						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, *field); }
+	if(LoadWholeScreen==argNmb){ SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontType,  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontType,0, *field);
+										  SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontType2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontType,1, *field); }
 #endif
 
 	lenStr.inPixel = field->width;
@@ -2480,12 +2490,12 @@ static StructTxtPxlLen ELEMENT_fontSize(StructFieldPos *field, int xPos,int yPos
 	fieldTouch.x 		= fieldTouch.x + fieldTouch.width;
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, field->len);
-						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, 		  Touch_FontSize2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontSize,1, field->len); }
+	if(LoadWholeScreen==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, field->len);
+										  SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, 		  Touch_FontSize2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontSize,1, field->len); }
 #else
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize,  	LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, *field);
-						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		    Touch_FontSize2, 	LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontSize,1, *field);
-						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_MOVE_RIGHT, 		    	 Touch_FontSizeMove,	press, 								  v.FONT_VAR_FontSize,2, fieldTouch); }
+	if(LoadWholeScreen==argNmb){ SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontSize,  	  LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontSize,0, *field);
+										  SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		   Touch_FontSize2, 	  LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontSize,1, *field);
+										  SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_MOVE_RIGHT, 		    	   Touch_FontSizeMove, press, 								 v.FONT_VAR_FontSize,2, fieldTouch); }
 #endif
 
 	lenStr.inPixel = field->width;
@@ -2516,11 +2526,11 @@ static StructTxtPxlLen ELEMENT_fontStyle(StructFieldPos *field, int xPos,int yPo
 	LCD_SetBkFontShape(v.FONT_VAR_FontStyle,BK_LittleRound);
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontStyle, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontStyle,0, field->len);
-						SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, 		  Touch_FontStyle2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontStyle,1, field->len); }
+	if(LoadWholeScreen==argNmb){ SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontStyle, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontStyle,0, field->len);
+										  SCREEN_ConfigTouchForStrVar(ID_TOUCH_POINT_WITH_HOLD, 		  Touch_FontStyle2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontStyle,1, field->len); }
 #else
-	if(0==argNmb){ SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontStyle, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontStyle,0, *field);
-						SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		  	 Touch_FontStyle2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontStyle,1, *field); }
+	if(LoadWholeScreen==argNmb){ SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_RELEASE_WITH_HOLD, Touch_FontStyle, LCD_TOUCH_SetTimeParam_ms(600), v.FONT_VAR_FontStyle,0, *field);
+										  SCREEN_ConfigTouchForStrVar_2(ID_TOUCH_POINT_WITH_HOLD, 		  	 Touch_FontStyle2, LCD_TOUCH_SetTimeParam_ms(700), v.FONT_VAR_FontStyle,1, *field); }
 #endif
 
 	lenStr.inPixel = field->width;
@@ -2624,16 +2634,15 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	#undef _FILL_COLOR
 }
 
-
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
 	    //ODKRYJ W usrtawienia debug aby tylko wyswietlic jeden leemnet z duzej struktury np Touch[].idx !!!!!!
 
-	if(argVal==NULL)
-		argVal = (char**)ppPTR;
+	if(NULL == argVal)
+		argVal = (char**)ppMain;
 
 
-	if(0==argNmb)
+	if(LoadWholeScreen == argNmb)
 	{
 		SCREEN_ResetAllParameters();		//ROBIMY TU JUZ KLAWIATUTE i wprowadzanie textu dowolnego !!!!!
 		LCD_TOUCH_DeleteAllSetTouch();  //Przyciski do zmian paranetru !!!!
@@ -2655,29 +2664,26 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 
+
+
 	if		 (*(argVal+0)==(char*)FRAMES_GROUP_combined)
 		FRAMES_GROUP_combined(argNmb,15,15,25,25,1);
 	else if(*(argVal+0)==(char*)FRAMES_GROUP_separat)
 		FRAMES_GROUP_separat(argNmb,20,20,25,25,0|(6<<8));
 
 
-	//int *ppPTR[7] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat,(int*)"Rafal", (int*)&Test, &incH, &incW, &incP };
+	//int *ppMain[7] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat,(int*)"Rafal", (int*)&Test, &incH, &incW, &incP };
 
-	if(argNmb == 2)
+	if(LoadUserScreen == argNmb)
 	{
 		//LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,211, ChangeElemSliderSize(**(argVal+5),NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(**(argVal+4),8), COLOR_GRAY(0x60), COLOR_GRAY(0x60) ,YELLOW, v.COLOR_BkScreen, SetValType(**(argVal+6),Percent), NoSel);
-//
-//		LCD_Arrow(0,LCD_X,LCD_Y,  0,231,   SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Up);
-//		LCD_Arrow(0,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(**(argVal+5),2,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Left);
-//		LCD_Arrow(0,LCD_X,LCD_Y,  300,231, SetLineBold(**(argVal+5),3),  SetTriangHeightCoeff(**(argVal+4),3), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Right);
-//		LCD_Arrow(0,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Down);
-//		LCD_Arrow(0,LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),5,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right);
 
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  0,231,   SHIFT_LEFT(**(argVal+5),0,16),  SHIFT_LEFT(**(argVal+4)+80,0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Up));
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Right));
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  300,231, SetLineBold(**(argVal+5),2),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Right));
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),3,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Down));
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right));
+
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  0,231,   SHIFT_LEFT(**(argVal+5),0,16),  SHIFT_LEFT(**(argVal+4)+80,0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Up));
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  300,231, SetLineBold(**(argVal+5),2),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Right));
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),3,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Down));
+		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right));
 
 
 //
@@ -2689,9 +2695,9 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	}
 	else
 	{
-		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(40,4,16),  SHIFT_LEFT(100,3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Up));
+		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(40,4,16),  SHIFT_LEFT(100,3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Up));
 
-		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(40,4,16),  SHIFT_LEFT(100,3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Down));
+		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(40,4,16),  SHIFT_LEFT(100,3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Down));
 	}
 
 
