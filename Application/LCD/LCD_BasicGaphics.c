@@ -3394,7 +3394,7 @@ SHAPE_PARAMS LCD_Arrow(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uin
 {
 	SHAPE_PARAMS params = {.bkSize.x=bkpSizeX, .bkSize.y=bkpSizeY, .pos[0].x=x, .pos[0].y=y, .size[0].w=width, .size[0].h=height, .color[0].frame=frameColor, .color[0].fill=fillColor, .color[0].bk=bkpColor, .param[0]=direct};
 
-	if(ToShapeAndReturn == posBuff)
+	if(ToStructAndReturn == posBuff)
 		return params;
 
 	posBuff = posBuff & 0x7FFFFFFF;
