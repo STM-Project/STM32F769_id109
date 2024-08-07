@@ -32,8 +32,8 @@ enum CircleParam{
 };
 
 enum COPY_TO_SHAPE_STRUCT{
-	ToShapeAndReturn = 0x80000001,
-	ToShapeAndDisplay = 0x80000000
+	ToStructAndReturn = 0x80000001,
+	ToStructAndDisplay = 0x80000000
 };
 
 typedef enum{
