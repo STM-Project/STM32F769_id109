@@ -3378,12 +3378,6 @@ SHAPE_PARAMS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSi
 
 
 
-
-
-
-
-
-
 uint32_t SetLineBold(uint32_t width, uint8_t bold){
 	return SHIFT_LEFT(width,bold,16);
 }

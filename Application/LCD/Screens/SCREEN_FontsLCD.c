@@ -1400,12 +1400,31 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 
 
+	void LCD_Shape_1(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t frameColor, uint32_t fillColor, uint32_t bkpColor, DIRECTIONS direct, int fontId, char *txt)
+	{
+		int boldLine = 0;
+		int heightTraingCoeff = 3;
+		int spaceArrowTxt = 5;
 
+		if(height < LCD_GetFontHeight(fontId))
+			height = LCD_GetFontHeight(fontId);
+
+		int heightArrow = height - height/4;
+		int xTxt;
+
+		StructTxtPxlLen len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, xTxt=MIDDLE(x,width,LCD_GetWholeStrPxlWidth(fontID,txt,0,NoConstWidth)), MIDDLE(y,height,LCD_GetFontHeight(fontId)),txt, fullHight, 0, bkpColor, WHITE,250, NoConstWidth);
+		LCD_Arrow(0,bkpSizeX,bkpSizeY, x,										MIDDLE(y,height,heightArrow), SetLineBold(xTxt-x-spaceArrowTxt,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor, Left);
+		LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt+len.inPixel+spaceArrowTxt, MIDDLE(y,height,heightArrow), SetLineBold(xTxt-x-spaceArrowTxt,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,frameColor,bkpColor, Right);
+
+//		LCD_Arrow(0,bkpSizeX,bkpSizeY, x,y, SetLineBold(width,boldLine),  SetTriangHeightCoeff(height,heightTraingCoeff), frameColor,fillColor,bkpColor, Left);
+//		StructTxtPxlLen len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, x+=width+spaceArrowTxt, MIDDLE(y,height,LCD_GetFontHalfHeight(fontId)),txt, halfHight, 0, bkpColor, frameColor,250, NoConstWidth);
+//		LCD_Arrow(0,bkpSizeX,bkpSizeY,   x+=len.inPixel+spaceArrowTxt, y, SetLineBold(width,boldLine),  SetTriangHeightCoeff(height,heightTraingCoeff), frameColor,frameColor,bkpColor, Right);
+	}
 
 	void _ServiceLenOffsWin(void)
 	{
 		#define _NMB2KEY	8
-		const char *txtKey[]								= {"<-->", "-><-", "->->",	"<-<-", "__>>", "<<__", "<-||->", "->||<-", "Show Info", "Write spaces", "Reset spaces"};
+		const char *txtKey[]								= {"<-(...)-> ", "->(...)<-", "(...)->->",	"<-<-(...)", "(_)->->", "<-<-(_)", "<-||->", "->||<-", "Show info", "Write spaces", "Reset spaces"};
 		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,	 WHITE,		WHITE,		 WHITE,			  WHITE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,  DARKRED,	DARKRED, 	 DARKRED,		  DARKRED};
 		const uint16_t dimKeys[] = {4,3};
@@ -1413,8 +1432,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		int widthKey=0;/*	!!!!!!*/
 		if(shape!=0){
 			if(KeysAutoSize == widthKey){
-				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey;		/*	space + text + space */
-/*	!!!!!!*/	widthKey 	   = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey;
+				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey + 20;		/*	space + text + space */
+/*	!!!!!!*/	widthKey 	   = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey; // moze do  c.widthKey
 				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
 			}
 		}
@@ -1445,9 +1464,13 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 		heightAll = dimKeys[1]*s[k].heightKey + (dimKeys[1]+1)*s[k].interSpace + head;
 
+		int widthShape1 =  s[k].widthKey - s[k].widthKey/4;
+		int heightShape1 = LCD_GetFontHeight(fontID) + LCD_GetFontHeight(fontID)/3;  /* s[k].heightKey - s[k].heightKey/3; */
+
 		switch((int)selBlockPress)
 		{
 			case KEY_All_release:
+				/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
 				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
 				_StrDescr(posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr);
 
@@ -1458,9 +1481,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 						_Key(posKey[i]);
 						//LCD_SimpleTriangle(0,widthAll, MIDDLE(posKey[i].x,s[k].widthKey,12),MIDDLE(posKey[i].y,s[k].heightKey,12), 6,12, frameColor,frameColor,bkColor,Right);
 
-LCD_Arrow(0,widthAll,heightAll,  posKey[i].x+5,posKey[i].y+5, SetLineBold(20,2),  SetTriangHeightCoeff(15,3), frameColor,frameColor,bkColor, Left);
-StructTxtPxlLen len = LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, posKey[i].x+5+20,posKey[i].y+5,"...", fullHight, 0, fillColor, frameColor,250, NoConstWidth);
-LCD_Arrow(0,widthAll,heightAll,   posKey[i].x+5+20+len.inPixel,posKey[i].y+5, SetLineBold(20,2),  SetTriangHeightCoeff(15,3), frameColor,frameColor,bkColor, Right);
+
+						LCD_Shape_1(0,widthAll,heightAll, MIDDLE(posKey[i].x, s[k].widthKey, widthShape1), MIDDLE(posKey[i].y, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, outside, fontID, "(.....)");
+
+
+
+//LCD_Arrow(0,widthAll,heightAll,  posKey[i].x+5,posKey[i].y+5, SetLineBold(20,2),  SetTriangHeightCoeff(20,3), frameColor,frameColor,bkColor, Right);
+//StructTxtPxlLen len = LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, posKey[i].x+5+20,posKey[i].y+5,"(...)", fullHight, 0, fillColor, frameColor,250, NoConstWidth);
+//LCD_Arrow(0,widthAll,heightAll,   posKey[i].x+5+20+len.inPixel,posKey[i].y+5, SetLineBold(20,2),  SetTriangHeightCoeff(20,3), frameColor,frameColor,bkColor, Left);
 
 					}
 					else{
