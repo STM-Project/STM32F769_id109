@@ -1125,6 +1125,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		uint16_t y;
 		uint16_t widthKey;
 		uint16_t heightKey;
+		uint16_t widthKey2;
+		uint16_t heightKey2;
 		uint8_t interSpace;
 		uint8_t forTouchIdx;
 		uint8_t startTouchIdx;
@@ -1400,40 +1402,59 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 
 
-	void LCD_Shape_1(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t frameColor, uint32_t fillColor, uint32_t bkpColor, DIRECTIONS direct, int fontId, char *txt)
+	void LCD_ArrowTxt(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t frameColor, uint32_t fillColor, uint32_t bkpColor, DIRECTIONS direct, int fontId, char *txt, uint32_t txtColor)
 	{
 		int boldLine = 0;
 		int heightTraingCoeff = 3;
 		int spaceArrowTxt = 5;
 
-		if(height < LCD_GetFontHeight(fontId))
+		if(height < LCD_GetFontHeight(fontId))   //colorTxtKey = WHITE !!!!!!!!!!!!!
 			height = LCD_GetFontHeight(fontId);
 
 		int heightArrow = height - height/4;
-		int xTxt;
+		int xTxt,lineLen;
+		StructTxtPxlLen len;
 
-		StructTxtPxlLen len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, xTxt=MIDDLE(x,width,LCD_GetWholeStrPxlWidth(fontID,txt,0,NoConstWidth)), MIDDLE(y,height,LCD_GetFontHeight(fontId)),txt, fullHight, 0, bkpColor, WHITE,250, NoConstWidth);
-		LCD_Arrow(0,bkpSizeX,bkpSizeY, x,										MIDDLE(y,height,heightArrow), SetLineBold(xTxt-x-spaceArrowTxt,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor, Left);
-		LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt+len.inPixel+spaceArrowTxt, MIDDLE(y,height,heightArrow), SetLineBold(xTxt-x-spaceArrowTxt,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,frameColor,bkpColor, Right);
+		if(heightArrow > height)
+			heightArrow = height;
 
-//		LCD_Arrow(0,bkpSizeX,bkpSizeY, x,y, SetLineBold(width,boldLine),  SetTriangHeightCoeff(height,heightTraingCoeff), frameColor,fillColor,bkpColor, Left);
-//		StructTxtPxlLen len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, x+=width+spaceArrowTxt, MIDDLE(y,height,LCD_GetFontHalfHeight(fontId)),txt, halfHight, 0, bkpColor, frameColor,250, NoConstWidth);
-//		LCD_Arrow(0,bkpSizeX,bkpSizeY,   x+=len.inPixel+spaceArrowTxt, y, SetLineBold(width,boldLine),  SetTriangHeightCoeff(height,heightTraingCoeff), frameColor,frameColor,bkpColor, Right);
+		switch((int)direct)
+		{
+		case outside:
+		case inside:
+			len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, xTxt=MIDDLE(x,width,LCD_GetWholeStrPxlWidth(fontID,txt,0,NoConstWidth)), MIDDLE(y,height,LCD_GetFontHeight(fontId)),txt, fullHight, 0, bkpColor, txtColor,250, NoConstWidth);
+			LCD_Arrow(0,bkpSizeX,bkpSizeY, x,										MIDDLE(y,height,heightArrow), SetLineBold(xTxt-x-spaceArrowTxt,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,  CONDITION(outside==direct,Left,Right));
+			LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt+len.inPixel+spaceArrowTxt, MIDDLE(y,height,heightArrow), SetLineBold(xTxt-x-spaceArrowTxt,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor, CONDITION(outside==direct,Right,Left));
+			break;
+
+		case RightRight:
+			len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, x, MIDDLE(y,height,LCD_GetFontHeight(fontId)),txt, fullHight, 0, bkpColor, txtColor,250, NoConstWidth);
+			lineLen = (width-(len.inPixel+spaceArrowTxt))/2;
+			LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt=x+len.inPixel+spaceArrowTxt, MIDDLE(y,height,heightArrow), SetLineBold(lineLen,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,Right);
+			LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt+=lineLen,						  MIDDLE(y,height,heightArrow), SetLineBold(lineLen,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,Right);
+			break;
+
+		case LeftLeft:
+			lineLen = (width-(LCD_GetWholeStrPxlWidth(fontID,txt,0,NoConstWidth)+spaceArrowTxt))/2;
+			LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt=x,			 MIDDLE(y,height,heightArrow), SetLineBold(lineLen,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,Left);
+			LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt+=lineLen, MIDDLE(y,height,heightArrow), SetLineBold(lineLen,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,Left);
+			len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, xTxt+=lineLen+spaceArrowTxt, MIDDLE(y,height,LCD_GetFontHeight(fontId)),txt, fullHight, 0, bkpColor, txtColor,250, NoConstWidth);
+			break;
+		}
 	}
 
 	void _ServiceLenOffsWin(void)
 	{
 		#define _NMB2KEY	8
-		const char *txtKey[]								= {"<-(...)-> ", "->(...)<-", "(...)->->",	"<-<-(...)", "(_)->->", "<-<-(_)", "<-||->", "->||<-", "Show info", "Write spaces", "Reset spaces"};
+		const char *txtKey[]								= {"<-(.....)->", "->(.....)<-", "(.....)->->",	"<-<-(.....)", "(.._..)->->", "<-<-(.._..)", "<-(.| |.)->", "->(.| |.)<-", "Show info", "Write spaces", "Reset spaces"};
 		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,	 WHITE,		WHITE,		 WHITE,			  WHITE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,  DARKRED,	DARKRED, 	 DARKRED,		  DARKRED};
 		const uint16_t dimKeys[] = {4,3};
 
-		int widthKey=0;/*	!!!!!!*/
 		if(shape!=0){
 			if(KeysAutoSize == widthKey){
 				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey + 20;		/*	space + text + space */
-/*	!!!!!!*/	widthKey 	   = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey; // moze do  c.widthKey
+				s[k].widthKey2 = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey;
 				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
 			}
 		}
@@ -1451,9 +1472,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			{3*s[k].interSpace + 2*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
 			{4*s[k].interSpace + 3*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
 			\
-/*	!!!!!!*/{1*s[k].interSpace + 0*widthKey,		3*s[k].interSpace + 2*s[k].heightKey + head},
-/*	!!!!!!*/{2*s[k].interSpace + 1*widthKey, 		3*s[k].interSpace + 2*s[k].heightKey + head},
-/*	!!!!!!*/{3*s[k].interSpace + 2*widthKey, 		3*s[k].interSpace + 2*s[k].heightKey + head}};
+			{1*s[k].interSpace + 0*s[k].widthKey2,	3*s[k].interSpace + 2*s[k].heightKey + head},
+			{2*s[k].interSpace + 1*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head},
+			{3*s[k].interSpace + 2*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head}};
 
 		int countKey = dimKeys[0]*dimKeys[1]; 		/* = STRUCT_TAB_SIZE(txtKey); */
 		countKey--;
@@ -1467,34 +1488,31 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		int widthShape1 =  s[k].widthKey - s[k].widthKey/4;
 		int heightShape1 = LCD_GetFontHeight(fontID) + LCD_GetFontHeight(fontID)/3;  /* s[k].heightKey - s[k].heightKey/3; */
 
+		void _OverArrowTxt(int nr, DIRECTIONS direct){
+			LCD_ArrowTxt(0,widthAll,heightAll, MIDDLE(posKey[nr].x, s[k].widthKey, widthShape1), MIDDLE(posKey[nr].y, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, direct,fontID,(char*)txtKey[nr],colorTxtKey[nr]);
+		}
+
 		switch((int)selBlockPress)
 		{
 			case KEY_All_release:
-				/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
-				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
+				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
 				_StrDescr(posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr);
 
 				BKCOPY_VAL(fillColor_c,fillColor,BrightIncr(fillColor_c,0xE));
-				for(int i=0; i<_NMB2KEY; ++i){
-					//_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
-					if(i==1){
-						_Key(posKey[i]);
-						//LCD_SimpleTriangle(0,widthAll, MIDDLE(posKey[i].x,s[k].widthKey,12),MIDDLE(posKey[i].y,s[k].heightKey,12), 6,12, frameColor,frameColor,bkColor,Right);
-
-
-						LCD_Shape_1(0,widthAll,heightAll, MIDDLE(posKey[i].x, s[k].widthKey, widthShape1), MIDDLE(posKey[i].y, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, outside, fontID, "(.....)");
-
-
-
-//LCD_Arrow(0,widthAll,heightAll,  posKey[i].x+5,posKey[i].y+5, SetLineBold(20,2),  SetTriangHeightCoeff(20,3), frameColor,frameColor,bkColor, Right);
-//StructTxtPxlLen len = LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, posKey[i].x+5+20,posKey[i].y+5,"(...)", fullHight, 0, fillColor, frameColor,250, NoConstWidth);
-//LCD_Arrow(0,widthAll,heightAll,   posKey[i].x+5+20+len.inPixel,posKey[i].y+5, SetLineBold(20,2),  SetTriangHeightCoeff(20,3), frameColor,frameColor,bkColor, Left);
-
-					}
-					else{
-						_Key(posKey[i]);   //LCD_ShapeWindow( s[k].shape, 0, widthAll,heightAll, pos.x,pos.y, s[k].widthKey,s[k].heightKey, SetColorBoldFrame(frameColor,s[k].bold),fillColor,bkColor);
-
-					_TxtPos(posKey[i]);		i<countKey-1 ? _Str(txtKey[i],colorTxtKey[i]) : _StrDisp(txtKey[i],colorTxtKey[i]);
+				for(int i=0; i<_NMB2KEY; ++i)
+				{
+					_Key(posKey[i]);
+					switch(i){
+						case 0: 	_OverArrowTxt(i,outside); 	  break;
+						case 1: 	_OverArrowTxt(i,inside); 	  break;
+						case 2: 	_OverArrowTxt(i,RightRight); break;
+						case 3: 	_OverArrowTxt(i,LeftLeft);   break;
+						case 4: 	_OverArrowTxt(i,RightRight); break;
+						case 5: 	_OverArrowTxt(i,LeftLeft);   break;
+						case 6: 	_OverArrowTxt(i,outside);	  break;
+						case 7: 	_OverArrowTxt(i,inside); 	  break;
+						default:
+							_Key(posKey[i]); 	_TxtPos(posKey[i]);	CONDITION(i<countKey-1, _Str(txtKey[i],colorTxtKey[i]), _StrDisp(txtKey[i],colorTxtKey[i]));
 					}
 				}
 
