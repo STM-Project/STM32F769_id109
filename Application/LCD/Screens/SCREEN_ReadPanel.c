@@ -40,6 +40,48 @@ char **argVal = NULL;
 StructTxtPxlLen lenStr;
 int startScreen=0;
 
+void LCD_ArrowTxt(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t frameColor, uint32_t fillColor, uint32_t bkpColor, DIRECTIONS direct, int fontId, char *txt, uint32_t txtColor)
+{
+	int boldLine = 0;
+	int heightTraingCoeff = 3;
+	int spaceArrowTxt = 5;
+	int spaceBetweenArrows = 4;
+
+	if(height < LCD_GetFontHeight(fontId))
+		height = LCD_GetFontHeight(fontId);
+
+	int heightArrow = height - height/2;
+	int xTxt,lineLen,temp=0;
+	StructTxtPxlLen len;
+
+	if(heightArrow > height)
+		heightArrow = height;
+
+	switch((int)direct)
+	{
+	case outside:
+	case inside:
+		len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, xTxt=MIDDLE(x,width,LCD_GetWholeStrPxlWidth(fontId,txt,0,NoConstWidth)), MIDDLE(y,height,LCD_GetFontHeight(fontId)),txt, fullHight, 0, bkpColor, txtColor,250, NoConstWidth);
+		LCD_Arrow(0,bkpSizeX,bkpSizeY, x,										MIDDLE(y,height,heightArrow), SetLineBold(xTxt-x-spaceArrowTxt,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,  CONDITION(outside==direct,Left,Right));
+		LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt+len.inPixel+spaceArrowTxt, MIDDLE(y,height,heightArrow), SetLineBold(xTxt-x-spaceArrowTxt,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor, CONDITION(outside==direct,Right,Left));
+		break;
+
+	case RightRight:
+		len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, x, MIDDLE(y,height,LCD_GetFontHeight(fontId)),txt, fullHight, 0, bkpColor, txtColor,250, NoConstWidth);
+		lineLen = (width-(len.inPixel+spaceArrowTxt))/2;	if(lineLen>spaceBetweenArrows){ lineLen-=spaceBetweenArrows; temp=spaceBetweenArrows; }
+		LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt=x+len.inPixel+spaceArrowTxt, MIDDLE(y,height,heightArrow), SetLineBold(lineLen,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,Right);
+		LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt+=lineLen+temp,					  MIDDLE(y,height,heightArrow), SetLineBold(lineLen,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,Right);
+		break;
+
+	case LeftLeft:
+		lineLen = (width-(LCD_GetWholeStrPxlWidth(fontId,txt,0,NoConstWidth)+spaceArrowTxt))/2;	if(lineLen>spaceBetweenArrows){ lineLen-=spaceBetweenArrows; temp=spaceBetweenArrows; }
+		LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt=x,			 		MIDDLE(y,height,heightArrow), SetLineBold(lineLen,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,Left);
+		LCD_Arrow(0,bkpSizeX,bkpSizeY, xTxt+=lineLen+temp, MIDDLE(y,height,heightArrow), SetLineBold(lineLen,boldLine), SetTriangHeightCoeff(heightArrow,heightTraingCoeff), frameColor,fillColor,bkpColor,Left);
+		len = LCD_StrDependOnColorsWindow(0,bkpSizeX,bkpSizeY,fontId, xTxt+=lineLen+spaceArrowTxt, MIDDLE(y,height,LCD_GetFontHeight(fontId)),txt, fullHight, 0, bkpColor, txtColor,250, NoConstWidth);
+		break;
+	}
+}
+
 int SCREEN_ConfigTouchForStrVar(uint16_t ID_touch, uint16_t idx_touch, uint8_t param_touch, int idVar, int nrTouchIdx, StructTxtPxlLen lenStr){
  	LCD_SetStrVar_idxTouch(idVar,nrTouchIdx,idx_touch);
 	touchTemp[0].x = LCD_GetStrVar_x(idVar);
