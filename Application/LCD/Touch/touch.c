@@ -38,6 +38,7 @@ typedef struct
 
 static Service_lcd_Touch_Struct  ServiceTouch = {.idx=0};
 static Touch_Struct  Touch[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
+static uint16_t susspendTouch[MAX_OPEN_TOUCH_SIMULTANEOUSLY];
 
 XY_Touch_Struct  touchTemp[MAX_NUMBER_PIONTS_TOUCH] = {0};
 
@@ -522,7 +523,7 @@ int LCD_TOUCH_Set(uint16_t ID, uint16_t idx, uint8_t param)
 	  }
 	  for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
 	  {
-		  if(0 == Touch[i].index)
+		  if(0 == Touch[i].index && 0 == susspendTouch[i])
 		  {
 			  Touch[i].id = ID;
 			  Touch[i].index = idx;
@@ -577,8 +578,10 @@ int LCD_TOUCH_SetNewPos(uint16_t idx, uint16_t x, uint16_t y, uint16_t xLen, uin
 
 void LCD_TOUCH_DeleteAllSetTouch(void)
 {
-	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i){
 		Touch[i].index=0;
+		susspendTouch[i]=0;
+	}
 }
 
 void LCD_TOUCH_DeleteSelectTouch(uint16_t idx)
@@ -596,6 +599,20 @@ void DeleteAllTouchWithout(uint16_t idx)
 			Touch[i].index=0;
 	}
 }
+
+void LCD_TOUCH_SusspendAllTouchWithout(uint16_t start_idx, uint16_t stop_idx){
+	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i){
+		if(!IS_RANGE(Touch[i].index, start_idx, stop_idx)){
+			if(0 < Touch[i].index && 0 == susspendTouch[i]){
+				susspendTouch[i] = Touch[i].index;
+				Touch[i].index=0;
+}}}}
+void LCD_TOUCH_RestoreSusspendedTouch(void){
+	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i){
+		if(0 < susspendTouch[i] && 0 == Touch[i].index){
+			Touch[i].index = susspendTouch[i];
+			susspendTouch[i]=0;
+}}}
 
 uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time){
 	return time/SERVICE_TOUCH_PROB_TIME_MS;
