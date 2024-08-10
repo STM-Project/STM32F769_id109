@@ -58,6 +58,7 @@ void 		LCD_TOUCH_DeleteSelectTouch			(uint16_t idx);
 void 		DeleteAllTouchWithout	(uint16_t idx);
 
 void LCD_TOUCH_SusspendAllTouchsWithout(uint16_t start_idx, uint16_t stop_idx);
+void LCD_TOUCH_SusspendAllTouchs(void);
 void LCD_TOUCH_SusspendTouch(uint16_t idx);
 void LCD_TOUCH_SusspendNmbTouch(int nmb, uint16_t start_idx);
 void LCD_TOUCH_SusspendTouchs(uint16_t start_idx, uint16_t stop_idx);

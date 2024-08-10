@@ -49,7 +49,10 @@
 	X(LANG_FontCoeffLeft, 	 "6.", "6.") \
 	X(LANG_FontCoeffUnder, 	 "naci"ś"nij", "press me") \
 	X(LANG_CoeffKeyName, "Wsp"ó""ł"", "Coeff") \
-	X(LANG_LenOffsWin, "Odst"ę"py mi"ę"dzy literami", "Spaces between fonts") \
+	X(LANG_LenOffsWin1, "Okre"ś"lenie odst"ę"p"ó"w pomi"ę"dzy literami", "Specifying the spacing between letters") \
+	X(LANG_LenOffsWin2, "Przesuwanie tekstu, zmiana pozycji kursora, edycja i zapis zmian", "Moving text, changing cursor position, editing and saving changes") \
+	X(LANG_LenOffsWin3, "Szeroko"ś""ć" tekstu", "xxxxxxx") \
+	X(LANG_LenOffsWin4, "i jego przesuni"ę"cie", "xxxxxxx") \
 
 #define SCREEN_FONTS_SET_PARAMETERS \
 /* id   name							default value */ \
@@ -590,11 +593,9 @@ static void Data2Refresh(int nr)
 	case PARAM_COLOR_FONT:
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontColor,TXT_FONT_COLOR);
 		break;
-//	case PARAM_LEN_WINDOW:
-//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LenWin, TXT_LEN_WIN);
-//		break;
-//	case PARAM_OFFS_WINDOW:
-//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_OffsWin, TXT_OFFS_WIN);
+	case PARAM_OFFS_WINDOW:
+	case PARAM_LEN_WINDOW:
+		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LenWin, TXT_LENOFFS_WIN);
 		break;
 	case PARAM_STYLE:
 		lenStr=LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_FontStyle, TXT_FONT_STYLE);
@@ -605,21 +606,23 @@ static void Data2Refresh(int nr)
 	case PARAM_COEFF:
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Coeff,TXT_COEFF);
 		break;
+/*	case PARAM_POS_CURSOR:
+		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_PosCursor,TXT_PosCursor());
+		break; */
+
+
 //	case PARAM_SPEED:
 //		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Speed,TXT_SPEED);
 //		break;
 //	case PARAM_LOAD_FONT_TIME:
 //		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LoadFontTime, TXT_LOAD_FONT_TIME);
 //		break;
-//	case PARAM_POS_CURSOR:
-//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_PosCursor,TXT_PosCursor());
-//		break;
 //	case PARAM_CPU_USAGE:
 //		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_CPUusage,TXT_CPU_USAGE);
 //		break;
 	}
 }
-
+/*
 static void RefreshAllParam(void)
 {
 	Data2Refresh(FONTS);
@@ -635,7 +638,7 @@ static void RefreshAllParam(void)
 	Data2Refresh(PARAM_SPEED);
 	Data2Refresh(PARAM_POS_CURSOR);
 }
-
+*/
 static void RefreshValRGB(void){
 	Data2Refresh(FONTS);
 	Data2Refresh(PARAM_COLOR_FONT);
@@ -677,9 +680,6 @@ static void ChangeValRGB(char font_bk, char rgb, int32_t sign)
 	}
 	RefreshValRGB();
 }
-
-
-
 /*
 static void IncStepRGB(void){
 	Test.step>=255 ? 255 : Test.step++;
@@ -1413,7 +1413,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	void _ServiceLenOffsWin(void)
 	{
 		#define _NMB2KEY	8
-		#define _LEN_ARROW	22
 		const char *txtKey[]								= {"(.......)", "(...)", "(.......)",	"(.......)", " _ ", " _ ", "|  |", "||", "Show info", "Write spaces", "Reset spaces"};
 		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,	 WHITE,		WHITE,		 WHITE,			  WHITE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,  DARKRED,	DARKRED, 	 DARKRED,		  DARKRED};
@@ -1421,11 +1420,15 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 		if(shape!=0){
 			if(KeysAutoSize == widthKey){
-				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey + 2*_LEN_ARROW;		/*	space + text + space */
+				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey;		/*	space + text + space */
 				s[k].widthKey2 = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey;
 				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
-			}
-		}
+
+				int diff;
+				if		 (0 < (diff = dimKeys[0]*(s[k].widthKey+s[k].interSpace) - dimKeys[1]*(s[k].widthKey2+s[k].interSpace)))		s[k].widthKey2 += diff 		 / dimKeys[1];
+				else if( 0 > diff)																																s[k].widthKey  += ABS(diff) / dimKeys[0];
+		}}
+
 		int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
 
 		XY_Touch_Struct posHead={0,0};
@@ -1468,8 +1471,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		{
 			case KEY_All_release:
 				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
-				posHead.y = s[k].interSpace/2;												_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr);		/* _StrDescr(posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr); */
-				posHead.y += LCD_GetFontHeight(fontID_descr)+s[k].interSpace/3;	_StrDescr_Xmidd_Yoffs(posHead, 0, "Rafa"ł" Markielowski kocha Agnieszke Dr"ó""ż"DDD", v.FONT_COLOR_Descr);
+				posHead.y = s[k].interSpace/2;												_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin1), v.FONT_COLOR_Descr);		/* _StrDescr(posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr); */
+				posHead.y += LCD_GetFontHeight(fontID_descr)+s[k].interSpace/3;	_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin2), v.FONT_COLOR_Descr);
 
 				BKCOPY_VAL(fillColor_c,fillColor,BrightIncr(fillColor_c,0xA));
 				for(int i=0; i<_NMB2KEY; ++i)
@@ -1478,10 +1481,10 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					switch(i){
 						case 0: 	_OverArrowTxt(i,outside); 	  break;
 						case 1: 	_OverArrowTxt(i,inside); 	  break;
-						case 2: 	_OverArrowTxt(i,RightRight); break;
-						case 3: 	_OverArrowTxt(i,LeftLeft);   break;
-						case 4: 	_OverArrowTxt(i,RightRight); break;
-						case 5: 	_OverArrowTxt(i,LeftLeft);   break;
+						case 2: 	_OverArrowTxt(i,LeftLeft); break;
+						case 3: 	_OverArrowTxt(i,RightRight);   break;
+						case 4: 	_OverArrowTxt(i,LeftLeft); break;
+						case 5: 	_OverArrowTxt(i,RightRight);   break;
 						case 6: 	_OverArrowTxt(i,outside);	  break;
 						case 7: 	_OverArrowTxt(i,inside); 	  break;
 					}
@@ -1496,10 +1499,10 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 			case KEY_LenWin_plus: 		_OverArrowTxt_oneBlockDisp(0,outside);		break;
 			case KEY_LenWin_minus: 		_OverArrowTxt_oneBlockDisp(1,inside);		break;
-			case KEY_OffsWin_plus:  	_OverArrowTxt_oneBlockDisp(2,RightRight);	break;
-			case KEY_OffsWin_minus: 	_OverArrowTxt_oneBlockDisp(3,LeftLeft);	break;
-			case KEY_PosInWin_plus:    _OverArrowTxt_oneBlockDisp(4,RightRight);	break;
-			case KEY_PosInWin_minus: 	_OverArrowTxt_oneBlockDisp(5,LeftLeft);	break;
+			case KEY_OffsWin_plus:  	_OverArrowTxt_oneBlockDisp(2,LeftLeft);	break;
+			case KEY_OffsWin_minus: 	_OverArrowTxt_oneBlockDisp(3,RightRight);	break;
+			case KEY_PosInWin_plus:    _OverArrowTxt_oneBlockDisp(4,LeftLeft);	break;
+			case KEY_PosInWin_minus: 	_OverArrowTxt_oneBlockDisp(5,RightRight);	break;
 			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);		break;
 			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);		break;
 
@@ -1515,15 +1518,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			BKCOPY(s[k].widthKey,c.widthKey);
 		}
 		#undef _NMB2KEY
-		#undef _LEN_ARROW
 	}
-
-
-
-
-
-
-
 
 	void _ServiceStyle(void)
 	{
@@ -1939,7 +1934,6 @@ void FILE_NAME(setTouch)(void)
 	#define _KEYS_RELEASE_fontSize 		if(_WasStatePrev(Touch_size_plus,  Touch_size_minus))	 KEYBOARD_TYPE(KEYBOARD_fontSize,  KEY_All_release_and_select_one)
 	#define _KEYS_RELEASE_fontCoeff 		if(_WasStatePrev(Touch_coeff_plus, Touch_coeff_minus)) KEYBOARD_TYPE(KEYBOARD_fontCoeff, KEY_All_release)
 	#define _KEYS_RELEASE_fontSliderRGB if(_WasStatePrev(Touch_fontSliderR, Touch_fontSliderB_right)) KEYBOARD_TYPE(KEYBOARD_sliderRGB, KEY_All_release)
-
 	#define _KEYS_RELEASE_LenOffsWin 	if(_WasStatePrev(Touch_LenWin_plus, Touch_ResetSpaces)) KEYBOARD_TYPE(KEYBOARD_LenOffsWin, KEY_All_release)
 
 	static uint16_t statePrev=0;
@@ -2094,13 +2088,12 @@ void FILE_NAME(setTouch)(void)
 		case Touch_coeff_plus:  _KEYS_RELEASE_fontCoeff;	IncCoeffRGB(); KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Coeff_plus );    _SaveState(); break;
 		case Touch_coeff_minus: _KEYS_RELEASE_fontCoeff;	DecCoeefRGB(); KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Coeff_minus );   _SaveState(); break;
 
-
 		case Touch_LenWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_lenWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); 	 	_SaveState();  break;
 		case Touch_LenWin_minus: 		_KEYS_RELEASE_LenOffsWin;	 Dec_lenWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_minus ); 	 	_SaveState();  break;
 		case Touch_OffsWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_offsWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_OffsWin_plus );   	_SaveState();  break;
 		case Touch_OffsWin_minus: 		_KEYS_RELEASE_LenOffsWin;	 Dec_offsWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_OffsWin_minus );  	_SaveState();  break;
-		case Touch_PosInWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_PosInWin_plus );  	_SaveState();  break;
-		case Touch_PosInWin_minus: 	_KEYS_RELEASE_LenOffsWin;	 Dec_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_PosInWin_minus ); 	_SaveState();  break;
+		case Touch_PosInWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Dec_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_PosInWin_plus );  	_SaveState();  break;
+		case Touch_PosInWin_minus: 	_KEYS_RELEASE_LenOffsWin;	 Inc_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_PosInWin_minus ); 	_SaveState();  break;
 		case Touch_SpaceFonts_plus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(1);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_plus );  _SaveState();  break;
 		case Touch_SpaceFonts_minus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(0);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_minus ); _SaveState();  break;
 
@@ -2467,9 +2460,9 @@ static StructTxtPxlLen ELEMENT_fontLenOffsWin(StructFieldPos *field, int xPos,in
 	StructTxtPxlLen lenStr = {0};
 
 	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(0,STR_FONT_PARAM2(LenWin), xPos, yPos, TXT_LENOFFS_WIN, fullHight, 0,250, ConstWidth, \
-		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16),	Above_left,   "Szeroko"ś""ć" okna", fullHight, 0,250, NoConstWidth,\
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16),	Above_left,  SL(LANG_LenOffsWin3), fullHight, 0,250, NoConstWidth,\
 		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 					Left_mid, 	  "8.",  fullHight, 0,250, NoConstWidth, \
-		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16),	Under_left, "Pozycja textu", fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16),	Under_left,  SL(LANG_LenOffsWin4), fullHight, 0,250, NoConstWidth, \
 		LCD_STR_DESCR_PARAM_NUMBER(3) );
 
 	LCD_SetBkFontShape(v.FONT_VAR_LenWin,BK_LittleRound);
