@@ -56,9 +56,16 @@ int 		GetTouchToTemp				(uint16_t idx);
 int 		LCD_TOUCH_SetNewPos				(uint16_t idx, uint16_t x, uint16_t y, uint16_t xLen, uint16_t yLen);
 void 		LCD_TOUCH_DeleteSelectTouch			(uint16_t idx);
 void 		DeleteAllTouchWithout	(uint16_t idx);
-void LCD_TOUCH_SusspendAllTouchWithout(uint16_t start_idx, uint16_t stop_idx);
-void LCD_TOUCH_RestoreSusspendedTouch(void);
-int 		LCD_TOUCH_Set				(uint16_t id, uint16_t idx, uint8_t param);
+
+void LCD_TOUCH_SusspendAllTouchsWithout(uint16_t start_idx, uint16_t stop_idx);
+void LCD_TOUCH_SusspendTouch(uint16_t idx);
+void LCD_TOUCH_SusspendNmbTouch(int nmb, uint16_t start_idx);
+void LCD_TOUCH_SusspendTouchs(uint16_t start_idx, uint16_t stop_idx);
+void LCD_TOUCH_RestoreAllSusspendedTouchs(void);
+void LCD_TOUCH_RestoreSusspendedTouch(uint16_t idx);
+void LCD_TOUCH_RestoreSusspendedTouchs(uint16_t start_idx, uint16_t stop_idx);
+
+int LCD_TOUCH_Set(uint16_t id, uint16_t idx, uint8_t param);
 int LCD_TOUCH_isPress(void);
 void SetLogXY(XY_Touch_Struct *pos, uint16_t *width, int maxSize);
 void SetPhysXY(XY_Touch_Struct *pos, int maxSize);

@@ -1080,14 +1080,14 @@ static void IncDec_SpaceBetweenFont(int incDec){
 			Data2Refresh(FONTS);
 			Test.lenWin=lenStr.inChar;
 			SetCursor();
-			RefreshAllParam();
+			Data2Refresh(FONTS);		/* RefreshAllParam(); */
 		}
 	}
 }
 //dla DEBUG ON wlaczyc i wylaczyc caly debug dla danego pliku !!!! uregulowac to !!!
 static void DisplayFontsWithChangeColorOrNot(void){
 	TOOGLE(Test.dispChangeColorOrNot);
-	RefreshAllParam();
+	Data2Refresh(FONTS);		/* RefreshAllParam(); */
 }
 
 static void LCD_DrawMainFrame(figureShape shape, int directDisplay, uint8_t bold, uint16_t x,uint16_t y, uint16_t w,uint16_t h, int frameColor,int fillColor,int bkColor)// zastanowic czy nie dac to do BasicGraphic.c
@@ -1460,8 +1460,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		}
 		void _OverArrowTxt_oneBlockDisp(int nr, DIRECTIONS direct){
 			LCD_ShapeWindow( s[k].shape, 0, s[k].widthKey,s[k].heightKey, 0,0, s[k].widthKey,s[k].heightKey, SetColorBoldFrame(framePressColor,s[k].bold),fillPressColor,bkColor);
-			LCD_ArrowTxt(0,s[k].widthKey,s[k].heightKey, MIDDLE(0, s[k].widthKey, widthShape1), MIDDLE(0, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, direct,fontID,(char*)txtKey[nr],colorTxtPressKey[nr]);
-			LCD_Display(0, posKey[nr].x, posKey[nr].y, s[k].widthKey, s[k].heightKey);
+			LCD_ArrowTxt(0,s[k].widthKey,s[k].heightKey, MIDDLE(0, s[k].widthKey, widthShape1), MIDDLE(0, s[k].heightKey, heightShape1), widthShape1,heightShape1, colorTxtPressKey[nr],colorTxtPressKey[nr],fillPressColor, direct,fontID,(char*)txtKey[nr],colorTxtPressKey[nr]);
+			LCD_Display(0, s[k].x+posKey[nr].x, s[k].y+posKey[nr].y, s[k].widthKey, s[k].heightKey);
 		}
 
 		switch((int)selBlockPress)
@@ -1996,9 +1996,11 @@ void FILE_NAME(setTouch)(void)
 		CASE_TOUCH_STATE(state,Touch_FontLenOffsWin, LenWin,Press, TXT_LENOFFS_WIN,252);
 			if(IsFunc()){
 				KeyboardTypeDisplay(KEYBOARD_LenOffsWin, KEY_All_release, LCD_RoundRectangle,0, 50,20, KeysAutoSize,12, 16, state, Touch_LenWin_plus,KeysDel);
-				LCD_TOUCH_SusspendAllTouchWithout(Touch_LenWin_plus, Touch_ResetSpaces);
+				LCD_TOUCH_SusspendAllTouchs();
+				LCD_TOUCH_RestoreSusspendedTouch(state);
+				LCD_TOUCH_RestoreSusspendedTouchs(Touch_LenWin_plus, Touch_ResetSpaces);
 			}
-			else LCD_TOUCH_RestoreSusspendedTouch();
+			else LCD_TOUCH_RestoreAllSusspendedTouchs();
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontCoeff, Coeff,Press, TXT_COEFF,255);
@@ -2093,14 +2095,14 @@ void FILE_NAME(setTouch)(void)
 		case Touch_coeff_minus: _KEYS_RELEASE_fontCoeff;	DecCoeefRGB(); KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Coeff_minus );   _SaveState(); break;
 
 
-		case Touch_LenWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_lenWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); _SaveState();  break;
-		case Touch_LenWin_minus: 		_KEYS_RELEASE_LenOffsWin;	 Dec_lenWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); _SaveState();  break;
-		case Touch_OffsWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_offsWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); _SaveState();  break;
-		case Touch_OffsWin_minus: 		_KEYS_RELEASE_LenOffsWin;	 Dec_offsWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); _SaveState();  break;
-		case Touch_PosInWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); _SaveState();  break;
-		case Touch_PosInWin_minus: 	_KEYS_RELEASE_LenOffsWin;	 Dec_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); _SaveState();  break;
-		case Touch_SpaceFonts_plus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(1);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); _SaveState();  break;
-		case Touch_SpaceFonts_minus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(0);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); _SaveState();  break;
+		case Touch_LenWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_lenWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); 	 	_SaveState();  break;
+		case Touch_LenWin_minus: 		_KEYS_RELEASE_LenOffsWin;	 Dec_lenWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_minus ); 	 	_SaveState();  break;
+		case Touch_OffsWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_offsWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_OffsWin_plus );   	_SaveState();  break;
+		case Touch_OffsWin_minus: 		_KEYS_RELEASE_LenOffsWin;	 Dec_offsWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_OffsWin_minus );  	_SaveState();  break;
+		case Touch_PosInWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_PosInWin_plus );  	_SaveState();  break;
+		case Touch_PosInWin_minus: 	_KEYS_RELEASE_LenOffsWin;	 Dec_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_PosInWin_minus ); 	_SaveState();  break;
+		case Touch_SpaceFonts_plus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(1);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_plus );  _SaveState();  break;
+		case Touch_SpaceFonts_minus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(0);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_minus ); _SaveState();  break;
 
 		case Touch_DispSpaces: 	_KEYS_RELEASE_LenOffsWin;	 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_DispSpaces ); _SaveState();  break;
 		case Touch_WriteSpaces: _KEYS_RELEASE_LenOffsWin;	 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_WriteSpaces ); _SaveState();  break;
