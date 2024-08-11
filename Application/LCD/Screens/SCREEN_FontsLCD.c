@@ -53,6 +53,8 @@
 	X(LANG_LenOffsWin2, "Przesuwanie tekstu, zmiana pozycji kursora, edycja i zapis zmian", "Moving text, changing cursor position, editing and saving changes") \
 	X(LANG_LenOffsWin3, "Szeroko"ś""ć" tekstu", "xxxxxxx") \
 	X(LANG_LenOffsWin4, "i jego przesuni"ę"cie", "xxxxxxx") \
+	X(LANG_TimeSpeed1, "Czas za"ł"adowania czcionek", "xxxxxxx") \
+	X(LANG_TimeSpeed2, "i szybko"ś""ć"wy"ś"wietlenia", "xxxxxxx") \
 
 #define SCREEN_FONTS_SET_PARAMETERS \
 /* id   name							default value */ \
@@ -281,6 +283,7 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define TXT_LENOFFS_WIN StrAll(5," ",TXT_LEN_WIN," ",TXT_OFFS_WIN," ")
 #define TXT_LOAD_FONT_TIME		StrAll(2,INT2STR_TIME(Test.loadFontTime)," ms")
 #define TXT_SPEED					StrAll(2,INT2STR_TIME(Test.speed),       " us")
+#define TXT_TIMESPEED 			StrAll(4,Int2Str(Test.loadFontTime,' ',5,Sign_none)," ms   ",Int2Str(Test.speed,' ',6,Sign_none)," us")
 #define TXT_CPU_USAGE		   StrAll(2,INT2STR(osGetCPUUsage()),"c")
 
 #define RGB_FONT 	RGB2INT(Test.font[0],Test.font[1],Test.font[2])
@@ -606,6 +609,9 @@ static void Data2Refresh(int nr)
 	case PARAM_COEFF:
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Coeff,TXT_COEFF);
 		break;
+	case PARAM_LOAD_FONT_TIME:
+		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LoadFontTime, TXT_TIMESPEED);
+		break;
 /*	case PARAM_POS_CURSOR:
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_PosCursor,TXT_PosCursor());
 		break; */
@@ -613,9 +619,6 @@ static void Data2Refresh(int nr)
 
 //	case PARAM_SPEED:
 //		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Speed,TXT_SPEED);
-//		break;
-//	case PARAM_LOAD_FONT_TIME:
-//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LoadFontTime, TXT_LOAD_FONT_TIME);
 //		break;
 //	case PARAM_CPU_USAGE:
 //		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_CPUusage,TXT_CPU_USAGE);
@@ -2588,6 +2591,24 @@ static StructTxtPxlLen ELEMENT_fontStyle(StructFieldPos *field, int xPos,int yPo
 	return lenStr;
 }
 
+static StructTxtPxlLen ELEMENT_fontTime(StructFieldPos *field, int xPos,int yPos, int argNmb)
+{
+	StructTxtPxlLen lenStr = {0};
+
+	*field = LCD_StrDependOnColorsDescrVar_array_xyCorrect(0,STR_FONT_PARAM2(LoadFontTime), xPos, yPos, TXT_TIMESPEED, fullHight, 0,250, ConstWidth, \
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16),	Above_left,  SL(LANG_TimeSpeed1), fullHight, 0,250, NoConstWidth,\
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4, 					Left_mid, 	  "7.",  fullHight, 0,250, NoConstWidth, \
+		v.FONT_ID_Descr, v.FONT_COLOR_Descr, v.FONT_BKCOLOR_Descr, 4|(xPos<<16),	Under_left,  SL(LANG_TimeSpeed2), fullHight, 0,250, NoConstWidth, \
+		LCD_STR_DESCR_PARAM_NUMBER(3) );
+
+	LCD_SetBkFontShape(v.FONT_VAR_LenWin,BK_LittleRound);
+
+	lenStr.inPixel = field->width;
+	lenStr.height 	= field->height;
+
+	return lenStr;
+}
+
 static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int bold)
 {
 	#define _LINES_COLOR		COLOR_GRAY(0x77)
@@ -2601,14 +2622,15 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	uint16_t tab[4]={0};
 	int X_start=0;
 
-	FILE_NAME(funcSet)(FONT_BKCOLOR_Descr, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_FontColor, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_BkColor, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_FontType, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_FontSize, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_FontStyle, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_Coeff, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_LenWin, _FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_Descr, 		_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontColor, 	_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_BkColor, 		_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontType, 	_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontSize, 	_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontStyle, 	_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_Coeff, 		_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_LenWin, 		_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_LoadFontTime, _FILL_COLOR);
 
 	_Element(fontRGB,SetPos,X_start=startOffsX,SetPos,startOffsY)		/* _LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0) */	field1=field;
 	_Element(fontBkRGB,GetPos,0,IncPos,offsY)									/* _LineV(field.height,GetPos,-startOffsX/2-1,GetPos,0) */
@@ -2625,15 +2647,19 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	_LineH(tab[3],GetPos,0,GetPos,-offsY/2-1)
 
 	_Element(fontStyle,SetPos,X_start+=tab[3]+offsX,SetPos,startOffsY)	_LineV(field.height,GetPos,-offsX/2-1,GetPos,0)	field1=field;
-	_Element(fontCoeff,GetPos,0,IncPos,offsY)										_LineV(field.height,GetPos,-offsX/2-1,GetPos,0)
+	_Element(fontTime,GetPos,0,IncPos,offsY)										_LineV(field.height,GetPos,-offsX/2-1,GetPos,0)
 	tab[0]=field1.width;
 	tab[1]=field.width;
 	MAXVAL(tab,2,0,tab[3])
 	_LineH(tab[3],GetPos,0,GetPos,-offsY/2-1)
 
-	_Element(fontLenOffsWin,SetPos,X_start+=tab[3]+offsX,SetPos,startOffsY)	_LineV(field.height,GetPos,-offsX/2-1,GetPos,0)	field1=field;
-	LCD_Ypos(lenStr,IncPos,offsY);
-	_LineH(lenStr.inPixel,GetPos,0,GetPos,-offsY/2-1);
+	int offsX_temp = 0;
+	_Element(fontLenOffsWin,SetPos,X_start+=tab[3]+offsX,SetPos,startOffsY)	_LineV(field.height,GetPos,-offsX/2-1,				 GetPos,0)	field1=field;
+	_Element(fontCoeff,GetPos,0-offsX_temp,IncPos,offsY)							_LineV(field.height,GetPos,-offsX/2-1-offsX_temp,GetPos,0)
+	tab[0]=field1.width;
+	tab[1]=field.width;
+	MAXVAL(tab,2,0,tab[3])
+	_LineH(tab[3],GetPos,0,GetPos,-offsY/2-1)
 
 	#undef _Element
 	#undef _LineH
@@ -2665,17 +2691,18 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	uint8_t fontsFrameSpace = boldFrame >>8;
 	int bold = boldFrame&0x000000FF;
 
-	FILE_NAME(funcSet)(FONT_BKCOLOR_Descr, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_FontColor, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_BkColor, 	_FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_FontType, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_FontSize, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_FontStyle, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_Coeff, _FILL_COLOR);
-	FILE_NAME(funcSet)(FONT_BKCOLOR_LenWin, _FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_Descr, 		_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontColor, 	_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_BkColor, 		_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontType, 	_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontSize, 	_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_FontStyle,	_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_Coeff, 		_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_LenWin, 		_FILL_COLOR);
+	FILE_NAME(funcSet)(FONT_BKCOLOR_LoadFontTime, _FILL_COLOR);
 
 	_Element(fontRGB,0,SetPos,startOffsX,0,SetPos,startOffsY) 	_Element(fontType,0,IncPos,offsX,1,SetPos,startOffsY)  _Element(fontStyle,0,IncPos,offsX,2,SetPos,startOffsY)  _Element(fontLenOffsWin,0,IncPos,offsX,3,SetPos,startOffsY)
-	_Element(fontBkRGB,0,SetPos,startOffsX,0,GetPos,0) 		 	_Element(fontSize,0,IncPos,offsX,1,GetPos,0)				 _Element(fontCoeff,0,IncPos,offsX,2,GetPos,0)
+	_Element(fontBkRGB,0,SetPos,startOffsX,0,GetPos,0) 		 	_Element(fontSize,0,IncPos,offsX,1,GetPos,0)				 _Element(fontTime,0,IncPos,offsX,2,GetPos,0)				_Element(fontCoeff,0,IncPos,offsX,3,GetPos,0)
 
 	#undef _Element
 	#undef _Rectan
@@ -2721,46 +2748,16 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 		FRAMES_GROUP_separat(argNmb,20,20,25,25,0|(6<<8));
 
 
-	//int *ppMain[7] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat,(int*)"Rafal", (int*)&Test, &incH, &incW, &incP };
 
 	if(LoadUserScreen == argNmb)
 	{
-		//LCD_SimpleSlider(0, LCD_X,LCD_Y, 50,211, ChangeElemSliderSize(**(argVal+5),NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(**(argVal+4),8), COLOR_GRAY(0x60), COLOR_GRAY(0x60) ,YELLOW, v.COLOR_BkScreen, SetValType(**(argVal+6),Percent), NoSel);
 
-
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  0,231,   SHIFT_LEFT(**(argVal+5),0,16),  SHIFT_LEFT(**(argVal+4)+80,0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Up));
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Right));
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  300,231, SetLineBold(**(argVal+5),2),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Right));
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),3,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Down));
-		LCDSHAPE_Arrow(0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right));
-
-
-//
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  0,231,   SHIFT_LEFT(**(argVal+5),0,16),  SHIFT_LEFT(**(argVal+4),0,16), v.COLOR_MainFrame,YELLOW,v.COLOR_BkScreen, Left));
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(**(argVal+5),1,16),  SHIFT_LEFT(**(argVal+4),1,16), v.COLOR_MainFrame,DARKYELLOW,v.COLOR_BkScreen, Up));
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  300,231, SetLineBold(**(argVal+5),2),  SetTriangHeightCoeff(**(argVal+4),2), v.COLOR_MainFrame,WHITE,v.COLOR_BkScreen, Down));
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(**(argVal+5),3,16),  SHIFT_LEFT(**(argVal+4),3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Right));
-//		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToShapeAndReturn,LCD_X,LCD_Y,  600,231, SHIFT_LEFT(**(argVal+5),4,16),  SHIFT_LEFT(**(argVal+4),4,16), v.COLOR_MainFrame,ORANGE,v.COLOR_BkScreen, Right));
-	}
-	else
-	{
-		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  450,231, SHIFT_LEFT(40,4,16),  SHIFT_LEFT(100,3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Up));
-
-		LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,LCD_X,LCD_Y,  150,231, SHIFT_LEFT(40,4,16),  SHIFT_LEFT(100,3,16), v.COLOR_MainFrame,BROWN,v.COLOR_BkScreen, Down));
 	}
 
 
-
-
-
-
-
-
-//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(LenWin,FillMainFrame),400,  0, TXT_LEN_WIN,		 	 halfHight,0,255,ConstWidth);
-//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(OffsWin,FillMainFrame),400, 20, TXT_OFFS_WIN,	    	 halfHight,0,255,ConstWidth);
 //	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(LoadFontTime,FillMainFrame),320, 20, TXT_LOAD_FONT_TIME,	 halfHight,0,255,ConstWidth);
-//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(PosCursor,FillMainFrame),440, 40,TXT_PosCursor(),halfHight,0,255,ConstWidth);
 //	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450, 0, 	TXT_CPU_USAGE,	 		 halfHight,0,255,ConstWidth);
+ //lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Speed, FillMainFrame),450,0,TXT_SPEED,fullHight,0,255,ConstWidth);
 
 
 	 Test.yFontsField=240;
@@ -2779,8 +2776,10 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-	 //lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Speed, FillMainFrame),450,0,TXT_SPEED,fullHight,0,255,ConstWidth);
+
 
 	LCD_Show();
 
 }
+
+#undef INT2STR_TIME
