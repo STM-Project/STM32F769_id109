@@ -54,7 +54,7 @@
 	X(LANG_LenOffsWin3, "Szeroko"ś""ć" tekstu", "xxxxxxx") \
 	X(LANG_LenOffsWin4, "i jego przesuni"ę"cie", "xxxxxxx") \
 	X(LANG_TimeSpeed1, "Czas za"ł"adowania czcionek", "xxxxxxx") \
-	X(LANG_TimeSpeed2, "i szybko"ś""ć"wy"ś"wietlenia", "xxxxxxx") \
+	X(LANG_TimeSpeed2, "i szybko"ś""ć" wy"ś"wietlenia", "xxxxxxx") \
 
 #define SCREEN_FONTS_SET_PARAMETERS \
 /* id   name							default value */ \
@@ -609,6 +609,7 @@ static void Data2Refresh(int nr)
 	case PARAM_COEFF:
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Coeff,TXT_COEFF);
 		break;
+	case PARAM_SPEED:
 	case PARAM_LOAD_FONT_TIME:
 		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_LoadFontTime, TXT_TIMESPEED);
 		break;
@@ -1129,7 +1130,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	#define GET_Y			LCD_Ymiddle(MIDDLE_NR,GetPos,fontID)
 
 	int k = type-1;
-	int /*frameColor_c = 0,*/ fillColor_c = 0;
+	int frameColor_c = 0, fillColor_c = 0;
 	uint16_t widthAll = 0, widthAll_c = 0;
 	uint16_t heightAll = 0, heightAll_c = 0;
 
@@ -1146,6 +1147,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		uint8_t forTouchIdx;
 		uint8_t startTouchIdx;
 		uint8_t nmbTouch;
+		uint8_t param;
 	}s[MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY]={0}, c={0};
 
 	void _Str(const char *txt, uint32_t color){
@@ -1300,6 +1302,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			s[k].forTouchIdx = forTouchIdx;
 			s[k].startTouchIdx = startTouchIdx;
 			s[k].nmbTouch = 0;
+			s[k].param = 0;
 		}
 		return 0;
 	}
@@ -1416,16 +1419,16 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	void _ServiceLenOffsWin(void)
 	{
 		#define _NMB2KEY	8
-		const char *txtKey[]								= {"(.......)", "(...)", "(.......)",	"(.......)", " _ ", " _ ", "|  |", "||", "Show info", "Write spaces", "Reset spaces"};
+		const char *txtKey[]								= {"(.......)", "(...)", "(.......)",	"(.......)", " _ ", " _ ", "|  |", "||", "Info spaces", "Write spaces", "Reset spaces"};
 		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,	 WHITE,		WHITE,		 WHITE,			  WHITE};
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,  DARKRED,	DARKRED, 	 DARKRED,		  DARKRED};
 		const uint16_t dimKeys[] = {4,3};
 
 		if(shape!=0){
 			if(KeysAutoSize == widthKey){
-				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey;		/*	space + text + space */
-				s[k].widthKey2 = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey;
-				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
+				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey -1;		/*	space + text + space */
+				s[k].widthKey2 = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey -1;
+				s[k].heightKey = heightKey + 5 + LCD_GetFontHeight(fontID) + heightKey + 5;
 
 				int diff;
 				if		 (0 < (diff = dimKeys[0]*(s[k].widthKey+s[k].interSpace) - dimKeys[1]*(s[k].widthKey2+s[k].interSpace)))		s[k].widthKey2 += diff 		 / dimKeys[1];
@@ -1473,7 +1476,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		switch((int)selBlockPress)
 		{
 			case KEY_All_release:
-				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
+				BKCOPY_VAL(frameColor_c,frameColor,WHITE);
+					LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
+				BKCOPY(frameColor,frameColor_c);
 				posHead.y = s[k].interSpace/2;												_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin1), v.FONT_COLOR_Descr);		/* _StrDescr(posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr); */
 				posHead.y += LCD_GetFontHeight(fontID_descr)+s[k].interSpace/3;	_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin2), v.FONT_COLOR_Descr);
 
@@ -1484,40 +1489,93 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					switch(i){
 						case 0: 	_OverArrowTxt(i,outside); 	  break;
 						case 1: 	_OverArrowTxt(i,inside); 	  break;
-						case 2: 	_OverArrowTxt(i,LeftLeft); break;
-						case 3: 	_OverArrowTxt(i,RightRight);   break;
-						case 4: 	_OverArrowTxt(i,LeftLeft); break;
-						case 5: 	_OverArrowTxt(i,RightRight);   break;
+						case 2: 	_OverArrowTxt(i,LeftLeft);   break;
+						case 3: 	_OverArrowTxt(i,RightRight); break;
+						case 4: 	_OverArrowTxt(i,LeftLeft);   break;
+						case 5: 	_OverArrowTxt(i,RightRight); break;
 						case 6: 	_OverArrowTxt(i,outside);	  break;
 						case 7: 	_OverArrowTxt(i,inside); 	  break;
 					}
 				}
 				BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);
 				for(int i=_NMB2KEY; i<countKey; ++i){
-					i<countKey-1 ? _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
+
+
+					if(i<countKey-1)
+					{
+						if(MASK(s[k].param,80) && _NMB2KEY==i)
+						{
+
+							if(MASK(s[k].param,1)){
+								s[k].param &= ~0x01;     _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);  }
+							else{
+								s[k].param |= 0x01;    BKCOPY_VAL(fillColor_c,fillColor,fillPressColor);
+															  BKCOPY_VAL(frameColor_c,frameColor,framePressColor);
+
+															 _KeyStr(posKey[i],txtKey[i],colorTxtPressKey[i]);
+
+															 BKCOPY(fillColor,fillColor_c);
+															 BKCOPY(frameColor,frameColor_c);
+
+							}
+
+
+
+							RST_bit(s[k].param,7);
+						}
+						else
+						{
+							_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
+						}
+
+					}
+					else
+						_KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
+
+
+					//CONDITION(i<countKey-1, 	CONDITION(s[k].param && _NMB2KEY==i, _KeyStr(posKey[i],txtKey[i],colorTxtPressKey[i]), _KeyStr(posKey[i],txtKey[i],colorTxtKey[i])), 	_KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]));
+
 				}
 				BKCOPY(s[k].widthKey,c.widthKey);
 				BKCOPY(fillColor,fillColor_c);
 				break;
 
-			case KEY_LenWin_plus: 		_OverArrowTxt_oneBlockDisp(0,outside);		break;
-			case KEY_LenWin_minus: 		_OverArrowTxt_oneBlockDisp(1,inside);		break;
-			case KEY_OffsWin_plus:  	_OverArrowTxt_oneBlockDisp(2,LeftLeft);	break;
-			case KEY_OffsWin_minus: 	_OverArrowTxt_oneBlockDisp(3,RightRight);	break;
-			case KEY_PosInWin_plus:    _OverArrowTxt_oneBlockDisp(4,LeftLeft);	break;
-			case KEY_PosInWin_minus: 	_OverArrowTxt_oneBlockDisp(5,RightRight);	break;
-			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);		break;
-			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);		break;
+			case KEY_LenWin_plus: 		_OverArrowTxt_oneBlockDisp(0,outside);		s[k].param=0; break;
+			case KEY_LenWin_minus: 		_OverArrowTxt_oneBlockDisp(1,inside);		s[k].param=0; break;
+			case KEY_OffsWin_plus:  	_OverArrowTxt_oneBlockDisp(2,LeftLeft);	s[k].param=0; break;
+			case KEY_OffsWin_minus: 	_OverArrowTxt_oneBlockDisp(3,RightRight);	s[k].param=0; break;
+			case KEY_PosInWin_plus:    _OverArrowTxt_oneBlockDisp(4,LeftLeft);	s[k].param=0; break;
+			case KEY_PosInWin_minus: 	_OverArrowTxt_oneBlockDisp(5,RightRight);	s[k].param=0; break;
+			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);		s[k].param=0; break;
+			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);		s[k].param=0; break;
 
-			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); break;
+			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey);
+
+				SET_bit(s[k].param,7);
+
+//				if(0==s[k].param)
+//					s[k].param=1;
+//				else if(2==s[k].param)
+//					s[k].param=0;
+//				else
+//					DO_NOTHING(s[k].param);
+
+				//CONDITION( 0==s[k].param, s[k].param=1, CONDITION(2==s[k].param,s[k].param=0,DO_NOTHING(s[k].param)) );
+
+
+
+				break;
 			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); break;
 			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); break;
 		}
 
 		if(startTouchIdx){
-			BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);
-			for(int i=0; i<countKey; ++i)
+			for(int i=0; i<_NMB2KEY; ++i)
 				_SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
+
+			BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);
+			 for(int i=_NMB2KEY; i<countKey; ++i)
+				 _SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
 			BKCOPY(s[k].widthKey,c.widthKey);
 		}
 		#undef _NMB2KEY
@@ -1992,7 +2050,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontLenOffsWin, LenWin,Press, TXT_LENOFFS_WIN,252);
 			if(IsFunc()){
-				KeyboardTypeDisplay(KEYBOARD_LenOffsWin, KEY_All_release, LCD_RoundRectangle,0, 50,20, KeysAutoSize,12, 16, state, Touch_LenWin_plus,KeysDel);
+				KeyboardTypeDisplay(KEYBOARD_LenOffsWin, KEY_All_release, LCD_RoundRectangle,0, 0,0, KeysAutoSize,8, 10, state, Touch_LenWin_plus,KeysDel);
 				LCD_TOUCH_SusspendAllTouchs();
 				LCD_TOUCH_RestoreSusspendedTouch(state);
 				LCD_TOUCH_RestoreSusspendedTouchs(Touch_LenWin_plus, Touch_ResetSpaces);
@@ -2745,7 +2803,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	if		 (*(argVal+0)==(char*)FRAMES_GROUP_combined)
 		FRAMES_GROUP_combined(argNmb,15,15,25,25,1);
 	else if(*(argVal+0)==(char*)FRAMES_GROUP_separat)
-		FRAMES_GROUP_separat(argNmb,20,20,25,25,0|(6<<8));
+		FRAMES_GROUP_separat(argNmb,23,20,25,25,0|(6<<8));
 
 
 

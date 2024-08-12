@@ -25,7 +25,7 @@
 
 #define getName(var)  #var
 #define ABS(X)  ((X) > 0 ? (X) : -(X))
-#define TOOGLE(x)  x=1-x
+#define TOOGLE(x)  ((x)=1-(x))
 #define INCR(x,step,max)  ((x+step>max) ? (x=max) : (x+=step))
 #define DECR(x,step,min)  ((x-step<min) ? (x=min) : (x-=step))
 #define INCR_WRAP(x,step,min,max)  ((x+step>max) ? (x=min) : (x+=step))
@@ -69,6 +69,7 @@
 #define SHIFT_RIGHT(val,shift,hexMask)		(((val)>>(shift))&0x##hexMask)
 #define SHIFT_LEFT(val,val2,shift)		((val)|((val2)<<(shift)))
 #define CONDITION(condition,val1,val2)	((condition) ? (val1) : (val2))
+#define DO_NOTHING(x)	((x)=(x))
 
 #define PERCENT_SCALE(val,maxVal)	(((val)*100)/(maxVal))
 

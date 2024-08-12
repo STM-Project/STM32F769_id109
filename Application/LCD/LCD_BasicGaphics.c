@@ -3157,7 +3157,7 @@ void LCD_SimpleTriangle(uint32_t posBuff,uint32_t BkpSizeX, uint32_t x,uint32_t 
 	Set_AACoeff_Draw(coeff,FrameColor,BkpColor, 0.1);
 	_StartDrawLine(0,BkpSizeX,x,y);
 
-	switch(direct)
+	switch((int)direct)
 	{
 		case Right:
 			_DrawRightDown_AA(height,halfBaseWidth,FrameColor,BkpSizeX);
