@@ -3604,7 +3604,7 @@ StructTxtPxlLen LCD_StrDependOnColorsVarIndirect(int idVar, char *txt){
 	temp = LCD_StrDependOnColorsIndirect( (FontVar[idVar].bkRoundRect ? FontVar[idVar].id|(idVar<<16) : FontVar[idVar].id), FontVar[idVar].xPos,FontVar[idVar].yPos,txt,FontVar[idVar].heightType,FontVar[idVar].space,FontVar[idVar].bkColor,FontVar[idVar].fontColor,FontVar[idVar].coeff,FontVar[idVar].widthType);
 	if((temp.height==0)&&(temp.inChar==0)&&(temp.inPixel==0))
 		return temp;
-	//LCD_DimensionBkCorrect(idVar,temp,pLcd);
+	LCD_DimensionBkCorrect(idVar,temp,pLcd);
 	return temp;
 }
 

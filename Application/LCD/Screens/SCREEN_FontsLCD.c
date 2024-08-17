@@ -49,8 +49,8 @@
 	X(LANG_FontCoeffLeft, 	 "6.", "6.") \
 	X(LANG_FontCoeffUnder, 	 "naci"ś"nij", "press me") \
 	X(LANG_CoeffKeyName, "Wsp"ó""ł"", "Coeff") \
-	X(LANG_LenOffsWin1, "Okre"ś"lenie odst"ę"p"ó"w pomi"ę"dzy literami", "Specifying the spacing between letters") \
-	X(LANG_LenOffsWin2, "Przesuwanie tekstu, zmiana pozycji kursora, edycja i zapis zmian", "Moving text, changing cursor position, editing and saving changes") \
+	X(LANG_LenOffsWin1, "Okre"ś"lenie odst"ę"p"ó"w pom"ę"dzy literami", "Specifying the spacing between letters") \
+	X(LANG_LenOffsWin2, "Przesuwanie tekstu, zmiana pozycji kursora i zapis zmian", "Moving text, changing cursor position, editing and saving changes") \
 	X(LANG_LenOffsWin3, "Szeroko"ś""ć" tekstu", "xxxxxxx") \
 	X(LANG_LenOffsWin4, "i jego przesuni"ę"cie", "xxxxxxx") \
 	X(LANG_TimeSpeed1, "Czas za"ł"adowania czcionek", "xxxxxxx") \
@@ -618,9 +618,6 @@ static void Data2Refresh(int nr)
 		break; */
 
 
-//	case PARAM_SPEED:
-//		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_Speed,TXT_SPEED);
-//		break;
 //	case PARAM_CPU_USAGE:
 //		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_CPUusage,TXT_CPU_USAGE);
 //		break;
@@ -1424,42 +1421,46 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,  DARKRED,	DARKRED, 	 DARKRED,		  DARKRED};
 		const uint16_t dimKeys[] = {4,3};
 
+		int widthKeyCorrect = 0;
+		int heightKeyCorrect = 5;
 		if(shape!=0){
 			if(KeysAutoSize == widthKey){
-				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey -1;		/*	space + text + space */
-				s[k].widthKey2 = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey -1;
-				s[k].heightKey = heightKey + 5 + LCD_GetFontHeight(fontID) + heightKey + 5;
+				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey -widthKeyCorrect;		/*	space + text + space */
+				s[k].widthKey2 = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey -widthKeyCorrect;
+				s[k].heightKey = heightKey +heightKeyCorrect + LCD_GetFontHeight(fontID) + heightKey +heightKeyCorrect;
 
 				int diff;
 				if		 (0 < (diff = dimKeys[0]*(s[k].widthKey+s[k].interSpace) - dimKeys[1]*(s[k].widthKey2+s[k].interSpace)))		s[k].widthKey2 += diff 		 / dimKeys[1];
 				else if( 0 > diff)																																s[k].widthKey  += ABS(diff) / dimKeys[0];
 		}}
 
-		int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
+		int edgeSpace = s[k].interSpace + s[k].interSpace/2;
 
-		XY_Touch_Struct posHead={0,0};
+		int head = s[k].interSpace + 2*LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
+
+		XY_Touch_Struct posHead={0, s[k].interSpace};
 		XY_Touch_Struct posKey[]=
-		  {{1*s[k].interSpace + 0*s[k].widthKey,	1*s[k].interSpace + 0*s[k].heightKey + head},
-			{2*s[k].interSpace + 1*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
-			{3*s[k].interSpace + 2*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
-			{4*s[k].interSpace + 3*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
+		  {{edgeSpace		 					 + 0*s[k].widthKey,	1*s[k].interSpace + 0*s[k].heightKey + head},
+			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
+			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
+			{edgeSpace + 3*s[k].interSpace + 3*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
 			\
-			{1*s[k].interSpace + 0*s[k].widthKey,	2*s[k].interSpace + 1*s[k].heightKey + head},
-			{2*s[k].interSpace + 1*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
-			{3*s[k].interSpace + 2*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
-			{4*s[k].interSpace + 3*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
+			{edgeSpace		 					 + 0*s[k].widthKey,	2*s[k].interSpace + 1*s[k].heightKey + head},
+			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
+			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
+			{edgeSpace + 3*s[k].interSpace + 3*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
 			\
-			{1*s[k].interSpace + 0*s[k].widthKey2,	3*s[k].interSpace + 2*s[k].heightKey + head},
-			{2*s[k].interSpace + 1*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head},
-			{3*s[k].interSpace + 2*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head}};
+			{edgeSpace		 					 + 0*s[k].widthKey2,	3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3},
+			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3},
+			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3}};
 
 		int countKey = dimKeys[0]*dimKeys[1] - 1;
 
-		widthAll 	=   dimKeys[0]	  *s[k].widthKey   + (dimKeys[0]+1)*s[k].interSpace;
-		widthAll_c 	=  (dimKeys[0]-1)*s[k].widthKey2  + (dimKeys[0]+0)*s[k].interSpace;
+		widthAll 	=   dimKeys[0]	  *s[k].widthKey   + (dimKeys[0]+1-2)*s[k].interSpace + 2*edgeSpace;
+		widthAll_c 	=  (dimKeys[0]-1)*s[k].widthKey2  + (dimKeys[0]+0-2)*s[k].interSpace + 2*edgeSpace;
 		if(widthAll_c > widthAll)	widthAll = widthAll_c;
 
-		heightAll = dimKeys[1]*s[k].heightKey + (dimKeys[1]+1)*s[k].interSpace + head;
+		heightAll = head + dimKeys[1]*s[k].heightKey + (dimKeys[1]+1-1)*s[k].interSpace + s[k].interSpace-s[k].interSpace/3 + edgeSpace;
 
 		int widthShape1 =  s[k].widthKey - s[k].widthKey/4;
 		int heightShape1 = LCD_GetFontHeight(fontID) + LCD_GetFontHeight(fontID)/3;  /* s[k].heightKey - s[k].heightKey/3; */
@@ -1471,6 +1472,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			LCD_ShapeWindow( s[k].shape, 0, s[k].widthKey,s[k].heightKey, 0,0, s[k].widthKey,s[k].heightKey, SetColorBoldFrame(framePressColor,s[k].bold),fillPressColor,bkColor);
 			LCD_ArrowTxt(0,s[k].widthKey,s[k].heightKey, MIDDLE(0, s[k].widthKey, widthShape1), MIDDLE(0, s[k].heightKey, heightShape1), widthShape1,heightShape1, colorTxtPressKey[nr],colorTxtPressKey[nr],fillPressColor, direct,fontID,(char*)txtKey[nr],colorTxtPressKey[nr]);
 			LCD_Display(0, s[k].x+posKey[nr].x, s[k].y+posKey[nr].y, s[k].widthKey, s[k].heightKey);
+			s[k].param=0;
 		}
 
 		switch((int)selBlockPress)
@@ -1479,7 +1481,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				BKCOPY_VAL(frameColor_c,frameColor,WHITE);
 					LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
 				BKCOPY(frameColor,frameColor_c);
-				posHead.y = s[k].interSpace/2;												_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin1), v.FONT_COLOR_Descr);		/* _StrDescr(posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr); */
+			/*	posHead.y = s[k].interSpace/2; */											_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin1), v.FONT_COLOR_Descr);		/* _StrDescr(posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr); */
 				posHead.y += LCD_GetFontHeight(fontID_descr)+s[k].interSpace/3;	_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin2), v.FONT_COLOR_Descr);
 
 				BKCOPY_VAL(fillColor_c,fillColor,BrightIncr(fillColor_c,0xA));
@@ -1498,73 +1500,43 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					}
 				}
 				BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);
-				for(int i=_NMB2KEY; i<countKey; ++i){
-
-
+				for(int i=_NMB2KEY; i<countKey; ++i)
+				{
 					if(i<countKey-1)
 					{
-						if(MASK(s[k].param,80) && _NMB2KEY==i)
+						if(MASK(s[k].param,80) && _NMB2KEY==i)		/* find key to hold press */
 						{
-
 							if(MASK(s[k].param,1)){
-								s[k].param &= ~0x01;     _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);  }
+								RST_bit(s[k].param,0);   _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
+							}
 							else{
-								s[k].param |= 0x01;    BKCOPY_VAL(fillColor_c,fillColor,fillPressColor);
-															  BKCOPY_VAL(frameColor_c,frameColor,framePressColor);
-
-															 _KeyStr(posKey[i],txtKey[i],colorTxtPressKey[i]);
-
-															 BKCOPY(fillColor,fillColor_c);
-															 BKCOPY(frameColor,frameColor_c);
+								SET_bit(s[k].param,0);    BKCOPY_VAL(fillColor_c,fillColor,fillPressColor);
+															  	  BKCOPY_VAL(frameColor_c,frameColor,framePressColor);
+															  	  _KeyStr(posKey[i],txtKey[i],colorTxtPressKey[i]);
+															  	  BKCOPY(fillColor,fillColor_c);
+															  	  BKCOPY(frameColor,frameColor_c);
 
 							}
-
-
-
 							RST_bit(s[k].param,7);
 						}
-						else
-						{
-							_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
-						}
-
+						else	_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
 					}
-					else
-						_KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
-
-
-					//CONDITION(i<countKey-1, 	CONDITION(s[k].param && _NMB2KEY==i, _KeyStr(posKey[i],txtKey[i],colorTxtPressKey[i]), _KeyStr(posKey[i],txtKey[i],colorTxtKey[i])), 	_KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]));
-
+					else	_KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
 				}
 				BKCOPY(s[k].widthKey,c.widthKey);
 				BKCOPY(fillColor,fillColor_c);
 				break;
 
-			case KEY_LenWin_plus: 		_OverArrowTxt_oneBlockDisp(0,outside);		s[k].param=0; break;
-			case KEY_LenWin_minus: 		_OverArrowTxt_oneBlockDisp(1,inside);		s[k].param=0; break;
-			case KEY_OffsWin_plus:  	_OverArrowTxt_oneBlockDisp(2,LeftLeft);	s[k].param=0; break;
-			case KEY_OffsWin_minus: 	_OverArrowTxt_oneBlockDisp(3,RightRight);	s[k].param=0; break;
-			case KEY_PosInWin_plus:    _OverArrowTxt_oneBlockDisp(4,LeftLeft);	s[k].param=0; break;
-			case KEY_PosInWin_minus: 	_OverArrowTxt_oneBlockDisp(5,RightRight);	s[k].param=0; break;
-			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);		s[k].param=0; break;
-			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);		s[k].param=0; break;
+			case KEY_LenWin_plus: 		_OverArrowTxt_oneBlockDisp(0,outside);	 break;
+			case KEY_LenWin_minus: 		_OverArrowTxt_oneBlockDisp(1,inside);	 break;
+			case KEY_OffsWin_plus:  	_OverArrowTxt_oneBlockDisp(2,LeftLeft);	 break;
+			case KEY_OffsWin_minus: 	_OverArrowTxt_oneBlockDisp(3,RightRight);	 break;
+			case KEY_PosInWin_plus:    _OverArrowTxt_oneBlockDisp(4,LeftLeft);	 break;
+			case KEY_PosInWin_minus: 	_OverArrowTxt_oneBlockDisp(5,RightRight);	 break;
+			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);	 break;
+			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);	 break;
 
-			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey);
-
-				SET_bit(s[k].param,7);
-
-//				if(0==s[k].param)
-//					s[k].param=1;
-//				else if(2==s[k].param)
-//					s[k].param=0;
-//				else
-//					DO_NOTHING(s[k].param);
-
-				//CONDITION( 0==s[k].param, s[k].param=1, CONDITION(2==s[k].param,s[k].param=0,DO_NOTHING(s[k].param)) );
-
-
-
-				break;
+			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); SET_bit(s[k].param,7); break;
 			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); break;
 			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); break;
 		}
@@ -2726,7 +2698,7 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	#undef _LINES_COLOR
 }
 
-static int FRAME_odstep()
+static int FRAME_odstep()   //CONDITION(warunek, 	fffff(), 	aaaaa());
 {
 	return 0;
 }
