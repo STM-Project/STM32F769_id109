@@ -17,7 +17,6 @@
 #define MAX_DEGREE_CIRCLE  10
 
 ALIGN_32BYTES(SDRAM uint32_t pLcd[LCD_BUFF_XSIZE*LCD_BUFF_YSIZE]);
-ALIGN_32BYTES(SDRAM uint32_t pLcd_[LCD_BUFF_XSIZE*LCD_BUFF_YSIZE]);
 
 static uint32_t k, kCopy;
 static uint32_t buff_AA[MAX_SIZE_TAB_AA];
@@ -2497,7 +2496,7 @@ void LCD_Display(uint32_t posBuff, uint32_t Xpos, uint32_t Ypos, uint32_t width,
 	LCD_DisplayBuff(Xpos,Ypos,width,height,  pLcd+posBuff);
 }
 void LCD_DisplayPart(uint32_t posBuff, uint32_t Xpos, uint32_t Ypos, uint32_t width, uint32_t height){
-	int m=0;
+/*	int m=0;
 	k = posBuff + LCD_X*Ypos + Xpos;
 	for(int j=0; j<height; j++){
 		for(int i=0; i<width; i++)
@@ -2505,6 +2504,15 @@ void LCD_DisplayPart(uint32_t posBuff, uint32_t Xpos, uint32_t Ypos, uint32_t wi
 		k += LCD_X;
 	}
 	LCD_DisplayBuff(Xpos,Ypos,width,height, pLcd_);
+*/
+	uint32_t tab[width];
+	k = posBuff + LCD_X*Ypos + Xpos;
+	for(int j=0; j<height; j++){
+		for(int i=0; i<width; i++)
+			tab[i] = pLcd[k+i];
+		k += LCD_X;
+		LCD_DisplayBuff(Xpos,Ypos+j,width,1, tab);
+	}
 }
 void LCD_Show(void){
 	LCD_Display(0,0,0,LCD_X,LCD_Y);

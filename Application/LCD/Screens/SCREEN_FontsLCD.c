@@ -449,10 +449,11 @@ typedef enum{
 	FONTS
 }REFRESH_DATA;
 
-typedef enum{
+typedef enum{	//takie ogolen funkcje umiesci w osobnym ogolnym pliku !!!!
 	LoadWholeScreen,
 	LoadPartScreen,
-	LoadUserScreen
+	LoadUserScreen,
+	LoadNoDispScreen
 }LOAD_SCREEN;
 
 static char bufTemp[50];
@@ -1252,7 +1253,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		s[k].nmbTouch++;
 	}
 
-
 	void _deleteAllTouchs(void){
 		for(int j=0; j<MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY; ++j){
 			for(int i=0; i<s[j].nmbTouch; ++i)
@@ -1434,9 +1434,12 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				else if( 0 > diff)																																s[k].widthKey  += ABS(diff) / dimKeys[0];
 		}}
 
+		int countKey = dimKeys[0]*dimKeys[1] - 1;
+		int head = s[k].interSpace + 2*LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
 		int edgeSpace = s[k].interSpace + s[k].interSpace/2;
 
-		int head = s[k].interSpace + 2*LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
+		int widthShape1 =  s[k].widthKey - s[k].widthKey/4;
+		int heightShape1 = LCD_GetFontHeight(fontID) + LCD_GetFontHeight(fontID)/3;  /* s[k].heightKey - s[k].heightKey/3; */
 
 		XY_Touch_Struct posHead={0, s[k].interSpace};
 		XY_Touch_Struct posKey[]=
@@ -1454,17 +1457,27 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3},
 			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3}};
 
-		int countKey = dimKeys[0]*dimKeys[1] - 1;
-
 		widthAll 	=   dimKeys[0]	  *s[k].widthKey   + (dimKeys[0]+1-2)*s[k].interSpace + 2*edgeSpace;
 		widthAll_c 	=  (dimKeys[0]-1)*s[k].widthKey2  + (dimKeys[0]+0-2)*s[k].interSpace + 2*edgeSpace;
 		if(widthAll_c > widthAll)	widthAll = widthAll_c;
-
 		heightAll = head + dimKeys[1]*s[k].heightKey + (dimKeys[1]+1-1)*s[k].interSpace + s[k].interSpace-s[k].interSpace/3 + edgeSpace;
 
-		int widthShape1 =  s[k].widthKey - s[k].widthKey/4;
-		int heightShape1 = LCD_GetFontHeight(fontID) + LCD_GetFontHeight(fontID)/3;  /* s[k].heightKey - s[k].heightKey/3; */
+		void 	_SetFlagWin	 (void){	SET_bit(s[k].param,7); }
+		int 	_IsFlagWin	 (void){ return CHECK_bit(s[k].param,7); }
+		void 	_RstFlagWin	 (void){	RST_bit(s[k].param,7); }
 
+		POS_SIZE win = { .pos={500,20}, .size={150,250} };
+
+		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height){
+			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
+			LCD_Display(0, x,y, width,height);
+		}
+		void _CreateWindows(){
+			_WindowSpacesInfo(win.pos.x ,win.pos.y, win.size.w, win.size.h); _SetFlagWin();
+		}
+		void _DeleteWindows(){		/* Use function only after displaying (not during) */
+			FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h);
+		}
 		void _OverArrowTxt(int nr, DIRECTIONS direct){
 			LCD_ArrowTxt(0,widthAll,heightAll, MIDDLE(posKey[nr].x, s[k].widthKey, widthShape1), MIDDLE(posKey[nr].y, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, direct,fontID,(char*)txtKey[nr],colorTxtKey[nr]);
 		}
@@ -1472,21 +1485,12 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			LCD_ShapeWindow( s[k].shape, 0, s[k].widthKey,s[k].heightKey, 0,0, s[k].widthKey,s[k].heightKey, SetColorBoldFrame(framePressColor,s[k].bold),fillPressColor,bkColor);
 			LCD_ArrowTxt(0,s[k].widthKey,s[k].heightKey, MIDDLE(0, s[k].widthKey, widthShape1), MIDDLE(0, s[k].heightKey, heightShape1), widthShape1,heightShape1, colorTxtPressKey[nr],colorTxtPressKey[nr],fillPressColor, direct,fontID,(char*)txtKey[nr],colorTxtPressKey[nr]);
 			LCD_Display(0, s[k].x+posKey[nr].x, s[k].y+posKey[nr].y, s[k].widthKey, s[k].heightKey);
-			s[k].param=0;
-		}
-		void _WindowSpacesInfo(int x,int y, int width,int height){
-			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
-			LCD_Display(0, x,y, width,height);
+			if(_IsFlagWin())	_DeleteWindows();
 		}
 
 		switch((int)selBlockPress)
 		{
 			case KEY_All_release:
-
-				if(CHECK_bit(s[k].param,6)){
-					incP=5000;  FILE_NAME(main)(LoadPartScreen,(char**)ppMain);  incP=0;  RST_bit(s[k].param,6);     LCD_DisplayPart(0, 500,20,150,250);
-				}
-
 
 				BKCOPY_VAL(frameColor_c,frameColor,WHITE);
 					LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
@@ -1515,26 +1519,17 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);
 				for(int i=_NMB2KEY; i<countKey; ++i)
 				{
-					if(i<countKey-1)
-					{
-						if(CHECK_bit(s[k].param,7) && _NMB2KEY==i)		/* find key to hold press */
-						{
-							if(CHECK_bit(s[k].param,0)){
-								RST_bit(s[k].param,0);    _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);  //zparametryzuj hold press !!!!
-							}
-							else{
-								SET_bit(s[k].param,0);    BKCOPY_VAL(fillColor_c2,fillColor,fillPressColor);
-															  	  BKCOPY_VAL(frameColor_c,frameColor,framePressColor);
-															  	  _KeyStr(posKey[i],txtKey[i],colorTxtPressKey[i]);
-															  	  BKCOPY(fillColor,fillColor_c2);
-															  	  BKCOPY(frameColor,frameColor_c);		SET_bit(s[k].param,6);
-							}
-							RST_bit(s[k].param,7);  //nazwac jako funkcje ukryc w wfunkcji !!
+					if(i<countKey-1){
+						if(_IsFlagWin() && _NMB2KEY==i){		/* find key to hold press */
+							BKCOPY_VAL(fillColor_c2,fillColor,fillPressColor);
+							BKCOPY_VAL(frameColor_c,frameColor,framePressColor);
+							 _KeyStr(posKey[i],txtKey[i],colorTxtPressKey[i]);
+							BKCOPY(fillColor,fillColor_c2);
+							BKCOPY(frameColor,frameColor_c);
 						}
 						else _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
 					}
 					else _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
-
 				}
 				BKCOPY(s[k].widthKey,c.widthKey);
 				BKCOPY(fillColor,fillColor_c);
@@ -1549,13 +1544,10 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);	 break;
 			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);	 break;
 
-			case KEY_DispSpaces:	 if(!CHECK_bit(s[k].param,7)){ BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); SET_bit(s[k].param,7); _WindowSpacesInfo(500,20,150,250); } break;
-			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); break;
-			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); break;
+			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),_CreateWindows()); break;
+			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL); 				break;
+			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL); 				break;
 		}
-
-//		if(CHECK_bit(s[k].param,6))
-//			_WindowSpacesInfo(500,20,150,250);
 
 		if(startTouchIdx){
 			for(int i=0; i<_NMB2KEY; ++i)
@@ -1942,7 +1934,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 //dla ROLL bez select a drugie pole touch to z select,
 // blokada globalna touch !!!! tylko 1 touch zostaje
 
-void FILE_NAME(setTouch)(void)
+void FILE_NAME(setTouch)(void)   //BUTTON ktory zminia sepearate czy combined screen !!!!
 {
 	#define SELECT_CURRENT_FONT(src,dst,txt,coeff) \
 		LCD_SetStrVar_fontID		(v.FONT_VAR_##src, v.FONT_ID_##dst);\
@@ -2714,7 +2706,7 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	#undef _LINES_COLOR
 }
 
-static int FRAME_odstep()   //CONDITION(warunek, 	fffff(), 	aaaaa());
+static int FRAME_odstep()
 {
 	return 0;
 }
@@ -2822,8 +2814,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 
 
-
-	 if(incP != 5000){
+	 if(LoadNoDispScreen != argNmb){
 		 LCD_Show();
 	 }
 

@@ -155,3 +155,7 @@ int BrightIncr(int color, int val)
 
 	return RGB2INT(INCR(_R,val,255), INCR(_G,val,255), INCR(_B,val,255));
 }
+
+void _CallFunc(WindowFunc Win, uint16_t x,uint16_t y, uint16_t width,uint16_t height){
+	Win(x,y,width,height);
+}

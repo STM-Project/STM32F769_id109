@@ -8,6 +8,8 @@
 #ifndef LCD_LCD_COMMON_H_
 #define LCD_LCD_COMMON_H_
 
+#include "common.h"
+
 typedef enum{
    BLUE          = ((uint32_t)0xFF0000FF),
  	GREEN         = ((uint32_t)0xFF00FF00),
@@ -110,5 +112,7 @@ void CorrectPosIfOutRange(int16_t *pos);
 
 int BrightDecr(int color, int val);
 int BrightIncr(int color, int val);
+
+void _CallFunc(WindowFunc Win, uint16_t x,uint16_t y, uint16_t width,uint16_t height);
 
 #endif /* LCD_LCD_COMMON_H_ */

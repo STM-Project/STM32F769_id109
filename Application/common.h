@@ -110,7 +110,14 @@ typedef struct{
 	char           *ptr[STRUCT_SIZE_SHAPE_POS];
 }SHAPE_PARAMS;
 
+typedef struct{
+	structPosition pos;
+	structSize 		size;
+}POS_SIZE;
+
 /* ----------- Functions Definitations ----------- */
+typedef void (*WindowFunc)(uint16_t,uint16_t,uint16_t,uint16_t);
+
 typedef void (*figureShape)(uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t,uint32_t);
 
 typedef int FUNC_Keyboard(uint8_t,uint8_t,figureShape,uint8_t,uint16_t,uint16_t,uint16_t,uint16_t,uint8_t,uint16_t,uint16_t,uint8_t);
