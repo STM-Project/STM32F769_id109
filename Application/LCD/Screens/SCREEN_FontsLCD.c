@@ -496,6 +496,8 @@ static int incH = 30;  ///do usuniecia !!!
 static int incW = 50;
 static int incP = 50;
 
+extern uint32_t pLcd[];
+
 static int *ppMain[7] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat,(int*)"Rafal", (int*)&Test, &incH, &incW, &incP };
 /*
 static char* TXT_PosCursor(void){
@@ -1468,11 +1470,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y }, .size={200,250} };
 
-		char bufTxt[60];
-
 		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height){
 			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
-			LCD_StrDependOnColorsWindow(0,width,height,fontID_descr,5,5,LCD_DisplayRemeberedSpacesBetweenFonts(1,bufTxt),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth);
+			LCD_TxtWin(0,width,height,fontID_descr,5,5,LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(width*height)),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth);
 			LCD_Display(0, x,y, width,height);
 		}
 		void _CreateWindows(){

@@ -3135,8 +3135,10 @@ char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff){
 		Dbg(1,"\r\n");
 		return NULL;
 	case 1:
-		mini_snprintf(buff,50,"%d: %s %s %c %c  %d",1,LCD_FontStyle2Str(bufTemp,space[0].fontStyle),LCD_FontSize2Str(bufTemp+20,space[0].fontSize),space[0].char1,space[0].char2,space[0].val);
-		return buff;
+//		int inc=0;
+//		for(int i=0; i<StructSpaceCount; i++)
+//			inc=mini_snprintf(buff+inc,50,"%d: %s %s %c %c  %d",1,LCD_FontStyle2Str(bufTemp,space[0].fontStyle),LCD_FontSize2Str(bufTemp+20,space[0].fontSize),space[0].char1,space[0].char2,space[0].val);
+		return "ABC\r\n0123\r\n";
 }}
 void LCD_WriteSpacesBetweenFontsOnSDcard(void){
 	SDCardFileOpen(0,"Spaces_Between_Font.bin",FA_CREATE_ALWAYS|FA_WRITE);
@@ -3628,6 +3630,33 @@ StructTxtPxlLen LCD_StrDependOnColorsWindow(uint32_t posBuff,uint32_t BkpSizeX,u
 		lenStr=LCD_StrChangeColorWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos,txt,OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
 	return lenStr;
 }
+
+StructTxtPxlLen LCD_TxtWin(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth){
+//	char *pRead = NULL;
+//
+//	char tab[50]="Rafal\r\nMarkielowski";
+//	char *ptr = tab;
+//	ptr = strtok_r(txt,"\r\n",&pRead);
+
+	for(int i=0; i<200; i++)
+	{
+		if(*(txt+i)=='\r'){
+			*(txt+i) = 'a';
+			break;
+		}
+	}
+
+
+
+
+	return LCD_StrDependOnColorsWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos, txt, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
+	//return LCD_StrDependOnColorsWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos, strtok_r(NULL,"\r\n",&pRead), OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);
+}
+
+
+
+
+
 
 StructTxtPxlLen LCD_StrDependOnColorsWindowIndirect(uint32_t posBuff, int Xwin, int Ywin,uint32_t BkpSizeX,uint32_t BkpSizeY,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth)
 {

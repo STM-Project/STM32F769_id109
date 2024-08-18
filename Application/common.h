@@ -73,6 +73,11 @@
 
 #define PERCENT_SCALE(val,maxVal)	(((val)*100)/(maxVal))
 
+#define CHAR_PLCD(offs)		((char*)(pLcd+(offs)))
+#define UINT8_PLCD(offs)	((uint8_t*)(pLcd+(offs)))
+#define UINT16_PLCD(offs)	((uint16_t*)(pLcd+(offs)))
+#define INT_PLCD(offs)		((int*)(pLcd+(offs)))
+
 #define STRUCT_SIZE_SHAPE_POS		3
 
 typedef struct{
