@@ -1466,10 +1466,13 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		int 	_IsFlagWin	 (void){ return CHECK_bit(s[k].param,7); }
 		void 	_RstFlagWin	 (void){	RST_bit(s[k].param,7); }
 
-		POS_SIZE win = { .pos={500,20}, .size={150,250} };
+		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y }, .size={200,250} };
+
+		char bufTxt[60];
 
 		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height){
 			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
+			LCD_StrDependOnColorsWindow(0,width,height,fontID_descr,5,5,LCD_DisplayRemeberedSpacesBetweenFonts(1,bufTxt),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth);
 			LCD_Display(0, x,y, width,height);
 		}
 		void _CreateWindows(){
@@ -2298,7 +2301,7 @@ void FILE_NAME(debugRcvStr)(void)
 	else if(DEBUG_RcvStr("\\"))
 		IncDec_SpaceBetweenFont(1);
 	else if(DEBUG_RcvStr("/"))
-		LCD_DisplayRemeberedSpacesBetweenFonts();
+		LCD_DisplayRemeberedSpacesBetweenFonts(0,NULL);
 	else if(DEBUG_RcvStr("o"))
 		LCD_WriteSpacesBetweenFontsOnSDcard();
 	else if(DEBUG_RcvStr("m"))

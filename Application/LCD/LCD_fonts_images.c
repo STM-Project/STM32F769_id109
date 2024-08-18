@@ -3124,13 +3124,20 @@ int LCD_SelectedSpaceBetweenFontsIncrDecr(uint8_t incrDecr, uint8_t fontStyle, u
 	return 0xFFFF;
 }
 
-void LCD_DisplayRemeberedSpacesBetweenFonts(void){
+char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff){
 	char bufTemp[50];
-	Dbg(1,"\r\nSpacesBetweenFonts:");
-	for(int i=0; i<StructSpaceCount; i++)
-		DbgVar(1,50,"\r\n%d: %s %s %c %c  %d ",i+1,LCD_FontStyle2Str(bufTemp,space[i].fontStyle),LCD_FontSize2Str(bufTemp+20,space[i].fontSize),space[i].char1,space[i].char2,space[i].val);
-	Dbg(1,"\r\n");
-}
+	switch(param){
+	default:
+	case 0:
+		Dbg(1,"\r\nSpacesBetweenFonts:");
+		for(int i=0; i<StructSpaceCount; i++)
+			DbgVar(1,50,"\r\n%d: %s %s %c %c  %d ",i+1,LCD_FontStyle2Str(bufTemp,space[i].fontStyle),LCD_FontSize2Str(bufTemp+20,space[i].fontSize),space[i].char1,space[i].char2,space[i].val);
+		Dbg(1,"\r\n");
+		return NULL;
+	case 1:
+		mini_snprintf(buff,50,"%d: %s %s %c %c  %d",1,LCD_FontStyle2Str(bufTemp,space[0].fontStyle),LCD_FontSize2Str(bufTemp+20,space[0].fontSize),space[0].char1,space[0].char2,space[0].val);
+		return buff;
+}}
 void LCD_WriteSpacesBetweenFontsOnSDcard(void){
 	SDCardFileOpen(0,"Spaces_Between_Font.bin",FA_CREATE_ALWAYS|FA_WRITE);
 	SDCardFileWrite(0,(char*)LCD_GetStructSpaceCount(),1);

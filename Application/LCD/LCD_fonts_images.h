@@ -322,7 +322,7 @@ int LCD_GetFontHalfHeight(int fontID);
 int CopyCharsTab(char *buf, int len, int offset, int fontID);
 
 int LCD_SelectedSpaceBetweenFontsIncrDecr(uint8_t incrDecr, uint8_t fontStyle, uint8_t fontSize, char char1, char char2);
-void LCD_DisplayRemeberedSpacesBetweenFonts(void);
+char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff);
 void LCD_WriteSpacesBetweenFontsOnSDcard(void);
 void LCD_ResetSpacesBetweenFonts(void);
 void LCD_SetSpacesBetweenFonts(void);
