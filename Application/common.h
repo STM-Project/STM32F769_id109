@@ -40,7 +40,7 @@
 #define INCR_FLOAT_WRAP(x,step,min,max)  ((x<max-step/2) ? (x+=step) : (x=min))
 #define DECR_FLOAT_WRAP(x,step,min,max)  ((x<step/2) ?     (x=max)   : (x-=step))
 
-#define MIDDLE(startPos,widthBk,width)	startPos+(widthBk-width)/2
+#define MIDDLE(startPos,widthBk,width)	((startPos)+((widthBk)-(width))/2)
 #define IS_RANGE(val,min,max) (val>=min)&&(val<=max)
 
 #define SET_IN_RANGE(val,min,max) (((val)<(min))?(min):(((val)>(max))?(max):(val)))

@@ -361,6 +361,8 @@ typedef enum{
 	Touch_DispSpaces,
 	Touch_WriteSpaces,
 	Touch_ResetSpaces,
+	Touch_SpacesInfoUp,
+	Touch_SpacesInfoDown,
 	Move_1,
 	Move_2,
 	Move_3,
@@ -423,6 +425,8 @@ typedef enum{
 	KEY_DispSpaces,
 	KEY_WriteSpaces,
 	KEY_ResetSpaces,
+	KEY_InfoSpacesUp,
+	KEY_InfoSpacesDown,
 
 }SELECT_PRESS_BLOCK;
 
@@ -1470,21 +1474,48 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y }, .size={200,250} };
 
-		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height){
+		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height, int param){
+			int spaceFromFrame = 10;
+			int heightUpDown = 17;
+			int widthtUpDown = 26;
+			int xPosU = MIDDLE(0,		 width/2,widthtUpDown);
+			int xPosD = MIDDLE(width/2,width/2,widthtUpDown);
+			int yPosUD = height-heightUpDown-spaceFromFrame;
 			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
-			LCD_TxtWin(0,width,height,fontID_descr,5,5,LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(width*height)),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth);
+			LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(width*height)),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth);
 
-LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height,  20,height-40, SetLineBold2Width(30,2),  SetTriangHeightCoeff2Height(15,3), v.FONT_COLOR_Descr,v.FONT_COLOR_Descr, v.COLOR_BkScreen, Down));
-
-
-
+			LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height,  xPosU,yPosUD, SetLineBold2Width(widthtUpDown,7),  SetTriangHeightCoeff2Height(heightUpDown-1,3), v.FONT_COLOR_Descr,v.FONT_COLOR_Descr, v.COLOR_BkScreen, Up));
+														LCD_Arrow(0,					 width,height,  xPosD,yPosUD, SetLineBold2Width(widthtUpDown,7),  SetTriangHeightCoeff2Height(heightUpDown,  3), v.FONT_COLOR_Descr,v.FONT_COLOR_Descr, v.COLOR_BkScreen, Down);
 			LCD_Display(0, x,y, width,height);
+
+			if(0==param){
+				touchTemp[0].x= win.pos.x + xPosU;
+				touchTemp[1].x= touchTemp[0].x + widthtUpDown;
+				touchTemp[0].y= win.pos.y + yPosUD;
+				touchTemp[1].y= touchTemp[0].y + heightUpDown;
+				LCD_TOUCH_Set(ID_TOUCH_POINT,Touch_SpacesInfoUp,press);
+				s[k].nmbTouch++;
+
+				touchTemp[0].x= win.pos.x + xPosD;
+				touchTemp[1].x= touchTemp[0].x + widthtUpDown;
+				touchTemp[0].y= win.pos.y + yPosUD;
+				touchTemp[1].y= touchTemp[0].y + heightUpDown;
+				LCD_TOUCH_Set(ID_TOUCH_POINT,Touch_SpacesInfoDown,press);
+				s[k].nmbTouch++;
+			}
+
+
+
+
 		}
-		void _CreateWindows(){
-			_WindowSpacesInfo(win.pos.x ,win.pos.y, win.size.w, win.size.h); _SetFlagWin();
+		void _CreateWindows(int param){
+			_WindowSpacesInfo(win.pos.x ,win.pos.y, win.size.w, win.size.h, param); _SetFlagWin();
 		}
-		void _DeleteWindows(){		/* Use function only after displaying (not during) */
+		void _DeleteWindows(void){		/* Use function only after displaying (not during) */
 			FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h);
+			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoUp);
+			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoDown);
+			s[k].nmbTouch-=2;
 		}
 		void _OverArrowTxt(int nr, DIRECTIONS direct){
 			LCD_ArrowTxt(0,widthAll,heightAll, MIDDLE(posKey[nr].x, s[k].widthKey, widthShape1), MIDDLE(posKey[nr].y, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, direct,fontID,(char*)txtKey[nr],colorTxtKey[nr]);
@@ -1552,9 +1583,12 @@ LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height,  20,h
 			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);	 break;
 			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);	 break;
 
-			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),_CreateWindows()); break;
+			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),_CreateWindows(0)); break;
 			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL); 				break;
 			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL); 				break;
+
+			case KEY_InfoSpacesUp: 	 _CreateWindows(Up);   Dbg(1,"\r\n11111111111111111111111111"); break;
+			case KEY_InfoSpacesDown: _CreateWindows(Down); Dbg(1,"\r\n22222222222222222222222222");break;
 		}
 
 		if(startTouchIdx){
@@ -2145,10 +2179,11 @@ void FILE_NAME(setTouch)(void)   //BUTTON ktory zminia sepearate czy combined sc
 		case Touch_PosInWin_minus: 	_KEYS_RELEASE_LenOffsWin;	 Inc_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_PosInWin_minus ); 	_SaveState();  break;
 		case Touch_SpaceFonts_plus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(1);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_plus );  _SaveState();  break;
 		case Touch_SpaceFonts_minus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(0);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_minus ); _SaveState();  break;
-
 		case Touch_DispSpaces: 	_KEYS_RELEASE_LenOffsWin;	 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_DispSpaces ); _SaveState();  break;
 		case Touch_WriteSpaces: _KEYS_RELEASE_LenOffsWin;	 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_WriteSpaces ); _SaveState();  break;
 		case Touch_ResetSpaces: _KEYS_RELEASE_LenOffsWin;	 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_ResetSpaces ); _SaveState();  break;
+		case Touch_SpacesInfoUp: 									 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesUp );  break;
+		case Touch_SpacesInfoDown: 								 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesDown ); break;
 
 		case Touch_FontSizeRoll:
 			vTimerService(0,start_time,1000);
