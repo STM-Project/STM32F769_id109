@@ -147,8 +147,8 @@ int ChangeElemSliderColor(SLIDER_PARAMS sel, uint32_t color);
 uint32_t ChangeElemSliderSize(uint16_t width, uint8_t coeffHeightTriang, uint8_t coeffLineBold, uint8_t coeffHeightPtr, uint8_t coeffWidthPtr);
 uint32_t SetSpaceTriangLineSlider(uint16_t height, uint16_t param);
 uint32_t SetValType(uint16_t slidPos, uint16_t param);
-uint32_t SetLineBold(uint32_t width, uint8_t bold);
-uint32_t SetTriangHeightCoeff(uint32_t height, uint8_t coeff);
+uint32_t SetLineBold2Width(uint32_t width, uint8_t bold);
+uint32_t SetTriangHeightCoeff2Height(uint32_t height, uint8_t coeff);
 
 SHAPE_PARAMS LCDSHAPE_Window(ShapeFunc pShape, uint32_t posBuff, SHAPE_PARAMS param);
 SHAPE_PARAMS LCDSHAPE_Arrow(uint32_t posBuff, SHAPE_PARAMS param);

@@ -278,3 +278,20 @@ int STRING_GetTheLongestTxt(int nmb, char **txt)
 	}
 	return itMaxLen;
 }
+
+void Int16ToCharBuff(char* buff, uint16_t val){
+	buff[0] = val>>8;
+	buff[1] = val;
+}
+void Int32ToCharBuff(char* buff, uint32_t val){
+	buff[0] = val>>24;
+	buff[1] = val>>16;
+	buff[2] = val>>8;
+	buff[3] = val;
+}
+uint16_t CharBuffToInt16(char* buff){
+	return ((buff[0]<<8) | buff[1]);
+}
+uint32_t CharBuffToInt32(char* buff){
+	return ((buff[0]<<24) | (buff[1]<<16) | (buff[2]<<8) | buff[3]);
+}

@@ -3392,14 +3392,10 @@ SHAPE_PARAMS LCD_SimpleSlider(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSi
 	return elements;
 }
 
-
-
-
-
-uint32_t SetLineBold(uint32_t width, uint8_t bold){
+uint32_t SetLineBold2Width(uint32_t width, uint8_t bold){
 	return SHIFT_LEFT(width,bold,16);
 }
-uint32_t SetTriangHeightCoeff(uint32_t height, uint8_t coeff){
+uint32_t SetTriangHeightCoeff2Height(uint32_t height, uint8_t coeff){
 	return SHIFT_LEFT(height,coeff,16);
 }
 SHAPE_PARAMS LCD_Arrow(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t frameColor, uint32_t fillColor, uint32_t bkpColor, DIRECTIONS direct)
@@ -3467,21 +3463,11 @@ SHAPE_PARAMS LCD_Arrow(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uin
 SHAPE_PARAMS LCDSHAPE_Arrow(uint32_t posBuff, SHAPE_PARAMS param){
 	return LCD_Arrow(posBuff,param.bkSize.x,param.bkSize.y, param.pos[0].x,param.pos[0].y, param.size[0].w,param.size[0].h, param.color[0].frame, param.color[0].fill, param.color[0].bk, param.param[0]);
 }
-
 SHAPE_PARAMS LCDSHAPE_Window(ShapeFunc pShape, uint32_t posBuff, SHAPE_PARAMS param){
 	return pShape(posBuff,param);
 }
-
-void LCDSHAPE_SimpleTriangle(SHAPE_PARAMS shape)
-{
-
+void LCDSHAPE_SimpleTriangle(SHAPE_PARAMS shape){
 }
-
-
-
-
-
-
 
 void LCD_SetCircleParam(float outRatio, float inRatio, int len, ...){
 	va_list va;

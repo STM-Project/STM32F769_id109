@@ -1473,6 +1473,11 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height){
 			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor );
 			LCD_TxtWin(0,width,height,fontID_descr,5,5,LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(width*height)),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth);
+
+LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height,  20,height-40, SetLineBold2Width(30,2),  SetTriangHeightCoeff2Height(15,3), v.FONT_COLOR_Descr,v.FONT_COLOR_Descr, v.COLOR_BkScreen, Down));
+
+
+
 			LCD_Display(0, x,y, width,height);
 		}
 		void _CreateWindows(){

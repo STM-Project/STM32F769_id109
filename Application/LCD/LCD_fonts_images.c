@@ -3138,9 +3138,8 @@ char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff){
 //		int inc=0;
 //		for(int i=0; i<StructSpaceCount; i++)
 //			inc=mini_snprintf(buff+inc,50,"%d: %s %s %c %c  %d",1,LCD_FontStyle2Str(bufTemp,space[0].fontStyle),LCD_FontSize2Str(bufTemp+20,space[0].fontSize),space[0].char1,space[0].char2,space[0].val);
-		int len =mini_snprintf(buff+2,100,"ABC\r\n0123\r\nRafa"ł"\r\nMarkielowski\r\n1234567890");
-		buff[0] = len>>8;  //sprobuj rzutowania !!!!
-		buff[1] = len;
+		int len =mini_snprintf(buff+2,100,"ABC\r\n0123\r\n\r\nRafa"ł"\r\nMarkielowski\r\n1234567890");
+		Int16ToCharBuff(buff,len);
 		return buff;
 }}
 void LCD_WriteSpacesBetweenFontsOnSDcard(void){
@@ -3640,18 +3639,21 @@ StructTxtPxlLen LCD_TxtWin(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 	char buf_temp[100]={0};
 	int j=0, nrLine=0;
 	int heightFont=LCD_GetFontHeight(fontID);
-	int lenTxt= (txt[0]<<8)|txt[1];
+	int lenTxt= CharBuffToInt16(txt);
+
+	StructTxtPxlLen _LcdTxt(void){
+		return LCD_StrDependOnColorsWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos+nrLine*heightFont, buf_temp, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth); }
 
 	txt+=2;
-	for(int i=0; i<lenTxt; i++){
-
+	for(int i=0; i<lenTxt; i++)
+	{
 		if(*(txt+i)=='\r' && *(txt+i+1)=='\n'){
-			if(j){ lenStr=LCD_StrDependOnColorsWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos+nrLine*heightFont, buf_temp, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth);  j=0; }
+			if(j){ lenStr=_LcdTxt();  j=0; }
 			i++; nrLine++;
 		}
-		else buf_temp[j++] = *(txt+i);
-
+		else{ buf_temp[j++]=*(txt+i); buf_temp[j]=0; };
 	}
+	if(j) lenStr=_LcdTxt();
 	return lenStr;
 }
 
