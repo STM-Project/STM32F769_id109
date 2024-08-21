@@ -1474,6 +1474,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		int 	_IsFlagWin	 (void){ return CHECK_bit(s[k].param,7); }
 		void 	_RstFlagWin	 (void){	RST_bit(s[k].param,7); }
 
+		void 		_SetCurrPosTxt(uint16_t pos){ s[k].param2=pos; }
+		uint16_t _GetCurrPosTxt(void)			 { return s[k].param2; }
+
 		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y }, .size={200,250} };
 
 		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height, int param){
@@ -1483,28 +1486,10 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			int xPosU = MIDDLE(0,		width/2,widthtUpDown);
 			int xPosD = MIDDLE(width/2,width/2,widthtUpDown);
 			int yPosUD = height-heightUpDown-spaceFromFrame;
-			uint16_t temp;
-			static uint16_t directUp[100]={0};
-			static uint16_t i_directUp=0;
 
-			if(NoDirect==param) i_directUp=0;
-
-
-			if(Up==param){
-				if(1 < i_directUp) i_directUp -= 2;
-				else i_directUp--;
-				s[k].param2 = directUp[i_directUp];
-			}
-
-
-			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
-			temp= LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(width*height))+s[k].param2,fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth).inChar;
-			if(temp){
-				s[k].param2 += temp;
-				if(i_directUp<sizeof(directUp)-2) directUp[++i_directUp]= s[k].param2;
-			}
-
-
+			static uint16_t posTxt_temp=0;  //przemyslec to !!!!
+			static uint16_t posTxtTab[50]={0};
+			static uint16_t i_posTxtTab=0;
 
 			if(NoDirect==param){
 				touchTemp[0].x= win.pos.x + xPosU;
@@ -1520,31 +1505,36 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				touchTemp[1].y= touchTemp[0].y + heightUpDown;
 				LCD_TOUCH_Set(ID_TOUCH_POINT,Touch_SpacesInfoDown,press);
 				s[k].nmbTouch++;
+				i_posTxtTab=0;
+			}
+			else if(Up==param){
+				CONDITION(1<i_posTxtTab && 0<posTxt_temp, i_posTxtTab-=2, i_posTxtTab--);
+				_SetCurrPosTxt(posTxtTab[i_posTxtTab]);
+			}
+
+			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
+			posTxt_temp = LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(width*height))+_GetCurrPosTxt(),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth).inChar;
+			if(posTxt_temp){
+				_SetCurrPosTxt(_GetCurrPosTxt()+posTxt_temp);
+				if(i_posTxtTab<sizeof(posTxtTab)-2)
+					posTxtTab[++i_posTxtTab]= _GetCurrPosTxt();
 			}
 
 			LCD_TOUCH_SusspendTouch(Touch_SpacesInfoUp);
 			LCD_TOUCH_SusspendTouch(Touch_SpacesInfoDown);
 
-
-			if(1 < i_directUp || (1==i_directUp && 0==temp)){
-				LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height, xPosU,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown,	 3), v.FONT_COLOR_Descr,v.FONT_COLOR_Descr, v.COLOR_BkScreen, Up));
+			if(1 < i_posTxtTab || (1==i_posTxtTab && 0==posTxt_temp)){
+				LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height, xPosU,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown,3), v.FONT_COLOR_Descr, v.FONT_COLOR_Descr, v.COLOR_BkScreen, Up));
 				LCD_TOUCH_RestoreSusspendedTouch(Touch_SpacesInfoUp);
 			}
-			if(0 < temp){
-				LCD_Arrow(0,width,height, xPosD,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown-1,3), v.FONT_COLOR_Descr,v.FONT_COLOR_Descr, v.COLOR_BkScreen, Down);
+			if(0 < posTxt_temp){
+				LCD_Arrow(0,width,height, xPosD,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown-1,3), v.FONT_COLOR_Descr, v.FONT_COLOR_Descr, v.COLOR_BkScreen, Down);
 				LCD_TOUCH_RestoreSusspendedTouch(Touch_SpacesInfoDown);
 			}
 
 			LCD_Display(0, x,y, width,height);
-
-
-
-
-
-
-
-
 		}
+
 		void _CreateWindows(int param){
 			_WindowSpacesInfo(win.pos.x ,win.pos.y, win.size.w, win.size.h, param); _SetFlagWin();
 		}
@@ -1553,7 +1543,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoUp);
 			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoDown);
 			s[k].nmbTouch-=2;
-			s[k].param2=0;
+			_SetCurrPosTxt(0);
 		}
 		void _OverArrowTxt(int nr, DIRECTIONS direct){
 			LCD_ArrowTxt(0,widthAll,heightAll, MIDDLE(posKey[nr].x, s[k].widthKey, widthShape1), MIDDLE(posKey[nr].y, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, direct,fontID,(char*)txtKey[nr],colorTxtKey[nr]);

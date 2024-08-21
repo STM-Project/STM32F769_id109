@@ -3136,7 +3136,7 @@ char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff){
 		return NULL;
 	case 1:
 		int len=0;
-		for(int i=0; i<20; i++)
+		for(int i=0; i<113; i++)
 			len += mini_snprintf(buff+len,100,"%d. Rafa"ł" Markielowski\r\n",i);
 //		Int16ToCharBuff(buff,20);
 //		Int16ToCharBuff(buff+2,len);
@@ -3637,16 +3637,23 @@ StructTxtPxlLen LCD_TxtWin(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 {
 	#define CURRENT_Y	 nrLine*lenStr.height
 	StructTxtPxlLen lenStr={0};
-	char buf_temp[200]={0};
+	char buf_temp[200]={0}, buf[10];
 	int j=0, nrLine=0;
-/* int maxLines= CharBuffToInt16(txt); */
-	//int lenTxt	= CharBuffToInt16(txt+2);
+	//static uint16_t ittt=0;
 
 	StructTxtPxlLen _LcdTxt(int offsY){
-		return LCD_StrDependOnColorsWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos+offsY, buf_temp, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth); }
+		int y=0,i;
 
-//	txt+=4;
-//	int llll = strlen(txt);
+		while(1){
+			if(buf_temp[y++]=='.') break;
+		}
+		for(i=0; i<y; i++)
+			buf[i] = buf_temp[i];
+		buf[i]=0;
+
+		StructTxtPxlLen xx = LCD_StrDependOnColorsWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos+offsY, buf, OnlyDigits,space,bkColor,fontColor,maxVal,ConstWidth);
+		return LCD_StrDependOnColorsWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos+xx.inPixel,Ypos+offsY, &buf_temp[y], OnlyDigits,space,bkColor,fontColor,maxVal,constWidth); }
+
 	for(int i=0; i<strlen(txt); i++)
 	{
 		if(*(txt+i)=='\r' && *(txt+i+1)=='\n'){
