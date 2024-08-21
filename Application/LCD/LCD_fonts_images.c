@@ -3135,11 +3135,11 @@ char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff){
 		Dbg(1,"\r\n");
 		return NULL;
 	case 1:
-//		int inc=0;
-//		for(int i=0; i<StructSpaceCount; i++)
-//			inc=mini_snprintf(buff+inc,50,"%d: %s %s %c %c  %d",1,LCD_FontStyle2Str(bufTemp,space[0].fontStyle),LCD_FontSize2Str(bufTemp+20,space[0].fontSize),space[0].char1,space[0].char2,space[0].val);
-		int len =mini_snprintf(buff+2,100,"ABC\r\n0123\r\n\r\nRafa"ł"\r\nMarkielowski\r\n1234567890");
-		Int16ToCharBuff(buff,len);
+		int len=0;
+		for(int i=0; i<20; i++)
+			len += mini_snprintf(buff+len,100,"%d. Rafa"ł" Markielowski\r\n",i);
+//		Int16ToCharBuff(buff,20);
+//		Int16ToCharBuff(buff+2,len);
 		return buff;
 }}
 void LCD_WriteSpacesBetweenFontsOnSDcard(void){
@@ -3635,26 +3635,31 @@ StructTxtPxlLen LCD_StrDependOnColorsWindow(uint32_t posBuff,uint32_t BkpSizeX,u
 
 StructTxtPxlLen LCD_TxtWin(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth)
 {
+	#define CURRENT_Y	 nrLine*lenStr.height
 	StructTxtPxlLen lenStr={0};
-	char buf_temp[100]={0};
+	char buf_temp[200]={0};
 	int j=0, nrLine=0;
-	int heightFont=LCD_GetFontHeight(fontID);
-	int lenTxt= CharBuffToInt16(txt);
+/* int maxLines= CharBuffToInt16(txt); */
+	//int lenTxt	= CharBuffToInt16(txt+2);
 
-	StructTxtPxlLen _LcdTxt(void){
-		return LCD_StrDependOnColorsWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos+nrLine*heightFont, buf_temp, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth); }
+	StructTxtPxlLen _LcdTxt(int offsY){
+		return LCD_StrDependOnColorsWindow(posBuff,BkpSizeX,BkpSizeY,fontID,Xpos,Ypos+offsY, buf_temp, OnlyDigits,space,bkColor,fontColor,maxVal,constWidth); }
 
-	txt+=2;
-	for(int i=0; i<lenTxt; i++)
+//	txt+=4;
+//	int llll = strlen(txt);
+	for(int i=0; i<strlen(txt); i++)
 	{
 		if(*(txt+i)=='\r' && *(txt+i+1)=='\n'){
-			if(j){ lenStr=_LcdTxt();  j=0; }
+			if(j){ lenStr=_LcdTxt(CURRENT_Y);  j=0; }
 			i++; nrLine++;
+			if(CURRENT_Y > BkpSizeY-(lenStr.height+lenStr.height)){ lenStr.inChar=i+1;  return lenStr; }
 		}
-		else{ buf_temp[j++]=*(txt+i); buf_temp[j]=0; };
+		else{ if(j<sizeof(buf_temp)-2){ buf_temp[j++]=*(txt+i); buf_temp[j]=0; } };
 	}
-	if(j) lenStr=_LcdTxt();
+	if(j) lenStr=_LcdTxt(CURRENT_Y);
+	lenStr.inChar=0;
 	return lenStr;
+	#undef CURRENT_Y
 }
 
 StructTxtPxlLen LCD_StrDependOnColorsWindowIndirect(uint32_t posBuff, int Xwin, int Ywin,uint32_t BkpSizeX,uint32_t BkpSizeY,int fontID, int Xpos, int Ypos, char *txt, int OnlyDigits, int space, uint32_t bkColor, uint32_t fontColor,uint8_t maxVal, int constWidth)

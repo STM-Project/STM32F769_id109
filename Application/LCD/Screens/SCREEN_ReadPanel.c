@@ -237,13 +237,13 @@ void NOWY_2(void)  //dac mozliwosc zablokowania Dbg definem!!!
 	LCD_Shape(240,50,LCD_BoldFrame,100,45,frameColor,bkColor,bkColor);
 	StopMeasureTime_us("\r\nAAAAAAAAAAAA1:");
 	StartMeasureTime_us();
-	LCD_Shape(240,100,LCD_BoldFrame,100,45,SetColorBoldFrame(frameColor,4),bkColor,bkColor);
+	LCD_Shape(240,100,LCD_BoldFrame,100,45,SetBold2Color(frameColor,4),bkColor,bkColor);
 	StopMeasureTime_us("\r\nAAAAAAAAAAAA1:");
 	StartMeasureTime_us();
 	LCD_Shape(240,150,LCD_RoundFrame,100,45,frameColor,bkColor,bkColor);
 	StopMeasureTime_us("\r\nAAAAAAAAAAAA1:");
 	StartMeasureTime_us();
-	LCD_Shape(240,200,LCD_BoldRoundFrame,100,45,SetColorBoldFrame(frameColor,3),bkColor,bkColor);
+	LCD_Shape(240,200,LCD_BoldRoundFrame,100,45,SetBold2Color(frameColor,3),bkColor,bkColor);
 	StopMeasureTime_us("\r\nAAAAAAAAAAAA3:");
 
 
@@ -254,13 +254,13 @@ void NOWY_2(void)  //dac mozliwosc zablokowania Dbg definem!!!
 	LCD_Shape(350,50,LCD_BoldRectangle,100,45,frameColor,bkColor,bkColor);
 	StopMeasureTime_us("\r\nAAAAAAAAAAAA1:");
 	StartMeasureTime_us();
-	LCD_Shape(350,100,LCD_BoldRectangle,100,45,SetColorBoldFrame(GRAY,4),DARKYELLOW,bkColor);
+	LCD_Shape(350,100,LCD_BoldRectangle,100,45,SetBold2Color(GRAY,4),DARKYELLOW,bkColor);
 	StopMeasureTime_us("\r\nAAAAAAAAAAAA1:");
 	StartMeasureTime_us();
 	LCD_Shape(350,150,LCD_RoundRectangle,100,45,GRAY,DARKRED,bkColor);  //zrobic jezsli Round to _AA !!!!
 	StopMeasureTime_us("\r\nAAAAAAAAAAAA1:");
 	StartMeasureTime_us();
-	LCD_Shape(350,200,LCD_BoldRoundRectangle,100,45,SetColorBoldFrame(frameColor,3),0x111111,bkColor);
+	LCD_Shape(350,200,LCD_BoldRoundRectangle,100,45,SetBold2Color(frameColor,3),0x111111,bkColor);
 	StopMeasureTime_us("\r\nAAAAAAAAAAAA3:");
 
 
@@ -276,7 +276,7 @@ void NOWY_2(void)  //dac mozliwosc zablokowania Dbg definem!!!
 	DisplayFontsStructState();
 
 
-	LCD_ShapeIndirect(100,200,LCD_BoldRoundRectangle,100,45, SetColorBoldFrame(frameColor,5),DARKGREEN,bkColor);
+	LCD_ShapeIndirect(100,200,LCD_BoldRoundRectangle,100,45, SetBold2Color(frameColor,5),DARKGREEN,bkColor);
 
 }
 
@@ -356,7 +356,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		int widthCalculated=LCD_CalculateCircleWidth(width);
 		LCD_ClearPartScreen(3333,widthCalculated,widthCalculated,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
-		LCD_ShapeWindow	         (LCD_Circle,3333,widthCalculated,widthCalculated, 0,0, width,          width,          SetColorBoldFrame(_FrameColor(),bold), _FillColor(),_BkColor());
+		LCD_ShapeWindow	         (LCD_Circle,3333,widthCalculated,widthCalculated, 0,0, width,          width,          SetBold2Color(_FrameColor(),bold), _FillColor(),_BkColor());
 		LCD_ShapeWindowIndirect(x,y,LCD_Frame, 3333,widthCalculated,widthCalculated, 0,0, widthCalculated,widthCalculated,                  _FrameColor(),       _BkColor(),  _BkColor());
 	}
 
@@ -364,7 +364,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	{
 		LCD_ClearPartScreen(0,width,width,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
-		LCD_ShapeIndirect(x,y,LCD_Circle, width,width, SetColorBoldFrame(_FrameColor(),bold), _FillColor(), _BkColor());
+		LCD_ShapeIndirect(x,y,LCD_Circle, width,width, SetBold2Color(_FrameColor(),bold), _FillColor(), _BkColor());
 	}
 
 	if(Circle.startFlag!=0x52)
@@ -437,7 +437,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	//LCD_Shape(480-LCD_GetYSize()+10,10,LCD_Circle, Circle.width-20,Circle.width-20, _FrameColor(),  _FillColor(), MYGRAY);
 
 
-	LCD_Shape(480-LCD_GetYSize(),0,LCD_Circle, Circle.width,Circle.width, SetColorBoldFrame(WHITE/*_FrameColor()*/,Circle.bold), /*TRANSPARENT*/ _FillColor(), _BkColor());  //dla tRANSPARENT nie dziala bold na >niz 0 !!!!
+	LCD_Shape(480-LCD_GetYSize(),0,LCD_Circle, Circle.width,Circle.width, SetBold2Color(WHITE/*_FrameColor()*/,Circle.bold), /*TRANSPARENT*/ _FillColor(), _BkColor());  //dla tRANSPARENT nie dziala bold na >niz 0 !!!!
 	//LCD_Shape(200,200,LCD_Circle, 50,50, SetColorBoldFrame(WHITE/*_FrameColor()*/,Circle.bold), TRANSPARENT/* _FillColor()*/, _BkColor());
 	//LCD_Shape(480-LCD_GetYSize()+6,6,LCD_Circle, Circle.width-5,Circle.width-5, _FrameColor(),  TRANSPARENT/*_FillColor()*/, MYRED);
 
@@ -482,7 +482,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	// __Show_FrameAndCircle_Indirect(480-LCD_GetYSize(),0, Circle.width, Circle.bold);
 	 __Show_Circle_Indirect(LCD_GetXSize()-50,200, 50, 0);
 
-	 LCD_ShapeIndirect(400,350,LCD_Circle, 50,50, SetColorBoldFrame(WHITE,0), RED, MYGRAY);
+	 LCD_ShapeIndirect(400,350,LCD_Circle, 50,50, SetBold2Color(WHITE,0), RED, MYGRAY);
 
 
 
