@@ -1474,9 +1474,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		int 	_IsFlagWin	 (void){ return CHECK_bit(s[k].param,7); }
 		void 	_RstFlagWin	 (void){	RST_bit(s[k].param,7); }
 
-		void 		_SetCurrPosTxt(uint16_t pos){ s[k].param2=pos; }
-		uint16_t _GetCurrPosTxt(void)			 { return s[k].param2; }
-
 		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y }, .size={200,250} };
 
 		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height, int param){
@@ -1487,9 +1484,12 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			int xPosD = MIDDLE(width/2,width/2,widthtUpDown);
 			int yPosUD = height-heightUpDown-spaceFromFrame;
 
-			static uint16_t posTxt_temp=0;  //przemyslec to !!!!
+			static uint16_t posTxt_temp=0;
 			static uint16_t posTxtTab[50]={0};
 			static uint16_t i_posTxtTab=0;
+
+			void 		_SetCurrPosTxt(uint16_t pos){ s[k].param2=pos; }
+			uint16_t _GetCurrPosTxt(void)			 { return s[k].param2; }
 
 			if(NoDirect==param){
 				touchTemp[0].x= win.pos.x + xPosU;
@@ -1505,6 +1505,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				touchTemp[1].y= touchTemp[0].y + heightUpDown;
 				LCD_TOUCH_Set(ID_TOUCH_POINT,Touch_SpacesInfoDown,press);
 				s[k].nmbTouch++;
+
+				_SetCurrPosTxt(0);
 				i_posTxtTab=0;
 			}
 			else if(Up==param){
@@ -1543,7 +1545,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoUp);
 			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoDown);
 			s[k].nmbTouch-=2;
-			_SetCurrPosTxt(0);
 		}
 		void _OverArrowTxt(int nr, DIRECTIONS direct){
 			LCD_ArrowTxt(0,widthAll,heightAll, MIDDLE(posKey[nr].x, s[k].widthKey, widthShape1), MIDDLE(posKey[nr].y, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, direct,fontID,(char*)txtKey[nr],colorTxtKey[nr]);
