@@ -3653,7 +3653,7 @@ StructTxtPxlLen LCD_TxtWin(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 		if(*(txt+i)=='\r' && *(txt+i+1)=='\n'){
 			if(j){ lenStr=_LcdTxt(CURRENT_Y);  j=0; }
 			i++; nrLine++;
-			if(CURRENT_Y > BkpSizeY-(lenStr.height+lenStr.height)){ lenStr.inChar=i+1;  return lenStr; }
+			if(CURRENT_Y > BkpSizeY-(3*lenStr.height)){ lenStr.inChar=i+1;  return lenStr; }
 		}
 		else{ if(j<sizeof(buf_data)-2){ buf_data[j++]=*(txt+i); buf_data[j]=0; } };
 	}

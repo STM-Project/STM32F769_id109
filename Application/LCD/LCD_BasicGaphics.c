@@ -2496,6 +2496,7 @@ void LCD_Display(uint32_t posBuff, uint32_t Xpos, uint32_t Ypos, uint32_t width,
 	LCD_DisplayBuff(Xpos,Ypos,width,height,  pLcd+posBuff);
 }
 void LCD_DisplayPart(uint32_t posBuff, uint32_t Xpos, uint32_t Ypos, uint32_t width, uint32_t height){
+/* For another ptr2pLcd: pLcd_*/
 /*	int m=0;
 	k = posBuff + LCD_X*Ypos + Xpos;
 	for(int j=0; j<height; j++){
