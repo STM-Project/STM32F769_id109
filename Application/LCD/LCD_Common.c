@@ -17,6 +17,19 @@
 
 portTickType refreshScreenVar[MAX_ELEMENTS_REFRESH_IN_SCREEN];
 
+int _CheckTickCount(portTickType tim, int timeout){		/*check: configUSE_16_BIT_TICKS in portmacro.h*/
+	TickType_t countVal = xTaskGetTickCount();
+	if((countVal-tim) < 0){
+		if(countVal+(65535-tim) > timeout)
+			return 1;
+	}
+	else{
+		if((countVal-tim) > timeout)
+			return 1;
+	}
+	return 0;
+}
+
 void LCD_AllRefreshScreenClear(void){
 	for(int i=0; i<MAX_ELEMENTS_REFRESH_IN_SCREEN; ++i)
 		refreshScreenVar[i] = xTaskGetTickCount();
@@ -25,11 +38,10 @@ void LCD_RefreshScreenClear(int nrRefresh){
 	refreshScreenVar[nrRefresh] = xTaskGetTickCount();
 }
 int LCD_IsRefreshScreenTimeout(int nrRefresh, int timeout){
-	if((xTaskGetTickCount()-refreshScreenVar[nrRefresh])>timeout){
+	int temp = _CheckTickCount(refreshScreenVar[nrRefresh],timeout);
+	if(temp)
 		LCD_RefreshScreenClear(nrRefresh);
-		return 1;
-	}
-	else return 0;
+	return temp;
 }
 
 uint16_t vTimerService(int nr, int cmd, int timeout)
@@ -39,28 +51,30 @@ uint16_t vTimerService(int nr, int cmd, int timeout)
 	switch(cmd)
 	{
 		case start_time:
-			if(_timer[nr] == 0)
+			if(_timer[nr] == 0){
 				_timer[nr] = xTaskGetTickCount();
+				return 0;
+			}
 			return _timer[nr];
 
 		case get_time:
 			return xTaskGetTickCount();
 
 		case check_time:
-			if((xTaskGetTickCount()-_timer[nr]) > timeout)
-				return 1;
-			else
-				return 0;
+			if(_timer[nr])
+				return _CheckTickCount(_timer[nr],timeout);
+			return 0;
 
 		case stop_time:
-			if((xTaskGetTickCount()-_timer[nr]) > timeout){
+			if(_timer[nr]){
+				int temp= _CheckTickCount(_timer[nr],timeout);
 				_timer[nr] = 0;
-				return 1;
+				return temp;
 			}
-			else{
-				_timer[nr] = 0;
-				return 0;
-			}
+			return 0;
+
+		case get_startTime:
+			return _timer[nr];
 
 		case reset_time:
 		default:
@@ -156,6 +170,6 @@ int BrightIncr(int color, int val)
 	return RGB2INT(INCR(_R,val,255), INCR(_G,val,255), INCR(_B,val,255));
 }
 
-void _CallFunc(WindowFunc Win, uint16_t x,uint16_t y, uint16_t width,uint16_t height){
-	Win(x,y,width,height);
+void CallFunc(VOID_FUNCTION *pfunc1, VOID_FUNCTION *pfunc2, VOID_FUNCTION *pfunc3, VOID_FUNCTION *pfunc4, VOID_FUNCTION *pfunc5){
+	pfunc1(); pfunc2(); pfunc3(); pfunc4(); pfunc5();
 }

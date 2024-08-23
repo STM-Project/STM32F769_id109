@@ -55,6 +55,8 @@
 	X(LANG_LenOffsWin4, "i jego przesuni"ę"cie", "xxxxxxx") \
 	X(LANG_TimeSpeed1, "Czas za"ł"adowania czcionek", "xxxxxxx") \
 	X(LANG_TimeSpeed2, "i szybko"ś""ć" wy"ś"wietlenia", "xxxxxxx") \
+	X(LANG_WinInfo, "Zmiany odst"ę"p"ó"w mi"ę"dzy literami zosta"ł"y zapisane", "xxxxxxx") \
+
 
 #define SCREEN_FONTS_SET_PARAMETERS \
 /* id   name							default value */ \
@@ -389,6 +391,7 @@ typedef enum{
 	KEY_All_release,
 	KEY_Select_one,
 	KEY_All_release_and_select_one,
+	KEY_Timer,
 
 	KEY_Red_plus,
 	KEY_Green_plus,
@@ -1474,13 +1477,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		int 	_IsFlagWin	 (void){ return CHECK_bit(s[k].param,7); }
 		void 	_RstFlagWin	 (void){	RST_bit(s[k].param,7); }
 
-		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y }, .size={200,250} };
+		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y 				 }, .size={200,250} };
+		POS_SIZE win2 ={ .pos={ 15, 					  s[k].y+heightAll+70 }, .size={600, 60} };
 
-		void _WindowGeneralInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height,char* txt ){
-			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
-			LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,width),NULL,0,NoConstWidth);
-			LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,height));
-			LCD_StrDependOnColorsWindowIndirect(0,x,y, width,height,fontID, GET_X((char*)txt),GET_Y,txt, fullHight, 0, fillColor, frameColor,250, NoConstWidth);
+		void _WindowGeneralInfo(void){
+			LCD_ShapeWindow( s[k].shape, 0, win2.size.w, win2.size.h, 0,0, win2.size.w, win2.size.h, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
+			LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.w),NULL,0,NoConstWidth);
+			LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.h));
+			LCD_StrDependOnColorsWindowIndirect(0,win2.pos.x, win2.pos.y, win2.size.w, win2.size.h,fontID, GET_X(SL(LANG_WinInfo)),GET_Y,SL(LANG_WinInfo), fullHight, 0, fillColor, frameColor,250, NoConstWidth);
 		}
 		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height, int param){
 			int spaceFromFrame = 10;
@@ -1571,7 +1575,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		switch((int)selBlockPress)
 		{
 			case KEY_All_release:
-
 				BKCOPY_VAL(frameColor_c,frameColor,WHITE);
 					LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
 				BKCOPY(frameColor,frameColor_c);
@@ -1624,12 +1627,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);	 break;
 			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);	 break;
 
-			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),_CreateWindows(0,NoDirect)); break;
-			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL); 	_WindowGeneralInfo(20,265,600,60,(char*)"Zmiany odst"ę"p"ó"w mi"ę"dzy literami zosta"ł"y zapisane"); vTimerService(1,start_time,2000);	break;
-			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL); 	FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0,20,265, 600,60);			break;
+			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),_CreateWindows(0,NoDirect));  break;
+			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);	 if(0==vTimerService(1,start_time,2000)) _WindowGeneralInfo();	 break;
+			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);  break;
 
 			case KEY_InfoSpacesUp: 	 _CreateWindows(0,Up);    break;
 			case KEY_InfoSpacesDown: _CreateWindows(0,Down);  break;
+
+			case KEY_Timer: FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0, win2.pos.x, win2.pos.y, win2.size.w, win2.size.h);  break;
 		}
 
 		if(startTouchIdx){
@@ -2017,11 +2022,11 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 //dla ROLL bez select a drugie pole touch to z select,
 // blokada globalna touch !!!! tylko 1 touch zostaje
 
-void FILE_NAME(timer)(void)
+static void FILE_NAME(timer)(void)
 {
 	if(vTimerService(1,check_time,2000)){
 		vTimerService(1,stop_time,2000);
-		FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0,20,265, 600,60);
+		KEYBOARD_TYPE(KEYBOARD_LenOffsWin, KEY_Timer);
 	}
 }
 

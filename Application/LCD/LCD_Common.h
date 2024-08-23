@@ -58,6 +58,7 @@ typedef enum{
 	start_time,
 	stop_time,
 	get_time,
+	get_startTime,
 	check_time,
 	reset_time,
 	paramNoUse
@@ -113,6 +114,6 @@ void CorrectPosIfOutRange(int16_t *pos);
 int BrightDecr(int color, int val);
 int BrightIncr(int color, int val);
 
-void _CallFunc(WindowFunc Win, uint16_t x,uint16_t y, uint16_t width,uint16_t height);
+void CallFunc(VOID_FUNCTION *pfunc1, VOID_FUNCTION *pfunc2, VOID_FUNCTION *pfunc3, VOID_FUNCTION *pfunc4, VOID_FUNCTION *pfunc5);
 
 #endif /* LCD_LCD_COMMON_H_ */
