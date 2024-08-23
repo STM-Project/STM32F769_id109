@@ -3138,7 +3138,7 @@ char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff){
 		return NULL;
 	case 1:
 		int len=0;
-		for(int i=0; i<3; i++)
+		for(int i=0; i<163; i++)
 			len += mini_snprintf(buff+len,100,"%d%c Rafa"ł" Markielowski\r\n",i,COMMON_SIGN);
 		return buff;
 }}
