@@ -3126,7 +3126,7 @@ int LCD_SelectedSpaceBetweenFontsIncrDecr(uint8_t incrDecr, uint8_t fontStyle, u
 	return 0xFFFF;
 }
 
-char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff){
+char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff, int* maxArray){
 	char bufTemp[50];
 	switch(param){
 	default:
@@ -3137,9 +3137,12 @@ char* LCD_DisplayRemeberedSpacesBetweenFonts(int param, char* buff){
 		Dbg(1,"\r\n");
 		return NULL;
 	case 1:
-		int len=0;
-		for(int i=0; i<163; i++)
-			len += mini_snprintf(buff+len,100,"%d%c Rafa"ł" Markielowski\r\n",i,COMMON_SIGN);
+		int len=0,lenArray=0;	if(maxArray!=NULL) *maxArray=0;
+		for(int i=0; i<StructSpaceCount; i++){
+			lenArray = mini_snprintf(buff+len,100,"%d%c %s %s %c %c  %d \r\n",i,COMMON_SIGN,LCD_FontStyle2Str(bufTemp,space[i].fontStyle),LCD_FontSize2Str(bufTemp+20,space[i].fontSize),space[i].char1,space[i].char2,space[i].val);
+			len += lenArray;
+			if(maxArray!=NULL){  if(lenArray>*maxArray) *maxArray=lenArray;  }
+		}
 		return buff;
 }}
 void LCD_WriteSpacesBetweenFontsOnSDcard(void){

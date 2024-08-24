@@ -18,12 +18,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-//#include "general_macro.h"
-
 /*----------------- Main Settings ------------------*/
-#define TTTTTT SCREEN_FONTS_LANG
-
-
 #define FILE_NAME(extend) SCREEN_Fonts_##extend
 
 #define SCREEN_FONTS_LANG \
@@ -56,6 +51,7 @@
 	X(LANG_TimeSpeed1, "Czas za"ł"adowania czcionek", "xxxxxxx") \
 	X(LANG_TimeSpeed2, "i szybko"ś""ć" wy"ś"wietlenia", "xxxxxxx") \
 	X(LANG_WinInfo, "Zmiany odst"ę"p"ó"w mi"ę"dzy literami zosta"ł"y zapisane", "xxxxxxx") \
+	X(LANG_WinInfo2, "Reset wszystkich ustawie"ń" dla odst"ę"p"ó"w mi"ę"dzy literami", "xxxxxxx") \
 
 
 #define SCREEN_FONTS_SET_PARAMETERS \
@@ -176,18 +172,15 @@
 /*------------ Main Screen MACROs -----------------*/
 #define SL(name)	(char*)FILE_NAME(Lang)[ v.LANG_SELECT==Polish ? 2*(name) : 2*(name)+1 ]
 
-
-
-
 typedef enum{  // to dac w jednym #include !!!!!!!
 	#define X(a,b,c) a,
-		TTTTTT
+		SCREEN_FONTS_LANG
 	#undef X
 }FILE_NAME(Lang_enum);
 
 static const char *FILE_NAME(Lang)[]={
 	#define X(a,b,c) b"\x00",c"\x00",
-		TTTTTT
+		SCREEN_FONTS_LANG
 	#undef X
 };
 
@@ -1478,18 +1471,25 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		void 	_RstFlagWin	 (void){	RST_bit(s[k].param,7); }
 
 		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y 				 }, .size={200,250} };
-		POS_SIZE win2 ={ .pos={ 15, 					  s[k].y+heightAll+70 }, .size={600, 60} };
+		POS_SIZE win2 ={ .pos={ 15, 					  s[k].y+heightAll+15 }, .size={600, 60} };
 
-		void _WindowGeneralInfo(void){
-			LCD_ShapeWindow( s[k].shape, 0, win2.size.w, win2.size.h, 0,0, win2.size.w, win2.size.h, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
+		LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(0),(int*)(&win.size.w));
+		win.size.w *= LCD_GetWholeStrPxlWidth(fontID_descr,(char*)"r",0,NoConstWidth);
+
+		void _WinInfo(char* txt){
+			BKCOPY_VAL(fillColor_c,fillColor,BrightIncr(fillColor,0x1A));
+			LCD_ShapeWindow( s[k].shape, 0, win2.size.w, win2.size.h, 0,0, win2.size.w, win2.size.h, SetBold2Color(frameColor,s[k].bold), fillColor,bkColor );
 			LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.w),NULL,0,NoConstWidth);
 			LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.h));
-			LCD_StrDependOnColorsWindowIndirect(0,win2.pos.x, win2.pos.y, win2.size.w, win2.size.h,fontID, GET_X(SL(LANG_WinInfo)),GET_Y,SL(LANG_WinInfo), fullHight, 0, fillColor, frameColor,250, NoConstWidth);
+			LCD_StrDependOnColorsWindowIndirect(0,MIDDLE(0,LCD_X,win2.size.w) /* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, DARKRED,250, NoConstWidth);
+			BKCOPY(fillColor,fillColor_c);
+			vTimerService(1,start_time,2000);
 		}
 		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height, int param){
 			int spaceFromFrame = 10;
 			int heightUpDown = 17;
 			int widthtUpDown = 26;
+
 			int xPosU = MIDDLE(0,		width/2,widthtUpDown);
 			int xPosD = MIDDLE(width/2,width/2,widthtUpDown);
 			int yPosUD = height-heightUpDown-spaceFromFrame;
@@ -1525,7 +1525,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			}
 
 			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
-			posTxt_temp = LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(width*height))+_GetCurrPosTxt(),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth).inChar;
+			posTxt_temp = LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(width*height),NULL)+_GetCurrPosTxt(),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth).inChar;
 			if(posTxt_temp){
 				_SetCurrPosTxt(_GetCurrPosTxt()+posTxt_temp);
 				if(i_posTxtTab<sizeof(posTxtTab)-2)
@@ -1628,13 +1628,13 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);	 break;
 
 			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),_CreateWindows(0,NoDirect));  break;
-			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);	 if(0==vTimerService(1,start_time,2000)) _WindowGeneralInfo();	 break;
-			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);  break;
+			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);	 _WinInfo(SL(LANG_WinInfo));	 break;
+			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);  _WinInfo(SL(LANG_WinInfo2));  break;
 
 			case KEY_InfoSpacesUp: 	 _CreateWindows(0,Up);    break;
 			case KEY_InfoSpacesDown: _CreateWindows(0,Down);  break;
 
-			case KEY_Timer: FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0, win2.pos.x, win2.pos.y, win2.size.w, win2.size.h);  break;
+			case KEY_Timer: FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0, MIDDLE(0,LCD_X,win2.size.w) /* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h);  break;
 		}
 
 		if(startTouchIdx){
@@ -2233,11 +2233,11 @@ void FILE_NAME(setTouch)(void)   //BUTTON ktory zminia sepearate czy combined sc
 		case Touch_PosInWin_minus: 	_KEYS_RELEASE_LenOffsWin;	 Inc_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_PosInWin_minus ); 	_SaveState();  break;
 		case Touch_SpaceFonts_plus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(1);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_plus );  _SaveState();  break;
 		case Touch_SpaceFonts_minus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(0);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_minus ); _SaveState();  break;
-		case Touch_DispSpaces: 	_KEYS_RELEASE_LenOffsWin;	 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_DispSpaces ); _SaveState();  break;
-		case Touch_WriteSpaces: _KEYS_RELEASE_LenOffsWin;	 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_WriteSpaces ); _SaveState();  break;
-		case Touch_ResetSpaces: _KEYS_RELEASE_LenOffsWin;	 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_ResetSpaces ); _SaveState();  break;
-		case Touch_SpacesInfoUp: 									 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesUp );  break;
-		case Touch_SpacesInfoDown: 								 /* do something */  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesDown ); break;
+		case Touch_DispSpaces: 	_KEYS_RELEASE_LenOffsWin;	 /* here do nothing something */  	KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_DispSpaces ); _SaveState();  break;
+		case Touch_WriteSpaces: _KEYS_RELEASE_LenOffsWin;	LCD_WriteSpacesBetweenFontsOnSDcard();  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_WriteSpaces ); _SaveState();  break;
+		case Touch_ResetSpaces: _KEYS_RELEASE_LenOffsWin;	LCD_ResetSpacesBetweenFonts();  			 KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_ResetSpaces ); _SaveState();  break;
+		case Touch_SpacesInfoUp: 									 /* here do nothing something */  	KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesUp );  break;
+		case Touch_SpacesInfoDown: 								 /* here do nothing something */  	KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesDown ); break;
 
 		case Touch_FontSizeRoll:
 			vTimerService(0,start_time,1000);
@@ -2397,7 +2397,7 @@ void FILE_NAME(debugRcvStr)(void)
 	else if(DEBUG_RcvStr("\\"))
 		IncDec_SpaceBetweenFont(1);
 	else if(DEBUG_RcvStr("/"))
-		LCD_DisplayRemeberedSpacesBetweenFonts(0,NULL);
+		LCD_DisplayRemeberedSpacesBetweenFonts(0,NULL,NULL);
 	else if(DEBUG_RcvStr("o"))
 		LCD_WriteSpacesBetweenFontsOnSDcard();
 	else if(DEBUG_RcvStr("m"))
