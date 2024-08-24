@@ -294,6 +294,13 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY		20
 /* #define TOUCH_MAINFONTS_WITHOUT_DESCR */
 
+#define SELECT_CURRENT_FONT(src,dst,txt,coeff) \
+	LCD_SetStrVar_fontID		(v.FONT_VAR_##src, v.FONT_ID_##dst);\
+	LCD_SetStrVar_fontColor	(v.FONT_VAR_##src, v.FONT_COLOR_##dst);\
+	LCD_SetStrVar_bkColor  	(v.FONT_VAR_##src, v.FONT_BKCOLOR_##dst);\
+	LCD_SetStrVar_coeff		(v.FONT_VAR_##src, coeff);\
+	LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_##src, txt)
+
 #define ROLL_1		0
 
 typedef enum{
@@ -1557,7 +1564,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			}
 		}
 		void _DeleteWindows(void){		/* Use function only after displaying (not during) */
-			FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h);
+			FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h); SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,252);
 			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoUp);
 			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoDown);
 			s[k].nmbTouch-=2;
@@ -2032,12 +2039,7 @@ static void FILE_NAME(timer)(void)
 
 void FILE_NAME(setTouch)(void)   //BUTTON ktory zminia sepearate czy combined screen !!!!
 {
-	#define SELECT_CURRENT_FONT(src,dst,txt,coeff) \
-		LCD_SetStrVar_fontID		(v.FONT_VAR_##src, v.FONT_ID_##dst);\
-		LCD_SetStrVar_fontColor	(v.FONT_VAR_##src, v.FONT_COLOR_##dst);\
-		LCD_SetStrVar_bkColor  	(v.FONT_VAR_##src, v.FONT_BKCOLOR_##dst);\
-		LCD_SetStrVar_coeff		(v.FONT_VAR_##src, coeff);\
-		LCD_StrDependOnColorsVarIndirect(v.FONT_VAR_##src, txt)
+
 /*
 	#define DESELECT_CURRENT_FONT(src,txt) \
 		LCD_SetStrVar_fontID		(v.FONT_VAR_##src, v.FONT_ID_##src);\
