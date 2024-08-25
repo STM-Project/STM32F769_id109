@@ -172,7 +172,7 @@
 /*------------ Main Screen MACROs -----------------*/
 #define SL(name)	(char*)FILE_NAME(Lang)[ v.LANG_SELECT==Polish ? 2*(name) : 2*(name)+1 ]
 
-typedef enum{  // to dac w jednym #include !!!!!!!
+typedef enum{
 	#define X(a,b,c) a,
 		SCREEN_FONTS_LANG
 	#undef X
@@ -260,7 +260,7 @@ void FILE_NAME(setTouch)(void);
 void 	FILE_NAME(main)(int argNmb, char **argVal);
 /*------------ End Main Screen MACRO -----------------*/
 
-#define TEXT_TO_SHOW		" Rafa"ł" Markielowski "
+#define TEXT_TO_SHOW		"Rafa"ł" Markielowski"
 
 #define FLOAT2STR(val)	Float2Str(val,' ',4,Sign_plusMinus,1)
 #define INT2STR(val)		  Int2Str(val,'0',3,Sign_none)
@@ -365,6 +365,7 @@ typedef enum{
 	Touch_ResetSpaces,
 	Touch_SpacesInfoUp,
 	Touch_SpacesInfoDown,
+	TOUCH_MainFramesType,
 	Move_1,
 	Move_2,
 	Move_3,
@@ -719,7 +720,7 @@ static void DecCoeefRGB(void){
 }
 
 static int ChangeTxt(void){ //wprowadzanie z klawiatury textu !!!!!!
-	return CopyCharsTab(Test.txt,Test.lenWin,Test.offsWin,Test.size);
+	//return CopyCharsTab(Test.txt,Test.lenWin,Test.offsWin,Test.size);
 
 	const char *pChar;
 	int i, j, lenChars;
@@ -867,6 +868,8 @@ static void Inc_lenWin(void){
 		else
 			Data2Refresh(PARAM_LEN_WINDOW);
 	}
+	ClearCursorField();
+	SetCursor();
 	Data2Refresh(PARAM_SPEED);
 }
 static void Dec_lenWin(void){
@@ -1564,7 +1567,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			}
 		}
 		void _DeleteWindows(void){		/* Use function only after displaying (not during) */
-			FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h); SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,252);
+			FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h); SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,255);
 			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoUp);
 			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoDown);
 			s[k].nmbTouch-=2;
@@ -2249,6 +2252,12 @@ void FILE_NAME(setTouch)(void)   //BUTTON ktory zminia sepearate czy combined sc
 			_SaveState();
 			break;
 
+		case TOUCH_MainFramesType:
+			if(ppMain[0]==(int*)FRAMES_GROUP_separat)	*ppMain=(int*)FRAMES_GROUP_combined;
+			else													*ppMain=(int*)FRAMES_GROUP_separat;
+			FILE_NAME(main)(LoadPartScreen,(char**)ppMain);
+			break;
+
 		default:
 			if(_WasState(Touch_fontRp) || _WasState(Touch_fontRm) ||
 				_WasState(Touch_fontGp) || _WasState(Touch_fontGm) ||
@@ -2869,6 +2878,13 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 		LoadFonts(FONT_ID_Title, FONT_ID_Press); //ZROBIC AUTOMATYCZNE testy wszystkich mozliwosci !!!!!!! taki interfejs testowy
 		LCD_LoadFontVar();
+
+	 	touchTemp[0].x= LCD_X-30;
+	 	touchTemp[0].y= LCD_Y-30;
+	 	touchTemp[1].x= touchTemp[0].x+30;
+	 	touchTemp[1].y= touchTemp[0].y+30;
+	 	LCD_TOUCH_Set(ID_TOUCH_POINT,TOUCH_MainFramesType,press);
+
 	}
 	else{
 		LCD_Clear(v.COLOR_BkScreen);   //ZROBIC animacje ze samo sie klioka i chmurka z info ze przytrzymac na 2 sekundy ....
@@ -2903,7 +2919,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	 LCD_Ymiddle(0,SetPos, SetPosAndWidth(Test.yFontsField,240) );
 	 LCD_Xmiddle(0,SetPos, SetPosAndWidth(Test.xFontsField,LCD_GetXSize()),NULL,0,NoConstWidth);
 
-	 LCD_SetBkFontShape(v.FONT_VAR_Fonts,BK_LittleRound);
+	 LCD_SetBkFontShape(v.FONT_VAR_Fonts,BK_Rectangle);
 	 //daj mozliwosc wpisywania dowolnego textu aby korygowac odstepy miedzy kazdymi fontami jakimi sie chce !!!!!!!
 
 	 StartMeasureTime_us();
@@ -2914,6 +2930,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	 Test.speed=StopMeasureTime_us("");
 
 
+	 LCD_StrDependOnColors(v.FONT_ID_Descr, LCD_X-100, LCD_Y-30, "press me", fullHight,0,v.COLOR_FillFrame, v.FONT_COLOR_Descr,255,NoConstWidth); //unormowac pole touch !!!!
 
 	 if(LoadNoDispScreen != argNmb){
 		 LCD_Show();
