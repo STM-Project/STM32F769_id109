@@ -80,6 +80,12 @@
 
 #define STRUCT_SIZE_SHAPE_POS		3
 
+typedef enum{
+	SetVal,
+	GetVal,
+	NotUse,
+}VARIABLE_ACTIONS;
+
 typedef struct{
 	char *pData;
 	uint32_t len;
