@@ -853,3 +853,11 @@ uint8_t LCD_TOUCH_ScrollSel_DetermineRateRoll(uint8_t nr, uint16_t touchState, u
 	 return (GetTouchToTemp(touchState) && IS_RANGE(xPos, touchTemp[0].x+3*(touchTemp[1].x-touchTemp[0].x)/4, touchTemp[1].x)) ? LCD_TOUCH_ScrollSel_GetRateCoeff(nr) : 1;
 }
 
+int LCDTOUCH_Set(uint16_t startX, uint16_t startY, uint16_t width, uint16_t height, uint16_t ID, uint16_t idx, uint8_t param){
+ 	touchTemp[0].x= startX;
+ 	touchTemp[0].y= startY;
+ 	touchTemp[1].x= touchTemp[0].x+width;
+ 	touchTemp[1].y= touchTemp[0].y+height;
+ 	return LCD_TOUCH_Set(ID,idx,param);
+}
+
