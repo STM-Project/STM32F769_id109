@@ -52,6 +52,7 @@
 	X(LANG_TimeSpeed2, "i szybko"ś""ć" wy"ś"wietlenia", "xxxxxxx") \
 	X(LANG_WinInfo, "Zmiany odst"ę"p"ó"w mi"ę"dzy literami zosta"ł"y zapisane", "xxxxxxx") \
 	X(LANG_WinInfo2, "Reset wszystkich ustawie"ń" dla odst"ę"p"ó"w mi"ę"dzy literami", "xxxxxxx") \
+	X(LANG_MainFrameType, "Zmie"ń" wygl"ą"d", "Change appearance") \
 
 
 #define SCREEN_FONTS_SET_PARAMETERS \
@@ -276,8 +277,6 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define TXT_LEN_WIN		Int2Str(Test.lenWin ,' ',3,Sign_none)
 #define TXT_OFFS_WIN		Int2Str(Test.offsWin,' ',3,Sign_none)
 #define TXT_LENOFFS_WIN StrAll(5," ",TXT_LEN_WIN," ",TXT_OFFS_WIN," ")
-#define TXT_LOAD_FONT_TIME		StrAll(2,INT2STR_TIME(Test.loadFontTime)," ms")
-#define TXT_SPEED					StrAll(2,INT2STR_TIME(Test.speed),       " us")
 #define TXT_TIMESPEED 			StrAll(4,Int2Str(Test.loadFontTime,' ',5,Sign_none)," ms   ",Int2Str(Test.speed,' ',6,Sign_none)," us")
 #define TXT_CPU_USAGE		   StrAll(2,INT2STR(osGetCPUUsage()),"c")
 
@@ -1644,7 +1643,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			case KEY_InfoSpacesUp: 	 _CreateWindows(0,Up);    break;
 			case KEY_InfoSpacesDown: _CreateWindows(0,Down);  break;
 
-			case KEY_Timer: FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0, MIDDLE(0,LCD_X,win2.size.w) /* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h);  break;
+			case KEY_Timer: FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0, MIDDLE(0,LCD_X,win2.size.w)/* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h); SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,255);  break;
 		}
 
 		if(startTouchIdx){
@@ -2040,10 +2039,8 @@ static void FILE_NAME(timer)(void)
 	}
 }
 
-void FILE_NAME(setTouch)(void)   //BUTTON ktory zminia sepearate czy combined screen !!!!
-{
-
-/*
+void FILE_NAME(setTouch)(void)
+{/*
 	#define DESELECT_CURRENT_FONT(src,txt) \
 		LCD_SetStrVar_fontID		(v.FONT_VAR_##src, v.FONT_ID_##src);\
 		LCD_SetStrVar_fontColor	(v.FONT_VAR_##src, v.FONT_COLOR_##src);\
@@ -2858,6 +2855,19 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	#undef _FILL_COLOR
 }
 
+int FV(VARIABLE_ACTIONS type, int nrMem, int val){
+	static int mem[10];
+	switch((int)type){
+		case SetVal:
+			mem[nrMem]=val;
+			return mem[nrMem];
+		case GetVal:
+			return mem[nrMem];
+		default:
+			return 0;
+	}
+}
+
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
 	    //ODKRYJ W usrtawienia debug aby tylko wyswietlic jeden leemnet z duzej struktury np Touch[].idx !!!!!!
@@ -2873,18 +2883,15 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 		FONTS_LCD_ResetParam();
 
 		LCD_Clear(v.COLOR_BkScreen);
-
 		DbgVar(DEBUG_ON,100,Clr_ Cya_"\r\nStart: %s\r\n"_X,GET_CODE_FUNCTION);
 
 		LoadFonts(FONT_ID_Title, FONT_ID_Press); //ZROBIC AUTOMATYCZNE testy wszystkich mozliwosci !!!!!!! taki interfejs testowy
 		LCD_LoadFontVar();
 
-	 	touchTemp[0].x= LCD_X-30;
-	 	touchTemp[0].y= LCD_Y-30;
-	 	touchTemp[1].x= touchTemp[0].x+30;
-	 	touchTemp[1].y= touchTemp[0].y+30;
-	 	LCD_TOUCH_Set(ID_TOUCH_POINT,TOUCH_MainFramesType,press);
-
+		LCDTOUCH_Set(LCD_X-FV(SetVal,0,LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,SL(LANG_MainFrameType),0,NoConstWidth)+5), \
+						 LCD_Y-FV(SetVal,1,LCD_GetFontHeight(v.FONT_ID_Descr)+5), \
+						 	 	 FV(GetVal,0,NotUse),\
+								 FV(GetVal,1,NotUse), ID_TOUCH_POINT,TOUCH_MainFramesType,press);
 	}
 	else{
 		LCD_Clear(v.COLOR_BkScreen);   //ZROBIC animacje ze samo sie klioka i chmurka z info ze przytrzymac na 2 sekundy ....
@@ -2910,9 +2917,9 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	}
 
 
-//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(LoadFontTime,FillMainFrame),320, 20, TXT_LOAD_FONT_TIME,	 halfHight,0,255,ConstWidth);
+
 //	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450, 0, 	TXT_CPU_USAGE,	 		 halfHight,0,255,ConstWidth);
- //lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(Speed, FillMainFrame),450,0,TXT_SPEED,fullHight,0,255,ConstWidth);
+
 
 
 	 Test.yFontsField=240;
@@ -2930,7 +2937,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	 Test.speed=StopMeasureTime_us("");
 
 
-	 LCD_StrDependOnColors(v.FONT_ID_Descr, LCD_X-100, LCD_Y-30, "press me", fullHight,0,v.COLOR_FillFrame, v.FONT_COLOR_Descr,255,NoConstWidth); //unormowac pole touch !!!!
+	 LCD_StrDependOnColors(v.FONT_ID_Descr, LCD_X-FV(GetVal,0,NotUse), LCD_Y-FV(GetVal,1,NotUse), SL(LANG_MainFrameType), fullHight,0, v.COLOR_FillFrame, v.FONT_COLOR_Descr, 255, NoConstWidth);
 
 	 if(LoadNoDispScreen != argNmb){
 		 LCD_Show();
