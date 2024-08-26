@@ -1643,7 +1643,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			case KEY_InfoSpacesUp: 	 _CreateWindows(0,Up);    break;
 			case KEY_InfoSpacesDown: _CreateWindows(0,Down);  break;
 
-			case KEY_Timer: FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0, MIDDLE(0,LCD_X,win2.size.w)/* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h); SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,255);  break;
+			case KEY_Timer: FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0, MIDDLE(0,LCD_X,win2.size.w)/* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h);  break;
 		}
 
 		if(startTouchIdx){
@@ -2855,7 +2855,7 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	#undef _FILL_COLOR
 }
 
-int FV(VARIABLE_ACTIONS type, int nrMem, int val){
+int FV(VARIABLE_ACTIONS type, int nrMem, int val){   //umiesc gdzie indziej !!!!
 	static int mem[10];
 	switch((int)type){
 		case SetVal:
