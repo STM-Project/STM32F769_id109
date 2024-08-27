@@ -385,6 +385,7 @@ typedef enum{
 	KEYBOARD_LenOffsWin,
 	KEYBOARD_sliderRGB,
 	KEYBOARD_sliderBkRGB,
+	KEYBOARD_setTxt,
 }KEYBOARD_TYPES;	/* MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY */
 
 typedef enum{
@@ -430,6 +431,8 @@ typedef enum{
 	KEY_ResetSpaces,
 	KEY_InfoSpacesUp,
 	KEY_InfoSpacesDown,
+
+	KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_s1,KEY_s2,KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,KEY_H,KEY_J,KEY_K,KEY_L,KEY_s3,KEY_s4,KEY_s5,
 
 }SELECT_PRESS_BLOCK;
 
@@ -1482,7 +1485,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y 				 }, .size={200,250} };
 		POS_SIZE win2 ={ .pos={ 15, 					  s[k].y+heightAll+15 }, .size={600, 60} };
 
-		LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(0),(int*)(&win.size.w));
+		LCD_DisplayRemeberedSpacesBetweenFonts(1,pCHAR_PLCD(0),(int*)(&win.size.w));
 		win.size.w *= LCD_GetWholeStrPxlWidth(fontID_descr,(char*)"r",0,NoConstWidth);
 
 		void _WinInfo(char* txt){
@@ -1534,7 +1537,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			}
 
 			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
-			posTxt_temp = LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,CHAR_PLCD(width*height),NULL)+_GetCurrPosTxt(),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth).inChar;
+			posTxt_temp = LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,pCHAR_PLCD(width*height),NULL)+_GetCurrPosTxt(),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth).inChar;
 			if(posTxt_temp){
 				_SetCurrPosTxt(_GetCurrPosTxt()+posTxt_temp);
 				if(i_posTxtTab<sizeof(posTxtTab)-2)
@@ -1931,7 +1934,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 		uint32_t LineColor 	= frameColor;
 		uint32_t LineSelColor = COLOR_GRAY(0x77);
-		uint32_t spaceTriangLine = 11;	/*DelTriang*/
+		uint32_t spaceTriangLine = 11;	/* DelTriang */
 		int maxSliderValue = 255;
 		int *pValForSlider = (int*)(&Test.font[0]);
 		VOID_FUNCTION *funcForSlider = RefreshValRGB;
@@ -1977,6 +1980,61 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			for(int i=0; i<countKey; ++i)
 				_SetTouchSlider(s[k].startTouchIdx, elemSliderPos[i]);
 		}
+	}
+//###################################################################################
+	void _ServiceSetTxt(void) // i to daj kako zewn funkcje w jednym pliku includowanym !!!!!
+	{
+		const char *txtKey[]								= {"Q","W","E","R","T","Y","U","I","O","P","{","}", \
+																	"A","S","D","F","G","H","J","K","L",":","\"","|"};
+		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE, \
+																	WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE};
+		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED, \
+																	DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED};
+		const uint16_t dimKeys[] = {12,2};
+
+		int widthFieldTxt = 0;
+		int heightFieldTxt = LCD_GetFontHeight(fontID) * 1;
+
+		if(shape!=0){
+			if(KeysAutoSize == widthKey){
+				s[k].widthKey =  heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[0],0,NoConstWidth) + heightKey;
+				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
+		}}
+		int head = s[k].interSpace + heightFieldTxt + s[k].interSpace;
+
+		#define P(x,y)	{(x+1)*s[k].interSpace + x*s[k].widthKey,	(y+1)*s[k].interSpace + y*s[k].heightKey + head}
+
+		XY_Touch_Struct posHead={0,0};
+		XY_Touch_Struct posKey[]= {P(0,0),P(1,0),P(2,0),P(3,0),P(4,0),P(5,0),P(6,0),P(7,0),P(8,0),P(9,0),P(10,0),P(11,0),\
+											P(0,1),P(1,1),P(2,1),P(3,1),P(4,1),P(5,1),P(6,1),P(7,1),P(8,1),P(9,1),P(10,1),P(11,1)};
+
+		int countKey = dimKeys[0]*dimKeys[1]; 		/* = STRUCT_TAB_SIZE(txtKey); */
+
+		widthAll =  dimKeys[0]*s[k].widthKey  + (dimKeys[0]+1)*s[k].interSpace;
+		heightAll = dimKeys[1]*s[k].heightKey + (dimKeys[1]+1)*s[k].interSpace + head;
+
+		widthFieldTxt = widthAll - 2*s[k].interSpace;
+
+		switch((int)selBlockPress)
+		{
+			case KEY_All_release:
+				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
+				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, s[k].interSpace,s[k].interSpace, widthFieldTxt,heightFieldTxt, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
+				_StrDescr(posHead, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
+
+				for(int i=0; i<countKey; ++i){
+					CONDITION(i<countKey-1, _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]), _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]));
+				}
+				break;
+
+			case KEY_Q:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
+		}
+
+		if(startTouchIdx){
+			for(int i=0; i<countKey; ++i)
+				_SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
+		}
+		#undef P
 	}
 
 
@@ -2127,12 +2185,8 @@ void FILE_NAME(setTouch)(void)
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontLenOffsWin, LenWin,Press, TXT_LENOFFS_WIN,252);
-			if(IsFunc()){
-				KeyboardTypeDisplay(KEYBOARD_LenOffsWin, KEY_All_release, LCD_RoundRectangle,0, 0,0, KeysAutoSize,8, 10, state, Touch_LenWin_plus,KeysDel);
-				LCD_TOUCH_SusspendAllTouchs();
-				LCD_TOUCH_RestoreSusspendedTouch(state);
-				LCD_TOUCH_RestoreSusspendedTouchs(Touch_LenWin_plus, Touch_ResetSpaces);
-			}
+			if(IsFunc()){	KeyboardTypeDisplay(KEYBOARD_LenOffsWin, KEY_All_release, LCD_RoundRectangle,0, 0,0, KeysAutoSize,8, 10, state, Touch_LenWin_plus,KeysDel);
+								LCDTOUCH_ActiveOnly(state,0,0,0,0,0,0,0,0,0,Touch_LenWin_plus,Touch_ResetSpaces); }
 			else LCD_TOUCH_RestoreAllSusspendedTouchs();
 			break;
 
@@ -2855,19 +2909,6 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	#undef _FILL_COLOR
 }
 
-int FV(VARIABLE_ACTIONS type, int nrMem, int val){   //umiesc gdzie indziej !!!!
-	static int mem[10];
-	switch((int)type){
-		case SetVal:
-			mem[nrMem]=val;
-			return mem[nrMem];
-		case GetVal:
-			return mem[nrMem];
-		default:
-			return 0;
-	}
-}
-
 void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
 {
 	    //ODKRYJ W usrtawienia debug aby tylko wyswietlic jeden leemnet z duzej struktury np Touch[].idx !!!!!!
@@ -2890,8 +2931,8 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 
 		LCDTOUCH_Set(LCD_X-FV(SetVal,0,LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,SL(LANG_MainFrameType),0,NoConstWidth)+5), \
 						 LCD_Y-FV(SetVal,1,LCD_GetFontHeight(v.FONT_ID_Descr)+5), \
-						 	 	 FV(GetVal,0,NotUse),\
-								 FV(GetVal,1,NotUse), ID_TOUCH_POINT,TOUCH_MainFramesType,press);
+						 	 	 FV(GetVal,0,NoUse),\
+								 FV(GetVal,1,NoUse), ID_TOUCH_POINT,TOUCH_MainFramesType,press);
 	}
 	else{
 		LCD_Clear(v.COLOR_BkScreen);   //ZROBIC animacje ze samo sie klioka i chmurka z info ze przytrzymac na 2 sekundy ....
@@ -2937,7 +2978,7 @@ void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!
 	 Test.speed=StopMeasureTime_us("");
 
 
-	 LCD_StrDependOnColors(v.FONT_ID_Descr, LCD_X-FV(GetVal,0,NotUse), LCD_Y-FV(GetVal,1,NotUse), SL(LANG_MainFrameType), fullHight,0, v.COLOR_FillFrame, v.FONT_COLOR_Descr, 255, NoConstWidth);
+	 LCD_StrDependOnColors(v.FONT_ID_Descr, LCD_X-FV(GetVal,0,NoUse), LCD_Y-FV(GetVal,1,NoUse), SL(LANG_MainFrameType), fullHight,0, v.COLOR_FillFrame, v.FONT_COLOR_Descr, 255, NoConstWidth);
 
 	 if(LoadNoDispScreen != argNmb){
 		 LCD_Show();
