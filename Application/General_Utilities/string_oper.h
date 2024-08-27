@@ -9,6 +9,12 @@
 #define GENERAL_UTILITIES_STRING_OPER_H_
 
 typedef enum{
+	SetVal,
+	GetVal,
+	NoUse,
+}VARIABLE_ACTIONS;
+
+typedef enum{
 	Sign_plusMinus,
 	Sign_minus,
 	Sign_plus,
@@ -32,5 +38,6 @@ void Int16ToCharBuff(char* buff, uint16_t val);
 void Int32ToCharBuff(char* buff, uint32_t val);
 uint16_t CharBuffToInt16(char* buff);
 uint32_t CharBuffToInt32(char* buff);
+int FV(VARIABLE_ACTIONS type, int nrMem, int val);
 
 #endif /* GENERAL_UTILITIES_STRING_OPER_H_ */
