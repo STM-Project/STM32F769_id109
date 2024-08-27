@@ -655,6 +655,21 @@ void LCD_TOUCH_SusspendTouchs(uint16_t start_idx, uint16_t stop_idx){
 				susspendTouch[i] = Touch[i].index;
 				Touch[i].index=0;
 }}}}
+void LCDTOUCH_ActiveOnly(uint16_t idx1,uint16_t idx2,uint16_t idx3,uint16_t idx4,uint16_t idx5,uint16_t idx6,uint16_t idx7,uint16_t idx8,uint16_t idx9,uint16_t idx10, uint16_t start_idx, uint16_t stop_idx){
+	LCD_TOUCH_SusspendAllTouchs();
+	/* is the same as: if(NoTouch==idx1) */
+	if(idx1)	LCD_TOUCH_RestoreSusspendedTouch(idx1);
+	if(idx2)	LCD_TOUCH_RestoreSusspendedTouch(idx2);
+	if(idx3)	LCD_TOUCH_RestoreSusspendedTouch(idx3);
+	if(idx4)	LCD_TOUCH_RestoreSusspendedTouch(idx4);
+	if(idx5)	LCD_TOUCH_RestoreSusspendedTouch(idx5);
+	if(idx6)	LCD_TOUCH_RestoreSusspendedTouch(idx6);
+	if(idx7)	LCD_TOUCH_RestoreSusspendedTouch(idx7);
+	if(idx8)	LCD_TOUCH_RestoreSusspendedTouch(idx8);
+	if(idx9)	LCD_TOUCH_RestoreSusspendedTouch(idx9);
+	if(idx10)	LCD_TOUCH_RestoreSusspendedTouch(idx10);
+	LCD_TOUCH_RestoreSusspendedTouchs(start_idx, stop_idx);
+}
 
 uint16_t LCD_TOUCH_SetTimeParam_ms(uint16_t time){
 	return time/SERVICE_TOUCH_PROB_TIME_MS;
