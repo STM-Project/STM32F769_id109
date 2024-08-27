@@ -295,3 +295,16 @@ uint16_t CharBuffToInt16(char* buff){
 uint32_t CharBuffToInt32(char* buff){
 	return ((buff[0]<<24) | (buff[1]<<16) | (buff[2]<<8) | buff[3]);
 }
+
+int FV(VARIABLE_ACTIONS type, int nrMem, int val){
+	static int mem[10];
+	switch((int)type){
+		case SetVal:
+			mem[nrMem]=val;
+			return mem[nrMem];
+		case GetVal:
+			return mem[nrMem];
+		default:
+			return 0;
+	}
+}
