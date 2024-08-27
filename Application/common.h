@@ -73,18 +73,18 @@
 
 #define PERCENT_SCALE(val,maxVal)	(((val)*100)/(maxVal))
 
-#define CHAR_PLCD(offs)		((char*)(pLcd+(offs)))
-#define UINT8_PLCD(offs)	((uint8_t*)(pLcd+(offs)))
-#define UINT16_PLCD(offs)	((uint16_t*)(pLcd+(offs)))
-#define INT_PLCD(offs)		((int*)(pLcd+(offs)))
+/* use only in thread 'LCD display' */
+#define pCHAR_PLCD(offs)	((char*)(pLcd+(offs)))
+#define pUINT8_PLCD(offs)	((uint8_t*)(pLcd+(offs)))
+#define pUINT16_PLCD(offs)	((uint16_t*)(pLcd+(offs)))
+#define pINT_PLCD(offs)		((int*)(pLcd+(offs)))
+
+#define vCHAR_PLCD(offs)	(*((char*)(pLcd+(offs))))
+#define vUINT8_PLCD(offs)	(*((uint8_t*)(pLcd+(offs))))
+#define vUINT16_PLCD(offs)	(*((uint16_t*)(pLcd+(offs))))
+#define vINT_PLCD(offs)		(*((int*)(pLcd+(offs))))
 
 #define STRUCT_SIZE_SHAPE_POS		3
-
-typedef enum{
-	SetVal,
-	GetVal,
-	NotUse,
-}VARIABLE_ACTIONS;
 
 typedef struct{
 	char *pData;
