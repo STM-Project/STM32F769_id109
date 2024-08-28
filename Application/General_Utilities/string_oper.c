@@ -306,5 +306,15 @@ int FV(VARIABLE_ACTIONS type, int nrMem, int val){
 			return mem[nrMem];
 		default:
 			return 0;
-	}
-}
+}}
+int FV2(char* descr, VARIABLE_ACTIONS type, int nrMem, int val){
+	static int mem[10];
+	switch((int)type){
+		case SetVal:
+			mem[nrMem]=val;
+			return mem[nrMem];
+		case GetVal:
+			return mem[nrMem];
+		default:
+			return 0;
+}}
