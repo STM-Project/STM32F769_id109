@@ -39,5 +39,6 @@ void Int32ToCharBuff(char* buff, uint32_t val);
 uint16_t CharBuffToInt16(char* buff);
 uint32_t CharBuffToInt32(char* buff);
 int FV(VARIABLE_ACTIONS type, int nrMem, int val);
+int FV2(char* descr, VARIABLE_ACTIONS type, int nrMem, int val);
 
 #endif /* GENERAL_UTILITIES_STRING_OPER_H_ */
