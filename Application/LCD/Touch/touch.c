@@ -8,7 +8,7 @@
 #include "stmpe811.h"
 #include "debug.h"
 
-#define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 80
+#define MAX_OPEN_TOUCH_SIMULTANEOUSLY	 180  //Tymczasowo zwiekszam ale rozwiaz ta kwestie !!!!!!!
 #define BUF_LCD_TOUCH_SIZE		100
 #define MAX_NUMBER_PIONTS_TOUCH	 2
 #define AB_COEFF_TAB_SIZE	4
