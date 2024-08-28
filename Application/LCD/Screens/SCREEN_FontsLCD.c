@@ -262,6 +262,8 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 /*------------ End Main Screen MACRO -----------------*/
 
 #define TEXT_TO_SHOW		"Rafa"ł" Markielowski"
+#define POS_X_TXT		LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth)
+#define POS_Y_TXT		LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts)
 
 #define FLOAT2STR(val)	Float2Str(val,' ',4,Sign_plusMinus,1)
 #define INT2STR(val)		  Int2Str(val,'0',3,Sign_none)
@@ -364,13 +366,16 @@ typedef enum{
 	Touch_ResetSpaces,
 	Touch_SpacesInfoUp,
 	Touch_SpacesInfoDown,
-	TOUCH_MainFramesType,
+	Touch_MainFramesType,
+	Touch_SetTxt,
 	Move_1,
 	Move_2,
 	Move_3,
 	Point_1,
 	AnyPress,
-	AnyPressWithWait
+	AnyPressWithWait,
+	Touch_Q,Touch_W,Touch_E,Touch_R,Touch_T,Touch_Y,Touch_U,Touch_I,Touch_O,Touch_P,Touch_s1,Touch_s2,Touch_A,Touch_S,Touch_D,Touch_F,Touch_G,Touch_H,TOouch_J,Touch_K,Touch_L,Touch_s3,Touch_s4,Touch_s5,
+
 }TOUCH_POINTS;		/* MAX_OPEN_TOUCH_SIMULTANEOUSLY */
 
 typedef enum{
@@ -517,6 +522,10 @@ static char* TXT_PosCursor(void){
 static void ClearCursorField(void){
 	LCD_ShapeIndirect(LCD_GetStrVar_x(v.FONT_VAR_Fonts),LCD_GetStrVar_y(v.FONT_VAR_Fonts)+LCD_GetFontHeight(v.FONT_ID_Fonts)+Test.spaceCoursorY,LCD_Rectangle, lenStr.inPixel,Test.heightCursor, v.COLOR_BkScreen,v.COLOR_BkScreen,v.COLOR_BkScreen);
 }
+static void SetNewTxtTouch(void){
+	LCD_TOUCH_DeleteSelectTouch(Touch_SetTxt);
+	LCDTOUCH_Set(POS_X_TXT, POS_Y_TXT, lenStr.inChar, lenStr.height, ID_TOUCH_POINT,Touch_SetTxt,press);
+}
 
 static void SetCursor(void)  //KURSOR DLA BIG FONT DAC PODWOJNY !!!!!
 {
@@ -575,6 +584,7 @@ static void Data2Refresh(int nr)
 				StartMeasureTime_us();
 				 lenStr=LCD_StrChangeColorVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 				Test.speed=StopMeasureTime_us("");
+			   SetNewTxtTouch();
 			}
 			else{
 				LCD_SetStrVar_fontID(v.FONT_VAR_Fonts,v.FONT_ID_Fonts);
@@ -583,6 +593,7 @@ static void Data2Refresh(int nr)
 				StartMeasureTime_us();
 				lenStr=LCD_StrVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 				Test.speed=StopMeasureTime_us("");
+			   SetNewTxtTouch();
 			}
 			break;
 		case 1:
@@ -592,6 +603,7 @@ static void Data2Refresh(int nr)
 			StartMeasureTime_us();
 			lenStr=LCD_StrVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 		   Test.speed=StopMeasureTime_us("");
+		   SetNewTxtTouch();
 		   break;
 		case 2:
 			LCD_SetStrVar_fontID(v.FONT_VAR_Fonts,v.FONT_ID_Fonts);
@@ -600,6 +612,7 @@ static void Data2Refresh(int nr)
 			StartMeasureTime_us();
 			lenStr=LCD_StrVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 		   Test.speed=StopMeasureTime_us("");
+		   SetNewTxtTouch();
 			break;
 		}
 		break;
@@ -749,6 +762,7 @@ static int ChangeTxt(void){ //wprowadzanie z klawiatury textu !!!!!!
 static void FONTS_LCD_ResetParam(void)
 {
 	Test.xFontsField=0;
+	Test.yFontsField=240;
 
 	Test.bk[0]=R_PART(v.FONT_BKCOLOR_Fonts);
 	Test.bk[1]=G_PART(v.FONT_BKCOLOR_Fonts);
@@ -816,10 +830,10 @@ static void LCD_LoadFontVar(void)
 }
 
 static void AdjustMiddle_X(void){
-	LCD_SetStrVar_x(v.FONT_VAR_Fonts,LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth));
+	LCD_SetStrVar_x(v.FONT_VAR_Fonts,POS_X_TXT);
 }
 static void AdjustMiddle_Y(void){
-	LCD_SetStrVar_y(v.FONT_VAR_Fonts,LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts));
+	LCD_SetStrVar_y(v.FONT_VAR_Fonts,POS_Y_TXT);
 }
 
 static void ChangeFontStyle(int8_t typeReq)
@@ -1981,7 +1995,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				_SetTouchSlider(s[k].startTouchIdx, elemSliderPos[i]);
 		}
 	}
-//###################################################################################
+
 	void _ServiceSetTxt(void) // i to daj kako zewn funkcje w jednym pliku includowanym !!!!!
 	{
 		const char *txtKey[]								= {"Q","W","E","R","T","Y","U","I","O","P","{","}", \
@@ -2004,7 +2018,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 		#define P(x,y)	{(x+1)*s[k].interSpace + x*s[k].widthKey,	(y+1)*s[k].interSpace + y*s[k].heightKey + head}
 
-		XY_Touch_Struct posHead={0,0};
 		XY_Touch_Struct posKey[]= {P(0,0),P(1,0),P(2,0),P(3,0),P(4,0),P(5,0),P(6,0),P(7,0),P(8,0),P(9,0),P(10,0),P(11,0),\
 											P(0,1),P(1,1),P(2,1),P(3,1),P(4,1),P(5,1),P(6,1),P(7,1),P(8,1),P(9,1),P(10,1),P(11,1)};
 
@@ -2020,25 +2033,26 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			case KEY_All_release:
 				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
 				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, s[k].interSpace,s[k].interSpace, widthFieldTxt,heightFieldTxt, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
-				_StrDescr(posHead, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
 
 				for(int i=0; i<countKey; ++i){
 					CONDITION(i<countKey-1, _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]), _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]));
 				}
 				break;
 
-			case KEY_Q:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
+			default:
+				if(IS_RANGE(selBlockPress,KEY_Q,KEY_s4)){ INIT(nr,selBlockPress-KEY_Q); _KeyStrPressDisp_oneBlock(posKey[nr],txtKey[nr],colorTxtPressKey[nr]); }
+				break;
+
+
+			//case KEY_Q:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
 		}
 
 		if(startTouchIdx){
 			for(int i=0; i<countKey; ++i)
-				_SetTouch(ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
+				_SetTouch(ID_TOUCH_POINT,s[k].startTouchIdx+i,press,posKey[i]);
 		}
 		#undef P
 	}
-
-
-
 
 
 
@@ -2073,6 +2087,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		case KEYBOARD_sliderRGB:
 			_ServiceSliderRGB();
 			break;
+		case KEYBOARD_setTxt:
+			_ServiceSetTxt();
+			break;
 
 		default:
 			break;
@@ -2087,7 +2104,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 //suwag okrągły !!!
 
 //dla ROLL bez select a drugie pole touch to z select,
-// blokada globalna touch !!!! tylko 1 touch zostaje
 
 static void FILE_NAME(timer)(void)
 {
@@ -2132,6 +2148,7 @@ void FILE_NAME(setTouch)(void)
 	#define _KEYS_RELEASE_fontCoeff 		if(_WasStatePrev(Touch_coeff_plus, Touch_coeff_minus)) KEYBOARD_TYPE(KEYBOARD_fontCoeff, KEY_All_release)
 	#define _KEYS_RELEASE_fontSliderRGB if(_WasStatePrev(Touch_fontSliderR, Touch_fontSliderB_right)) KEYBOARD_TYPE(KEYBOARD_sliderRGB, KEY_All_release)
 	#define _KEYS_RELEASE_LenOffsWin 	if(_WasStatePrev(Touch_LenWin_plus, Touch_ResetSpaces)) KEYBOARD_TYPE(KEYBOARD_LenOffsWin, KEY_All_release)
+	#define _KEYS_RELEASE_setTxt 	if(_WasStatePrev(Touch_Q, Touch_s4)) KEYBOARD_TYPE(KEYBOARD_setTxt, KEY_All_release)
 
 	static uint16_t statePrev=0;
 	uint16_t state, function=0;
@@ -2143,6 +2160,13 @@ void FILE_NAME(setTouch)(void)
 
 	int _WasState(int point){
 		if(release==LCD_TOUCH_isPress() && point==statePrev){
+			statePrev = state;
+			return 1;
+		}
+		else return 0;
+	}
+	int _WasStateRange(int point1, int point2){
+		if(release==LCD_TOUCH_isPress() && IS_RANGE(statePrev,point1,point2)){
 			statePrev = state;
 			return 1;
 		}
@@ -2217,6 +2241,11 @@ void FILE_NAME(setTouch)(void)
 				_SaveState();
 			break;
 
+		case Touch_SetTxt:
+			KeyboardTypeDisplay(KEYBOARD_setTxt,KEY_All_release,LCD_Rectangle,0,0,100,KeysAutoSize,10,10,state,Touch_Q,KeysDel);
+			LCDTOUCH_ActiveOnly(0,0,0,0,0,0,0,0,0,0,Touch_Q,Touch_s5);
+			break;
+
 		case Touch_FontStyle:
 			ChangeFontStyle(NONE_TYPE_REQ);
 			if(CHECK_TOUCH(Touch_FontStyle2))
@@ -2289,11 +2318,11 @@ void FILE_NAME(setTouch)(void)
 		case Touch_PosInWin_minus: 	_KEYS_RELEASE_LenOffsWin;	 Inc_PosCursor();  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_PosInWin_minus ); 	_SaveState();  break;
 		case Touch_SpaceFonts_plus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(1);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_plus );  _SaveState();  break;
 		case Touch_SpaceFonts_minus: 	_KEYS_RELEASE_LenOffsWin;	 IncDec_SpaceBetweenFont(0);  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_SpaceFonts_minus ); _SaveState();  break;
-		case Touch_DispSpaces: 	_KEYS_RELEASE_LenOffsWin;	 /* here do nothing something */  	KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_DispSpaces ); _SaveState();  break;
+		case Touch_DispSpaces: 	_KEYS_RELEASE_LenOffsWin;	 /* here do nothing */  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_DispSpaces ); _SaveState();  break;
 		case Touch_WriteSpaces: _KEYS_RELEASE_LenOffsWin;	LCD_WriteSpacesBetweenFontsOnSDcard();  KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_WriteSpaces ); _SaveState();  break;
 		case Touch_ResetSpaces: _KEYS_RELEASE_LenOffsWin;	LCD_ResetSpacesBetweenFonts();  			 KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_ResetSpaces ); _SaveState();  break;
-		case Touch_SpacesInfoUp: 									 /* here do nothing something */  	KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesUp );  break;
-		case Touch_SpacesInfoDown: 								 /* here do nothing something */  	KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesDown ); break;
+		case Touch_SpacesInfoUp: 									 /* here do nothing */  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesUp );  break;
+		case Touch_SpacesInfoDown: 								 /* here do nothing */  				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_InfoSpacesDown ); break;
 
 		case Touch_FontSizeRoll:
 			vTimerService(0,start_time,1000);
@@ -2303,13 +2332,24 @@ void FILE_NAME(setTouch)(void)
 			_SaveState();
 			break;
 
-		case TOUCH_MainFramesType:
+		case Touch_MainFramesType:
 			if(ppMain[0]==(int*)FRAMES_GROUP_separat)	*ppMain=(int*)FRAMES_GROUP_combined;
 			else													*ppMain=(int*)FRAMES_GROUP_separat;
 			FILE_NAME(main)(LoadPartScreen,(char**)ppMain);
 			break;
 
 		default:
+			if(IS_RANGE(state,Touch_Q,Touch_s4)){
+				_KEYS_RELEASE_setTxt;	KEYBOARD_TYPE(KEYBOARD_setTxt,KEY_Q+(state-Touch_Q));  _SaveState();
+				break;
+			}
+			else if(Touch_s5==state){
+				LCD_TOUCH_RestoreAllSusspendedTouchs();
+				FILE_NAME(main)(LoadPartScreen,(char**)ppMain);
+				KEYBOARD_TYPE(KEYBOARD_none,0);
+				break;
+			}
+
 			if(_WasState(Touch_fontRp) || _WasState(Touch_fontRm) ||
 				_WasState(Touch_fontGp) || _WasState(Touch_fontGm) ||
 				_WasState(Touch_fontBp) || _WasState(Touch_fontBm) )
@@ -2340,10 +2380,14 @@ void FILE_NAME(setTouch)(void)
 			if(_WasState(Touch_coeff_plus) || _WasState(Touch_coeff_minus))
 				KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_All_release );
 
+		/* if(_WasStateRange(Touch_LenWin_plus, Touch_ResetSpaces)) */  //sprawdz to !!!!
 			if(_WasState(Touch_LenWin_plus)   || _WasState(Touch_LenWin_minus) 	 || _WasState(Touch_OffsWin_plus) 	 || _WasState(Touch_OffsWin_minus) 	  ||
 				_WasState(Touch_PosInWin_plus) || _WasState(	Touch_PosInWin_minus) || _WasState(Touch_SpaceFonts_plus) || _WasState(Touch_SpaceFonts_minus) ||
 				_WasState(Touch_DispSpaces) 	 || _WasState(Touch_WriteSpaces) 	 || _WasState(Touch_ResetSpaces))
 				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_All_release );
+
+			if(_WasStateRange(Touch_Q,Touch_s4))
+				KEYBOARD_TYPE( KEYBOARD_setTxt, KEY_All_release );
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
 			if(_WasState(Touch_FontStyle) ||
@@ -2808,7 +2852,7 @@ static StructTxtPxlLen ELEMENT_fontTime(StructFieldPos *field, int xPos,int yPos
 	return lenStr;
 }
 
-static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int bold)
+static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY, int bold)
 {
 	#define _LINES_COLOR		COLOR_GRAY(0x77)
 	#define _FILL_COLOR		v.COLOR_FillMainFrame
@@ -2867,17 +2911,15 @@ static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int
 	#undef _LINES_COLOR
 }
 
-static int FRAME_odstep()
-{
-	return 0;
+static int FRAME_bold2Space(uint8_t bold, uint8_t space){
+	return ((uint32_t)bold&0x000000FF)|(uint32_t)space<<8;
 }
-// ... i iwyswietli ci sie lista w argumentach sprawdz je bo coeikawe !!!!!
 
-static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int boldFrame)		/* Parameters ..Offs.. is counted from STR (not from FRAME) */
+static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY, int boldFrame)		/* Parameters ..Offs.. is counted from STR (not from FRAME) */
 {
 	#define _FRAME_COLOR		v.COLOR_Frame
 	#define _FILL_COLOR		v.COLOR_FillFrame
-																										/* LCD_BoldRoundRectangle */
+																									 /* LCD_BoldRoundRectangle */
 	#define _Rectan LCD_Shape(field.x-fontsFrameSpace, field.y-fontsFrameSpace, LCD_RoundRectangle, field.width+2*fontsFrameSpace, field.height+2*fontsFrameSpace, SetBold2Color(_FRAME_COLOR,bold), _FILL_COLOR, v.COLOR_FillMainFrame)
 
 	#define _Element(name,nrX,cmdX,Xoffs,nrY,cmdY,Yoffs)	\
@@ -2909,81 +2951,65 @@ static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int 
 	#undef _FILL_COLOR
 }
 
-void FILE_NAME(main)(int argNmb, char **argVal)  //tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
+void FILE_NAME(main)(int argNmb, char **argVal)
 {
-	    //ODKRYJ W usrtawienia debug aby tylko wyswietlic jeden leemnet z duzej struktury np Touch[].idx !!!!!!
-
 	if(NULL == argVal)
 		argVal = (char**)ppMain;
 
+	LCD_Clear(v.COLOR_BkScreen);
 
 	if(LoadWholeScreen == argNmb)
 	{
-		SCREEN_ResetAllParameters();		//ROBIMY TU JUZ KLAWIATUTE i wprowadzanie textu dowolnego !!!!!
-		LCD_TOUCH_DeleteAllSetTouch();  //Przyciski do zmian paranetru !!!!
+		SCREEN_ResetAllParameters();
+		LCD_TOUCH_DeleteAllSetTouch();
 		FONTS_LCD_ResetParam();
 
-		LCD_Clear(v.COLOR_BkScreen);
 		DbgVar(DEBUG_ON,100,Clr_ Cya_"\r\nStart: %s\r\n"_X,GET_CODE_FUNCTION);
 
-		LoadFonts(FONT_ID_Title, FONT_ID_Press); //ZROBIC AUTOMATYCZNE testy wszystkich mozliwosci !!!!!!! taki interfejs testowy
+		LoadFonts(FONT_ID_Title, FONT_ID_Press);
 		LCD_LoadFontVar();
 
 		LCDTOUCH_Set(LCD_X-FV(SetVal,0,LCD_GetWholeStrPxlWidth(v.FONT_ID_Descr,SL(LANG_MainFrameType),0,NoConstWidth)+5), \
 						 LCD_Y-FV(SetVal,1,LCD_GetFontHeight(v.FONT_ID_Descr)+5), \
 						 	 	 FV(GetVal,0,NoUse),\
-								 FV(GetVal,1,NoUse), ID_TOUCH_POINT,TOUCH_MainFramesType,press);
+								 FV(GetVal,1,NoUse), ID_TOUCH_POINT,Touch_MainFramesType,press);
+
+		LCD_Ymiddle(0,SetPos, SetPosAndWidth(Test.yFontsField,240) );
+		LCD_Xmiddle(0,SetPos, SetPosAndWidth(Test.xFontsField,LCD_GetXSize()),NULL,0,NoConstWidth);
+		LCD_SetBkFontShape(v.FONT_VAR_Fonts,BK_Rectangle);
 	}
-	else{
-		LCD_Clear(v.COLOR_BkScreen);   //ZROBIC animacje ze samo sie klioka i chmurka z info ze przytrzymac na 2 sekundy ....
-	}
+
 	/*FILE_NAME(printInfo)();*/
-
-
 	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
-
-
-
 
 	if		 (*(argVal+0)==(char*)FRAMES_GROUP_combined)
 		FRAMES_GROUP_combined(argNmb,15,15,25,25,1);
 	else if(*(argVal+0)==(char*)FRAMES_GROUP_separat)
-		FRAMES_GROUP_separat(argNmb,23,20,25,25,0|(6<<8));
+		FRAMES_GROUP_separat(argNmb,23,20,25,25,FRAME_bold2Space(0,6));
 
+	/*	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450,0,TXT_CPU_USAGE,halfHight,0,255,ConstWidth); */
+	LCD_StrDependOnColors(v.FONT_ID_Descr, LCD_X-FV(GetVal,0,NoUse), LCD_Y-FV(GetVal,1,NoUse), SL(LANG_MainFrameType), fullHight,0, v.COLOR_FillFrame, v.FONT_COLOR_Descr, 255, NoConstWidth);
 
-
-	if(LoadUserScreen == argNmb)
-	{
+	if(LoadUserScreen == argNmb){
 
 	}
 
+	StartMeasureTime_us();
+	 if(Test.type) lenStr= LCD_StrVar			  (v.FONT_VAR_Fonts,v.FONT_ID_Fonts, POS_X_TXT, POS_Y_TXT, Test.txt, fullHight, Test.spaceBetweenFonts, argNmb==0 ? v.COLOR_BkScreen : LCD_GetStrVar_bkColor(v.FONT_VAR_Fonts), 0,			 Test.constWidth, v.COLOR_BkScreen);
+	 else 			lenStr= LCD_StrChangeColorVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, POS_X_TXT, POS_Y_TXT, Test.txt, fullHight, Test.spaceBetweenFonts, RGB_BK, RGB_FONT,																		 Test.coeff, Test.constWidth, v.COLOR_BkScreen);
+	Test.speed=StopMeasureTime_us("");
 
-
-//	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450, 0, 	TXT_CPU_USAGE,	 		 halfHight,0,255,ConstWidth);
-
-
-
-	 Test.yFontsField=240;
-	 LCD_Ymiddle(0,SetPos, SetPosAndWidth(Test.yFontsField,240) );
-	 LCD_Xmiddle(0,SetPos, SetPosAndWidth(Test.xFontsField,LCD_GetXSize()),NULL,0,NoConstWidth);
-
-	 LCD_SetBkFontShape(v.FONT_VAR_Fonts,BK_Rectangle);
-	 //daj mozliwosc wpisywania dowolnego textu aby korygowac odstepy miedzy kazdymi fontami jakimi sie chce !!!!!!!
-
-	 StartMeasureTime_us();
-	 if(Test.type)
-		 lenStr=LCD_StrVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts, argNmb==0 ? v.COLOR_BkScreen : LCD_GetStrVar_bkColor(v.FONT_VAR_Fonts),  0,Test.constWidth,v.COLOR_BkScreen);
-	 else
-		 lenStr=LCD_StrChangeColorVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth), LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts), Test.txt, fullHight, Test.spaceBetweenFonts,RGB_BK,RGB_FONT,Test.coeff,Test.constWidth,v.COLOR_BkScreen);
-	 Test.speed=StopMeasureTime_us("");
-
-
-	 LCD_StrDependOnColors(v.FONT_ID_Descr, LCD_X-FV(GetVal,0,NoUse), LCD_Y-FV(GetVal,1,NoUse), SL(LANG_MainFrameType), fullHight,0, v.COLOR_FillFrame, v.FONT_COLOR_Descr, 255, NoConstWidth);
-
-	 if(LoadNoDispScreen != argNmb){
-		 LCD_Show();
-	 }
-
+	if(LoadWholeScreen  == argNmb) SetNewTxtTouch();
+	if(LoadNoDispScreen != argNmb) LCD_Show();
 }
 
 #undef INT2STR_TIME
+#undef POS_X_TXT
+#undef POS_Y_TXT
+
+
+
+
+//ZROBIC animacje ze samo sie klioka i chmurka z info ze przytrzymac na 2 sekundy ....
+//ZROBIC AUTOMATYCZNE testy wszystkich mozliwosci !!!!!!! taki interfejs testowy
+//tu W **arcv PRZEKAZ TEXT !!!!!! dla fonts !!!
