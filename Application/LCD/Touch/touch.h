@@ -41,6 +41,11 @@ enum TOUCH_PRESS_RELEASE{
   checkPress
 };
 
+typedef enum{
+  TouchSetNew,
+  TouchUpdate,
+}TOUCH_SET_UPDATE;
+
 typedef struct{
   uint16_t x;
   uint16_t y;
@@ -67,7 +72,8 @@ void LCD_TOUCH_RestoreSusspendedTouch(uint16_t idx);
 void LCD_TOUCH_RestoreSusspendedTouchs(uint16_t start_idx, uint16_t stop_idx);
 void LCDTOUCH_ActiveOnly(uint16_t idx1,uint16_t idx2,uint16_t idx3,uint16_t idx4,uint16_t idx5,uint16_t idx6,uint16_t idx7,uint16_t idx8,uint16_t idx9,uint16_t idx10, uint16_t start_idx, uint16_t stop_idx);
 
-int LCD_TOUCH_Set(uint16_t id, uint16_t idx, uint8_t param);
+int LCD_TOUCH_Set(uint16_t ID, uint16_t idx, uint8_t param);
+int LCD_TOUCH_Update(uint16_t ID, uint16_t idx, uint8_t param);
 int LCD_TOUCH_isPress(void);
 void SetLogXY(XY_Touch_Struct *pos, uint16_t *width, int maxSize);
 void SetPhysXY(XY_Touch_Struct *pos, int maxSize);
@@ -87,5 +93,6 @@ void LCD_TOUCH_ScrollSel_FreeRolling(uint8_t nr, FUNC1_DEF(pFunc));
 uint8_t LCD_TOUCH_ScrollSel_DetermineRateRoll(uint8_t nr, uint16_t touchState, uint16_t xPos);
 
 int LCDTOUCH_Set(uint16_t startX, uint16_t startY, uint16_t width, uint16_t height, uint16_t ID, uint16_t idx, uint8_t param);
+int LCDTOUCH_Update(uint16_t startX, uint16_t startY, uint16_t width, uint16_t height, uint16_t ID, uint16_t idx, uint8_t param);
 
 #endif

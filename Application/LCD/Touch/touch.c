@@ -543,6 +543,31 @@ int LCD_TOUCH_Set(uint16_t ID, uint16_t idx, uint8_t param)
   return -1;
 }
 
+int LCD_TOUCH_Update(uint16_t ID, uint16_t idx, uint8_t param)
+{
+  if(isTouchTemp())
+  {
+	  for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i)
+	  {
+		  if(Touch[i].index == idx || susspendTouch[i] == idx)
+		  {
+			  Touch[i].id = ID;
+			  Touch[i].param = param;
+			  Touch[i].flags1 = 0;
+			  Touch[i].flags2 = 0;
+
+			  for(int j=0; j<MAX_NUMBER_PIONTS_TOUCH; ++j)
+				  Touch[i].pos[j] = touchTemp[j];
+
+			  clearTouchTemp();
+			  return i;
+		  }
+	  }
+  }
+  clearTouchTemp();
+  return -1;
+}
+
 int GetTouchToTemp(uint16_t idx)
 {
 	int i;
@@ -576,28 +601,25 @@ int LCD_TOUCH_SetNewPos(uint16_t idx, uint16_t x, uint16_t y, uint16_t xLen, uin
 	return 0;
 }
 
-void LCD_TOUCH_DeleteAllSetTouch(void)
-{
+void LCD_TOUCH_DeleteAllSetTouch(void){
 	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i){
 		Touch[i].index=0;
 		susspendTouch[i]=0;
 	}
 }
-
-void LCD_TOUCH_DeleteSelectTouch(uint16_t idx)
-{
+void LCD_TOUCH_DeleteSelectTouch(uint16_t idx){
 	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i){
-		if(Touch[i].index==idx)
+		if(Touch[i].index==idx){
 			Touch[i].index=0;
-	}
+			susspendTouch[i]=0;
+	}}
 }
-
-void DeleteAllTouchWithout(uint16_t idx)
-{
+void DeleteAllTouchWithout(uint16_t idx){
 	for(int i=0; i<MAX_OPEN_TOUCH_SIMULTANEOUSLY; ++i){
-		if(Touch[i].index!=idx)
+		if(Touch[i].index!=idx){
 			Touch[i].index=0;
-	}
+			susspendTouch[i]=0;
+	}}
 }
 
 void LCD_TOUCH_SusspendAllTouchsWithout(uint16_t start_idx, uint16_t stop_idx){
@@ -874,5 +896,12 @@ int LCDTOUCH_Set(uint16_t startX, uint16_t startY, uint16_t width, uint16_t heig
  	touchTemp[1].x= touchTemp[0].x+width;
  	touchTemp[1].y= touchTemp[0].y+height;
  	return LCD_TOUCH_Set(ID,idx,param);
+}
+int LCDTOUCH_Update(uint16_t startX, uint16_t startY, uint16_t width, uint16_t height, uint16_t ID, uint16_t idx, uint8_t param){
+ 	touchTemp[0].x= startX;
+ 	touchTemp[0].y= startY;
+ 	touchTemp[1].x= touchTemp[0].x+width;
+ 	touchTemp[1].y= touchTemp[0].y+height;
+ 	return LCD_TOUCH_Update(ID,idx,param);
 }
 

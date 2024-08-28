@@ -262,8 +262,10 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 /*------------ End Main Screen MACRO -----------------*/
 
 #define TEXT_TO_SHOW		"Rafa"ł" Markielowski"
-#define POS_X_TXT		LCD_Xmiddle(0,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth)
-#define POS_Y_TXT		LCD_Ymiddle(0,GetPos,v.FONT_ID_Fonts)
+
+#define nrMIDDLE_TXT	19
+#define POS_X_TXT		LCD_Xmiddle(nrMIDDLE_TXT,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth)
+#define POS_Y_TXT		LCD_Ymiddle(nrMIDDLE_TXT,GetPos,v.FONT_ID_Fonts)
 
 #define FLOAT2STR(val)	Float2Str(val,' ',4,Sign_plusMinus,1)
 #define INT2STR(val)		  Int2Str(val,'0',3,Sign_none)
@@ -285,11 +287,11 @@ void 	FILE_NAME(main)(int argNmb, char **argVal);
 #define RGB_FONT 	RGB2INT(Test.font[0],Test.font[1],Test.font[2])
 #define RGB_BK    RGB2INT(Test.bk[0],  Test.bk[1],  Test.bk[2])
 
-#define CHECK_TOUCH(state)			CHECK_bit(FILE_NAME(SelTouch)[state/32],(state-32*(state/32)-1))
-#define SET_TOUCH(state) 			  SET_bit(FILE_NAME(SelTouch)[state/32],(state-32*(state/32)-1))
-#define CLR_TOUCH(state) 			  RST_bit(FILE_NAME(SelTouch)[state/32],(state-32*(state/32)-1))
-#define CLR_ALL_TOUCH 				for(int i=0;i<SEL_BITS_SIZE;++i) FILE_NAME(SelTouch)[i]=0
-#define GET_TOUCH 					FILE_NAME(SelTouch)[0]!=0 || FILE_NAME(SelTouch)[1]!=0 || FILE_NAME(SelTouch)[2]!=0 || FILE_NAME(SelTouch)[3]!=0 || FILE_NAME(SelTouch)[4]!=0		/* determine by 'SEL_BITS_SIZE' */
+#define CHECK_TOUCH(state)		CHECK_bit(FILE_NAME(SelTouch)[state/32],(state-32*(state/32)-1))
+#define SET_TOUCH(state) 		SET_bit(FILE_NAME(SelTouch)[state/32],(state-32*(state/32)-1))
+#define CLR_TOUCH(state) 		RST_bit(FILE_NAME(SelTouch)[state/32],(state-32*(state/32)-1))
+#define CLR_ALL_TOUCH 			for(int i=0;i<SEL_BITS_SIZE;++i) FILE_NAME(SelTouch)[i]=0
+#define GET_TOUCH 				FILE_NAME(SelTouch)[0]!=0 || FILE_NAME(SelTouch)[1]!=0 || FILE_NAME(SelTouch)[2]!=0 || FILE_NAME(SelTouch)[3]!=0 || FILE_NAME(SelTouch)[4]!=0		/* determine by 'SEL_BITS_SIZE' */
 
 #define NONE_TYPE_REQ	-1
 #define MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY		20
@@ -522,9 +524,16 @@ static char* TXT_PosCursor(void){
 static void ClearCursorField(void){
 	LCD_ShapeIndirect(LCD_GetStrVar_x(v.FONT_VAR_Fonts),LCD_GetStrVar_y(v.FONT_VAR_Fonts)+LCD_GetFontHeight(v.FONT_ID_Fonts)+Test.spaceCoursorY,LCD_Rectangle, lenStr.inPixel,Test.heightCursor, v.COLOR_BkScreen,v.COLOR_BkScreen,v.COLOR_BkScreen);
 }
-static void SetNewTxtTouch(void){
-	LCD_TOUCH_DeleteSelectTouch(Touch_SetTxt);
-	LCDTOUCH_Set(POS_X_TXT, POS_Y_TXT, lenStr.inChar, lenStr.height, ID_TOUCH_POINT,Touch_SetTxt,press);
+static void TxtTouch(TOUCH_SET_UPDATE type){
+	switch((int)type){
+		case TouchSetNew:
+			LCD_TOUCH_DeleteSelectTouch(Touch_SetTxt);
+			LCDTOUCH_Set(POS_X_TXT, POS_Y_TXT, lenStr.inPixel, lenStr.height, ID_TOUCH_POINT,Touch_SetTxt,press);
+			break;
+		case TouchUpdate:
+			LCDTOUCH_Update(POS_X_TXT, POS_Y_TXT, lenStr.inPixel, lenStr.height, ID_TOUCH_POINT,Touch_SetTxt,press);
+			break;
+	}
 }
 
 static void SetCursor(void)  //KURSOR DLA BIG FONT DAC PODWOJNY !!!!!
@@ -572,7 +581,6 @@ static void Data2Refresh(int nr)
 #endif
 		break;
 	case FONTS:
-
 		switch(Test.type)
 		{
 		case 0:
@@ -584,7 +592,7 @@ static void Data2Refresh(int nr)
 				StartMeasureTime_us();
 				 lenStr=LCD_StrChangeColorVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 				Test.speed=StopMeasureTime_us("");
-			   SetNewTxtTouch();
+			   TxtTouch(TouchUpdate);
 			}
 			else{
 				LCD_SetStrVar_fontID(v.FONT_VAR_Fonts,v.FONT_ID_Fonts);
@@ -593,7 +601,7 @@ static void Data2Refresh(int nr)
 				StartMeasureTime_us();
 				lenStr=LCD_StrVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 				Test.speed=StopMeasureTime_us("");
-			   SetNewTxtTouch();
+			   TxtTouch(TouchUpdate);
 			}
 			break;
 		case 1:
@@ -603,7 +611,7 @@ static void Data2Refresh(int nr)
 			StartMeasureTime_us();
 			lenStr=LCD_StrVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 		   Test.speed=StopMeasureTime_us("");
-		   SetNewTxtTouch();
+		   TxtTouch(TouchUpdate);
 		   break;
 		case 2:
 			LCD_SetStrVar_fontID(v.FONT_VAR_Fonts,v.FONT_ID_Fonts);
@@ -612,7 +620,7 @@ static void Data2Refresh(int nr)
 			StartMeasureTime_us();
 			lenStr=LCD_StrVarIndirect(v.FONT_VAR_Fonts,Test.txt);
 		   Test.speed=StopMeasureTime_us("");
-		   SetNewTxtTouch();
+		   TxtTouch(TouchUpdate);
 			break;
 		}
 		break;
@@ -2242,7 +2250,7 @@ void FILE_NAME(setTouch)(void)
 			break;
 
 		case Touch_SetTxt:
-			KeyboardTypeDisplay(KEYBOARD_setTxt,KEY_All_release,LCD_Rectangle,0,0,100,KeysAutoSize,10,10,state,Touch_Q,KeysDel);
+			KeyboardTypeDisplay(KEYBOARD_setTxt,KEY_All_release,LCD_RoundRectangle,0,37,128,KeysAutoSize,10,10,state,Touch_Q,KeysDel);
 			LCDTOUCH_ActiveOnly(0,0,0,0,0,0,0,0,0,0,Touch_Q,Touch_s5);
 			break;
 
@@ -2380,11 +2388,12 @@ void FILE_NAME(setTouch)(void)
 			if(_WasState(Touch_coeff_plus) || _WasState(Touch_coeff_minus))
 				KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_All_release );
 
-		/* if(_WasStateRange(Touch_LenWin_plus, Touch_ResetSpaces)) */  //sprawdz to !!!!
-			if(_WasState(Touch_LenWin_plus)   || _WasState(Touch_LenWin_minus) 	 || _WasState(Touch_OffsWin_plus) 	 || _WasState(Touch_OffsWin_minus) 	  ||
-				_WasState(Touch_PosInWin_plus) || _WasState(	Touch_PosInWin_minus) || _WasState(Touch_SpaceFonts_plus) || _WasState(Touch_SpaceFonts_minus) ||
-				_WasState(Touch_DispSpaces) 	 || _WasState(Touch_WriteSpaces) 	 || _WasState(Touch_ResetSpaces))
+			if(_WasStateRange(Touch_LenWin_plus, Touch_ResetSpaces))  //sprawdz to !!!!
 				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_All_release );
+//			if(_WasState(Touch_LenWin_plus)   || _WasState(Touch_LenWin_minus) 	 || _WasState(Touch_OffsWin_plus) 	 || _WasState(Touch_OffsWin_minus) 	  ||
+//				_WasState(Touch_PosInWin_plus) || _WasState(	Touch_PosInWin_minus) || _WasState(Touch_SpaceFonts_plus) || _WasState(Touch_SpaceFonts_minus) ||
+//				_WasState(Touch_DispSpaces) 	 || _WasState(Touch_WriteSpaces) 	 || _WasState(Touch_ResetSpaces))
+//				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_All_release );
 
 			if(_WasStateRange(Touch_Q,Touch_s4))
 				KEYBOARD_TYPE( KEYBOARD_setTxt, KEY_All_release );
@@ -2974,8 +2983,8 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 						 	 	 FV(GetVal,0,NoUse),\
 								 FV(GetVal,1,NoUse), ID_TOUCH_POINT,Touch_MainFramesType,press);
 
-		LCD_Ymiddle(0,SetPos, SetPosAndWidth(Test.yFontsField,240) );
-		LCD_Xmiddle(0,SetPos, SetPosAndWidth(Test.xFontsField,LCD_GetXSize()),NULL,0,NoConstWidth);
+		LCD_Ymiddle(nrMIDDLE_TXT,SetPos, SetPosAndWidth(Test.yFontsField,240) );
+		LCD_Xmiddle(nrMIDDLE_TXT,SetPos, SetPosAndWidth(Test.xFontsField,LCD_GetXSize()),NULL,0,NoConstWidth);
 		LCD_SetBkFontShape(v.FONT_VAR_Fonts,BK_Rectangle);
 	}
 
@@ -2995,11 +3004,11 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 	}
 
 	StartMeasureTime_us();
-	 if(Test.type) lenStr= LCD_StrVar			  (v.FONT_VAR_Fonts,v.FONT_ID_Fonts, POS_X_TXT, POS_Y_TXT, Test.txt, fullHight, Test.spaceBetweenFonts, argNmb==0 ? v.COLOR_BkScreen : LCD_GetStrVar_bkColor(v.FONT_VAR_Fonts), 0,			 Test.constWidth, v.COLOR_BkScreen);
-	 else 			lenStr= LCD_StrChangeColorVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, POS_X_TXT, POS_Y_TXT, Test.txt, fullHight, Test.spaceBetweenFonts, RGB_BK, RGB_FONT,																		 Test.coeff, Test.constWidth, v.COLOR_BkScreen);
+	 if(Test.type) lenStr= LCD_StrVar			  (v.FONT_VAR_Fonts,v.FONT_ID_Fonts, POS_X_TXT, POS_Y_TXT, Test.txt, fullHight, Test.spaceBetweenFonts, argNmb==0 ? v.COLOR_BkScreen : LCD_GetStrVar_bkColor(v.FONT_VAR_Fonts), 0,			  Test.constWidth, v.COLOR_BkScreen);
+	 else 			lenStr= LCD_StrChangeColorVar(v.FONT_VAR_Fonts,v.FONT_ID_Fonts, POS_X_TXT, POS_Y_TXT, Test.txt, fullHight, Test.spaceBetweenFonts, RGB_BK, RGB_FONT,																		  Test.coeff, Test.constWidth, v.COLOR_BkScreen);
 	Test.speed=StopMeasureTime_us("");
 
-	if(LoadWholeScreen  == argNmb) SetNewTxtTouch();
+	if(LoadWholeScreen  == argNmb) TxtTouch(TouchSetNew);
 	if(LoadNoDispScreen != argNmb) LCD_Show();
 }
 
