@@ -84,6 +84,8 @@
 #define vUINT16_PLCD(offs)	(*((uint16_t*)(pLcd+(offs))))
 #define vINT_PLCD(offs)		(*((int*)(pLcd+(offs))))
 
+#define INIT(name,val)	int name=val
+
 #define STRUCT_SIZE_SHAPE_POS		3
 
 typedef struct{
