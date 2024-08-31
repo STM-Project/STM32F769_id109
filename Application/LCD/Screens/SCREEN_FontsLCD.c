@@ -2007,18 +2007,24 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		const char *txtKey[]								= {"q","w","e","r","t","y","u","i","o","p", \
 																	  "a","s","d","f","g","h","j","k","l", \
 																	"|","z","x","c","v","b","n","m","<--", \
-																	"alt","Sign","  space ",",",".","<-|" };  //Sign to klawiatyra liczbnowa dla malej klawiatury
+																	"alt","S","space",",",".","<-|" };  //Sign to klawiatyra liczbnowa dla malej klawiatury  "alt","S","space",",",".","<-|" };
 
-		const char *txtKey2[]							= {"/","1","2","3", \
-																	"*","4","5","6", \
-																	"-","7","8","9", \
-																	"+","0",".","=" };
+//		const char *txtKey2[]							= {"/","1","2","3", \
+//																	"*","4","5","6", \
+//																	"-","7","8","9", \
+//																	"+","=",".","0" };
 
-		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE, \
-																	WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE};
-		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED, \
-																	DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED};
-		const uint16_t dimKeys[] = {12,2};
+		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE, \
+																	WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE, \
+																	WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE, \
+																	WHITE,WHITE,WHITE,WHITE,WHITE,WHITE };
+
+		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED, \
+																	DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED, \
+																	DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED, \
+																	DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED };
+
+		const uint8_t dimKeys[] = {10,9,9,6};
 
 		int widthFieldTxt = 0;
 		int heightFieldTxt = LCD_GetFontHeight(fontID) * 1;
@@ -2030,15 +2036,29 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		}}
 		int head = s[k].interSpace + heightFieldTxt + s[k].interSpace;
 
-		#define P(x,y)	{(x+1)*s[k].interSpace + x*s[k].widthKey,	(y+1)*s[k].interSpace + y*s[k].heightKey + head}
+		#define W1	s[k].widthKey
+		#define W2	2*W1
+		#define W3	3*W1
+		#define W4	4*W1
+		uint8_t widthKey[]= {W1,W1,W1,W1,W1,W1,W1,W1,W1,W1,\
+									W2,W1,W1,W1,W1,W1,W1,W1,W1,\
+									W1,W1,W1,W1,W1,W1,W1,W1,W2,\
+									W2,W1,W4,W1,W1,W2};
 
-		XY_Touch_Struct posKey[]= {P(0,0),P(1,0),P(2,0),P(3,0),P(4,0),P(5,0),P(6,0),P(7,0),P(8,0),P(9,0),P(10,0),P(11,0),\
-											P(0,1),P(1,1),P(2,1),P(3,1),P(4,1),P(5,1),P(6,1),P(7,1),P(8,1),P(9,1),P(10,1),P(11,1)};
+		INIT(nr,0);		INIT(width_c,0);
+		#define P(x,y,offs)	{(x+1)*s[k].interSpace + offs + CONDITION(0==x, width_c=_ReturnVal(0,CONDITION(0==y,nr=0,nr++)), width_c += widthKey[nr++]),		(y+1)*s[k].interSpace + y*s[k].heightKey + head}
+		#define F	s[k].widthKey/2
 
-		int countKey = dimKeys[0]*dimKeys[1]; 		/* = STRUCT_TAB_SIZE(txtKey); */
+		XY_Touch_Struct posKey[]= {P(0,0,0),P(1,0,0),P(2,0,0),P(3,0,0),P(4,0,0),P(5,0,0),P(6,0,0),P(7,0,0),P(8,0,0),P(9,0,0),\
+											P(0,1,F),P(1,1,F),P(2,1,F),P(3,1,F),P(4,1,F),P(5,1,F),P(6,1,F),P(7,1,F),P(8,1,F),\
+											P(0,2,0),P(1,2,0),P(2,2,0),P(3,2,0),P(4,2,0),P(5,2,0),P(6,2,0),P(7,2,0),P(8,2,0),\
+											P(0,3,0),P(1,3,0),P(2,3,0),P(3,3,0),P(4,3,0),P(5,3,0)};
 
-		widthAll =  dimKeys[0]*s[k].widthKey  + (dimKeys[0]+1)*s[k].interSpace;
-		heightAll = dimKeys[1]*s[k].heightKey + (dimKeys[1]+1)*s[k].interSpace + head;
+		INIT_INCVAL(sizeof(dimKeys),countKey,dimKeys);
+		INIT_MAXVAL(dimKeys,sizeof(dimKeys),0,maxVal);
+
+		widthAll =  maxVal*s[k].widthKey  + (maxVal+1)*s[k].interSpace;
+		heightAll = sizeof(dimKeys)*s[k].heightKey + (sizeof(dimKeys)+1)*s[k].interSpace + head;
 		widthFieldTxt = widthAll - 2*s[k].interSpace;
 
 		int colorFillBk = BrightDecr(bkColor,0x10);
@@ -2050,21 +2070,29 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 				fillColor = BrightIncr(fillColor,0x10);
 				bkColor = colorFillBk;
-				 for(int i=0; i<countKey; ++i){
+
+				c.widthKey = s[k].widthKey;
+				 for(int i=0; i<countKey; ++i)
+				 {
+					 s[k].widthKey = widthKey[i];
 					 CONDITION(i<countKey-1, _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]), _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]));
 				 }
+				 s[k].widthKey = c.widthKey;
 				break;
 			default:
-				if(IS_RANGE(selBlockPress,KEY_Q,KEY_s4)){ INIT(nr,selBlockPress-KEY_Q); _KeyStrPressDisp_oneBlock(posKey[nr],txtKey[nr],colorTxtPressKey[nr]); }
+				if(IS_RANGE(selBlockPress,KEY_Q,KEY_s4)){ INIT(nr,selBlockPress-KEY_Q); BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);   _KeyStrPressDisp_oneBlock(posKey[nr],txtKey[nr],colorTxtPressKey[nr]); 	BKCOPY(s[k].widthKey,c.widthKey); }
 				break;
 			//case KEY_Q:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
 		}
 
 		if(startTouchIdx){
-			for(int i=0; i<countKey; ++i)
+			for(int i=0; i<countKey; ++i){
+				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[i]);
 				_SetTouch(ID_TOUCH_POINT,s[k].startTouchIdx+i,press,posKey[i]);
-		}
+				BKCOPY(s[k].widthKey,c.widthKey);
+		}}
 		#undef P
+		#undef F
 	}
 
 

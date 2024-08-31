@@ -52,7 +52,10 @@
 #define RST_bit(allBits,bitNr)	((allBits) &= ~(1<<(bitNr)))
 #define CHECK_bit(allBits,bitNr) (((allBits)>>((bitNr)>31?31:(bitNr))) & 0x00000001)
 
+#define INIT_MAXVAL(ptr,nmb,minVal,maxValCalc)	 int maxValCalc=0; 	for(int i=0,j=(minVal); i<(nmb); (ptr[i]>j ? j=ptr[i] : 0), (maxValCalc)=j, ++i);
 #define MAXVAL(ptr,nmb,minVal,maxValCalc)		for(int i=0,j=(minVal); i<(nmb); (ptr[i]>j ? j=ptr[i] : 0), (maxValCalc)=j, ++i);
+#define INIT_INCVAL(nmb,val,valinc)		int val=0; for(int i=0; i<nmb; val+=valinc[i++])
+#define INCVAL(nmb,val,valinc)				 val=0; for(int i=0; i<nmb; val+=valinc[i++])
 
 #define BKCOPY_VAL(dst,src,val)	dst=src; src=val
 #define BKCOPY(dst,src)	dst=src
@@ -144,6 +147,16 @@ typedef SHAPE_PARAMS (*ShapeFunc)(uint32_t,SHAPE_PARAMS);
 
 
 /* --------- End Functions Definitations ----------- */
+
+int _ReturnVal(int val, int in);
+int _ReturnVal2(int val, int in1,int in2);
+int _ReturnVal3(int val, int in1,int in2,int in3);
+void Int16ToCharBuff(char* buff, uint16_t val);
+void Int32ToCharBuff(char* buff, uint32_t val);
+uint16_t CharBuffToInt16(char* buff);
+uint32_t CharBuffToInt32(char* buff);
+int FV(VARIABLE_ACTIONS type, int nrMem, int val);
+int FV2(char* descr, VARIABLE_ACTIONS type, int nrMem, int val);
 
 
 #endif /* COMMON_H_ */
