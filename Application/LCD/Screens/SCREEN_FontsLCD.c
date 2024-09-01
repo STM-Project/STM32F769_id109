@@ -2037,17 +2037,17 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		int head = s[k].interSpace + heightFieldTxt + s[k].interSpace;
 
 		#define W1	s[k].widthKey
-		#define W2	2*W1
-		#define W3	3*W1
-		#define W4	4*W1
+		#define WS	4*W1 + 3*s[k].interSpace
+		#define WA	W1 + (W1 + s[k].interSpace)/2
+
 		uint8_t widthKey[]= {W1,W1,W1,W1,W1,W1,W1,W1,W1,W1,\
-									W2,W1,W1,W1,W1,W1,W1,W1,W1,\
-									W1,W1,W1,W1,W1,W1,W1,W1,W2,\
-									W2,W1,W4,W1,W1,W2};
+									W1,W1,W1,W1,W1,W1,W1,W1,W1,\
+									WA,W1,W1,W1,W1,W1,W1,W1,WA,\
+									WA,W1,WS,W1,W1,WA};
 
 		INIT(nr,0);		INIT(width_c,0);
 		#define P(x,y,offs)	{(x+1)*s[k].interSpace + offs + CONDITION(0==x, width_c=_ReturnVal(0,CONDITION(0==y,nr=0,nr++)), width_c += widthKey[nr++]),		(y+1)*s[k].interSpace + y*s[k].heightKey + head}
-		#define F	s[k].widthKey/2
+		#define F	(s[k].widthKey+s[k].interSpace)/2
 
 		XY_Touch_Struct posKey[]= {P(0,0,0),P(1,0,0),P(2,0,0),P(3,0,0),P(4,0,0),P(5,0,0),P(6,0,0),P(7,0,0),P(8,0,0),P(9,0,0),\
 											P(0,1,F),P(1,1,F),P(2,1,F),P(3,1,F),P(4,1,F),P(5,1,F),P(6,1,F),P(7,1,F),P(8,1,F),\
@@ -2075,7 +2075,23 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				 for(int i=0; i<countKey; ++i)
 				 {
 					 s[k].widthKey = widthKey[i];
-					 CONDITION(i<countKey-1, _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]), _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]));
+					 if(i<countKey-1)
+					 {
+						 if(STRING_CmpTxt((char*)txtKey[i],"|")){
+							 structSize size = { (35*widthKey[i])/100, (2*s[k].heightKey)/5 };
+							 _Key(posKey[i]);
+							 LCD_Arrow(0,widthAll,heightAll, MIDDLE(posKey[i].x,widthKey[i],size.w),MIDDLE(posKey[i].y,s[k].heightKey,size.h), SetLineBold2Width(size.w,1), SetTriangHeightCoeff2Height(size.h,3), frameColor,frameColor,bkColor, Up);
+
+						 }
+						 else if(STRING_CmpTxt((char*)txtKey[i],"<--")){
+							 structSize size = { (2*widthKey[i])/4, (2*s[k].heightKey)/7 };
+							 _Key(posKey[i]);
+							 LCD_Arrow(0,widthAll,heightAll, MIDDLE(posKey[i].x,widthKey[i],size.w),MIDDLE(posKey[i].y,s[k].heightKey,size.h), SetLineBold2Width(size.w,1), SetTriangHeightCoeff2Height(size.h,0), frameColor,frameColor,bkColor, Left);
+
+						 }
+						 else	_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
+					 }
+					 else	 _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
 				 }
 				 s[k].widthKey = c.widthKey;
 				break;
@@ -2093,6 +2109,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		}}
 		#undef P
 		#undef F
+		#undef W1
+		#undef WS
+		#undef WA
 	}
 
 

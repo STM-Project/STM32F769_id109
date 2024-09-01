@@ -33,5 +33,6 @@ char* StrAll(int nmbStr, ...);
 
 void SwapUint16(uint16_t *a, uint16_t *b);
 int STRING_GetTheLongestTxt(int nmb, char **txt);
+int STRING_CmpTxt(char* src, char* dst);
 
 #endif /* GENERAL_UTILITIES_STRING_OPER_H_ */

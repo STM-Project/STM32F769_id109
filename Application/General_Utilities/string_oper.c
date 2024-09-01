@@ -278,3 +278,11 @@ int STRING_GetTheLongestTxt(int nmb, char **txt)
 	}
 	return itMaxLen;
 }
+
+int STRING_CmpTxt(char* src, char* dst){
+	for(int i=0; i<strlen(dst); ++i){
+		if(src[i]!=dst[i])
+			return 0;
+	}
+	return 1;
+}
