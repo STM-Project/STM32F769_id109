@@ -71,7 +71,6 @@
 #define MASK(val,hexMask)		((val)&0x##hexMask)
 #define SHIFT_RIGHT(val,shift,hexMask)		(((val)>>(shift))&0x##hexMask)
 #define SHIFT_LEFT(val,val2,shift)		((val)|((val2)<<(shift)))
-#define CONDITION(condition,val1,val2)	((condition) ? (val1) : (val2))
 #define DO_NOTHING(x)	((x)=(x))
 
 #define PERCENT_SCALE(val,maxVal)	(((val)*100)/(maxVal))
@@ -88,6 +87,8 @@
 #define vINT_PLCD(offs)		(*((int*)(pLcd+(offs))))
 
 #define INIT(name,val)	int name=val
+#define CONDITION(condition,val1,val2)	((condition) ? (val1) : (val2))
+#define OPERATION(val,oper1,oper2,oper3)	_ReturnVal3(int val, int oper1,int oper2,int oper3)
 
 #define STRUCT_SIZE_SHAPE_POS		3
 
@@ -157,6 +158,7 @@ uint16_t CharBuffToInt16(char* buff);
 uint32_t CharBuffToInt32(char* buff);
 int FV(VARIABLE_ACTIONS type, int nrMem, int val);
 int FV2(char* descr, VARIABLE_ACTIONS type, int nrMem, int val);
+
 
 
 #endif /* COMMON_H_ */
