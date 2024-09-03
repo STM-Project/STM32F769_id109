@@ -2034,18 +2034,18 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 		const uint8_t dimKeys[] = {10,9,9,6};
 
-		structSize size_UP = { (35*s[k].widthKey)/100, (2*s[k].heightKey)/5 };		int bold_UP=0;		int coeff_UP = 3;
-		structSize size_LF = { (2*s[k].widthKey)/4, 	  (2*s[k].heightKey)/7 };		int bold_LF=0;		int coeff_LF = 0;
-		structSize size_EN = { (2*s[k].widthKey)/4, 	  (2*s[k].heightKey)/7 };		int bold_EN=0;		int coeff_EN = 0;
-
-		int widthFieldTxt = 0;
-		int heightFieldTxt = LCD_GetFontHeight(fontID) * 1;
+		#define _PARAM_ARROW_UP		structSize 	size_UP = { (35*s[k].widthKey)/100,  (2*s[k].heightKey)/5 };		int bold_UP = 1;		int coeff_UP = 3
+		#define _PARAM_ARROW_LF		structSize 	size_LF = { ( 2*s[k].widthKey)/4,    (2*s[k].heightKey)/7 };		int bold_LF = 1;		int coeff_LF = 0
+		#define _PARAM_ARROW_EN		structSize 	size_EN = { ( 2*s[k].widthKey)/4,    (2*s[k].heightKey)/7 };		int bold_EN = 1;		int coeff_EN = 0
 
 		if(shape!=0){
 			if(KeysAutoSize == widthKey){
 				s[k].widthKey =  heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[0],0,NoConstWidth) + heightKey;
 				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
 		}}
+
+		int widthFieldTxt = 0;
+		int heightFieldTxt = LCD_GetFontHeight(fontID) * 1;
 		int head = s[k].interSpace + heightFieldTxt + s[k].interSpace;
 
 		#define W1	s[k].widthKey
@@ -2087,36 +2087,43 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				 for(int i=0; i<countKey; ++i)
 				 {
 					 s[k].widthKey = widthKey[i];
-					 if(i<countKey-1)
-					 {
-						 if(STRING_CmpTxt((char*)txtKey[i],_UP)){
-							 _Key(posKey[i]);
+					// if(i<countKey-1)
+					 //{
+						 if(STRING_CmpTxt((char*)txtKey[i],_UP)){	 		_Key(posKey[i]);	_PARAM_ARROW_UP;
 							 LCD_Arrow(0,widthAll,heightAll, MIDDLE(posKey[i].x,s[k].widthKey,size_UP.w),MIDDLE(posKey[i].y,s[k].heightKey,size_UP.h), SetLineBold2Width(size_UP.w,bold_UP), SetTriangHeightCoeff2Height(size_UP.h,coeff_UP), frameColor,frameColor,bkColor, Up);
-
 						 }
-						 else if(STRING_CmpTxt((char*)txtKey[i],_LF)){
-							 _Key(posKey[i]);
+						 else if(STRING_CmpTxt((char*)txtKey[i],_LF)){	_Key(posKey[i]);	_PARAM_ARROW_LF;
 							 LCD_Arrow(0,widthAll,heightAll, MIDDLE(posKey[i].x,s[k].widthKey,size_LF.w),MIDDLE(posKey[i].y,s[k].heightKey,size_LF.h), SetLineBold2Width(size_LF.w,bold_LF), SetTriangHeightCoeff2Height(size_LF.h,coeff_LF), frameColor,frameColor,bkColor, Left);
-
+						 }
+						 else if(STRING_CmpTxt((char*)txtKey[i],_EN)){	_Key(posKey[i]);	_PARAM_ARROW_EN;
+							 LCD_Enter(0,widthAll,heightAll, MIDDLE(posKey[i].x,s[k].widthKey,size_EN.w),MIDDLE(posKey[i].y,s[k].heightKey,size_EN.h), SetLineBold2Width(size_EN.w,bold_EN), SetTriangHeightCoeff2Height(size_EN.h,coeff_EN), frameColor,frameColor,bkColor);
+							 LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 						 }
 						 else	_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
-					 }
-					 else	 _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
+					// }
+					// else	 _KeyStrDisp(posKey[i],txtKey[i],colorTxtKey[i]);
 				 }
 				 s[k].widthKey = c.widthKey;
 				break;
 
 			case KEY_big:
 				nr = selBlockPress-KEY_Q;
-				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);
+				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);		_PARAM_ARROW_UP;
 				_KeyShapePressDisp_oneBlock(posKey[nr], LCDSHAPE_Arrow, LCD_Arrow(ToStructAndReturn,s[k].widthKey,s[k].heightKey, MIDDLE(0,s[k].widthKey,size_UP.w),MIDDLE(0,s[k].heightKey,size_UP.h), SetLineBold2Width(size_UP.w,bold_UP), SetTriangHeightCoeff2Height(size_UP.h,coeff_UP), colorTxtPressKey[nr],colorTxtPressKey[nr],bkColor, Up));
+				BKCOPY(s[k].widthKey,c.widthKey);
+				break;
+
+			case KEY_back:
+				nr = selBlockPress-KEY_Q;
+				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);		_PARAM_ARROW_LF;
+				_KeyShapePressDisp_oneBlock(posKey[nr], LCDSHAPE_Arrow, LCD_Arrow(ToStructAndReturn,s[k].widthKey,s[k].heightKey, MIDDLE(0,s[k].widthKey,size_LF.w),MIDDLE(0,s[k].heightKey,size_LF.h), SetLineBold2Width(size_LF.w,bold_LF), SetTriangHeightCoeff2Height(size_LF.h,coeff_LF), colorTxtPressKey[nr],colorTxtPressKey[nr],bkColor, Left));
 				BKCOPY(s[k].widthKey,c.widthKey);
 				break;
 
 			case KEY_enter:
 				nr = selBlockPress-KEY_Q;
-				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);
-				_KeyShapePressDisp_oneBlock(posKey[nr], LCDSHAPE_Enter, LCD_Enter(ToStructAndReturn,s[k].widthKey,s[k].heightKey, MIDDLE(0,s[k].widthKey,size_EN.w),MIDDLE(0,s[k].heightKey,size_EN.h), SetLineBold2Width(size_EN.w,bold_EN), SetTriangHeightCoeff2Height(size_EN.h,coeff_EN), colorTxtPressKey[nr],colorTxtPressKey[nr],bkColor, size_EN.h));
+				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);		_PARAM_ARROW_EN;
+				_KeyShapePressDisp_oneBlock(posKey[nr], LCDSHAPE_Enter, LCD_Enter(ToStructAndReturn,s[k].widthKey,s[k].heightKey, MIDDLE(0,s[k].widthKey,size_EN.w),MIDDLE(0,s[k].heightKey,size_EN.h), SetLineBold2Width(size_EN.w,bold_EN), SetTriangHeightCoeff2Height(size_EN.h,coeff_EN), colorTxtPressKey[nr],colorTxtPressKey[nr],bkColor));
 				BKCOPY(s[k].widthKey,c.widthKey);
 				break;
 
@@ -2329,7 +2336,7 @@ void FILE_NAME(setTouch)(void)
 			break;
 
 		case Touch_SetTxt:
-			KeyboardTypeDisplay(KEYBOARD_setTxt,KEY_All_release,LCD_RoundRectangle,0,37,128,KeysAutoSize,10,10,state,Touch_Q,KeysDel);
+			KeyboardTypeDisplay(KEYBOARD_setTxt,KEY_All_release,LCD_RoundRectangle,0,15,15,KeysAutoSize,10,10,state,Touch_Q,KeysDel);
 			LCDTOUCH_ActiveOnly(0,0,0,0,0,0,0,0,0,0,Touch_Q,Touch_enter);
 			break;
 
