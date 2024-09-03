@@ -3461,9 +3461,48 @@ SHAPE_PARAMS LCD_Arrow(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uin
 	return params;
 }
 
+SHAPE_PARAMS LCD_Enter(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uint32_t x,uint32_t y, uint32_t width,uint32_t height, uint32_t frameColor, uint32_t fillColor, uint32_t bkpColor, int lenTail)
+{
+	SHAPE_PARAMS params = {.bkSize.x=bkpSizeX, .bkSize.y=bkpSizeY, .pos[0].x=x, .pos[0].y=y, .size[0].w=width, .size[0].h=height, .color[0].frame=frameColor, .color[0].fill=fillColor, .color[0].bk=bkpColor, .param[0]=lenTail};
+
+	if(ToStructAndReturn == posBuff)
+		return params;
+
+	posBuff = posBuff & 0x7FFFFFFF;
+
+	int heightShape = MASK(height,FFFF);
+	int widthShape = MASK(width,FFFF);
+
+	int boldLine = SHIFT_RIGHT(width,16,FF);
+	int widthTiang = 0, heightTiang = 0, lenLine = 0;
+
+	void _CalcHeightTriang(void){
+		switch(SHIFT_RIGHT(height,16,FF))
+		{	default:
+			case 0: heightTiang = widthTiang;   break;
+			case 1: heightTiang = widthTiang*2; break;
+			case 2: heightTiang = widthTiang*3; break;
+			case 3: heightTiang = widthTiang/2; break;
+			case 4: heightTiang = widthTiang/4; break; }
+	}
+
+	widthTiang = heightShape;
+	_CalcHeightTriang();
+	lenLine = CONDITION(widthShape>heightTiang, widthShape-heightTiang, 1);
+	LCD_LineH(bkpSizeX, x+heightTiang,  		  MIDDLE(y,widthTiang,boldLine), 		  lenLine,  frameColor, boldLine);
+	LCD_LineV(bkpSizeX, x+heightTiang+lenLine,  MIDDLE(y,widthTiang,boldLine)-lenTail, lenTail,  frameColor, boldLine);
+	LCD_SimpleTriangle(posBuff,bkpSizeX, x+heightTiang, y, widthTiang/2,heightTiang, frameColor, fillColor, bkpColor, Left);
+
+	return params;
+}
+
 SHAPE_PARAMS LCDSHAPE_Arrow(uint32_t posBuff, SHAPE_PARAMS param){
 	return LCD_Arrow(posBuff,param.bkSize.x,param.bkSize.y, param.pos[0].x,param.pos[0].y, param.size[0].w,param.size[0].h, param.color[0].frame, param.color[0].fill, param.color[0].bk, param.param[0]);
 }
+SHAPE_PARAMS LCDSHAPE_Enter(uint32_t posBuff, SHAPE_PARAMS param){
+	return LCD_Enter(posBuff,param.bkSize.x,param.bkSize.y, param.pos[0].x,param.pos[0].y, param.size[0].w,param.size[0].h, param.color[0].frame, param.color[0].fill, param.color[0].bk, param.param[0]);
+}
+
 SHAPE_PARAMS LCDSHAPE_Window(ShapeFunc pShape, uint32_t posBuff, SHAPE_PARAMS param){
 	return pShape(posBuff,param);
 }
