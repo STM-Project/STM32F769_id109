@@ -2008,10 +2008,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 
 	void _ServiceSetTxt(void) // i to daj kako zewn funkcje w jednym pliku includowanym !!!!!   klawiatura malutka i duza na caly LCD_X z liczbami
 	{
+		#define _UP		"|"
+		#define _LF		"<--"
+		#define _EN		"<-|"
+
 		const char *txtKey[]								= {"q","w","e","r","t","y","u","i","o","p", \
 																	  "a","s","d","f","g","h","j","k","l", \
-																	"|","z","x","c","v","b","n","m","<--", \
-																	"alt","S","space",",",".","<-|" };  //Sign to klawiatyra liczbnowa dla malej klawiatury  "alt","S","space",",",".","<-|" };
+																	_UP,"z","x","c","v","b","n","m",_LF, \
+																	"alt","S","space",",",".",_EN };  //Sign 'S' to klawiatyra liczbnowa dla malej klawiatury
 
 //		const char *txtKey2[]							= {"/","1","2","3", \
 //																	"*","4","5","6", \
@@ -2029,6 +2033,10 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 																	DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED };
 
 		const uint8_t dimKeys[] = {10,9,9,6};
+
+		structSize size_UP = { (35*s[k].widthKey)/100, (2*s[k].heightKey)/5 };		int bold_UP=0;		int coeff_UP = 3;
+		structSize size_LF = { (2*s[k].widthKey)/4, 	  (2*s[k].heightKey)/7 };		int bold_LF=0;		int coeff_LF = 0;
+		structSize size_EN = { (2*s[k].widthKey)/4, 	  (2*s[k].heightKey)/7 };		int bold_EN=0;		int coeff_EN = 0;
 
 		int widthFieldTxt = 0;
 		int heightFieldTxt = LCD_GetFontHeight(fontID) * 1;
@@ -2081,16 +2089,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					 s[k].widthKey = widthKey[i];
 					 if(i<countKey-1)
 					 {
-						 if(STRING_CmpTxt((char*)txtKey[i],"|")){
-							 structSize size = { (35*s[k].widthKey)/100, (2*s[k].heightKey)/5 };
+						 if(STRING_CmpTxt((char*)txtKey[i],_UP)){
 							 _Key(posKey[i]);
-							 LCD_Arrow(0,widthAll,heightAll, MIDDLE(posKey[i].x,s[k].widthKey,size.w),MIDDLE(posKey[i].y,s[k].heightKey,size.h), SetLineBold2Width(size.w,1), SetTriangHeightCoeff2Height(size.h,3), frameColor,frameColor,bkColor, Up);
+							 LCD_Arrow(0,widthAll,heightAll, MIDDLE(posKey[i].x,s[k].widthKey,size_UP.w),MIDDLE(posKey[i].y,s[k].heightKey,size_UP.h), SetLineBold2Width(size_UP.w,bold_UP), SetTriangHeightCoeff2Height(size_UP.h,coeff_UP), frameColor,frameColor,bkColor, Up);
 
 						 }
-						 else if(STRING_CmpTxt((char*)txtKey[i],"<--")){
-							 structSize size = { (2*s[k].widthKey)/4, (2*s[k].heightKey)/7 };
+						 else if(STRING_CmpTxt((char*)txtKey[i],_LF)){
 							 _Key(posKey[i]);
-							 LCD_Arrow(0,widthAll,heightAll, MIDDLE(posKey[i].x,s[k].widthKey,size.w),MIDDLE(posKey[i].y,s[k].heightKey,size.h), SetLineBold2Width(size.w,1), SetTriangHeightCoeff2Height(size.h,0), frameColor,frameColor,bkColor, Left);
+							 LCD_Arrow(0,widthAll,heightAll, MIDDLE(posKey[i].x,s[k].widthKey,size_LF.w),MIDDLE(posKey[i].y,s[k].heightKey,size_LF.h), SetLineBold2Width(size_LF.w,bold_LF), SetTriangHeightCoeff2Height(size_LF.h,coeff_LF), frameColor,frameColor,bkColor, Left);
 
 						 }
 						 else	_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
@@ -2101,17 +2107,22 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				break;
 
 			case KEY_big:
-				INIT(nr,selBlockPress-KEY_Q);
+				nr = selBlockPress-KEY_Q;
 				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);
-				structSize size = { (35*s[k].widthKey)/100, (2*s[k].heightKey)/5 };
-				_KeyShapePressDisp_oneBlock(posKey[nr], LCDSHAPE_Arrow, LCD_Arrow(ToStructAndReturn,s[k].widthKey,s[k].heightKey, MIDDLE(0,s[k].widthKey,size.w),MIDDLE(0,s[k].heightKey,size.h), SetLineBold2Width(size.w,1), SetTriangHeightCoeff2Height(size.h,3), colorTxtPressKey[nr],colorTxtPressKey[nr],bkColor, Up));
+				_KeyShapePressDisp_oneBlock(posKey[nr], LCDSHAPE_Arrow, LCD_Arrow(ToStructAndReturn,s[k].widthKey,s[k].heightKey, MIDDLE(0,s[k].widthKey,size_UP.w),MIDDLE(0,s[k].heightKey,size_UP.h), SetLineBold2Width(size_UP.w,bold_UP), SetTriangHeightCoeff2Height(size_UP.h,coeff_UP), colorTxtPressKey[nr],colorTxtPressKey[nr],bkColor, Up));
 				BKCOPY(s[k].widthKey,c.widthKey);
 				break;
-//KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,KEY_H,KEY_J,KEY_K,KEY_L,KEY_big,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,KEY_N,KEY_M,KEY_back,KEY_alt,KEY_sign,KEY_space,KEY_comma,KEY_dot,KEY_enter,
-			default:
-				if(IS_RANGE(selBlockPress,KEY_Q,KEY_dot)){ INIT(nr,selBlockPress-KEY_Q); BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);   _KeyStrPressDisp_oneBlock(posKey[nr],txtKey[nr],colorTxtPressKey[nr]); 	BKCOPY(s[k].widthKey,c.widthKey); }
+
+			case KEY_enter:
+				nr = selBlockPress-KEY_Q;
+				BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);
+				_KeyShapePressDisp_oneBlock(posKey[nr], LCDSHAPE_Enter, LCD_Enter(ToStructAndReturn,s[k].widthKey,s[k].heightKey, MIDDLE(0,s[k].widthKey,size_EN.w),MIDDLE(0,s[k].heightKey,size_EN.h), SetLineBold2Width(size_EN.w,bold_EN), SetTriangHeightCoeff2Height(size_EN.h,coeff_EN), colorTxtPressKey[nr],colorTxtPressKey[nr],bkColor, size_EN.h));
+				BKCOPY(s[k].widthKey,c.widthKey);
 				break;
-			//case KEY_Q:	 _KeyStrPressDisp_oneBlock(posKey[0], txtKey[0], colorTxtPressKey[0]);	break;
+
+			default:
+				if(IS_RANGE(selBlockPress,KEY_Q,KEY_enter)){ 	INIT(nr,selBlockPress-KEY_Q); BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);   _KeyStrPressDisp_oneBlock(posKey[nr],txtKey[nr],colorTxtPressKey[nr]); 	BKCOPY(s[k].widthKey,c.widthKey); }
+				break;
 		}
 
 		if(startTouchIdx){
@@ -2125,6 +2136,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		#undef W1
 		#undef WS
 		#undef WA
+		#undef _UP
+		#undef _LF
+		#undef _EN
 	}
 
 
@@ -2221,7 +2235,7 @@ void FILE_NAME(setTouch)(void)
 	#define _KEYS_RELEASE_fontCoeff 		if(_WasStatePrev(Touch_coeff_plus, Touch_coeff_minus)) KEYBOARD_TYPE(KEYBOARD_fontCoeff, KEY_All_release)
 	#define _KEYS_RELEASE_fontSliderRGB if(_WasStatePrev(Touch_fontSliderR, Touch_fontSliderB_right)) KEYBOARD_TYPE(KEYBOARD_sliderRGB, KEY_All_release)
 	#define _KEYS_RELEASE_LenOffsWin 	if(_WasStatePrev(Touch_LenWin_plus, Touch_ResetSpaces)) KEYBOARD_TYPE(KEYBOARD_LenOffsWin, KEY_All_release)
-	#define _KEYS_RELEASE_setTxt 	if(_WasStatePrev(Touch_Q, Touch_dot)) KEYBOARD_TYPE(KEYBOARD_setTxt, KEY_All_release)
+	#define _KEYS_RELEASE_setTxt 	if(_WasStatePrev(Touch_Q, Touch_enter)) KEYBOARD_TYPE(KEYBOARD_setTxt, KEY_All_release)
 
 	static uint16_t statePrev=0;
 	uint16_t state, function=0;
@@ -2412,16 +2426,16 @@ void FILE_NAME(setTouch)(void)
 			break;
 
 		default:
-			if(IS_RANGE(state,Touch_Q,Touch_dot)){
+			if(IS_RANGE(state,Touch_Q,Touch_enter)){
 				_KEYS_RELEASE_setTxt;	KEYBOARD_TYPE(KEYBOARD_setTxt,KEY_Q+(state-Touch_Q));  _SaveState();
 				break;
 			}
-			else if(Touch_enter==state){
+			/*else if(Touch_enter==state){
 				LCD_TOUCH_RestoreAllSusspendedTouchs();
 				FILE_NAME(main)(LoadPartScreen,(char**)ppMain);
 				KEYBOARD_TYPE(KEYBOARD_none,0);
 				break;
-			}
+			}*/
 
 			if(_WasState(Touch_fontRp) || _WasState(Touch_fontRm) ||
 				_WasState(Touch_fontGp) || _WasState(Touch_fontGm) ||
@@ -2460,7 +2474,7 @@ void FILE_NAME(setTouch)(void)
 				_WasState(Touch_DispSpaces) 	 || _WasState(Touch_WriteSpaces) 	 || _WasState(Touch_ResetSpaces))
 				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_All_release ); */
 
-			if(_WasStateRange(Touch_Q,Touch_dot))
+			if(_WasStateRange(Touch_Q,Touch_enter))
 				KEYBOARD_TYPE( KEYBOARD_setTxt, KEY_All_release );
 
 #ifdef TOUCH_MAINFONTS_WITHOUT_DESCR
