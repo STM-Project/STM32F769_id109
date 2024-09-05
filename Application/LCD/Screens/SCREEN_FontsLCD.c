@@ -1187,6 +1187,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	void _Str(const char *txt, uint32_t color){
 		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
 	}
+	void _Str_XYoffs(XY_Touch_Struct pos,int offsX,int offsY, const char *txt, uint32_t color){
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x+offsX, pos.y+offsY,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+	}
 	void _StrLeft(const char *txt, XY_Touch_Struct pos, uint32_t color){
 		LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(pos.y,s[k].heightKey));
 		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x+LCD_GetFontHeight(fontID)/2, GET_Y, (char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
@@ -2102,7 +2105,15 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 					else if(STRING_CmpTxt((char*)txtKey[i],_EX)){	_KeyPress(posKey[i]);	_PARAM_ARROW_EX;
 						LCD_Exit(0,widthAll,heightAll, MIDDLE(posKey[i].x,s[k].widthKey,size_EX.w),MIDDLE(posKey[i].y,s[k].heightKey,size_EX.h), size_EX.w, size_EX.h, colorTxtPressKey[i],colorTxtPressKey[i],bkColor);
 					}
-					else	_KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
+					else{
+						if(i<dimKeys[0]){
+							_Key(posKey[i]);
+							char *ptrTxt = Int2Str(i,None,1,Sign_none);
+							_Str_XYoffs(posKey[i], s[k].widthKey-LCD_GetWholeStrPxlWidth(fontID,ptrTxt,0,ConstWidth), 0,ptrTxt,colorTxtKey[i]);
+							_StrDescr_Xmidd_Yoffs(posKey[i], s[k].heightKey-LCD_GetFontHeight(fontID), txtKey[i], colorTxtKey[i]);
+						}
+						else _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
+					}
 				}
 				s[k].widthKey = c.widthKey;
 				break;
