@@ -74,6 +74,7 @@
 #define DO_NOTHING(x)	((x)=(x))
 
 #define PERCENT_SCALE(val,maxVal)	(((val)*100)/(maxVal))
+#define VALPERC(val,perc)		(((perc)*(val))/100)
 
 /* use only in thread 'LCD display' */
 #define pCHAR_PLCD(offs)	((char*)(pLcd+(offs)))

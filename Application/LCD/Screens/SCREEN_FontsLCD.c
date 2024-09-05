@@ -1187,8 +1187,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	void _Str(const char *txt, uint32_t color){
 		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
 	}
-	void _Str_XYoffs(XY_Touch_Struct pos,int offsX,int offsY, const char *txt, uint32_t color){
-		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x+offsX, pos.y+offsY,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+	void _Str_Xmidd_Yoffs(XY_Touch_Struct pos,int offsY, const char *txt, uint32_t color){
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt), pos.y+offsY,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
+	}
+	void _StrPress_Xmidd_Yoffs(XY_Touch_Struct pos,int offsY, const char *txt, uint32_t color){
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt), pos.y+offsY,(char*)txt, fullHight, 0, fillPressColor, color,250, NoConstWidth);
+	}
+	void _StrDescr_XYoffs(XY_Touch_Struct pos,int offsX,int offsY, const char *txt, uint32_t color){
+		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr, pos.x+offsX, pos.y+offsY,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
 	}
 	void _StrLeft(const char *txt, XY_Touch_Struct pos, uint32_t color){
 		LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(pos.y,s[k].heightKey));
@@ -2078,6 +2084,23 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		heightAll = sizeof(dimKeys)*s[k].heightKey + (sizeof(dimKeys)+1)*s[k].interSpace + head;
 		widthFieldTxt = widthAll - 2*s[k].interSpace;
 
+		void _KeyQ2P(int nr, int act){
+			CONDITION(release==act,_Key(posKey[nr]),_KeyPress(posKey[nr]));
+			char *ptrTxt = Int2Str(nr,None,1,Sign_none);
+			int widthDescr = LCD_GetWholeStrPxlWidth(fontID_descr,ptrTxt,0,ConstWidth);
+			int heightTxt = LCD_GetFontHeight(fontID);
+
+			if(press==act){ BKCOPY_VAL(fillColor_c[0],fillColor,fillPressColor); }
+
+
+			_StrDescr_XYoffs(posKey[nr], s[k].widthKey-VALPERC(widthDescr,180), VALPERC(widthDescr,35), ptrTxt, BrightIncr(v.FONT_COLOR_Descr,0x20));
+			_TxtPos(posKey[nr]);
+			CONDITION(release==act, _Str_Xmidd_Yoffs(posKey[nr], s[k].heightKey-VALPERC(heightTxt,115), txtKey[nr], colorTxtKey[nr]),\
+					  	  	  	    _StrPress_Xmidd_Yoffs(posKey[nr], s[k].heightKey-VALPERC(heightTxt,115), txtKey[nr], colorTxtPressKey[nr]));
+
+			if(press==act){	BKCOPY(fillColor,fillColor_c[0]); LCD_Display(0, s[k].x+posKey[nr].x, s[k].y+posKey[nr].y, s[k].widthKey, s[k].heightKey); }
+		}
+
 		int colorFillBk = BrightDecr(bkColor,0x10);
 		switch((int)selBlockPress)
 		{
@@ -2106,11 +2129,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 						LCD_Exit(0,widthAll,heightAll, MIDDLE(posKey[i].x,s[k].widthKey,size_EX.w),MIDDLE(posKey[i].y,s[k].heightKey,size_EX.h), size_EX.w, size_EX.h, colorTxtPressKey[i],colorTxtPressKey[i],bkColor);
 					}
 					else{
-						if(i<dimKeys[0]){
-							_Key(posKey[i]);
-							char *ptrTxt = Int2Str(i,None,1,Sign_none);
-							_Str_XYoffs(posKey[i], s[k].widthKey-LCD_GetWholeStrPxlWidth(fontID,ptrTxt,0,ConstWidth), 0,ptrTxt,colorTxtKey[i]);
-							_StrDescr_Xmidd_Yoffs(posKey[i], s[k].heightKey-LCD_GetFontHeight(fontID), txtKey[i], colorTxtKey[i]);
+						if(i<dimKeys[0]){  _KeyQ2P(i,release);
+//							_Key(posKey[i]);
+//							char *ptrTxt = Int2Str(i,None,1,Sign_none);
+//							int widthDescr = LCD_GetWholeStrPxlWidth(fontID_descr,ptrTxt,0,ConstWidth);
+//							int heightTxt = LCD_GetFontHeight(fontID);
+//							_StrDescr_XYoffs(posKey[i], s[k].widthKey-VALPERC(widthDescr,180), VALPERC(widthDescr,35), ptrTxt, BrightIncr(v.FONT_COLOR_Descr,0x20));
+//							_TxtPos(posKey[i]);
+//							_Str_Xmidd_Yoffs(posKey[i], s[k].heightKey-VALPERC(heightTxt,115), txtKey[i], colorTxtKey[i]);
 						}
 						else _KeyStr(posKey[i],txtKey[i],colorTxtKey[i]);
 					}
@@ -2140,7 +2166,10 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				break;
 
 			default:
-				if(IS_RANGE(selBlockPress,KEY_Q,KEY_enter)){ 	INIT(nr,selBlockPress-KEY_Q); BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);   _KeyStrPressDisp_oneBlock(posKey[nr],txtKey[nr],colorTxtPressKey[nr]); 	BKCOPY(s[k].widthKey,c.widthKey); }
+				if(IS_RANGE(selBlockPress,KEY_Q,KEY_P)){	INIT(nr,selBlockPress-KEY_Q); BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);  _KeyQ2P(nr,press);  BKCOPY(s[k].widthKey,c.widthKey);
+
+				}
+				else if(IS_RANGE(selBlockPress,KEY_A,KEY_enter)){ 	INIT(nr,selBlockPress-KEY_Q); BKCOPY_VAL(c.widthKey,s[k].widthKey,widthKey[nr]);   _KeyStrPressDisp_oneBlock(posKey[nr],txtKey[nr],colorTxtPressKey[nr]); 	BKCOPY(s[k].widthKey,c.widthKey); }
 				break;
 		}
 
