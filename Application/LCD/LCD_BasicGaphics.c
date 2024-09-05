@@ -3086,15 +3086,23 @@ structPosition DrawLine(uint32_t posBuff,uint16_t x0, uint16_t y0, uint16_t len,
 	return pos;
 }
 
-void LCD_KeyBackspace(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+SHAPE_PARAMS LCD_KeyBackspace(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
 {
+	SHAPE_PARAMS params = {.bkSize.x=BkpSizeX, .bkSize.y=BkpSizeY, .pos[0].x=x, .pos[0].y=y, .size[0].w=width, .size[0].h=height, .color[0].frame=FrameColor, .color[0].fill=FillColor, .color[0].bk=BkpColor};
+
+	if(ToStructAndReturn == posBuff)
+		return params;
+
+	width = MASK(width,FFFF);
+	height = MASK(height,FFFF);
+
 	int widthSign=width/2;
 	int heightSign=height/2;
 	int sizeSignX=height/4;
 
 	if((heightSign%2)!=0) heightSign++;
 
-	LCD_Rectangle(posBuff,BkpSizeX,BkpSizeY,x,y,width,height,FrameColor,FillColor,BkpColor);
+	 LCD_Rectangle(posBuff,BkpSizeX,BkpSizeY,x,y,width,height,FrameColor,FillColor,BkpColor);
 
 	_StartDrawLine(posBuff,BkpSizeX,x+(width-widthSign)/2,y+height/2);
 	_DrawRightUp(heightSign/2,heightSign/2, FrameColor,BkpSizeX);
@@ -3118,6 +3126,10 @@ void LCD_KeyBackspace(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint
 	_DrawLeftDown(heightSign/2,heightSign/2, FrameColor,BkpSizeX);
 	_StartDrawLine(posBuff,BkpSizeX,x+(width-sizeSignX)/2+sizeSignX/2+sizeSignX-1,y+(height-sizeSignX)/2);
 	_DrawLeftDown(heightSign/2,heightSign/2, FrameColor,BkpSizeX);
+	return params;
+}
+SHAPE_PARAMS LCDSHAPE_KeyBackspace(uint32_t posBuff, SHAPE_PARAMS param){
+	return LCD_KeyBackspace(posBuff,param.bkSize.x,param.bkSize.y, param.pos[0].x,param.pos[0].y, param.size[0].w,param.size[0].h, param.color[0].frame, param.color[0].fill, param.color[0].bk);
 }
 
 void LCD_SignStar(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
@@ -3503,13 +3515,13 @@ SHAPE_PARAMS LCD_Exit(uint32_t posBuff,uint32_t bkpSizeX,uint32_t bkpSizeY, uint
 	int coeff = width > height ? width/height : height/width;
 	Set_AACoeff_Draw(coeff,frameColor,bkpColor, 0.39);
 
-	//_StartDrawLine(0,bkpSizeX,x,y-1);		  _DrawRightDown_AA(width,height,frameColor,bkpSizeX);
-	_StartDrawLine(0,bkpSizeX,x,y);			  _DrawRightDown_AA(width,height,frameColor,bkpSizeX);
-	//_StartDrawLine(0,bkpSizeX,x,y+1);		  _DrawRightDown_AA(width,height,frameColor,bkpSizeX);
+	_StartDrawLine(0,bkpSizeX, x ,y-1);		  _DrawRightDown_AA(width,  height,  frameColor,bkpSizeX);
+	_StartDrawLine(0,bkpSizeX, x, y);		  _DrawRightDown_AA(width+1,height+1,frameColor,bkpSizeX);
+	_StartDrawLine(0,bkpSizeX, x, y+1);		  _DrawRightDown_AA(width,  height,	 frameColor,bkpSizeX);
 
-	//_StartDrawLine(0,bkpSizeX,x+width,y-1);  _DrawLeftDown_AA(width,height,frameColor,bkpSizeX);
-	_StartDrawLine(0,bkpSizeX,x+width,y);	  _DrawLeftDown_AA(width,height,frameColor,bkpSizeX);
-	//_StartDrawLine(0,bkpSizeX,x+width,y+1);  _DrawLeftDown_AA(width,height,frameColor,bkpSizeX);
+	_StartDrawLine(0,bkpSizeX, x+width, y-1);  _DrawLeftDown_AA(width,  height,  frameColor,bkpSizeX);
+	_StartDrawLine(0,bkpSizeX, x+width, y);	 _DrawLeftDown_AA(width+1,height+1,frameColor,bkpSizeX);
+	_StartDrawLine(0,bkpSizeX, x+width, y+1);  _DrawLeftDown_AA(width,  height,  frameColor,bkpSizeX);
 	return params;
 }
 SHAPE_PARAMS LCDSHAPE_Exit(uint32_t posBuff, SHAPE_PARAMS param){
