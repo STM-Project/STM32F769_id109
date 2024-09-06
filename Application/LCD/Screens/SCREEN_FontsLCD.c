@@ -2071,7 +2071,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		#define WS	4*W1 + 3*s[k].interSpace
 		#define WA	W1 + (W1 + s[k].interSpace)/2
 
-		uint8_t widthKey[]= {W1,W1,W1,W1,W1,W1,W1,W1,W1,W1,\
+		uint16_t widthKey[]= {W1,W1,W1,W1,W1,W1,W1,W1,W1,W1,\
 									W1,W1,W1,W1,W1,W1,W1,W1,W1,\
 									WA,W1,W1,W1,W1,W1,W1,W1,WA,\
 									WA,W1,WS,W1,W1,WA};
