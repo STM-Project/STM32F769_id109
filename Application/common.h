@@ -103,7 +103,7 @@ typedef struct{
 	int y;
 }structPosition;
 
-typedef struct{
+typedef struct{  //to zienic !!!!!!
 	int w;
 	int h;
 }structSize;
@@ -114,7 +114,7 @@ typedef struct{
 	int bk;
 }structColor;
 
-typedef struct{
+typedef struct{  //to zienic !!!!!!
 	int x;
 	int y;
 }structBkSize;
