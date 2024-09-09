@@ -17,6 +17,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "Keyboard.h"
 
 /*----------------- Main Settings ------------------*/
 #define FILE_NAME(extend) SCREEN_Fonts_##extend
@@ -1167,22 +1168,7 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	uint16_t widthAll = 0, widthAll_c = 0;
 	uint16_t heightAll = 0, heightAll_c = 0;
 
-	static struct SETTINGS{
-		figureShape shape;
-		uint8_t bold;
-		uint16_t x;
-		uint16_t y;
-		uint16_t widthKey;
-		uint16_t heightKey;
-		uint16_t widthKey2;
-		uint16_t heightKey2;
-		uint8_t interSpace;
-		uint8_t forTouchIdx;
-		uint8_t startTouchIdx;
-		uint8_t nmbTouch;
-		uint8_t param;
-		uint16_t param2;
-	}s[MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY]={0}, c={0};
+
 
 	void _Str(const char *txt, uint32_t color){
 		LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,250, NoConstWidth);
@@ -1311,26 +1297,6 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		s[k].nmbTouch++;
 	}
 
-	void _deleteAllTouchs(void){
-		for(int j=0; j<MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY; ++j){
-			for(int i=0; i<s[j].nmbTouch; ++i)
-				LCD_TOUCH_DeleteSelectTouch(s[j].startTouchIdx+i);
-		}
-	}
-	void _deleteAllTouchParams(void){
-		for(int j=0; j<MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY; ++j){
-			s[j].forTouchIdx = NoTouch;
-			s[j].nmbTouch = 0;
-		}
-	}
-	void _deleteTouchs(void){
-		for(int i=0; i<s[k].nmbTouch; ++i)
-			LCD_TOUCH_DeleteSelectTouch(s[k].startTouchIdx+i);
-	}
-	void _deleteTouchParams(void){
-		s[k].forTouchIdx = NoTouch;
-		s[k].nmbTouch = 0;
-	}
 	int _startUp(void){
 		if(KEYBOARD_none == type){
 			_deleteAllTouchs();
@@ -1343,8 +1309,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 				_deleteAllTouchParams();
 			}
 			else{
-				_deleteTouchs();
-				_deleteTouchParams();
+				_deleteTouchs(k);
+				_deleteTouchParams(k);
 			}
 
 			s[k].shape = shape;
