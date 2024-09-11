@@ -1979,8 +1979,14 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		case KEYBOARD_fontRGB:
 		case KEYBOARD_bkRGB:
 			//_ServiceRGB();
-			_ServiceRGB__(k, selBlockPress, shape, bold, x, y, widthKey, heightKey, interSpace, forTouchIdx, startTouchIdx, eraseOther,   KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
+			const char *txtKey[]								= {"R+",	  "G+", 	  "B+",		 "R-", 	    "G-",	  "B-"};
+			const COLORS_DEFINITION colorTxtKey[]		= {RED,	  GREEN, 	BLUE,		 RED, 	    GREEN,	 BLUE};
+			const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
+			const uint16_t dimKeys[] = {3,2};
+			_ServiceRGB__(k, selBlockPress, shape, bold, x, y, widthKey, heightKey, interSpace, forTouchIdx, startTouchIdx, eraseOther,   KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr,\
+					txtKey,colorTxtKey,colorTxtPressKey,dimKeys);
 			break;
+
 		case KEYBOARD_fontCoeff:
 			_ServiceCoeff();
 			break;

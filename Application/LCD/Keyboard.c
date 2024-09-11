@@ -279,12 +279,9 @@ void KEYBOARD_SetTouch(int nr, uint16_t startTouchIdx, const uint16_t dim[], XY_
 
 
 void _ServiceRGB__(int k, int selBlockPress, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t eraseOther, \
-						int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr)
+						int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, const char *txtKey[],const COLORS_DEFINITION colorTxtKey[], const COLORS_DEFINITION colorTxtPressKey[], const uint16_t dimKeys[])
 {
-	const char *txtKey[]								= {"R+",	  "G+", 	  "B+",		 "R-", 	    "G-",	  "B-"};
-	const COLORS_DEFINITION colorTxtKey[]		= {RED,	  GREEN, 	BLUE,		 RED, 	    GREEN,	 BLUE};
-	const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
-	const uint16_t dimKeys[] = {3,2};
+
 
 	if(shape!=0){
 		if(KeysAutoSize == widthKey){
