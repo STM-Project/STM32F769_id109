@@ -1158,6 +1158,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	if(_startUp( type, shape, bold, x, y, widthKey, heightKey, interSpace, forTouchIdx, startTouchIdx, eraseOther)) return 1;
 
 	/* ----- User Function Definitions ----- */
+
+
 	void _ServiceRGB(void)
 	{
 		const char *txtKey[]								= {"R+",	  "G+", 	  "B+",		 "R-", 	    "G-",	  "B-"};
@@ -1165,40 +1167,25 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
 		const uint16_t dimKeys[] = {3,2};
 
-		if(shape!=0){
-			if(KeysAutoSize == widthKey){
-				s[k].widthKey =  heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[0],0,NoConstWidth) + heightKey;		/*	space + text + space */
-				s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
-			}
-		}
-		int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
 
-		XY_Touch_Struct posHead={0,0};
-		XY_Touch_Struct posKey[]=
-		  {{1*s[k].interSpace + 0*s[k].widthKey,	1*s[k].interSpace + 0*s[k].heightKey + head},
-			{2*s[k].interSpace + 1*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
-			{3*s[k].interSpace + 2*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
-			\
-			{1*s[k].interSpace + 0*s[k].widthKey,	2*s[k].interSpace + 1*s[k].heightKey + head},
-			{2*s[k].interSpace + 1*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
-			{3*s[k].interSpace + 2*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head}};
+		KEYBOARD_SetDimKey(k, shape, widthKey, heightKey, txtKey[0]);
 
-		int countKey = dimKeys[0]*dimKeys[1]; 		/* = STRUCT_TAB_SIZE(txtKey); */
+		int head = KEYBOARD_GetHead(k);
 
-		widthAll =  dimKeys[0]*s[k].widthKey  + (dimKeys[0]+1)*s[k].interSpace;
-		heightAll = dimKeys[1]*s[k].heightKey + (dimKeys[1]+1)*s[k].interSpace + head;
+
+		XY_Touch_Struct posKey[ dimKeys[0]*dimKeys[1] ];
+
+
+		KEYBOARD_SetPosKey(k,posKey,dimKeys,head);
+
+
+		KEYBOARD_SetDimAll(k,dimKeys,head);
+
 
 		switch((int)selBlockPress)
 		{
 			case KEY_All_release:
-				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
-				_StrDescr(k,posHead, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
-
-				for(int i=0; i<countKey; ++i){
-					i<countKey-1 ? _KeyStr(k,posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(k,posKey[i],txtKey[i],colorTxtKey[i]);
-				/*	_Key(posKey[i]);
-					_TxtPos(k,posKey[i]);		i<countKey-1 ? _Str(txtKey[i],colorTxtKey[i]) : _StrDisp(k,txtKey[i],colorTxtKey[i]); */		/* This is the same as up */
-				}
+				KEYBOARD_KeysAllRelease(k,posKey,txtKey,colorTxtKey,dimKeys,SL(LANG_nazwa_8),v.FONT_COLOR_Descr);
 				break;
 
 			case KEY_Red_plus:	 _KeyStrPressDisp_oneBlock(k,posKey[0], txtKey[0], colorTxtPressKey[0]);	break;	/* Wykorzystac to dla przesuwu dotyku i pozostawienie sladu :) */
@@ -1209,10 +1196,9 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 			case KEY_Blue_minus:  _KeyStrPressDisp_oneBlock(k,posKey[5], txtKey[5], colorTxtPressKey[5]);	break;
 		}
 
-		if(startTouchIdx){
-			for(int i=0; i<countKey; ++i)
-				_SetTouch(k,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
-		}
+
+		KEYBOARD_SetTouch(k,startTouchIdx,dimKeys,posKey);
+
 	}
 
 	void _ServiceCoeff(void)
@@ -1992,7 +1978,8 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, f
 	{
 		case KEYBOARD_fontRGB:
 		case KEYBOARD_bkRGB:
-			_ServiceRGB();
+			//_ServiceRGB();
+			_ServiceRGB__(k, selBlockPress, shape, bold, x, y, widthKey, heightKey, interSpace, forTouchIdx, startTouchIdx, eraseOther,   KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
 			break;
 		case KEYBOARD_fontCoeff:
 			_ServiceCoeff();
