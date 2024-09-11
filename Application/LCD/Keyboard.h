@@ -10,6 +10,7 @@
 
 #include "stm32f7xx_hal.h"
 #include "LCD_fonts_images.h"
+#include "LCD_Common.h"
 #include "common.h"
 #include "touch.h" //to usunac !!!
 
@@ -90,4 +91,14 @@ void _SetTouchSlider(int nr,uint16_t idx, SHAPE_PARAMS posElemSlider);
 void _ElemSliderPressDisp_oneBlock(int nr,uint16_t x, XY_Touch_Struct posSlider, uint32_t spaceTringLine, int selElem, uint32_t lineColor, uint32_t lineSelColor, int *pVal, int valType, int maxSlidVal, VOID_FUNCTION *pfunc);
 void _SetTouch(int nr, uint16_t ID, uint16_t idx, uint8_t paramTouch, XY_Touch_Struct pos);
 
+void KEYBOARD_SetPosKey(int nr, XY_Touch_Struct pos[], const uint16_t dim[], int head);
+int KEYBOARD_GetHead(int nr);
+void KEYBOARD_SetDimKey(int nr, figureShape shape, uint16_t width, uint16_t height, const char *txt);
+void KEYBOARD_SetDimAll(int nr, const uint16_t dim[], int head);
+void KEYBOARD_KeysAllRelease(int nr, XY_Touch_Struct posKeys[], const char *txtKeys[], const COLORS_DEFINITION colorTxtKeys[], const uint16_t dim[], char* headTxt, uint32_t colorDescr);
+void KEYBOARD_SetTouch(int nr, uint16_t startTouchIdx, const uint16_t dim[], XY_Touch_Struct posKeys[]);
+
+
+void _ServiceRGB__(int k, int selBlockPress, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t eraseOther,\
+		int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
 #endif /* LCD_KEYBOARD_H_ */
