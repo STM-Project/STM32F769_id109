@@ -14,6 +14,9 @@
 #include "common.h"
 #include "touch.h" //to usunac !!!
 
+#define INIT_KEYBOARD_PARAM	figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t eraseOther
+#define ARG_KEYBOARD_PARAM	  shape, bold, x, y, widthKey, heightKey, interSpace, forTouchIdx, startTouchIdx, eraseOther
+
 	#define MIDDLE_NR		1
 	#define GET_X(txt)	LCD_Xmiddle(MIDDLE_NR,GetPos,fontID,txt,0,NoConstWidth)
 	#define GET_Y			LCD_Ymiddle(MIDDLE_NR,GetPos,fontID)
@@ -99,6 +102,11 @@ void KEYBOARD_KeysAllRelease(int nr, XY_Touch_Struct posKeys[], const char *txtK
 void KEYBOARD_SetTouch(int nr, uint16_t startTouchIdx, const uint16_t dim[], XY_Touch_Struct posKeys[]);
 
 
-void _ServiceRGB__(int k, int selBlockPress, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t eraseOther,\
-		int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, const char *txtKey[],const COLORS_DEFINITION colorTxtKey[], const COLORS_DEFINITION colorTxtPressKey[], const uint16_t dimKeys[]);
+void _ServiceRGB__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
+void _ServiceCoeff__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
+void _ServiceStyle__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value);
+void _ServiceType__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value);
+void _ServiceSize__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, int value);
+void _ServiceSizeRoll__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int nrRoll, char* txtDescr, uint32_t colorDescr, int value);
+
 #endif /* LCD_KEYBOARD_H_ */
