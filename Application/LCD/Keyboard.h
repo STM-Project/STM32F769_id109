@@ -108,5 +108,6 @@ void _ServiceStyle__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRel
 void _ServiceType__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value);
 void _ServiceSize__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, int value);
 void _ServiceSizeRoll__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int nrRoll, char* txtDescr, uint32_t colorDescr, int value);
+int _ServiceLenOffsWin__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, int touchAction2, int touchTimer, char* txtDescr, char* txtDescr2, char* txtDescr3, char* txtDescr4, uint32_t colorDescr,FUNC_MAIN *pfunc,FUNC_MAIN_INIT);
 
 #endif /* LCD_KEYBOARD_H_ */

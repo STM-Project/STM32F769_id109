@@ -93,6 +93,16 @@
 
 #define STRUCT_SIZE_SHAPE_POS		3
 
+#define FUNC_MAIN_INIT		int argNmb, char **argVal
+#define FUNC_MAIN_ARG		argNmb,argVal
+
+typedef enum{
+	LoadWholeScreen,
+	LoadPartScreen,
+	LoadUserScreen,
+	LoadNoDispScreen
+}LOAD_SCREEN;
+
 typedef struct{
 	char *pData;
 	uint32_t len;
@@ -144,8 +154,8 @@ typedef int FUNC_Keyboard(uint8_t,uint8_t,figureShape,uint8_t,uint16_t,uint16_t,
 #define FUNC1_ARG		a,b,c,d,e,f,g,h,i,j,k,l
 
 typedef void VOID_FUNCTION(void);
-
 typedef SHAPE_PARAMS (*ShapeFunc)(uint32_t,SHAPE_PARAMS);
+typedef void FUNC_MAIN(int, char**);
 
 
 /* --------- End Functions Definitations ----------- */

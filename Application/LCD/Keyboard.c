@@ -631,9 +631,9 @@ void _ServiceSizeRoll__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touch
 		s[k].nmbTouch++;
 	}
 }
-extern uint32_t pLcd[];
-void _ServiceLenOffsWin__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, int touchAction2, int touchTimer, char* txtDescr, char* txtDescr2, uint32_t colorDescr)
-{
+
+int _ServiceLenOffsWin__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, int touchAction2, int touchTimer, char* txtDescr, char* txtDescr2, char* txtDescr3, char* txtDescr4, uint32_t colorDescr,FUNC_MAIN *pfunc,FUNC_MAIN_INIT)
+{extern uint32_t pLcd[];
 	#define _NMB2KEY	8
 	const char *txtKey[]								= {"(.......)", "(...)", "(.......)",	"(.......)", " _ ", " _ ", "|  |", "||", "Info spaces", "Write spaces", "Reset spaces"};
 	const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,	 WHITE,		WHITE,		 WHITE,			  WHITE};
@@ -751,17 +751,17 @@ void _ServiceLenOffsWin__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int tou
 		LCD_TOUCH_SusspendTouch(touchAction2+1);
 
 		if(1 < i_posTxtTab || (1==i_posTxtTab && 0==posTxt_temp)){
-			LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height, xPosU,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown,3), colorDescr, colorDescr, 0/*v.COLOR_BkScreen*/, Up));
+			LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height, xPosU,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown,3), colorDescr, colorDescr, bkColor, Up));
 			LCD_TOUCH_RestoreSusspendedTouch(touchAction2);
 		}
 		if(0 < posTxt_temp){
-			LCD_Arrow(0,width,height, xPosD,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown-1,3), colorDescr, colorDescr, 0/*v.COLOR_BkScreen*/, Down);
+			LCD_Arrow(0,width,height, xPosD,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown-1,3), colorDescr, colorDescr, bkColor, Down);
 			LCD_TOUCH_RestoreSusspendedTouch(touchAction2+1);
 		}
 
 		LCD_Display(0, x,y, width,height);
 	}
-
+	int retVal=0;
 	void _CreateWindows(int nr,int param){
 		switch(nr){
 			case 0:
@@ -772,7 +772,7 @@ void _ServiceLenOffsWin__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int tou
 		}
 	}
 	void _DeleteWindows(void){		/* Use function only after displaying (not during) */
-		/*FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);*/	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h); /*SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,255)*/;
+		pfunc(FUNC_MAIN_ARG);	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h); retVal=1;
 		LCD_TOUCH_DeleteSelectTouch(touchAction2);
 		LCD_TOUCH_DeleteSelectTouch(touchAction2+1);
 		s[k].nmbTouch-=2;
@@ -793,8 +793,8 @@ void _ServiceLenOffsWin__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int tou
 			BKCOPY_VAL(frameColor_c[0],frameColor,WHITE);
 				LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
 			BKCOPY(frameColor,frameColor_c[0]);
-		/*	posHead.y = s[k].interSpace/2; */											_StrDescr_Xmidd_Yoffs(posHead, 0, "a"/*SL(LANG_LenOffsWin1)*/, colorDescr);		/* _StrDescr(k,posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr); */
-			posHead.y += LCD_GetFontHeight(fontID_descr)+s[k].interSpace/3;	_StrDescr_Xmidd_Yoffs(posHead, 0, "a"/*SL(LANG_LenOffsWin2)*/, colorDescr);
+		/*	posHead.y = s[k].interSpace/2; */											_StrDescr_Xmidd_Yoffs(posHead, 0, txtDescr3, colorDescr);		/* _StrDescr(k,posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr); */
+			posHead.y += LCD_GetFontHeight(fontID_descr)+s[k].interSpace/3;	_StrDescr_Xmidd_Yoffs(posHead, 0, txtDescr4, colorDescr);
 
 			BKCOPY_VAL(fillColor_c[0],fillColor,BrightIncr(fillColor,0xE));
 			for(int i=0; i<_NMB2KEY; ++i)
@@ -848,7 +848,7 @@ void _ServiceLenOffsWin__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int tou
 	else if(touchAction+11 == selBlockPress) 	 _CreateWindows(0,Up);
 	else if(touchAction+12 == selBlockPress) _CreateWindows(0,Down);
 
-	else if(touchTimer == selBlockPress){ /*FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);*/  LCD_DisplayPart(0, MIDDLE(0,LCD_X,win2.size.w)/* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h); }
+	else if(touchTimer == selBlockPress){ pfunc(FUNC_MAIN_ARG);  LCD_DisplayPart(0, MIDDLE(0,LCD_X,win2.size.w)/* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h); }
 
 
 
@@ -862,6 +862,7 @@ void _ServiceLenOffsWin__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int tou
 			 _SetTouch(k,ID_TOUCH_POINT, s[k].startTouchIdx + i, press, posKey[i]);
 		BKCOPY(s[k].widthKey,c.widthKey);
 	}
+	return retVal;
 	#undef _NMB2KEY
 }
 

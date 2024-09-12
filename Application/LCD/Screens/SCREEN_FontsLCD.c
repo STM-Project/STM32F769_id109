@@ -460,13 +460,6 @@ typedef enum{
 	FONTS
 }REFRESH_DATA;
 
-typedef enum{	//takie ogolen funkcje umiesci w osobnym ogolnym pliku !!!!
-	LoadWholeScreen,
-	LoadPartScreen,
-	LoadUserScreen,
-	LoadNoDispScreen
-}LOAD_SCREEN;
-
 static char bufTemp[50];
 static int lenTxt_prev;
 static StructTxtPxlLen lenStr;
@@ -1248,237 +1241,238 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 //		}
 //	}
 //
-	void _ServiceLenOffsWin(void)
-	{
-		#define _NMB2KEY	8
-		const char *txtKey[]								= {"(.......)", "(...)", "(.......)",	"(.......)", " _ ", " _ ", "|  |", "||", "Info spaces", "Write spaces", "Reset spaces"};
-		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,	 WHITE,		WHITE,		 WHITE,			  WHITE};
-		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,  DARKRED,	DARKRED, 	 DARKRED,		  DARKRED};
-		const uint16_t dimKeys[] = {4,3};
-
-		int widthKeyCorrect = 0;
-		int heightKeyCorrect = 5;
-		if(shape!=0){
-			if(KeysAutoSize == widthKey){
-				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey -widthKeyCorrect;		/*	space + text + space */
-				s[k].widthKey2 = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey -widthKeyCorrect;
-				s[k].heightKey = heightKey +heightKeyCorrect + LCD_GetFontHeight(fontID) + heightKey +heightKeyCorrect;
-
-				int diff;
-				if		 (0 < (diff = dimKeys[0]*(s[k].widthKey+s[k].interSpace) - dimKeys[1]*(s[k].widthKey2+s[k].interSpace)))		s[k].widthKey2 += diff 		 / dimKeys[1];
-				else if( 0 > diff)																																s[k].widthKey  += ABS(diff) / dimKeys[0];
-		}}
-
-		int countKey = dimKeys[0]*dimKeys[1] - 1;
-		int head = s[k].interSpace + 2*LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
-		int edgeSpace = s[k].interSpace + s[k].interSpace/2;
-
-		int widthShape1 =  s[k].widthKey - s[k].widthKey/4;
-		int heightShape1 = LCD_GetFontHeight(fontID) + LCD_GetFontHeight(fontID)/3;  /* s[k].heightKey - s[k].heightKey/3; */
-
-		XY_Touch_Struct posHead={0, s[k].interSpace};
-		XY_Touch_Struct posKey[]=
-		  {{edgeSpace		 					 + 0*s[k].widthKey,	1*s[k].interSpace + 0*s[k].heightKey + head},
-			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
-			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
-			{edgeSpace + 3*s[k].interSpace + 3*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
-			\
-			{edgeSpace		 					 + 0*s[k].widthKey,	2*s[k].interSpace + 1*s[k].heightKey + head},
-			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
-			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
-			{edgeSpace + 3*s[k].interSpace + 3*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
-			\
-			{edgeSpace		 					 + 0*s[k].widthKey2,	3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3},
-			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3},
-			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3}};
-
-		widthAll 	=   dimKeys[0]	  *s[k].widthKey   + (dimKeys[0]+1-2)*s[k].interSpace + 2*edgeSpace;
-		widthAll_c 	=  (dimKeys[0]-1)*s[k].widthKey2  + (dimKeys[0]+0-2)*s[k].interSpace + 2*edgeSpace;
-		if(widthAll_c > widthAll)	widthAll = widthAll_c;
-		heightAll = head + dimKeys[1]*s[k].heightKey + (dimKeys[1]+1-1)*s[k].interSpace + s[k].interSpace-s[k].interSpace/3 + edgeSpace;
-
-		void 	_SetFlagWin	 (void){	SET_bit(s[k].param,7); }
-		int 	_IsFlagWin	 (void){ return CHECK_bit(s[k].param,7); }
-		void 	_RstFlagWin	 (void){	RST_bit(s[k].param,7); }
-
-		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y 				 }, .size={200,250} };
-		POS_SIZE win2 ={ .pos={ 15, 					  s[k].y+heightAll+15 }, .size={600, 60} };
-
-		LCD_DisplayRemeberedSpacesBetweenFonts(1,pCHAR_PLCD(0),(int*)(&win.size.w));
-		win.size.w *= LCD_GetWholeStrPxlWidth(fontID_descr,(char*)"r",0,NoConstWidth);
-
-		void _WinInfo(char* txt){
-			BKCOPY_VAL(fillColor_c[0],fillColor,BrightIncr(fillColor,0x1A));
-			LCD_ShapeWindow( s[k].shape, 0, win2.size.w, win2.size.h, 0,0, win2.size.w, win2.size.h, SetBold2Color(frameColor,s[k].bold), fillColor,bkColor );
-			LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.w),NULL,0,NoConstWidth);
-			LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.h));
-			LCD_StrDependOnColorsWindowIndirect(0,MIDDLE(0,LCD_X,win2.size.w) /* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, DARKRED,250, NoConstWidth);
-			BKCOPY(fillColor,fillColor_c[0]);
-			vTimerService(1,start_time,2000);
-		}
-		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height, int param){
-			int spaceFromFrame = 10;
-			int heightUpDown = 17;
-			int widthtUpDown = 26;
-
-			int xPosU = MIDDLE(0,		width/2,widthtUpDown);
-			int xPosD = MIDDLE(width/2,width/2,widthtUpDown);
-			int yPosUD = height-heightUpDown-spaceFromFrame;
-
-			static uint16_t posTxt_temp=0;
-			static uint16_t posTxtTab[50]={0};
-			static uint16_t i_posTxtTab=0;
-
-			void 		_SetCurrPosTxt(uint16_t pos){ s[k].param2=pos; }
-			uint16_t _GetCurrPosTxt(void)			 { return s[k].param2; }
-
-			if(NoDirect==param){
-				touchTemp[0].x= win.pos.x + xPosU;
-				touchTemp[1].x= touchTemp[0].x + widthtUpDown;
-				touchTemp[0].y= win.pos.y + yPosUD;
-				touchTemp[1].y= touchTemp[0].y + heightUpDown;
-				LCD_TOUCH_Set(ID_TOUCH_POINT,Touch_SpacesInfoUp,press);
-				s[k].nmbTouch++;
-
-				touchTemp[0].x= win.pos.x + xPosD;
-				touchTemp[1].x= touchTemp[0].x + widthtUpDown;
-				touchTemp[0].y= win.pos.y + yPosUD;
-				touchTemp[1].y= touchTemp[0].y + heightUpDown;
-				LCD_TOUCH_Set(ID_TOUCH_POINT,Touch_SpacesInfoDown,press);
-				s[k].nmbTouch++;
-
-				_SetCurrPosTxt(0);
-				i_posTxtTab=0;
-			}
-			else if(Up==param){
-				CONDITION(1<i_posTxtTab && 0<posTxt_temp, i_posTxtTab-=2, i_posTxtTab--);
-				_SetCurrPosTxt(posTxtTab[i_posTxtTab]);
-			}
-
-			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
-			posTxt_temp = LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,pCHAR_PLCD(width*height),NULL)+_GetCurrPosTxt(),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth).inChar;
-			if(posTxt_temp){
-				_SetCurrPosTxt(_GetCurrPosTxt()+posTxt_temp);
-				if(i_posTxtTab<sizeof(posTxtTab)-2)
-					posTxtTab[++i_posTxtTab]= _GetCurrPosTxt();
-			}
-
-			LCD_TOUCH_SusspendTouch(Touch_SpacesInfoUp);
-			LCD_TOUCH_SusspendTouch(Touch_SpacesInfoDown);
-
-			if(1 < i_posTxtTab || (1==i_posTxtTab && 0==posTxt_temp)){
-				LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height, xPosU,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown,3), v.FONT_COLOR_Descr, v.FONT_COLOR_Descr, v.COLOR_BkScreen, Up));
-				LCD_TOUCH_RestoreSusspendedTouch(Touch_SpacesInfoUp);
-			}
-			if(0 < posTxt_temp){
-				LCD_Arrow(0,width,height, xPosD,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown-1,3), v.FONT_COLOR_Descr, v.FONT_COLOR_Descr, v.COLOR_BkScreen, Down);
-				LCD_TOUCH_RestoreSusspendedTouch(Touch_SpacesInfoDown);
-			}
-
-			LCD_Display(0, x,y, width,height);
-		}
-
-		void _CreateWindows(int nr,int param){
-			switch(nr){
-				case 0:
-					_WindowSpacesInfo(win.pos.x ,win.pos.y, win.size.w, win.size.h, param); _SetFlagWin();
-					break;
-				case 1:
-					break;
-			}
-		}
-		void _DeleteWindows(void){		/* Use function only after displaying (not during) */
-			FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h); SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,255);
-			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoUp);
-			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoDown);
-			s[k].nmbTouch-=2;
-		}
-		void _OverArrowTxt(int nr, DIRECTIONS direct){
-			LCD_ArrowTxt(0,widthAll,heightAll, MIDDLE(posKey[nr].x, s[k].widthKey, widthShape1), MIDDLE(posKey[nr].y, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, direct,fontID,(char*)txtKey[nr],colorTxtKey[nr]);
-		}
-		void _OverArrowTxt_oneBlockDisp(int nr, DIRECTIONS direct){
-			LCD_ShapeWindow( s[k].shape, 0, s[k].widthKey,s[k].heightKey, 0,0, s[k].widthKey,s[k].heightKey, SetBold2Color(framePressColor,s[k].bold),fillPressColor,bkColor);
-			LCD_ArrowTxt(0,s[k].widthKey,s[k].heightKey, MIDDLE(0, s[k].widthKey, widthShape1), MIDDLE(0, s[k].heightKey, heightShape1), widthShape1,heightShape1, colorTxtPressKey[nr],colorTxtPressKey[nr],fillPressColor, direct,fontID,(char*)txtKey[nr],colorTxtPressKey[nr]);
-			LCD_Display(0, s[k].x+posKey[nr].x, s[k].y+posKey[nr].y, s[k].widthKey, s[k].heightKey);
-			if(_IsFlagWin())	_DeleteWindows();
-		}
-
-		switch((int)selBlockPress)
-		{
-			case KEY_All_release:
-				BKCOPY_VAL(frameColor_c[0],frameColor,WHITE);
-					LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
-				BKCOPY(frameColor,frameColor_c[0]);
-			/*	posHead.y = s[k].interSpace/2; */											_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin1), v.FONT_COLOR_Descr);		/* _StrDescr(k,posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr); */
-				posHead.y += LCD_GetFontHeight(fontID_descr)+s[k].interSpace/3;	_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin2), v.FONT_COLOR_Descr);
-
-				BKCOPY_VAL(fillColor_c[0],fillColor,BrightIncr(fillColor,0xE));
-				for(int i=0; i<_NMB2KEY; ++i)
-				{
-					_Key(k,posKey[i]);
-					switch(i){
-						case 0: 	_OverArrowTxt(i,outside); 	  break;
-						case 1: 	_OverArrowTxt(i,inside); 	  break;
-						case 2: 	_OverArrowTxt(i,LeftLeft);   break;
-						case 3: 	_OverArrowTxt(i,RightRight); break;
-						case 4: 	_OverArrowTxt(i,LeftLeft);   break;
-						case 5: 	_OverArrowTxt(i,RightRight); break;
-						case 6: 	_OverArrowTxt(i,outside);	  break;
-						case 7: 	_OverArrowTxt(i,inside); 	  break;
-					}
-				}
-				BKCOPY(fillColor,fillColor_c[0]);
-
-				BKCOPY_VAL(fillColor_c[0],fillColor,BrightIncr(fillColor,0x6));
-				BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);
-				for(int i=_NMB2KEY; i<countKey; ++i)
-				{
-					if(i<countKey-1){
-						if(_IsFlagWin() && _NMB2KEY==i){		/* find key to hold press */
-							BKCOPY_VAL(fillColor_c[1],fillColor,fillPressColor);
-							BKCOPY_VAL(frameColor_c[0],frameColor,framePressColor);
-							 _KeyStr(k,posKey[i],txtKey[i],colorTxtPressKey[i]);
-							BKCOPY(fillColor,fillColor_c[1]);
-							BKCOPY(frameColor,frameColor_c[0]);
-						}
-						else _KeyStr(k,posKey[i],txtKey[i],colorTxtKey[i]);
-					}
-					else _KeyStrDisp(k,posKey[i],txtKey[i],colorTxtKey[i]);
-				}
-				BKCOPY(s[k].widthKey,c.widthKey);
-				BKCOPY(fillColor,fillColor_c[0]);
-				break;
-
-			case KEY_LenWin_plus: 		_OverArrowTxt_oneBlockDisp(0,outside);	 break;
-			case KEY_LenWin_minus: 		_OverArrowTxt_oneBlockDisp(1,inside);	 break;
-			case KEY_OffsWin_plus:  	_OverArrowTxt_oneBlockDisp(2,LeftLeft);	 break;
-			case KEY_OffsWin_minus: 	_OverArrowTxt_oneBlockDisp(3,RightRight);	 break;
-			case KEY_PosInWin_plus:    _OverArrowTxt_oneBlockDisp(4,LeftLeft);	 break;
-			case KEY_PosInWin_minus: 	_OverArrowTxt_oneBlockDisp(5,RightRight);	 break;
-			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);	 break;
-			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);	 break;
-
-			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(k,posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),_CreateWindows(0,NoDirect));  break;
-			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(k,posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);	 _WinInfo(SL(LANG_WinInfo));	 break;
-			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(k,posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);  _WinInfo(SL(LANG_WinInfo2));  break;
-
-			case KEY_InfoSpacesUp: 	 _CreateWindows(0,Up);    break;
-			case KEY_InfoSpacesDown: _CreateWindows(0,Down);  break;
-
-			case KEY_Timer: FILE_NAME(main)(LoadNoDispScreen,(char**)ppMain);  LCD_DisplayPart(0, MIDDLE(0,LCD_X,win2.size.w)/* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h);  break;
-		}
-
-		if(startTouchIdx){
-			for(int i=0; i<_NMB2KEY; ++i)
-				_SetTouch(k,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
-
-			BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);
-			 for(int i=_NMB2KEY; i<countKey; ++i)
-				 _SetTouch(k,ID_TOUCH_POINT, s[k].startTouchIdx + i, press, posKey[i]);
-			BKCOPY(s[k].widthKey,c.widthKey);
-		}
-		#undef _NMB2KEY
-	}
+//	int _ServiceLenOffsWin(FUNC_MAIN *pfunc,FUNC_MAIN_INIT)
+//	{
+//		#define _NMB2KEY	8
+//		const char *txtKey[]								= {"(.......)", "(...)", "(.......)",	"(.......)", " _ ", " _ ", "|  |", "||", "Info spaces", "Write spaces", "Reset spaces"};
+//		const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,	 WHITE,		WHITE,		 WHITE,			  WHITE};
+//		const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,DARKRED,  DARKRED,	DARKRED, 	 DARKRED,		  DARKRED};
+//		const uint16_t dimKeys[] = {4,3};
+//
+//		int widthKeyCorrect = 0;
+//		int heightKeyCorrect = 5;
+//		if(shape!=0){
+//			if(KeysAutoSize == widthKey){
+//				s[k].widthKey  = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[ 			 STRING_GetTheLongestTxt(_NMB2KEY-1,(char**)txtKey) 				],0,NoConstWidth) + heightKey -widthKeyCorrect;		/*	space + text + space */
+//				s[k].widthKey2 = heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[_NMB2KEY + STRING_GetTheLongestTxt(2,			(char**)(txtKey+_NMB2KEY)) ],0,NoConstWidth) + heightKey -widthKeyCorrect;
+//				s[k].heightKey = heightKey +heightKeyCorrect + LCD_GetFontHeight(fontID) + heightKey +heightKeyCorrect;
+//
+//				int diff;
+//				if		 (0 < (diff = dimKeys[0]*(s[k].widthKey+s[k].interSpace) - dimKeys[1]*(s[k].widthKey2+s[k].interSpace)))		s[k].widthKey2 += diff 		 / dimKeys[1];
+//				else if( 0 > diff)																																s[k].widthKey  += ABS(diff) / dimKeys[0];
+//		}}
+//
+//		int countKey = dimKeys[0]*dimKeys[1] - 1;
+//		int head = s[k].interSpace + 2*LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
+//		int edgeSpace = s[k].interSpace + s[k].interSpace/2;
+//
+//		int widthShape1 =  s[k].widthKey - s[k].widthKey/4;
+//		int heightShape1 = LCD_GetFontHeight(fontID) + LCD_GetFontHeight(fontID)/3;  /* s[k].heightKey - s[k].heightKey/3; */
+//
+//		XY_Touch_Struct posHead={0, s[k].interSpace};
+//		XY_Touch_Struct posKey[]=
+//		  {{edgeSpace		 					 + 0*s[k].widthKey,	1*s[k].interSpace + 0*s[k].heightKey + head},
+//			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
+//			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
+//			{edgeSpace + 3*s[k].interSpace + 3*s[k].widthKey, 	1*s[k].interSpace + 0*s[k].heightKey + head},
+//			\
+//			{edgeSpace		 					 + 0*s[k].widthKey,	2*s[k].interSpace + 1*s[k].heightKey + head},
+//			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
+//			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
+//			{edgeSpace + 3*s[k].interSpace + 3*s[k].widthKey, 	2*s[k].interSpace + 1*s[k].heightKey + head},
+//			\
+//			{edgeSpace		 					 + 0*s[k].widthKey2,	3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3},
+//			{edgeSpace + 1*s[k].interSpace + 1*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3},
+//			{edgeSpace + 2*s[k].interSpace + 2*s[k].widthKey2, 3*s[k].interSpace + 2*s[k].heightKey + head + s[k].interSpace-s[k].interSpace/3}};
+//
+//		widthAll 	=   dimKeys[0]	  *s[k].widthKey   + (dimKeys[0]+1-2)*s[k].interSpace + 2*edgeSpace;
+//		widthAll_c 	=  (dimKeys[0]-1)*s[k].widthKey2  + (dimKeys[0]+0-2)*s[k].interSpace + 2*edgeSpace;
+//		if(widthAll_c > widthAll)	widthAll = widthAll_c;
+//		heightAll = head + dimKeys[1]*s[k].heightKey + (dimKeys[1]+1-1)*s[k].interSpace + s[k].interSpace-s[k].interSpace/3 + edgeSpace;
+//
+//		void 	_SetFlagWin	 (void){	SET_bit(s[k].param,7); }
+//		int 	_IsFlagWin	 (void){ return CHECK_bit(s[k].param,7); }
+//		void 	_RstFlagWin	 (void){	RST_bit(s[k].param,7); }
+//
+//		POS_SIZE win = { .pos={ s[k].x+widthAll+15, s[k].y 				 }, .size={200,250} };
+//		POS_SIZE win2 ={ .pos={ 15, 					  s[k].y+heightAll+15 }, .size={600, 60} };
+//
+//		LCD_DisplayRemeberedSpacesBetweenFonts(1,pCHAR_PLCD(0),(int*)(&win.size.w));
+//		win.size.w *= LCD_GetWholeStrPxlWidth(fontID_descr,(char*)"r",0,NoConstWidth);
+//
+//		void _WinInfo(char* txt){
+//			BKCOPY_VAL(fillColor_c[0],fillColor,BrightIncr(fillColor,0x1A));
+//			LCD_ShapeWindow( s[k].shape, 0, win2.size.w, win2.size.h, 0,0, win2.size.w, win2.size.h, SetBold2Color(frameColor,s[k].bold), fillColor,bkColor );
+//			LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.w),NULL,0,NoConstWidth);
+//			LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.h));
+//			LCD_StrDependOnColorsWindowIndirect(0,MIDDLE(0,LCD_X,win2.size.w) /* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, DARKRED,250, NoConstWidth);
+//			BKCOPY(fillColor,fillColor_c[0]);
+//			vTimerService(1,start_time,2000);
+//		}
+//		void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height, int param){
+//			int spaceFromFrame = 10;
+//			int heightUpDown = 17;
+//			int widthtUpDown = 26;
+//
+//			int xPosU = MIDDLE(0,		width/2,widthtUpDown);
+//			int xPosD = MIDDLE(width/2,width/2,widthtUpDown);
+//			int yPosUD = height-heightUpDown-spaceFromFrame;
+//
+//			static uint16_t posTxt_temp=0;
+//			static uint16_t posTxtTab[50]={0};
+//			static uint16_t i_posTxtTab=0;
+//
+//			void 		_SetCurrPosTxt(uint16_t pos){ s[k].param2=pos; }
+//			uint16_t _GetCurrPosTxt(void)			 { return s[k].param2; }
+//
+//			if(NoDirect==param){
+//				touchTemp[0].x= win.pos.x + xPosU;
+//				touchTemp[1].x= touchTemp[0].x + widthtUpDown;
+//				touchTemp[0].y= win.pos.y + yPosUD;
+//				touchTemp[1].y= touchTemp[0].y + heightUpDown;
+//				LCD_TOUCH_Set(ID_TOUCH_POINT,Touch_SpacesInfoUp,press);
+//				s[k].nmbTouch++;
+//
+//				touchTemp[0].x= win.pos.x + xPosD;
+//				touchTemp[1].x= touchTemp[0].x + widthtUpDown;
+//				touchTemp[0].y= win.pos.y + yPosUD;
+//				touchTemp[1].y= touchTemp[0].y + heightUpDown;
+//				LCD_TOUCH_Set(ID_TOUCH_POINT,Touch_SpacesInfoDown,press);
+//				s[k].nmbTouch++;
+//
+//				_SetCurrPosTxt(0);
+//				i_posTxtTab=0;
+//			}
+//			else if(Up==param){
+//				CONDITION(1<i_posTxtTab && 0<posTxt_temp, i_posTxtTab-=2, i_posTxtTab--);
+//				_SetCurrPosTxt(posTxtTab[i_posTxtTab]);
+//			}
+//
+//			LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
+//			posTxt_temp = LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,pCHAR_PLCD(width*height),NULL)+_GetCurrPosTxt(),fullHight,0,fillColor,v.FONT_COLOR_Descr,250,NoConstWidth).inChar;
+//			if(posTxt_temp){
+//				_SetCurrPosTxt(_GetCurrPosTxt()+posTxt_temp);
+//				if(i_posTxtTab<sizeof(posTxtTab)-2)
+//					posTxtTab[++i_posTxtTab]= _GetCurrPosTxt();
+//			}
+//
+//			LCD_TOUCH_SusspendTouch(Touch_SpacesInfoUp);
+//			LCD_TOUCH_SusspendTouch(Touch_SpacesInfoDown);
+//
+//			if(1 < i_posTxtTab || (1==i_posTxtTab && 0==posTxt_temp)){
+//				LCDSHAPE_Window(LCDSHAPE_Arrow,0,LCD_Arrow(ToStructAndReturn,width,height, xPosU,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown,3), v.FONT_COLOR_Descr, v.FONT_COLOR_Descr, v.COLOR_BkScreen, Up));
+//				LCD_TOUCH_RestoreSusspendedTouch(Touch_SpacesInfoUp);
+//			}
+//			if(0 < posTxt_temp){
+//				LCD_Arrow(0,width,height, xPosD,yPosUD, SetLineBold2Width(widthtUpDown,7), SetTriangHeightCoeff2Height(heightUpDown-1,3), v.FONT_COLOR_Descr, v.FONT_COLOR_Descr, v.COLOR_BkScreen, Down);
+//				LCD_TOUCH_RestoreSusspendedTouch(Touch_SpacesInfoDown);
+//			}
+//
+//			LCD_Display(0, x,y, width,height);
+//		}
+//		int retVal=0;
+//		void _CreateWindows(int nr,int param){
+//			switch(nr){
+//				case 0:
+//					_WindowSpacesInfo(win.pos.x ,win.pos.y, win.size.w, win.size.h, param); _SetFlagWin();
+//					break;
+//				case 1:
+//					break;
+//			}
+//		}
+//		void _DeleteWindows(void){		/* Use function only after displaying (not during) */
+//			pfunc(FUNC_MAIN_ARG);	_RstFlagWin();  LCD_DisplayPart(0,win.pos.x ,win.pos.y, win.size.w, win.size.h); retVal=1;
+//			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoUp);
+//			LCD_TOUCH_DeleteSelectTouch(Touch_SpacesInfoDown);
+//			s[k].nmbTouch-=2;
+//		}
+//		void _OverArrowTxt(int nr, DIRECTIONS direct){
+//			LCD_ArrowTxt(0,widthAll,heightAll, MIDDLE(posKey[nr].x, s[k].widthKey, widthShape1), MIDDLE(posKey[nr].y, s[k].heightKey, heightShape1), widthShape1,heightShape1, frameColor,frameColor,fillColor, direct,fontID,(char*)txtKey[nr],colorTxtKey[nr]);
+//		}
+//		void _OverArrowTxt_oneBlockDisp(int nr, DIRECTIONS direct){
+//			LCD_ShapeWindow( s[k].shape, 0, s[k].widthKey,s[k].heightKey, 0,0, s[k].widthKey,s[k].heightKey, SetBold2Color(framePressColor,s[k].bold),fillPressColor,bkColor);
+//			LCD_ArrowTxt(0,s[k].widthKey,s[k].heightKey, MIDDLE(0, s[k].widthKey, widthShape1), MIDDLE(0, s[k].heightKey, heightShape1), widthShape1,heightShape1, colorTxtPressKey[nr],colorTxtPressKey[nr],fillPressColor, direct,fontID,(char*)txtKey[nr],colorTxtPressKey[nr]);
+//			LCD_Display(0, s[k].x+posKey[nr].x, s[k].y+posKey[nr].y, s[k].widthKey, s[k].heightKey);
+//			if(_IsFlagWin())	_DeleteWindows();
+//		}
+//
+//		switch((int)selBlockPress)
+//		{
+//			case KEY_All_release:
+//				BKCOPY_VAL(frameColor_c[0],frameColor,WHITE);
+//					LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );		/* s[k].shape(0,widthAll,heightAll, 0,0, widthAll,heightAll, SetColorBoldFrame(frameColor,s[k].bold), bkColor,bkColor); */
+//				BKCOPY(frameColor,frameColor_c[0]);
+//			/*	posHead.y = s[k].interSpace/2; */											_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin1), v.FONT_COLOR_Descr);		/* _StrDescr(k,posHead, SL(LANG_LenOffsWin), v.FONT_COLOR_Descr); */
+//				posHead.y += LCD_GetFontHeight(fontID_descr)+s[k].interSpace/3;	_StrDescr_Xmidd_Yoffs(posHead, 0, SL(LANG_LenOffsWin2), v.FONT_COLOR_Descr);
+//
+//				BKCOPY_VAL(fillColor_c[0],fillColor,BrightIncr(fillColor,0xE));
+//				for(int i=0; i<_NMB2KEY; ++i)
+//				{
+//					_Key(k,posKey[i]);
+//					switch(i){
+//						case 0: 	_OverArrowTxt(i,outside); 	  break;
+//						case 1: 	_OverArrowTxt(i,inside); 	  break;
+//						case 2: 	_OverArrowTxt(i,LeftLeft);   break;
+//						case 3: 	_OverArrowTxt(i,RightRight); break;
+//						case 4: 	_OverArrowTxt(i,LeftLeft);   break;
+//						case 5: 	_OverArrowTxt(i,RightRight); break;
+//						case 6: 	_OverArrowTxt(i,outside);	  break;
+//						case 7: 	_OverArrowTxt(i,inside); 	  break;
+//					}
+//				}
+//				BKCOPY(fillColor,fillColor_c[0]);
+//
+//				BKCOPY_VAL(fillColor_c[0],fillColor,BrightIncr(fillColor,0x6));
+//				BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);
+//				for(int i=_NMB2KEY; i<countKey; ++i)
+//				{
+//					if(i<countKey-1){
+//						if(_IsFlagWin() && _NMB2KEY==i){		/* find key to hold press */
+//							BKCOPY_VAL(fillColor_c[1],fillColor,fillPressColor);
+//							BKCOPY_VAL(frameColor_c[0],frameColor,framePressColor);
+//							 _KeyStr(k,posKey[i],txtKey[i],colorTxtPressKey[i]);
+//							BKCOPY(fillColor,fillColor_c[1]);
+//							BKCOPY(frameColor,frameColor_c[0]);
+//						}
+//						else _KeyStr(k,posKey[i],txtKey[i],colorTxtKey[i]);
+//					}
+//					else _KeyStrDisp(k,posKey[i],txtKey[i],colorTxtKey[i]);
+//				}
+//				BKCOPY(s[k].widthKey,c.widthKey);
+//				BKCOPY(fillColor,fillColor_c[0]);
+//				break;
+//
+//			case KEY_LenWin_plus: 		_OverArrowTxt_oneBlockDisp(0,outside);	 break;
+//			case KEY_LenWin_minus: 		_OverArrowTxt_oneBlockDisp(1,inside);	 break;
+//			case KEY_OffsWin_plus:  	_OverArrowTxt_oneBlockDisp(2,LeftLeft);	 break;
+//			case KEY_OffsWin_minus: 	_OverArrowTxt_oneBlockDisp(3,RightRight);	 break;
+//			case KEY_PosInWin_plus:    _OverArrowTxt_oneBlockDisp(4,LeftLeft);	 break;
+//			case KEY_PosInWin_minus: 	_OverArrowTxt_oneBlockDisp(5,RightRight);	 break;
+//			case KEY_SpaceFonts_plus:  _OverArrowTxt_oneBlockDisp(6,outside);	 break;
+//			case KEY_SpaceFonts_minus: _OverArrowTxt_oneBlockDisp(7,inside);	 break;
+//
+//			case KEY_DispSpaces:	 BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(k,posKey[8],txtKey[8],colorTxtPressKey[8]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),_CreateWindows(0,NoDirect));  break;
+//			case KEY_WriteSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(k,posKey[9],txtKey[9],colorTxtPressKey[9]);		BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);	 _WinInfo(SL(LANG_WinInfo));	 break;
+//			case KEY_ResetSpaces: BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);  _KeyStrPressDisp_oneBlock(k,posKey[10],txtKey[10],colorTxtPressKey[10]);	BKCOPY(s[k].widthKey,c.widthKey); CONDITION(_IsFlagWin(),_DeleteWindows(),NULL);  _WinInfo(SL(LANG_WinInfo2));  break;
+//
+//			case KEY_InfoSpacesUp: 	 _CreateWindows(0,Up);    break;
+//			case KEY_InfoSpacesDown: _CreateWindows(0,Down);  break;
+//
+//			case KEY_Timer: pfunc(FUNC_MAIN_ARG);  LCD_DisplayPart(0, MIDDLE(0,LCD_X,win2.size.w)/* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h);  break;
+//		}
+//
+//		if(startTouchIdx){
+//			for(int i=0; i<_NMB2KEY; ++i)
+//				_SetTouch(k,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
+//
+//			BKCOPY_VAL(c.widthKey,s[k].widthKey,s[k].widthKey2);
+//			 for(int i=_NMB2KEY; i<countKey; ++i)
+//				 _SetTouch(k,ID_TOUCH_POINT, s[k].startTouchIdx + i, press, posKey[i]);
+//			BKCOPY(s[k].widthKey,c.widthKey);
+//		}
+//		return retVal;
+//		#undef _NMB2KEY
+//	}
 
 //	void _ServiceStyle(void)
 //	{
@@ -1999,8 +1993,10 @@ int KeyboardTypeDisplay(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			_ServiceSizeRoll__(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, ROLL_1, SL(LANG_CoeffKeyName), v.FONT_COLOR_Descr, Test.size);
 			break;
 		case KEYBOARD_LenOffsWin:
-			//_ServiceLenOffsWin__(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_LenWin_plus,Touch_SpacesInfoUp, KEY_Timer, SL(LANG_WinInfo), SL(LANG_WinInfo2), v.FONT_COLOR_Descr);
-			_ServiceLenOffsWin();
+			if(_ServiceLenOffsWin__(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_LenWin_plus,Touch_SpacesInfoUp, KEY_Timer, SL(LANG_WinInfo), SL(LANG_WinInfo2),SL(LANG_LenOffsWin1),SL(LANG_LenOffsWin2), v.FONT_COLOR_Descr,FILE_NAME(main), LoadNoDispScreen, (char**)ppMain)){
+				SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,255);
+			}
+			//if(_ServiceLenOffsWin(FILE_NAME(main), LoadNoDispScreen, (char**)ppMain)){		SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,255);	}
 			break;
 		case KEYBOARD_sliderRGB:
 			_ServiceSliderRGB();
