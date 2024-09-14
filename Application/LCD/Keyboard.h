@@ -20,9 +20,15 @@
 #define INIT_KEYBOARD_PARAM	figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t eraseOther
 #define ARG_KEYBOARD_PARAM	  shape, bold, x, y, widthKey, heightKey, interSpace, forTouchIdx, startTouchIdx, eraseOther
 
-	#define MIDDLE_NR		1
-	#define GET_X(txt)	LCD_Xmiddle(MIDDLE_NR,GetPos,fontID,txt,0,NoConstWidth)
-	#define GET_Y			LCD_Ymiddle(MIDDLE_NR,GetPos,fontID)
+#define MIDDLE_NR		1
+#define GET_X(txt)	LCD_Xmiddle(MIDDLE_NR,GetPos,fontID,txt,0,NoConstWidth)
+#define GET_Y			LCD_Ymiddle(MIDDLE_NR,GetPos,fontID)
+
+typedef enum{
+	StringTxt,
+	ColorTxt,
+	ColorPressTxt,
+}TXT_PARAM_KEY;
 
 typedef enum{
 	KeysAutoSize,		/* Keys auto size to fontPress size*/
@@ -30,12 +36,12 @@ typedef enum{
 	KeysDel
 }KEYBOARD_ANOTHER_PARAM;
 
+void KEYBOARD_KeyParamSet(TXT_PARAM_KEY param, uint16_t dimX, uint16_t dimY, ...);
 void KEYBOARD_SetGeneral(int vFontID,int vFontID_descr,int vFrameColor,int vFillColor,int vFramePressColor,int vFillPressColor,int vBkColor);
 int KEYBOARD_StartUp(int type, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t eraseOther);
 
-void KEYBOARD_Buttons(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, char** txt, uint16_t *dim, COLORS_DEFINITION* colorTxt, COLORS_DEFINITION* colorTxtPress);
+void KEYBOARD_Buttons(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
 
-void KEYBOARD_ServiceRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
 void KEYBOARD_ServiceCoeff(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
 void KEYBOARD_ServiceStyle(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value);
 void KEYBOARD__ServiceType(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value);

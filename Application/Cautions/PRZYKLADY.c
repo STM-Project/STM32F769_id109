@@ -286,6 +286,14 @@ ETH_DMADescTypeDef  DMATxDscrTab[ETH_TX_DESC_CNT]; /* Ethernet Tx DMA Descriptor
 __attribute__((at(0x30040000))) ETH_DMADescTypeDef  DMARxDscrTab[ETH_RX_DESC_CNT]; /* Ethernet Rx DMA Descriptors */
 __attribute__((at(0x30040060))) ETH_DMADescTypeDef  DMATxDscrTab[ETH_TX_DESC_CNT]; /* Ethernet Tx DMA Descriptors */
 
+//##########################################
+		for(int i=0; i<countKey; ++i){
+			colorTxtKey[i] 	  = colorTxt[i];
+			colorTxtPressKey[i] = colorTxtPress[i];
+			for(int j=0; j<strlen(*(txtKey+i))+1; ++j)
+				*(*(txtKey+i)+j) = *(*(txt+i)+j);
+		}
+//############################################
 
 #endif
 

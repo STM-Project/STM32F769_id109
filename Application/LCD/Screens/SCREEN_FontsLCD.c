@@ -1147,15 +1147,17 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 	switch((int)type)
 	{
 		case KEYBOARD_fontRGB:
-			char *txtKey[]								= {"Rafa"ł"",	  ""ó"lka", 	  "W"ł"ujek",		 "Misia", 	    "Sex",	  "Markielowski"};
-			COLORS_DEFINITION colorTxtKey[]		= {RED,	  GREEN, 	BLUE,		 RED, 	    GREEN,	 BLUE};
-			COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
-			uint16_t dimKeys[] = {3,2};
-			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr, txtKey, dimKeys, colorTxtKey, colorTxtPressKey);
+			KEYBOARD_KeyParamSet(StringTxt,3,2,"Rafa"ł"", ""ó"lka", "W"ł"ujek", "Misia", "Six", "Markielowski");
+			KEYBOARD_KeyParamSet(ColorTxt,3,2,RED,GREEN,BLUE,RED,GREEN,BLUE);
+			KEYBOARD_KeyParamSet(ColorPressTxt,3,2,DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE);
+			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
 			break;
 
 		case KEYBOARD_bkRGB:
-			KEYBOARD_ServiceRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
+			KEYBOARD_KeyParamSet(StringTxt,3,2,"R+", "G+", "B+", "R-", "G-", "B-");
+			KEYBOARD_KeyParamSet(ColorTxt,3,2,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE);
+			KEYBOARD_KeyParamSet(ColorPressTxt,3,2,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN);
+			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
 			break;
 
 		case KEYBOARD_fontCoeff:
@@ -1625,8 +1627,8 @@ void FILE_NAME(debugRcvStr)(void)
 
 		if(RR)
 		{
-			FILE_NAME(keyboard)(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, 60,40, 4, Touch_FontColor, Touch_fontRp,KeysDel);
-			FILE_NAME(keyboard)(KEYBOARD_bkRGB, KEY_All_release, LCD_RoundRectangle,0, 500,160, 60,40, 4, Touch_BkColor, Touch_bkRp,KeysNotDel);
+			FILE_NAME(keyboard)(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, KeysAutoSize,12, 4, Touch_FontColor, Touch_fontRp,KeysDel);
+			FILE_NAME(keyboard)(KEYBOARD_bkRGB, KEY_All_release, LCD_RoundRectangle,0, 600,160, KeysAutoSize,12, 4, Touch_BkColor, Touch_bkRp,KeysNotDel);
 		}
 		else
 		{
