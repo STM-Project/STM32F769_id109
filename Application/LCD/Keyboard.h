@@ -33,6 +33,8 @@ typedef enum{
 void KEYBOARD_SetGeneral(int vFontID,int vFontID_descr,int vFrameColor,int vFillColor,int vFramePressColor,int vFillPressColor,int vBkColor);
 int KEYBOARD_StartUp(int type, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t eraseOther);
 
+void KEYBOARD_Buttons(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, char** txt, uint16_t *dim, COLORS_DEFINITION* colorTxt, COLORS_DEFINITION* colorTxtPress);
+
 void KEYBOARD_ServiceRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
 void KEYBOARD_ServiceCoeff(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
 void KEYBOARD_ServiceStyle(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value);

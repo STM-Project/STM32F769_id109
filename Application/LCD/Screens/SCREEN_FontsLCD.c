@@ -44,7 +44,7 @@
 	X(LANG_FontCoeffAbove, "Wsp"ó""ł"czynnik", "Coefficient") \
 	X(LANG_FontCoeffLeft, 	 "6.", "6.") \
 	X(LANG_FontCoeffUnder, 	 "naci"ś"nij", "press me") \
-	X(LANG_CoeffKeyName, "Wsp"ó""ł"", "Coeff") \
+	X(LANG_CoeffKeyName, "Wsp"ó""ł"czynniki", "Coeff") \
 	X(LANG_LenOffsWin1, "Okre"ś"lenie odst"ę"p"ó"w pom"ę"dzy literami", "Specifying the spacing between letters") \
 	X(LANG_LenOffsWin2, "Przesuwanie tekstu, zmiana pozycji kursora i zapis zmian", "Moving text, changing cursor position, editing and saving changes") \
 	X(LANG_LenOffsWin3, "Szeroko"ś""ć" tekstu", "xxxxxxx") \
@@ -1144,46 +1144,52 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 	KEYBOARD_SetGeneral(v.FONT_ID_Press, v.FONT_ID_Descr, v.COLOR_Frame, v.COLOR_FillFrame, v.COLOR_FramePress, v.COLOR_FillFramePress, v.COLOR_BkScreen);
 	if(KEYBOARD_StartUp(type, ARG_KEYBOARD_PARAM)) return 1;
 
-	type--;
 	switch((int)type)
 	{
 		case KEYBOARD_fontRGB:
+			char *txtKey[]								= {"Rafa"ł"",	  ""ó"lka", 	  "W"ł"ujek",		 "Misia", 	    "Sex",	  "Markielowski"};
+			COLORS_DEFINITION colorTxtKey[]		= {RED,	  GREEN, 	BLUE,		 RED, 	    GREEN,	 BLUE};
+			COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
+			uint16_t dimKeys[] = {3,2};
+			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr, txtKey, dimKeys, colorTxtKey, colorTxtPressKey);
+			break;
+
 		case KEYBOARD_bkRGB:
-			KEYBOARD_ServiceRGB(type, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
+			KEYBOARD_ServiceRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
 			break;
 
 		case KEYBOARD_fontCoeff:
-			KEYBOARD_ServiceCoeff(type, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Coeff_plus, SL(LANG_CoeffKeyName), v.FONT_COLOR_Descr);
+			KEYBOARD_ServiceCoeff(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Coeff_plus, SL(LANG_CoeffKeyName), v.FONT_COLOR_Descr);
 			break;
 
 		case KEYBOARD_fontStyle:
-			KEYBOARD_ServiceStyle(type, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.style);
+			KEYBOARD_ServiceStyle(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.style);
 			break;
 
 		case KEYBOARD_fontType:
-			KEYBOARD__ServiceType(type, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.type);
+			KEYBOARD__ServiceType(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.type);
 			break;
 
 		case KEYBOARD_fontSize:
-			KEYBOARD__ServiceSize(type, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release_and_select_one, KEY_Size_plus, SL(LANG_nazwa_0), v.FONT_COLOR_Descr, Test.normBoldItal);
+			KEYBOARD__ServiceSize(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release_and_select_one, KEY_Size_plus, SL(LANG_nazwa_0), v.FONT_COLOR_Descr, Test.normBoldItal);
 			break;
 
 		case KEYBOARD_fontSize2:
-			KEYBOARD__ServiceSizeRoll(type, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, ROLL_1, SL(LANG_CoeffKeyName), v.FONT_COLOR_Descr, Test.size);
+			KEYBOARD__ServiceSizeRoll(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, ROLL_1, SL(LANG_CoeffKeyName), v.FONT_COLOR_Descr, Test.size);
 			break;
 
 		case KEYBOARD_LenOffsWin:
-			if(KEYBOARD__ServiceLenOffsWin(type, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_LenWin_plus,Touch_SpacesInfoUp, KEY_Timer, SL(LANG_WinInfo), SL(LANG_WinInfo2),SL(LANG_LenOffsWin1),SL(LANG_LenOffsWin2), v.FONT_COLOR_Descr,FILE_NAME(main), LoadNoDispScreen, (char**)ppMain)){
+			if(KEYBOARD__ServiceLenOffsWin(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_LenWin_plus,Touch_SpacesInfoUp, KEY_Timer, SL(LANG_WinInfo), SL(LANG_WinInfo2),SL(LANG_LenOffsWin1),SL(LANG_LenOffsWin2), v.FONT_COLOR_Descr,FILE_NAME(main), LoadNoDispScreen, (char**)ppMain)){
 				SELECT_CURRENT_FONT(LenWin,Press, TXT_LENOFFS_WIN,255);
 			}
 			break;
 
 		case KEYBOARD_sliderRGB:
-			KEYBOARD__ServiceSliderRGB(type, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_1), v.FONT_COLOR_Descr, (int*)&Test.font[0],RefreshValRGB);
+			KEYBOARD__ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_1), v.FONT_COLOR_Descr, (int*)&Test.font[0],RefreshValRGB);
 			break;
 
 		case KEYBOARD_setTxt:
-			KEYBOARD__ServiceSetTxt(type, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Q, KEY_big, KEY_back, KEY_enter, v.FONT_COLOR_Descr);
+			KEYBOARD__ServiceSetTxt(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Q, KEY_big, KEY_back, KEY_enter, v.FONT_COLOR_Descr);
 			break;
 
 		default:

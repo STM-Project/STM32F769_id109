@@ -15,6 +15,14 @@
 #define MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY		20
 #define KEYBOARD_NONE	0
 
+#define MAX_WIN_X		30
+#define MAX_WIN_Y		30
+
+static char 				 txtKey			   [MAX_WIN_X] [MAX_WIN_Y];
+static COLORS_DEFINITION colorTxtKey		[MAX_WIN_X * MAX_WIN_Y];
+static COLORS_DEFINITION colorTxtPressKey [MAX_WIN_X * MAX_WIN_Y];
+static uint16_t dimKeys[2];
+
 static struct KEYBOARD_SETTINGS{
 	figureShape shape;
 	uint8_t bold;
@@ -152,6 +160,9 @@ static void _KeyStrPressDisp_oneBlock(int nr, XY_Touch_Struct pos, const char *t
 	_TxtPos(nr,(XY_Touch_Struct){0});
 	LCD_StrDependOnColorsWindowIndirect(0, s[nr].x+pos.x, s[nr].y+pos.y, s[nr].widthKey, s[nr].heightKey,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,255, NoConstWidth);
 }
+static void _KeyStrPressDisp_oneKey(int nr, XY_Touch_Struct pos, int nrTab){
+	_KeyStrPressDisp_oneBlock(nr, pos, txtKey[nrTab], colorTxtPressKey[nrTab]);
+}
 static void _KeyShapePressDisp_oneBlock(int nr, XY_Touch_Struct pos, ShapeFunc pShape, SHAPE_PARAMS param){
 	LCD_ShapeWindow( s[nr].shape, 0, s[nr].widthKey,s[nr].heightKey, 0,0, s[nr].widthKey,s[nr].heightKey, SetBold2Color(framePressColor,s[nr].bold),fillPressColor,bkColor);
 	pShape(0,param);
@@ -189,10 +200,10 @@ static void _SetTouch(int nr, uint16_t ID, uint16_t idx, uint8_t paramTouch, XY_
 	LCD_TOUCH_Set(ID,idx,paramTouch);
 	s[nr].nmbTouch++;
 }
-static void SetPosKey(int nr, XY_Touch_Struct pos[], const uint16_t dim[], int head){
+static void SetPosKey(int nr, XY_Touch_Struct pos[], int head){
 	int d=0;
-	for(int j=0; j<dim[1]; ++j){
-		for(int i=0; i<dim[0]; ++i){
+	for(int j=0; j<dimKeys[1]; ++j){
+		for(int i=0; i<dimKeys[0]; ++i){
 			pos[d].x = (i+1)*s[nr].interSpace + i*s[nr].widthKey;
 			pos[d].y = (j+1)*s[nr].interSpace + j*s[nr].heightKey + head;
 			d++;
@@ -211,31 +222,38 @@ static void SetPosKey(int nr, XY_Touch_Struct pos[], const uint16_t dim[], int h
 static int GetHeightHead(int nr){
 	return s[nr].interSpace + LCD_GetFontHeight(fontID_descr) + s[nr].interSpace;
 }
-void SetDimKey(int nr, figureShape shape, uint16_t width, uint16_t height, const char *txt){
+static void SetDimKey(int nr, figureShape shape, uint16_t width, uint16_t height){
 	if(shape!=0){
+		int count = dimKeys[0]*dimKeys[1];
+		int tab[count];
+
+		for(int i=0; i<count; ++i)
+			tab[i] = LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[i],0,NoConstWidth);
+		INIT_MAXVAL(tab,STRUCT_TAB_SIZE(tab),0,maxVal);
+
 		if(KeysAutoSize == width){
-			s[nr].widthKey =  height + LCD_GetWholeStrPxlWidth(fontID,(char*)txt,0,NoConstWidth) + height;		/*	space + text + space */
+			s[nr].widthKey =  height + maxVal + height;		/*	space + text + space */
 			s[nr].heightKey = height + LCD_GetFontHeight(fontID) + height;
 	}}
 }
-static void SetDimAll(int nr, const uint16_t dim[], int head){
-	widthAll =  dim[0]*s[nr].widthKey  + (dim[0]+1)*s[nr].interSpace;
-	heightAll = dim[1]*s[nr].heightKey + (dim[1]+1)*s[nr].interSpace + head;
+static void SetDimAll(int nr, int head){
+	widthAll =  dimKeys[0]*s[nr].widthKey  + (dimKeys[0]+1)*s[nr].interSpace;
+	heightAll = dimKeys[1]*s[nr].heightKey + (dimKeys[1]+1)*s[nr].interSpace + head;
 }
-static void KeysAllRelease(int nr, XY_Touch_Struct posKeys[], char **txtKeys, COLORS_DEFINITION *colorTxtKeys, uint16_t *dim, char* headTxt, uint32_t colorDescr){
-	int countKey = dim[0]*dim[1];
+static void KeysAllRelease(int nr, XY_Touch_Struct posKeys[], char* headTxt, uint32_t colorDescr){
+	int countKey = dimKeys[0]*dimKeys[1];
 	XY_Touch_Struct posHead={0,0};
 	LCD_ShapeWindow( s[nr].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameColor,s[nr].bold), bkColor,bkColor );
 	_StrDescr(nr,posHead, headTxt, colorDescr);
 
 	for(int i=0; i<countKey; ++i){
-		i<countKey-1 ? _KeyStr(nr,posKeys[i],txtKeys[i],colorTxtKeys[i]) : _KeyStrDisp(nr,posKeys[i],txtKeys[i],colorTxtKeys[i]);
+		i<countKey-1 ? _KeyStr(nr,posKeys[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(nr,posKeys[i],txtKey[i],colorTxtKey[i]);
 	/*	_Key(posKey[i]);
 		_TxtPos(k,posKey[i]);		i<countKey-1 ? _Str(txtKey[i],colorTxtKey[i]) : _StrDisp(k,txtKey[i],colorTxtKey[i]); */		/* This is the same as up */
 }}
-static void SetTouch(int nr, uint16_t startTouchIdx, const uint16_t *dim, XY_Touch_Struct* posKeys){
+static void SetTouch(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys){
 	if(startTouchIdx){
-		for(int i=0; i<dim[0]*dim[1]; ++i)
+		for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i)
 			_SetTouch(nr,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[nr].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKeys[i]);
 }}
 
@@ -286,48 +304,42 @@ int KEYBOARD_StartUp(int type, figureShape shape, uint8_t bold, uint16_t x, uint
 }
 
 /* ----- User Function Definitions ----- */
-#define MAX_WIN	30
-
-char *txtKey[MAX_WIN];
-COLORS_DEFINITION colorTxtKey[MAX_WIN];
-COLORS_DEFINITION colorTxtPressKey[MAX_WIN];
-uint16_t dimKeys[2];
 
 void KEYBOARD_Buttons(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, char** txt, uint16_t *dim, COLORS_DEFINITION* colorTxt, COLORS_DEFINITION* colorTxtPress)
 {
-	int countKey = dim[0]*dim[1]; 		/* = STRUCT_TAB_SIZE(dimKeys); */
-	if(countKey>MAX_WIN-1) countKey=MAX_WIN;
+	int countKey = dim[0]*dim[1];
+	if(countKey > MAX_WIN_X * MAX_WIN_Y-1)  countKey = MAX_WIN_X * MAX_WIN_Y;
 
 	if(shape!=0){
-		for(int i=0;i<countKey;++i){
-			colorTxtKey[i]=colorTxt[i];
-			colorTxtPressKey[i]=colorTxtPress[i];
-			for(int j=0;j<strlen(txt[i]);++j)
-				txtKey[i][j]=txt[i][j];
+		for(int i=0; i<countKey; ++i){
+			colorTxtKey[i] 	  = colorTxt[i];
+			colorTxtPressKey[i] = colorTxtPress[i];
+			for(int j=0; j<strlen(*(txtKey+i))+1; ++j)
+				*(*(txtKey+i)+j) = *(*(txt+i)+j);
 		}
 		for(int i=0;i<2;++i)
 			dimKeys[i]=dim[i];
 	}
 
-	SetDimKey(k,shape,widthKey,heightKey,txtKey[0]);
+	SetDimKey(k,shape,widthKey,heightKey);
 	int head = GetHeightHead(k);
 
 	XY_Touch_Struct posKey[countKey];
 
-	SetPosKey(k,posKey,dimKeys,head);
-	SetDimAll(k,dimKeys,head);
+	SetPosKey(k,posKey,head);
+	SetDimAll(k,head);
 
 	if(touchRelease == selBlockPress){
-		KeysAllRelease(k, posKey, txtKey, colorTxtKey, dimKeys, txtDescr, colorDescr);
+		KeysAllRelease(k, posKey, txtDescr, colorDescr);
 	}
-	else if(touchAction+0 == selBlockPress) 	_KeyStrPressDisp_oneBlock(k,posKey[0], txtKey[0], colorTxtPressKey[0]);
-	else if(touchAction+1 == selBlockPress) 	_KeyStrPressDisp_oneBlock(k,posKey[1], txtKey[1], colorTxtPressKey[1]);
-	else if(touchAction+2 == selBlockPress) 	_KeyStrPressDisp_oneBlock(k,posKey[2], txtKey[2], colorTxtPressKey[2]);
-	else if(touchAction+3 == selBlockPress) 	_KeyStrPressDisp_oneBlock(k,posKey[3], txtKey[3], colorTxtPressKey[3]);
-	else if(touchAction+4 == selBlockPress) 	_KeyStrPressDisp_oneBlock(k,posKey[4], txtKey[4], colorTxtPressKey[4]);
-	else if(touchAction+5 == selBlockPress) 	_KeyStrPressDisp_oneBlock(k,posKey[5], txtKey[5], colorTxtPressKey[5]);
+	else if(touchAction+0 == selBlockPress) 	_KeyStrPressDisp_oneKey(k,posKey[0],0);
+	else if(touchAction+1 == selBlockPress) 	_KeyStrPressDisp_oneKey(k,posKey[1],1);
+	else if(touchAction+2 == selBlockPress) 	_KeyStrPressDisp_oneKey(k,posKey[2],2);
+	else if(touchAction+3 == selBlockPress) 	_KeyStrPressDisp_oneKey(k,posKey[3],3);
+	else if(touchAction+4 == selBlockPress) 	_KeyStrPressDisp_oneKey(k,posKey[4],4);
+	else if(touchAction+5 == selBlockPress) 	_KeyStrPressDisp_oneKey(k,posKey[5],5);
 
-	SetTouch(k, startTouchIdx, dimKeys, posKey);
+	SetTouch(k, startTouchIdx, posKey);
 }
 
 void KEYBOARD_ServiceRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr)
@@ -681,7 +693,7 @@ void KEYBOARD__ServiceSizeRoll(int k, int selBlockPress, INIT_KEYBOARD_PARAM, in
 		s[k].nmbTouch++;
 	}
 }
-
+//SPACES DISP  numeracje dac ciemniejsza aby odroznic !!!!!!!!!!
 int KEYBOARD__ServiceLenOffsWin(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, int touchAction2, int touchTimer, char* txtDescr, char* txtDescr2, char* txtDescr3, char* txtDescr4, uint32_t colorDescr,FUNC_MAIN *pfunc,FUNC_MAIN_INIT)
 {extern uint32_t pLcd[];
 	#define _NMB2KEY	8
