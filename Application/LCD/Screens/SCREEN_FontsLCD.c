@@ -44,7 +44,7 @@
 	X(LANG_FontCoeffAbove, "Wsp"ó""ł"czynnik", "Coefficient") \
 	X(LANG_FontCoeffLeft, 	 "6.", "6.") \
 	X(LANG_FontCoeffUnder, 	 "naci"ś"nij", "press me") \
-	X(LANG_CoeffKeyName, "Wsp"ó""ł"czynniki", "Coeff") \
+	X(LANG_CoeffKeyName, "Wsp"ó""ł"czyn", "Coeff") \
 	X(LANG_LenOffsWin1, "Okre"ś"lenie odst"ę"p"ó"w pom"ę"dzy literami", "Specifying the spacing between letters") \
 	X(LANG_LenOffsWin2, "Przesuwanie tekstu, zmiana pozycji kursora i zapis zmian", "Moving text, changing cursor position, editing and saving changes") \
 	X(LANG_LenOffsWin3, "Szeroko"ś""ć" tekstu", "xxxxxxx") \
@@ -1148,23 +1148,31 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 	{
 		case KEYBOARD_fontRGB:
 			KEYBOARD_KeyParamSet(StringTxt,3,2,"Rafa"ł"", ""ó"lka", "W"ł"ujek", "Misia", "Six", "Markielowski");
-			KEYBOARD_KeyParamSet(ColorTxt,3,2,RED,GREEN,BLUE,RED,GREEN,BLUE);
-			KEYBOARD_KeyParamSet(ColorPressTxt,3,2,DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE);
+			KEYBOARD_KeyParamSet(Color1Txt,3,2,RED,GREEN,BLUE,RED,GREEN,BLUE);
+			KEYBOARD_KeyParamSet(Color2Txt,3,2,DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE);
 			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
 			break;
 
 		case KEYBOARD_bkRGB:
 			KEYBOARD_KeyParamSet(StringTxt,3,2,"R+", "G+", "B+", "R-", "G-", "B-");
-			KEYBOARD_KeyParamSet(ColorTxt,3,2,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE);
-			KEYBOARD_KeyParamSet(ColorPressTxt,3,2,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN);
+			KEYBOARD_KeyParamSet(Color1Txt,3,2,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE);
+			KEYBOARD_KeyParamSet(Color2Txt,3,2,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN);
 			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
 			break;
 
 		case KEYBOARD_fontCoeff:
-			KEYBOARD_ServiceCoeff(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Coeff_plus, SL(LANG_CoeffKeyName), v.FONT_COLOR_Descr);
+			KEYBOARD_KeyParamSet(StringTxt,2,1,"+", "-");
+			KEYBOARD_KeyParamSet(Color1Txt,2,1,WHITE,WHITE);
+			KEYBOARD_KeyParamSet(Color2Txt,2,1,LIGHTCYAN,LIGHTCYAN);
+			KEYBOARD_SetGeneral(N,N,N, BrightIncr(v.COLOR_FillFrame,0xE), N,N,N);
+			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Coeff_plus, SL(LANG_CoeffKeyName), v.FONT_COLOR_Descr);
 			break;
 
 		case KEYBOARD_fontStyle:
+			KEYBOARD_KeyParamSet(StringTxt,1,3,"Arial", "Times_New_Roman", "Comic_Saens_MS");
+			KEYBOARD_KeyParamSet(Color1Txt,1,3,WHITE,WHITE,WHITE);
+			KEYBOARD_KeyParamSet(Color2Txt,1,3,DARKRED,DARKRED,DARKBLUE);
+			//KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.style);
 			KEYBOARD_ServiceStyle(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.style);
 			break;
 

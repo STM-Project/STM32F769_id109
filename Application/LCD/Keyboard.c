@@ -274,10 +274,10 @@ void KEYBOARD_KeyParamSet(TXT_PARAM_KEY param, uint16_t dimX, uint16_t dimY, ...
 				int len= strlen(ptr);		if(len > MAX_WIN_X-1) len= MAX_WIN_X-1;
 				strcpy(txtKey[i],ptr);
 				break;
-			case ColorTxt:
+			case Color1Txt:
 				colorTxtKey[i]= va_arg(va,COLORS_DEFINITION);
 				break;
-			case ColorPressTxt:
+			case Color2Txt:
 				colorTxtPressKey[i]= va_arg(va,COLORS_DEFINITION);
 				break;
 	}}
@@ -285,13 +285,13 @@ void KEYBOARD_KeyParamSet(TXT_PARAM_KEY param, uint16_t dimX, uint16_t dimY, ...
 }
 
 void KEYBOARD_SetGeneral(int vFontID,int vFontID_descr,int vFrameColor,int vFillColor,int vFramePressColor,int vFillPressColor,int vBkColor){
-	fontID 			 = vFontID;
-	fontID_descr 	 = vFontID_descr;
-	frameColor 		 = vFrameColor;
-	fillColor 		 = vFillColor;
-	framePressColor = vFramePressColor;
-	fillPressColor  = vFillPressColor;
-	bkColor 			 = vBkColor;
+	if(vFontID 			  !=N) fontID 			  = vFontID;
+	if(vFontID_descr 	  !=N) fontID_descr 	  = vFontID_descr;
+	if(vFrameColor 	  !=N) frameColor 	  = vFrameColor;
+	if(vFillColor 		  !=N) fillColor 		  = vFillColor;
+	if(vFramePressColor !=N) framePressColor = vFramePressColor;
+	if(vFillPressColor  !=N) fillPressColor  = vFillPressColor;
+	if(vBkColor 		  !=N) bkColor 		  = vBkColor;
 }
 
 int KEYBOARD_StartUp(int type, figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t eraseOther){
@@ -339,56 +339,11 @@ void KEYBOARD_Buttons(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_R
 	SetPosKey(k,posKey,head);
 	SetDimAll(k,head);
 
-	if(TOUCH_Release == selBlockPress)				KeysAllRelease(k, posKey, txtDescr, colorDescr);
+	if(TOUCH_Release == selBlockPress)				KeysAllRelease(k, posKey, txtDescr, colorDescr);   //przemysl zmiane fillColor dla widthALL i butonnsa !!!!
 	else{	 INIT(nr,selBlockPress-TOUCH_Action);	_KeyStrPressDisp_oneKey(k,posKey[nr],nr);  }
 
 	SetTouch(k, startTouchIdx, posKey);
 }
-
-void KEYBOARD_ServiceCoeff(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr)
-{
-	const char *txtKey[]								= {"+",	  "-"};
-	const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE};
-	const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,DARKRED};
-	const uint16_t dimKeys[] = {2,1};
-
-	if(shape!=0){
-		if(KeysAutoSize == widthKey){
-			s[k].widthKey =  heightKey + LCD_GetWholeStrPxlWidth(fontID,(char*)txtKey[0],0,NoConstWidth) + heightKey;		/*	space + text + space */
-			s[k].heightKey = heightKey + LCD_GetFontHeight(fontID) + heightKey;
-		}
-	}
-	int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr)/* + s[k].interSpace*/;
-
-	XY_Touch_Struct posHead={0,0};
-	XY_Touch_Struct posKey[]=
-	  {{1*s[k].interSpace + 0*s[k].widthKey,	s[k].interSpace + head},
-		{2*s[k].interSpace + 1*s[k].widthKey, 	s[k].interSpace + head}};
-
-	int countKey = dimKeys[0]*dimKeys[1]; 		/* = STRUCT_TAB_SIZE(txtKey); */
-
-	widthAll =  dimKeys[0]*s[k].widthKey  + (dimKeys[0]+1)*s[k].interSpace;
-	heightAll = dimKeys[1]*s[k].heightKey + (dimKeys[1]+1)*s[k].interSpace + head;
-
-	if(touchRelease == selBlockPress){
-		LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
-		_StrDescr(k,posHead, txtDescr, colorDescr);
-
-		fillColor = BrightIncr(fillColor,0xE);
-		for(int i=0; i<countKey; ++i){
-			i<countKey-1 ? _KeyStr(k,posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(k,posKey[i],txtKey[i],colorTxtKey[i]);
-		}
-
-	}
-	else if(touchAction+0 == selBlockPress)	  _KeyStrPressDisp_oneBlock(k,posKey[0], txtKey[0], colorTxtPressKey[0]);
-	else if(touchAction+1 == selBlockPress)  _KeyStrPressDisp_oneBlock(k,posKey[1], txtKey[1], colorTxtPressKey[1]);
-
-	if(startTouchIdx){
-		for(int i=0; i<countKey; ++i)
-			_SetTouch(k,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKey[i]);
-	}
-}
-
 
 void KEYBOARD_ServiceStyle(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value)
 {

@@ -20,14 +20,15 @@
 #define INIT_KEYBOARD_PARAM	figureShape shape, uint8_t bold, uint16_t x, uint16_t y, uint16_t widthKey, uint16_t heightKey, uint8_t interSpace, uint16_t forTouchIdx, uint16_t startTouchIdx, uint8_t eraseOther
 #define ARG_KEYBOARD_PARAM	  shape, bold, x, y, widthKey, heightKey, interSpace, forTouchIdx, startTouchIdx, eraseOther
 
+#define N			0x80000000
 #define MIDDLE_NR		1
 #define GET_X(txt)	LCD_Xmiddle(MIDDLE_NR,GetPos,fontID,txt,0,NoConstWidth)
 #define GET_Y			LCD_Ymiddle(MIDDLE_NR,GetPos,fontID)
 
 typedef enum{
 	StringTxt,
-	ColorTxt,
-	ColorPressTxt,
+	Color1Txt,
+	Color2Txt,
 }TXT_PARAM_KEY;
 
 typedef enum{
@@ -42,7 +43,6 @@ int KEYBOARD_StartUp(int type, figureShape shape, uint8_t bold, uint16_t x, uint
 
 void KEYBOARD_Buttons(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
 
-void KEYBOARD_ServiceCoeff(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr);
 void KEYBOARD_ServiceStyle(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value);
 void KEYBOARD__ServiceType(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value);
 void KEYBOARD__ServiceSize(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, int value);
