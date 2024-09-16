@@ -1141,7 +1141,11 @@ static int RR=0;
 
 int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, INIT_KEYBOARD_PARAM)
 {
-	KEYBOARD_SetGeneral(v.FONT_ID_Press, v.FONT_ID_Descr, v.COLOR_Frame, v.COLOR_FillFrame, v.COLOR_FramePress, v.COLOR_FillFramePress, v.COLOR_BkScreen);
+	#define	SET_FRAME_DEFAULT 	KEYBOARD_SetGeneral(v.FONT_ID_Press, 	 v.FONT_ID_Descr, 		 v.FONT_COLOR_Descr,\
+							  	  	  	  	  	  	  	  	  	  	  v.COLOR_MainFrame,  v.COLOR_FillMainFrame,\
+																	  v.COLOR_Frame, 		 v.COLOR_FillFrame,\
+																	  v.COLOR_FramePress, v.COLOR_FillFramePress, v.COLOR_BkScreen)\
+
 	if(KEYBOARD_StartUp(type, ARG_KEYBOARD_PARAM)) return 1;
 
 	switch((int)type)
@@ -1150,30 +1154,33 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			KEYBOARD_KeyParamSet(StringTxt,3,2,"Rafa"ł"", ""ó"lka", "W"ł"ujek", "Misia", "Six", "Markielowski");
 			KEYBOARD_KeyParamSet(Color1Txt,3,2,RED,GREEN,BLUE,RED,GREEN,BLUE);
 			KEYBOARD_KeyParamSet(Color2Txt,3,2,DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE);
-			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
+			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8));
 			break;
 
 		case KEYBOARD_bkRGB:
 			KEYBOARD_KeyParamSet(StringTxt,3,2,"R+", "G+", "B+", "R-", "G-", "B-");
 			KEYBOARD_KeyParamSet(Color1Txt,3,2,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE);
 			KEYBOARD_KeyParamSet(Color2Txt,3,2,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN,LIGHTCYAN);
-			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8), v.FONT_COLOR_Descr);
+			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8));
 			break;
 
 		case KEYBOARD_fontCoeff:
 			KEYBOARD_KeyParamSet(StringTxt,2,1,"+", "-");
 			KEYBOARD_KeyParamSet(Color1Txt,2,1,WHITE,WHITE);
 			KEYBOARD_KeyParamSet(Color2Txt,2,1,LIGHTCYAN,LIGHTCYAN);
-			KEYBOARD_SetGeneral(N,N,N, BrightIncr(v.COLOR_FillFrame,0xE), N,N,N);
-			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Coeff_plus, SL(LANG_CoeffKeyName), v.FONT_COLOR_Descr);
+			KEYBOARD_SetGeneral(N,N,N, N,N, N,BrightIncr(v.COLOR_FillFrame,0xE), N,N,N);
+			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Coeff_plus, SL(LANG_CoeffKeyName));
+			SET_FRAME_DEFAULT;
 			break;
 
 		case KEYBOARD_fontStyle:
 			KEYBOARD_KeyParamSet(StringTxt,1,3,"Arial", "Times_New_Roman", "Comic_Saens_MS");
 			KEYBOARD_KeyParamSet(Color1Txt,1,3,WHITE,WHITE,WHITE);
 			KEYBOARD_KeyParamSet(Color2Txt,1,3,DARKRED,DARKRED,DARKBLUE);
-			//KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.style);
-			KEYBOARD_ServiceStyle(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.style);
+			KEYBOARD_SetGeneral(N,N,N, N,N, N,0xFF111111, N,N,N);
+			KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.style);
+			//KEYBOARD_ServiceStyle(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.style);
+			SET_FRAME_DEFAULT;
 			break;
 
 		case KEYBOARD_fontType:
@@ -1206,6 +1213,8 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			break;
 	}
 	return 0;
+
+	#undef SET_FRAME_DEFAULT
 }
 
 
@@ -1302,7 +1311,7 @@ void FILE_NAME(setTouch)(void)
 	{
 		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				FILE_NAME(keyboard)(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, KeysAutoSize,12, 4, state, Touch_fontRp,KeysDel); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
+				FILE_NAME(keyboard)(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, KeysAutoSize,12, 10, state, Touch_fontRp,KeysDel); //dac wyrownanie ADJUTMENT to LEFT RIGHT TOP .....
 			/* DisplayTouchPosXY(state,pos,"Touch_FontColor"); */
 			break;
 
