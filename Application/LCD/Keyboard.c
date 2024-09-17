@@ -367,7 +367,7 @@ void KEYBOARD_Buttons(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_R
 void KEYBOARD_Select(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int value)
 {
 	int interSp = -1;
-	int head = 20;
+	int head = s[k].interSpace + LCD_GetFontHeight(fontID_descr) + s[k].interSpace;
 
 	XY_Touch_Struct posKey[_GetPosKeySize()];
 
@@ -376,54 +376,11 @@ void KEYBOARD_Select(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Re
 	SetDimAll(k,interSp,head);
 
 	if(TOUCH_Release == selBlockPress)
-		KeysSelectOne(k, posKey, NULL, value);
+		KeysSelectOne(k, posKey, "text", value);
 
 	SetTouch_Select(k, startTouchIdx, posKey);
 }
 
-void KEYBOARD_ServiceStyle(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value)
-{
-	const char *txtKey[]								= {"Arial", "Times_New_Roman", "Comic_Saens_MS"};
-	const COLORS_DEFINITION colorTxtKey[]		= {WHITE,	  WHITE, 	  			WHITE};
-	const COLORS_DEFINITION colorTxtPressKey[]= {DARKRED,	  DARKRED, 				DARKBLUE};
-	const uint16_t dimKeys[] = {1,3};
-
-	XY_Touch_Struct posKey[]=
-	  {{s[k].interSpace, 1*s[k].interSpace + 0*s[k].heightKey - 0},
-		{s[k].interSpace, 2*s[k].interSpace + 1*s[k].heightKey - 1},
-		{s[k].interSpace, 3*s[k].interSpace + 2*s[k].heightKey - 2}};
-
-	int countKey = STRUCT_TAB_SIZE(txtKey);
-	framePressColor = frameColor;
-	widthAll  = dimKeys[0]*s[k].widthKey  + (dimKeys[0]+1)*s[k].interSpace;
-	heightAll = dimKeys[1]*s[k].heightKey + (dimKeys[1]+1)*s[k].interSpace - (countKey-1);
-
-	if(touchRelease == selBlockPress)
-	{
-		LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameMainColor,s[k].bold), fillMainColor,bkColor );
-
-		fillColor = 0xFF111111;
-
-		for(int i=0; i<countKey; ++i)
-		{
-			if((i==0 && value==Arial) ||
-				(i==1 && value==Times_New_Roman) ||
-				(i==2 && value==Comic_Saens_MS))
-			{
-					i<countKey-1 ? _KeyStrPress(k,posKey[i],txtKey[i],colorTxtPressKey[i]) : _KeyStrPressDisp(k,posKey[i],txtKey[i],colorTxtPressKey[i]);
-				/* _KeyPress(posKey[i]); _TxtPos(posKey[i]);    i<countKey-1 ? _StrPress(txtKey[i],colorTxtPressKey[i]) : _StrPressDisp(txtKey[i],colorTxtPressKey[i]); */		/* This is the same as up */
-			}
-			else{	i<countKey-1 ? _KeyStr(k,posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(k,posKey[i],txtKey[i],colorTxtKey[i]);
-					/* _Key(posKey[i]); _TxtPos(posKey[i]);   i<countKey-1 ? _Str(txtKey[i],colorTxtKey[i]) : _StrDisp(txtKey[i],colorTxtKey[i]); */		/* This is the same as up */
-			}
-		}
-	}
-
-	if(startTouchIdx){
-		for(int i=0; i<countKey; ++i)
-			_SetTouch(k,ID_TOUCH_POINT, s[k].startTouchIdx + i, press, posKey[i]);
-	}
-}
 
 
 
@@ -432,48 +389,6 @@ void KEYBOARD_ServiceStyle(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int to
 
 
 
-
-
-void KEYBOARD__ServiceType(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int value)
-{
-	const char *txtKey[]								= {"(Gray-Green)", "(Gray-White)", "(White-Black)"};
-	const COLORS_DEFINITION colorTxtKey[]		= {WHITE,	  		 WHITE, 	  			WHITE};
-	const COLORS_DEFINITION colorTxtPressKey[]= {BLACK,	  		 BROWN, 				ORANGE};
-	const uint16_t dimKeys[] = {1,3};
-
-	XY_Touch_Struct posKey[]=
-	  {{s[k].interSpace, 1*s[k].interSpace + 0*s[k].heightKey - 0},
-		{s[k].interSpace, 2*s[k].interSpace + 1*s[k].heightKey - 1},
-		{s[k].interSpace, 3*s[k].interSpace + 2*s[k].heightKey - 2}};
-
-	int countKey = STRUCT_TAB_SIZE(txtKey);
-
-	framePressColor = frameColor;
-	widthAll  = dimKeys[0]*s[k].widthKey  + (dimKeys[0]+1)*s[k].interSpace;
-	heightAll = dimKeys[1]*s[k].heightKey + (dimKeys[1]+1)*s[k].interSpace - (countKey-1);
-
-	if(touchRelease == selBlockPress)
-	{
-		LCD_ShapeWindow( s[k].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameMainColor,s[k].bold), fillMainColor,bkColor );
-
-		for(int i=0; i<countKey; ++i)
-		{
-			if((i==0 && value==0) ||
-				(i==1 && value==1) ||
-				(i==2 && value==2))
-			{
-					i<countKey-1 ? _KeyStrPress(k,posKey[i],txtKey[i],colorTxtPressKey[i]) : _KeyStrPressDisp(k,posKey[i],txtKey[i],colorTxtPressKey[i]);
-			}
-			else{	i<countKey-1 ? _KeyStr(k,posKey[i],txtKey[i],colorTxtKey[i]) : _KeyStrDisp(k,posKey[i],txtKey[i],colorTxtKey[i]);
-			}
-		}
-	}
-
-	if(startTouchIdx){
-		for(int i=0; i<countKey; ++i)
-			_SetTouch(k,ID_TOUCH_POINT, s[k].startTouchIdx + i, press, posKey[i]);
-	}
-}
 
 void KEYBOARD__ServiceSize(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, int value)
 {
