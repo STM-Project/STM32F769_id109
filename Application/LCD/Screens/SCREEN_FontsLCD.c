@@ -1189,7 +1189,8 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			break;
 
 		case KEYBOARD_fontSize:
-			KEYBOARD__ServiceSize(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release_and_select_one, KEY_Size_plus, SL(LANG_nazwa_0), v.FONT_COLOR_Descr, Test.normBoldItal);
+			//KEYBOARD__ServiceSize(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release_and_select_one, KEY_Size_plus, SL(LANG_nazwa_0), v.FONT_COLOR_Descr, Test.normBoldItal);
+			KEYBOARD__ServiceSize__(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release_and_select_one, KEY_Size_plus, SL(LANG_nazwa_0), Test.normBoldItal);
 			break;
 
 		case KEYBOARD_fontSize2:
