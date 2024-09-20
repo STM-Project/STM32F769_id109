@@ -90,6 +90,7 @@
 #define INIT(name,val)	int name=val
 #define CONDITION(condition,val1,val2)	((condition) ? (val1) : (val2))
 #define OPERATION(val,oper1,oper2,oper3)	_ReturnVal3(int val, int oper1,int oper2,int oper3)
+#define MAXVAL2(value1,value2)	value1 >= value2 ? value1 : value2
 
 #define STRUCT_SIZE_SHAPE_POS		3
 
