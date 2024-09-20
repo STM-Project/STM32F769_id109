@@ -1177,7 +1177,7 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			KEYBOARD_KeyParamSet(Color1Txt,1,3,WHITE,WHITE,WHITE,WHITE,WHITE,ORANGE);
 			KEYBOARD_KeyParamSet(Color2Txt,1,3,DARKRED,DARKRED,DARKBLUE,DARKRED,DARKRED,DARKBLUE);
 			KEYBOARD_SetGeneral(N,N,N, N,N, N,0xFF111111, N,N,N);
-			KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.style);
+			KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, "Text1", Test.style);
 			break;
 
 		case KEYBOARD_fontType:
@@ -1185,7 +1185,7 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			KEYBOARD_KeyParamSet(Color1Txt,1,3,WHITE,WHITE,WHITE);
 			KEYBOARD_KeyParamSet(Color2Txt,1,3,BLACK,BROWN,ORANGE);
 			KEYBOARD_SetGeneral(N,N,N, N,N, N,N, 0xFF111111,N,N);
-			KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, Test.type);
+			KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, "Text2", Test.type);
 			break;
 
 		case KEYBOARD_fontSize:
