@@ -254,7 +254,7 @@ static void ElemSliderPressDisp_oneBlock(int nr, uint16_t x, XY_Touch_Struct pos
 	int value = 0;
 	switch(valType){
 		case PosX:		value = SetValType(CONDITION(0>x-s[nr].x-s[nr].interSpace,0,x-s[nr].x-s[nr].interSpace),PosX);  break;
-		case Percent:	value = SetValType(PERCENT_SCALE(*pVal+1,maxSlidVal+1),Percent);  			  					  break;
+		case Percent:	value = SetValType(PERCENT_SCALE(*pVal+1,maxSlidVal+1),Percent);  			  					  		break;
 	}
 	LCD_ShapeWindow(LCD_Rectangle,0,s[nr].widthKey,s[nr].heightKey, 0,0, s[nr].widthKey,s[nr].heightKey, bkColor, bkColor,bkColor);
 	SHAPE_PARAMS slid = LCD_SimpleSlider(0, s[nr].widthKey, s[nr].heightKey, 0,0, ChangeElemSliderSize(s[nr].widthKey,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].heightKey,spaceTringLine), lineColor, lineSelColor ,selElem|0xFF000000, bkColor, value, selElem);
@@ -556,39 +556,38 @@ void KEYBOARD__ServiceSize__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int 
 	const COLORS_DEFINITION colorTxtPressKey2[]	= {BLACK,	  BROWN,  ORANGE};
 	const uint16_t dimKeys2[] = {1,3};
 
+	int interSpaceForSelect = -1;
+
 	XY_Touch_Struct posKey1[_GetPosKeySize((uint16_t*)dimKeys1)];
 	XY_Touch_Struct posKey2[_GetPosKeySize((uint16_t*)dimKeys2)];
-
 	int head = GetHeightHead(k);
 
 	_SetDimKey(k,shape,widthKey,heightKey,(uint16_t*)dimKeys1,(char**)txtKey1,KEBOARD_1);
 	_SetDimKey(k,shape,widthKey,heightKey,(uint16_t*)dimKeys2,(char**)txtKey2,KEBOARD_2);
 
-	int interSpac = s[k].interSpace;
-	int offsX = s[k].interSpace + dimKeys1[0]*s[k].wKey[0]  + (dimKeys1[0]-1)*interSpac;
+	structSize allSize1 = _SetDimAll(k,s[k].interSpace,	 head,(uint16_t*)dimKeys1,KEBOARD_1);
+	structSize allSize2 = _SetDimAll(k,interSpaceForSelect,head,(uint16_t*)dimKeys2,KEBOARD_2);
 
-	_SetPosKey(k,posKey1,s[k].interSpace, head, (uint16_t*)dimKeys1, 0,		KEBOARD_1);
-	_SetPosKey(k,posKey2,s[k].interSpace, head, (uint16_t*)dimKeys2, offsX, KEBOARD_2);
+	_SetPosKey(k,posKey1,s[k].interSpace, 		head, (uint16_t*)dimKeys1, 0,									 	KEBOARD_1);
+	_SetPosKey(k,posKey2,interSpaceForSelect, head, (uint16_t*)dimKeys2, allSize1.w - s[k].interSpace, KEBOARD_2);
 
-	structSize allSize1 = _SetDimAll(k,interSpac,head,(uint16_t*)dimKeys1,KEBOARD_1);
-	structSize allSize2 = _SetDimAll(k,interSpac,head,(uint16_t*)dimKeys2,KEBOARD_2);
-
-	widthAll  = allSize1.w + allSize2.w;
+	widthAll  = (allSize1.w - s[k].interSpace) + allSize2.w;
 	heightAll = MAXVAL2(allSize1.h, allSize2.h);
 
-	if(TOUCH_Release == selBlockPress)
-	{
+	if(TOUCH_Release == selBlockPress){
 		ShapeWin(k,widthAll,heightAll);
 		TxtDescr(k, 0,0, txtDescr);
 
 		_KeysAllRelease(k, posKey1, 		  (uint16_t*)dimKeys1, (char**)txtKey1, (uint32_t*)colorTxtKey1, 										  KEBOARD_1, DispNo);
+
+		BKCOPY_VAL(c.shape, s[k].shape, LCD_Rectangle);
 		_KeysSelectOne (k, posKey2, value, (uint16_t*)dimKeys2, (char**)txtKey2, (uint32_t*)colorTxtKey2, (uint32_t*)colorTxtPressKey2, KEBOARD_2, DispYes);
+		BKCOPY(s[k].shape, c.shape);
 	}
 	else{
 		INIT(nr,selBlockPress-TOUCH_Action);
 		_KeyStrPressDisp_oneBlock(k, posKey1[nr], txtKey1[nr], colorTxtPressKey1[nr],KEBOARD_1);
 	}
-
 	_SetTouch_Button(k, startTouchIdx, posKey1, (uint16_t*)dimKeys1, KEBOARD_1);
 	_SetTouch_Select(k, startTouchIdx, posKey2, (uint16_t*)dimKeys2, KEBOARD_2);
 }
@@ -999,7 +998,57 @@ int KEYBOARD__ServiceLenOffsWin(int k, int selBlockPress, INIT_KEYBOARD_PARAM, i
 	#undef _NMB2KEY
 }
 
-void KEYBOARD__ServiceSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, int *value, VOID_FUNCTION *pfunc)
+
+static void KeysAllRelease_Slider(int nr, XY_Touch_Struct posKeys[],int *value, int maxSliderValue, uint32_t lineColor, uint32_t lineSelColor, uint32_t spaceTriangLine, SHAPE_PARAMS *elemSliderPos){
+	for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i){
+		elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, ChangeElemSliderSize(s[nr].widthKey,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].heightKey,spaceTriangLine), lineColor, lineSelColor ,colorTxtKey[i], bkColor, SetValType(PERCENT_SCALE(*(value+i)+1,maxSliderValue+1),Percent), NoSel);
+		StrDescr_Xmidd_Yoffs(posKeys[i],- LCD_GetFontHeight(fontID_descr), txtKey[i], colorTxtKey[i]);
+	}
+	LCD_Display(0, s[nr].x, s[nr].y, widthAll, heightAll);
+}
+static void SetTouch_Slider(int nr, uint16_t startTouchIdx, SHAPE_PARAMS *elemSliderPos){
+	if(startTouchIdx){
+		for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i)
+			SetTouchSlider(nr,s[nr].startTouchIdx, elemSliderPos[i]); //po co 'k' i 's[k].startTouchIdx'  ????!!
+	}
+}
+void KEYBOARD__ServiceSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int TOUCH_Action, char* txtDescr, int *value, VOID_FUNCTION *pfunc)
+{
+	uint32_t LineColor 	= frameColor;
+	uint32_t LineSelColor = COLOR_GRAY(0x77);
+	uint32_t spaceTriangLine = 11;	/* DelTriang */
+	int maxSliderValue = 255;
+
+	VOID_FUNCTION *funcForSlider = pfunc;
+	int *pValForSlider = (int*)value;
+	int head = GetHeightHead(k);
+	XY_Touch_Struct posKey[GetPosKeySize()];
+
+	SetPosKey(k,posKey, s[k].widthKey, head);
+	SetDimAll(k, s[k].widthKey, head);
+
+	int countKey = dimKeys[0]*dimKeys[1];
+	SHAPE_PARAMS elemSliderPos[countKey];
+
+	if(TOUCH_Release == selBlockPress){
+		ShapeWin(k,widthAll,heightAll);
+		TxtDescr(k, 0,0, txtDescr);
+
+		KeysAllRelease_Slider(k, posKey, value, maxSliderValue, LineColor, LineSelColor, spaceTriangLine, elemSliderPos);
+	}
+	else{
+		INIT(nr,selBlockPress-TOUCH_Action);
+		if		 (IS_RANGE(nr,0,	countKey-1)){	INIT(n,nr);
+			ElemSliderPressDisp_oneBlock(k,x,posKey[n],spaceTriangLine, ChangeElemSliderColor(RightSel,colorTxtKey[n]),LineColor,LineSelColor,pValForSlider+n,Percent,maxSliderValue,funcForSlider); }
+		else if(IS_RANGE(nr,3,2*countKey-1)){	INIT(n,nr-countKey);
+			ElemSliderPressDisp_oneBlock(k,x,posKey[n],spaceTriangLine, ChangeElemSliderColor(LeftSel, colorTxtKey[n]),LineColor,LineSelColor,pValForSlider+n,Percent,maxSliderValue,funcForSlider); }
+		else if(IS_RANGE(nr,6,3*countKey-1)){	INIT(n,nr-2*countKey);
+			ElemSliderPressDisp_oneBlock(k,x,posKey[n],spaceTriangLine, ChangeElemSliderColor(PtrSel,  colorTxtKey[n]),LineColor,LineSelColor,pValForSlider+n,PosX,	 maxSliderValue,funcForSlider); }
+	}
+	SetTouch_Slider(k, startTouchIdx, elemSliderPos);
+}
+
+void KEYBOARD__ServiceSliderRGB_3(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, int *value, VOID_FUNCTION *pfunc)
 {
 	const char *txtSliders[]							= {"Red","Green","Blue"};
 	const COLORS_DEFINITION colorTxtSliders[]		= {RED, GREEN, BLUE};
