@@ -28,6 +28,11 @@ typedef enum{
 	KEBOARD_3,
 }KEYBOARD_NUMBER;
 
+typedef enum{
+	DispYes,
+	DispNo,
+}DISPLAY_YES_NO;
+
 static char 				 txtKey			   [MAX_WIN_Y] [MAX_WIN_X];
 static COLORS_DEFINITION colorTxtKey		[MAX_WIN_Y];
 static COLORS_DEFINITION colorTxtPressKey [MAX_WIN_Y];
@@ -225,7 +230,7 @@ static void _KeyStrPressDisp_oneBlock(int nr, XY_Touch_Struct pos, const char *t
 static void KeyStrPressDisp_oneKey(int nr, XY_Touch_Struct pos, int nrTab){
 	KeyStrPressDisp_oneBlock(nr, pos, txtKey[nrTab], colorTxtPressKey[nrTab]);
 }
-static void _KeyStrPressDisp_oneKey(int nr, XY_Touch_Struct pos, int nrTab, char txtKeys[MAX_WIN_Y][MAX_WIN_X], uint32_t colorTxtPressKeys[], int nrWH){
+static void _KeyStrPressDisp_oneKey(int nr, XY_Touch_Struct pos, int nrTab, char *txtKeys[], uint32_t colorTxtPressKeys[], int nrWH){
 	_KeyStrPressDisp_oneBlock(nr, pos, txtKeys[nrTab], colorTxtPressKeys[nrTab],nrWH);
 }
 
@@ -313,7 +318,7 @@ static void SetDimKey(int nr, figureShape shape, uint16_t width, uint16_t height
 	}
 }
 
-static void _SetDimKey(int nr, figureShape shape, uint16_t width, uint16_t height, uint16_t dimKey[], char *txtKeys[]/*char txtKeys[MAX_WIN_Y][MAX_WIN_X]*/, int nrWH){
+static void _SetDimKey(int nr, figureShape shape, uint16_t width, uint16_t height, uint16_t dimKey[], char *txtKeys[], int nrWH){
 	if(0!=shape){
 		if(KeysAutoSize==width){
 			int count = dimKey[0]*dimKey[1];
@@ -335,6 +340,10 @@ static void _SetDimKey(int nr, figureShape shape, uint16_t width, uint16_t heigh
 static void ShapeWin(int nr, int width_all, int height_all){
 	LCD_ShapeWindow( s[nr].shape,0,width_all,height_all, 0,0, width_all,height_all, SetBold2Color(frameMainColor,s[nr].bold), fillMainColor,bkColor );
 }
+static void TxtDescr(int nr, uint16_t xPos, uint16_t yPos, char* txtDescr){
+	XY_Touch_Struct posHead = {xPos,yPos};
+	StrDescr(nr, posHead, txtDescr, colorDescr);
+}
 
 static void SetDimAll(int nr, int interSpace, int head){
 	widthAll =  s[nr].interSpace + dimKeys[0]*s[nr].widthKey  + (dimKeys[0]-1)*interSpace + s[nr].interSpace;
@@ -346,53 +355,54 @@ static structSize _SetDimAll(int nr, int interSpace, int head, uint16_t dimKey[]
 	return temp;
 }
 
-static void KeysAllRelease(int nr, XY_Touch_Struct posKeys[], char* headTxt){
-	int countKey = dimKeys[0]*dimKeys[1];
-	LCD_ShapeWindow( s[nr].shape,0,widthAll,heightAll, 0,0, widthAll,heightAll, SetBold2Color(frameMainColor,s[nr].bold), fillMainColor,bkColor );
-	if(NULL!=headTxt){	XY_Touch_Struct posHead={0,0};	StrDescr(nr,posHead, headTxt, colorDescr);	}
-	for(int i=0; i<countKey; ++i){
-		i<countKey-1 ? KeyStr(nr,posKeys[i],txtKey[i],colorTxtKey[i]) : KeyStrDisp(nr,posKeys[i],txtKey[i],colorTxtKey[i]);
-	/*	_Key(posKey[i]);
-		_TxtPos(k,posKey[i]);		i<countKey-1 ? _Str(txtKey[i],colorTxtKey[i]) : _StrDisp(k,txtKey[i],colorTxtKey[i]); */		/* This is the same as up */
-}}
-static void _KeysAllRelease(int nr, XY_Touch_Struct posKeys[], char* headTxt, uint16_t dimKey[], char txtKeys[MAX_WIN_Y][MAX_WIN_X], uint32_t colorTxtKeys[], int nrWH){
-	int countKey = dimKey[0]*dimKey[1];
-	ShapeWin(nr,widthAll,heightAll);
-	if(NULL!=headTxt){	XY_Touch_Struct posHead={0,0};	StrDescr(nr,posHead, headTxt, colorDescr);	}
-	for(int i=0; i<countKey; ++i){
-		i<countKey-1 ? _KeyStr(nr,posKeys[i],txtKeys[i],colorTxtKeys[i],nrWH) : _KeyStrDisp(nr,posKeys[i],txtKeys[i],colorTxtKeys[i],nrWH);
-}}
+static void KeysAllRelease(int nr, XY_Touch_Struct posKeys[]){
+	int i, countKey = dimKeys[0]*dimKeys[1];
+	for(i=0; i<countKey-1; ++i)
+		KeyStr(nr,posKeys[i],txtKey[i],colorTxtKey[i]);
+	KeyStrDisp(nr,posKeys[i],txtKey[i],colorTxtKey[i]);
+}
+static void _KeysAllRelease(int nr, XY_Touch_Struct posKeys[], uint16_t dimKey[], char *txtKeys[], uint32_t colorTxtKeys[], int nrWH, DISPLAY_YES_NO disp){
+	int i, countKey = dimKey[0]*dimKey[1];
+	for(i=0; i<countKey-1; ++i)
+		_KeyStr(nr,posKeys[i],txtKeys[i],colorTxtKeys[i],nrWH);
+	if(DispYes==disp)	_KeyStrDisp(nr,posKeys[i],txtKeys[i],colorTxtKeys[i],nrWH);
+	else					_KeyStr	  (nr,posKeys[i],txtKeys[i],colorTxtKeys[i],nrWH);
+}
 
-static void KeysSelectOne(int nr, XY_Touch_Struct posKeys[], char* headTxt, int value){
-	int countKey = dimKeys[0]*dimKeys[1];
-	ShapeWin(nr,widthAll,heightAll);
-	if(NULL!=headTxt){	XY_Touch_Struct posHead={0,0};	StrDescr(nr,posHead, headTxt, colorDescr);	}
-	for(int i=0; i<countKey; ++i){
-		if(i == value)
-			i<countKey-1 ? KeyStrPress(nr,posKeys[i],txtKey[i],colorTxtPressKey[i]) : KeyStrPressDisp(nr,posKeys[i],txtKey[i],colorTxtPressKey[i]);
-		else
-			i<countKey-1 ? KeyStr(nr,posKeys[i],txtKey[i],colorTxtKey[i]) : KeyStrDisp(nr,posKeys[i],txtKey[i],colorTxtKey[i]);
-}}
-static void _KeysSelectOne(int nr, XY_Touch_Struct posKeys[], char* headTxt, int value, uint16_t dimKey[], char txtKeys[MAX_WIN_Y][MAX_WIN_X], uint32_t colorTxtKeys[], uint32_t colorTxtPressKeys[], int nrWH){
-	int countKey = dimKey[0]*dimKey[1];
-	ShapeWin(nr,widthAll,heightAll);
-	if(NULL!=headTxt){	XY_Touch_Struct posHead={0,0};	StrDescr(nr,posHead, headTxt, colorDescr);	}
-	for(int i=0; i<countKey; ++i){
-		if(i == value)
-			i<countKey-1 ? _KeyStrPress(nr,posKeys[i],txtKeys[i],colorTxtPressKeys[i],nrWH) : _KeyStrPressDisp(nr,posKeys[i],txtKeys[i],colorTxtPressKeys[i],nrWH);
-		else
-			i<countKey-1 ? _KeyStr(nr,posKeys[i],txtKeys[i],colorTxtKeys[i],nrWH) : _KeyStrDisp(nr,posKeys[i],txtKeys[i],colorTxtKeys[i],nrWH);
-}}
+static void KeysSelectOne(int nr, XY_Touch_Struct posKeys[], int value){
+	typedef void FUNC_KEYSTR(int,XY_Touch_Struct,const char*,uint32_t);
+	int i, countKey = dimKeys[0]*dimKeys[1];
+	void _KeyStrFunc(FUNC_KEYSTR pFunc1,FUNC_KEYSTR pFunc2){
+		if(i == value)	pFunc1(nr,posKeys[i],txtKey[i],colorTxtPressKey[i]);
+		else				pFunc2(nr,posKeys[i],txtKey[i],colorTxtKey[i]);
+	}
+	for(i=0; i<countKey-1; ++i)
+		_KeyStrFunc( KeyStrPress, KeyStr );
+	_KeyStrFunc( KeyStrPressDisp, KeyStrDisp );
+}
+static void _KeysSelectOne(int nr, XY_Touch_Struct posKeys[], int value, uint16_t dimKey[], char *txtKeys[], uint32_t colorTxtKeys[], uint32_t colorTxtPressKeys[], int nrWH, DISPLAY_YES_NO disp){
+	typedef void FUNC_KEYSTR(int,XY_Touch_Struct,const char*,uint32_t,int);
+	int i, countKey = dimKey[0]*dimKey[1];
+	void _KeyStrFunc(FUNC_KEYSTR pFunc1,FUNC_KEYSTR pFunc2){
+		if(i == value)	pFunc1(nr,posKeys[i],txtKeys[i],colorTxtPressKeys[i],nrWH);
+		else				pFunc2(nr,posKeys[i],txtKeys[i],colorTxtKeys[i],nrWH);
+	}
+	for(i=0; i<countKey-1; ++i)
+		_KeyStrFunc(_KeyStrPress,_KeyStr );
+	if(DispYes==disp) _KeyStrFunc(_KeyStrPressDisp,_KeyStrDisp );
+	else					_KeyStrFunc(_KeyStrPress, 	  _KeyStr );
+}
 
-static void SetTouch_CountButton(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys){
+static void SetTouch_Button(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys){
 	if(startTouchIdx){
 		for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i)
 			SetTouch(nr,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[nr].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKeys[i]);
 }}
-static void _SetTouch_CountButton(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys, uint16_t dimKey[], int nrWH){
+static void _SetTouch_Button(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys, uint16_t dimKey[], int nrWH){
+	uint8_t touchCnt = s[nr].nmbTouch;
 	if(startTouchIdx){
 		for(int i=0; i<dimKey[0]*dimKey[1]; ++i)
-			_SetTouch(nr,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[nr].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKeys[i],nrWH);
+			_SetTouch(nr,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[nr].startTouchIdx + touchCnt + i, TOUCH_GET_PER_X_PROBE, posKeys[i],nrWH);
 }}
 
 static void SetTouch_Select(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys){
@@ -401,9 +411,10 @@ static void SetTouch_Select(int nr, uint16_t startTouchIdx, XY_Touch_Struct* pos
 			SetTouch(nr,ID_TOUCH_POINT, s[nr].startTouchIdx + i, press, posKeys[i]);
 }}
 static void _SetTouch_Select(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys, uint16_t dimKey[], int nrWH){
+	uint8_t touchCnt = s[nr].nmbTouch;
 	if(startTouchIdx){
 		for(int i=0; i<dimKey[0]*dimKey[1]; ++i)
-			_SetTouch(nr,ID_TOUCH_POINT, s[nr].startTouchIdx + i, press, posKeys[i],nrWH);
+			_SetTouch(nr,ID_TOUCH_POINT, s[nr].startTouchIdx + touchCnt + i, press, posKeys[i],nrWH);
 }}
 
 static int GetPosKeySize(void){
@@ -495,74 +506,47 @@ int KEYBOARD_StartUp(int type, figureShape shape, uint8_t bold, uint16_t x, uint
 
 void KEYBOARD_Buttons(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int TOUCH_Action, char* txtDescr)
 {
-	//XY_Touch_Struct posKey[GetPosKeySize()];
-	XY_Touch_Struct posKey[_GetPosKeySize((uint16_t*)dimKeys)];
-
-	int head = GetHeightHead(k);
+	int head 	  = GetHeightHead(k);
 	int interSpac = 4;
+	XY_Touch_Struct posKey[GetPosKeySize()];
 
-	//SetDimKey(k,shape,widthKey,heightKey);
-	_SetDimKey(k,shape,widthKey,heightKey,(uint16_t*)dimKeys,txtKey,KEBOARD_1);
-
-	//SetPosKey(k,posKey,interSpac,head);
-	_SetPosKey(k,posKey,interSpac,head, dimKeys, 0, KEBOARD_1);
-
-	//SetDimAll(k,interSpac,head);
-	structSize allSize = _SetDimAll(k,interSpac,head,dimKeys,KEBOARD_1);
-	widthAll = allSize.w;
-	heightAll = allSize.h;
-
+	SetDimKey(k,shape,widthKey,heightKey);
+	SetPosKey(k,posKey,interSpac,head);
+	SetDimAll(k,interSpac,head);
 
 	if(TOUCH_Release == selBlockPress){
-		//KeysAllRelease(k, posKey, txtDescr);
-		_KeysAllRelease(k, posKey, txtDescr, dimKeys, txtKey, (uint32_t*)colorTxtKey, KEBOARD_1);
+		ShapeWin(k,widthAll,heightAll);
+		TxtDescr(k, 0,0, txtDescr);
+		KeysAllRelease(k, posKey);
 	}
 	else{
 		INIT(nr,selBlockPress-TOUCH_Action);
-		 //KeyStrPressDisp_oneKey(k,posKey[nr],nr);
-		_KeyStrPressDisp_oneKey(k,posKey[nr],nr, txtKey, (uint32_t*)colorTxtPressKey, KEBOARD_1);
+		KeyStrPressDisp_oneKey(k,posKey[nr],nr);
 	}
-
-	//SetTouch_CountButton(k, startTouchIdx, posKey);
-	_SetTouch_CountButton(k, startTouchIdx, posKey, dimKeys, KEBOARD_1);
+	SetTouch_Button(k, startTouchIdx, posKey);
 }
 
-void KEYBOARD_Select(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int value)
+void KEYBOARD_Select(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, char* txtDescr, int value)
 {
-	//XY_Touch_Struct posKey[GetPosKeySize()];
-	XY_Touch_Struct posKey[_GetPosKeySize((uint16_t*)dimKeys)];
-
-	int head = GetHeightHead(k);
+	int head 	  = GetHeightHead(k);
 	int interSpac = -1;
+	XY_Touch_Struct posKey[GetPosKeySize()];
 
-	//SetDimKey(k,shape,widthKey,heightKey);
-	_SetDimKey(k,shape,widthKey,heightKey,(uint16_t*)dimKeys,txtKey,KEBOARD_1);
-
-	//SetPosKey(k,posKey,interSpac,head);
-	_SetPosKey(k,posKey,interSpac,head, dimKeys, 0, KEBOARD_1);
-
-	//SetDimAll(k,interSpac,head);
-		structSize allSize = _SetDimAll(k,interSpac,head,dimKeys,KEBOARD_1);
-		widthAll = allSize.w;
-		heightAll = allSize.h;
+	SetDimKey(k,shape,widthKey,heightKey);
+	SetPosKey(k,posKey,interSpac,head);
+	SetDimAll(k,interSpac,head);
 
 	if(TOUCH_Release == selBlockPress){
-		//KeysSelectOne(k, posKey, "text", value);
-		_KeysSelectOne(k, posKey, "text", value, dimKeys, txtKey, (uint32_t*)colorTxtKey, (uint32_t*)colorTxtPressKey, KEBOARD_1);
+		ShapeWin(k,widthAll,heightAll);
+		TxtDescr(k, 0,0, txtDescr);
+		KeysSelectOne(k, posKey, value);
 	}
-
-
-	//SetTouch_Select(k, startTouchIdx, posKey);
-	_SetTouch_Select(k, startTouchIdx, posKey, dimKeys, KEBOARD_1);
-
+	SetTouch_Select(k, startTouchIdx, posKey);
 }
-
-
-
 
 void KEYBOARD__ServiceSize__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int TOUCH_Action, char* txtDescr, int value)
 {
-	const char *txtKey1[]							= {"Size +",	"Size -"};  ///te tablice const !!!!!
+	const char *txtKey1[]							= {"Size +",	"Size -"};
 	const COLORS_DEFINITION colorTxtKey1[]		= {WHITE,	  	WHITE};
 	const COLORS_DEFINITION colorTxtPressKey1[]= {DARKRED,	BLACK};
 	const uint16_t dimKeys1[] = {1,2};
@@ -575,57 +559,38 @@ void KEYBOARD__ServiceSize__(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int 
 	XY_Touch_Struct posKey1[_GetPosKeySize((uint16_t*)dimKeys1)];
 	XY_Touch_Struct posKey2[_GetPosKeySize((uint16_t*)dimKeys2)];
 
-	XY_Touch_Struct posHead={0,0};
 	int head = GetHeightHead(k);
 
-	_SetDimKey(k,shape,widthKey,heightKey,(uint16_t*)dimKeys1,(char**)txtKey1,KEBOARD_1); // trzeba tu inne okreslic !!!!!!
+	_SetDimKey(k,shape,widthKey,heightKey,(uint16_t*)dimKeys1,(char**)txtKey1,KEBOARD_1);
 	_SetDimKey(k,shape,widthKey,heightKey,(uint16_t*)dimKeys2,(char**)txtKey2,KEBOARD_2);
 
 	int interSpac = s[k].interSpace;
 	int offsX = s[k].interSpace + dimKeys1[0]*s[k].wKey[0]  + (dimKeys1[0]-1)*interSpac;
+
 	_SetPosKey(k,posKey1,s[k].interSpace, head, (uint16_t*)dimKeys1, 0,		KEBOARD_1);
 	_SetPosKey(k,posKey2,s[k].interSpace, head, (uint16_t*)dimKeys2, offsX, KEBOARD_2);
 
 	structSize allSize1 = _SetDimAll(k,interSpac,head,(uint16_t*)dimKeys1,KEBOARD_1);
 	structSize allSize2 = _SetDimAll(k,interSpac,head,(uint16_t*)dimKeys2,KEBOARD_2);
 
-	widthAll = allSize1.w + allSize2.w;
-	heightAll =  allSize1.h > allSize2.h ? allSize1.h : allSize2.h;
-
-	int countKey = dimKeys1[0]*dimKeys1[1];
-	int countKey2 = dimKeys2[0]*dimKeys2[1];
+	widthAll  = allSize1.w + allSize2.w;
+	heightAll = MAXVAL2(allSize1.h, allSize2.h);
 
 	if(TOUCH_Release == selBlockPress)
 	{
 		ShapeWin(k,widthAll,heightAll);
-		StrDescr(k,posHead, txtDescr, colorDescr);
+		TxtDescr(k, 0,0, txtDescr);
 
-		for(int i=0; i<countKey; ++i)
-			_KeyStr(k,posKey1[i],txtKey1[i],colorTxtKey1[i],KEBOARD_1);
-
-		for(int i=0; i<countKey2; ++i)
-		{
-			if(i == value){
-					i<countKey2-1 ? _KeyStrPress(k,posKey2[i],txtKey2[i],colorTxtPressKey2[i],KEBOARD_2) : _KeyStrPressDisp(k,posKey2[i],txtKey2[i],colorTxtPressKey2[i],KEBOARD_2);
-			}
-			else{	i<countKey2-1 ? _KeyStr(k,posKey2[i],txtKey2[i],colorTxtKey2[i],KEBOARD_2) : _KeyStrDisp(k,posKey2[i],txtKey2[i],colorTxtKey2[i],KEBOARD_2);
-			}
-		}
-
+		_KeysAllRelease(k, posKey1, 		  (uint16_t*)dimKeys1, (char**)txtKey1, (uint32_t*)colorTxtKey1, 										  KEBOARD_1, DispNo);
+		_KeysSelectOne (k, posKey2, value, (uint16_t*)dimKeys2, (char**)txtKey2, (uint32_t*)colorTxtKey2, (uint32_t*)colorTxtPressKey2, KEBOARD_2, DispYes);
 	}
-	else if(TOUCH_Action+0 == selBlockPress)	 _KeyStrPressDisp_oneBlock(k,posKey1[0], txtKey1[0], colorTxtPressKey1[0],KEBOARD_1);
-	else if(TOUCH_Action+1 == selBlockPress)	 _KeyStrPressDisp_oneBlock(k,posKey1[1], txtKey1[1], colorTxtPressKey1[1],KEBOARD_1);
-
-	if(startTouchIdx){
-		int touch_it=0;  // touch_it and  s[k].nmbTouch is the same  !!!!
-		for(int i=0; i<countKey; ++i)
-			_SetTouch(k,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[k].startTouchIdx + touch_it++, TOUCH_GET_PER_X_PROBE, posKey1[i],KEBOARD_1);
-
-		for(int i=0; i<countKey2; ++i)
-			_SetTouch(k,ID_TOUCH_POINT, s[k].startTouchIdx + touch_it++, press, posKey2[i],KEBOARD_2);
+	else{
+		INIT(nr,selBlockPress-TOUCH_Action);
+		_KeyStrPressDisp_oneBlock(k, posKey1[nr], txtKey1[nr], colorTxtPressKey1[nr],KEBOARD_1);
 	}
 
-
+	_SetTouch_Button(k, startTouchIdx, posKey1, (uint16_t*)dimKeys1, KEBOARD_1);
+	_SetTouch_Select(k, startTouchIdx, posKey2, (uint16_t*)dimKeys2, KEBOARD_2);
 }
 
 void KEYBOARD__ServiceSize(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, char* txtDescr, uint32_t colorDescr, int value)
