@@ -262,7 +262,7 @@ void FILE_NAME(setTouch)(void);
 void 	FILE_NAME(main)(int argNmb, char **argVal);
 /*------------ End Main Screen MACRO -----------------*/
 
-#define TEXT_TO_SHOW		"Rafa"ł" Markielowski"
+#define TEXT_TO_SHOW		"1234567890"//"Rafa"ł" Markielowski"
 
 #define nrMIDDLE_TXT	19
 #define POS_X_TXT		LCD_Xmiddle(nrMIDDLE_TXT,GetPos,v.FONT_ID_Fonts,Test.txt,Test.spaceBetweenFonts,Test.constWidth)
@@ -1171,24 +1171,24 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			break;
 
 		case KEYBOARD_fontCoeff:
-			KEYBOARD_KeyParamSet(StringTxt,2,1,"+", "-");
-			KEYBOARD_KeyParamSet(Color1Txt,2,1,WHITE,WHITE);
-			KEYBOARD_KeyParamSet(Color2Txt,2,1,LIGHTCYAN,LIGHTCYAN);
+			KEYBOARD_KeyParamSet(StringTxt,1,2,"+", "-");
+			KEYBOARD_KeyParamSet(Color1Txt,1,2,WHITE,WHITE);
+			KEYBOARD_KeyParamSet(Color2Txt,1,2,LIGHTCYAN,LIGHTCYAN);
 			KEYBOARD_SetGeneral(N,N,N, N,N, N,BrightIncr(v.COLOR_FillFrame,0xE), N,N,N);
 			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Coeff_plus, SL(LANG_CoeffKeyName));
 			break;
 
 		case KEYBOARD_fontStyle:
-			KEYBOARD_KeyParamSet(StringTxt,1,3,"Arial", "Times_New_Roman", "Comic_Saens_MS","1","2","3");
-			KEYBOARD_KeyParamSet(Color1Txt,1,3,WHITE,WHITE,WHITE,WHITE,WHITE,ORANGE);
-			KEYBOARD_KeyParamSet(Color2Txt,1,3,DARKRED,DARKRED,DARKBLUE,DARKRED,DARKRED,DARKBLUE);
+			KEYBOARD_KeyParamSet(StringTxt,3,1,"Arial", "Times_New_Roman", "Comic_Saens_MS","1","2","3");
+			KEYBOARD_KeyParamSet(Color1Txt,3,1,WHITE,WHITE,WHITE,WHITE,WHITE,ORANGE);
+			KEYBOARD_KeyParamSet(Color2Txt,3,1,DARKRED,DARKRED,DARKBLUE,DARKRED,DARKRED,DARKBLUE);
 			KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, NULL, Test.style);
 			break;
 
 		case KEYBOARD_fontType:
-			KEYBOARD_KeyParamSet(StringTxt,1,3,"(Gray-Green)", "(Gray-White)", "(White-Black)");
-			KEYBOARD_KeyParamSet(Color1Txt,1,3,WHITE,WHITE,WHITE);
-			KEYBOARD_KeyParamSet(Color2Txt,1,3,BLACK,BROWN,ORANGE);
+			KEYBOARD_KeyParamSet(StringTxt,3,1,"(Gray-Green)", "(Gray-White)", "(White-Black)");
+			KEYBOARD_KeyParamSet(Color1Txt,3,1,WHITE,WHITE,WHITE);
+			KEYBOARD_KeyParamSet(Color2Txt,3,1,BLACK,BROWN,ORANGE);
 			KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, NULL, Test.type);
 			break;
 
@@ -1207,9 +1207,9 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			break;
 
 		case KEYBOARD_sliderRGB:
-			KEYBOARD_KeyParamSet(StringTxt,1,3,"Red",					 "Green",			  "Blue");
-			KEYBOARD_KeyParamSet(Color1Txt,1,3, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
-			KEYBOARD_KeyParamSet(Color2Txt,1,3, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
+			KEYBOARD_KeyParamSet(StringTxt,3,1,"Red",					 "Green",			  "Blue");
+			KEYBOARD_KeyParamSet(Color1Txt,3,1, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
+			KEYBOARD_KeyParamSet(Color2Txt,3,1, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
 			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB);
 			break;
 
@@ -1323,7 +1323,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 200,46, 16, state, Touch_fontSliderR_left,KeysDel);
+				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 223,46, 16, state, Touch_fontSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
@@ -2101,14 +2101,15 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 		LCD_Xmiddle(nrMIDDLE_TXT,SetPos, SetPosAndWidth(Test.xFontsField,LCD_GetXSize()),NULL,0,NoConstWidth);
 		LCD_SetBkFontShape(v.FONT_VAR_Fonts,BK_Rectangle);
 	}
-
 	/*FILE_NAME(printInfo)();*/
-	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,220,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
+
+	INIT(endSetFrame,195);
+	LCD_DrawMainFrame(LCD_RoundRectangle,NoIndDisp,0, 0,0, LCD_X,endSetFrame,SHAPE_PARAM(MainFrame,FillMainFrame,BkScreen));
 
 	if		 (*(argVal+0)==(char*)FRAMES_GROUP_combined)
 		FRAMES_GROUP_combined(argNmb,15,15,25,25,1);
 	else if(*(argVal+0)==(char*)FRAMES_GROUP_separat)
-		FRAMES_GROUP_separat(argNmb,23,20,25,25,FRAME_bold2Space(0,6));
+		FRAMES_GROUP_separat(argNmb,15,15,25,25,FRAME_bold2Space(0,6));
 
 	/*	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450,0,TXT_CPU_USAGE,halfHight,0,255,ConstWidth); */
 	LCD_StrDependOnColors(v.FONT_ID_Descr, LCD_X-FV(GetVal,0,NoUse), LCD_Y-FV(GetVal,1,NoUse), SL(LANG_MainFrameType), fullHight,0, v.COLOR_FillFrame, v.FONT_COLOR_Descr, 255, NoConstWidth);
