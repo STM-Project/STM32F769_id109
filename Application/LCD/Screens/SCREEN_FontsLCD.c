@@ -401,13 +401,6 @@ typedef enum{
 	KEY_All_release_and_select_one,
 	KEY_Timer,
 
-	KEY_Red_plus,
-	KEY_Green_plus,
-	KEY_Blue_plus,
-	KEY_Red_minus,
-	KEY_Green_minus,
-	KEY_Blue_minus,
-
 	KEY_Red_slider_left,
 	KEY_Red_slider,
 	KEY_Red_slider_right,
@@ -417,6 +410,13 @@ typedef enum{
 	KEY_Blue_slider_left,
 	KEY_Blue_slider,
 	KEY_Blue_slider_right,
+
+	KEY_Red_plus,
+	KEY_Green_plus,
+	KEY_Blue_plus,
+	KEY_Red_minus,
+	KEY_Green_minus,
+	KEY_Blue_minus,
 
 	KEY_Style_1,
 	KEY_Style_2,
@@ -1193,7 +1193,7 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			break;
 
 		case KEYBOARD_fontSize:
-			KEYBOARD_ServiceSize(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release_and_select_one, KEY_Size_plus, SL(LANG_nazwa_0), Test.normBoldItal);
+			KEYBOARD_ServiceSizeStyle(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release_and_select_one, KEY_Size_plus, SL(LANG_nazwa_0), Test.normBoldItal);
 			break;
 
 		case KEYBOARD_fontSize2:
@@ -1207,10 +1207,11 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			break;
 
 		case KEYBOARD_sliderRGB:
-			KEYBOARD_KeyParamSet(StringTxt,3,1,"Red",					 "Green",			  "Blue");
-			KEYBOARD_KeyParamSet(Color1Txt,3,1, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
-			KEYBOARD_KeyParamSet(Color2Txt,3,1, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
-			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB);
+//			KEYBOARD_KeyParamSet(StringTxt,3,1,"Red",					 "Green",			  "Blue");
+//			KEYBOARD_KeyParamSet(Color1Txt,3,1, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
+//			KEYBOARD_KeyParamSet(Color2Txt,3,1, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
+//			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB);
+			KEYBOARD_Service_SliderButtonRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB);
 			break;
 
 		case KEYBOARD_setTxt:
