@@ -336,12 +336,12 @@ typedef enum{
 	Touch_fontSliderB_left,
 	Touch_fontSliderB,
 	Touch_fontSliderB_right,
-	Touch_exmpl_1,
-	Touch_exmpl_2,
-	Touch_exmpl_3,
-	Touch_exmpl_4,
-	Touch_exmpl_5,
-	Touch_exmpl_6,
+	Touch_sliderRp,
+	Touch_sliderGp,
+	Touch_sliderBp,
+	Touch_sliderRm,
+	Touch_sliderGm,
+	Touch_sliderBm,
 	Touch_bkRp,
 	Touch_bkGp,
 	Touch_bkBp,
@@ -423,12 +423,12 @@ typedef enum{
 	KEY_Blue_slider_left,
 	KEY_Blue_slider,
 	KEY_Blue_slider_right,
-	KEY_exmpl_1,
-	KEY_exmpl_2,
-	KEY_exmpl_3,
-	KEY_exmpl_4,
-	KEY_exmpl_5,
-	KEY_exmpl_6,
+	KEY_sliderRp,
+	KEY_sliderGp,
+	KEY_sliderBp,
+	KEY_sliderRm,
+	KEY_sliderGm,
+	KEY_sliderBm,
 
 	KEY_Style_1,
 	KEY_Style_2,
@@ -1278,13 +1278,13 @@ void FILE_NAME(setTouch)(void)
 				CLR_TOUCH(state);\
 			}
 
-	#define _KEYS_RELEASE_fontRGB 		if(_WasStatePrev(Touch_fontRp,     Touch_fontBm)) 	 	 KEYBOARD_TYPE(KEYBOARD_fontRGB,   KEY_All_release)
-	#define _KEYS_RELEASE_fontBk 			if(_WasStatePrev(Touch_fontRp,     Touch_bkBm)) 		 KEYBOARD_TYPE(KEYBOARD_bkRGB,     KEY_All_release)
-	#define _KEYS_RELEASE_fontSize 		if(_WasStatePrev(Touch_size_plus,  Touch_size_minus))	 KEYBOARD_TYPE(KEYBOARD_fontSize,  KEY_All_release_and_select_one)
-	#define _KEYS_RELEASE_fontCoeff 		if(_WasStatePrev(Touch_coeff_plus, Touch_coeff_minus)) KEYBOARD_TYPE(KEYBOARD_fontCoeff, KEY_All_release)
-	#define _KEYS_RELEASE_fontSliderRGB if(_WasStatePrev(Touch_fontSliderR_left, Touch_exmpl_6)) KEYBOARD_TYPE(KEYBOARD_sliderRGB, KEY_All_release)
-	#define _KEYS_RELEASE_LenOffsWin 	if(_WasStatePrev(Touch_LenWin_plus, Touch_ResetSpaces)) KEYBOARD_TYPE(KEYBOARD_LenOffsWin, KEY_All_release)
-	#define _KEYS_RELEASE_setTxt 	if(_WasStatePrev(Touch_Q, Touch_enter)) KEYBOARD_TYPE(KEYBOARD_setTxt, KEY_All_release)
+	#define _KEYS_RELEASE_fontRGB 		if(_WasStatePrev( Touch_fontRp,     	  Touch_fontBm)) 	 		KEYBOARD_TYPE( KEYBOARD_fontRGB,   KEY_All_release)
+	#define _KEYS_RELEASE_fontBk 			if(_WasStatePrev( Touch_fontRp,     	  Touch_bkBm)) 		 	KEYBOARD_TYPE( KEYBOARD_bkRGB,     KEY_All_release)
+	#define _KEYS_RELEASE_fontSize 		if(_WasStatePrev( Touch_size_plus,  	  Touch_size_minus))		KEYBOARD_TYPE( KEYBOARD_fontSize,  KEY_All_release_and_select_one)
+	#define _KEYS_RELEASE_fontCoeff 		if(_WasStatePrev( Touch_coeff_plus, 	  Touch_coeff_minus)) 	KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_All_release)
+	#define _KEYS_RELEASE_fontSliderRGB if(_WasStatePrev( Touch_fontSliderR_left,Touch_sliderBm)) 		KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_All_release)
+	#define _KEYS_RELEASE_LenOffsWin 	if(_WasStatePrev( Touch_LenWin_plus, 	  Touch_ResetSpaces)) 	KEYBOARD_TYPE( KEYBOARD_LenOffsWin,KEY_All_release)
+	#define _KEYS_RELEASE_setTxt 			if(_WasStatePrev( Touch_Q, 				  Touch_enter)) 			KEYBOARD_TYPE( KEYBOARD_setTxt, 	  KEY_All_release)
 
 	static uint16_t statePrev=0;
 	uint16_t state, function=0;
@@ -1412,21 +1412,21 @@ void FILE_NAME(setTouch)(void)
 		case Touch_fontGm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Green_minus ); Test.step=5; _SaveState(); break;
 		case Touch_fontBm: _KEYS_RELEASE_fontRGB;	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_fontRGB, KEY_Blue_minus ); 	Test.step=5; _SaveState(); break;
 
-		case Touch_fontSliderR:  		_KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Red_slider,  pos.x,0,0,0,0 );  _SaveState(); break;
-		case Touch_fontSliderG:  		_KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Green_slider,pos.x,0,0,0,0 );  _SaveState(); break;
-		case Touch_fontSliderB:  		_KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Blue_slider, pos.x,0,0,0,0 );  _SaveState(); break;
+		case Touch_fontSliderR:  _KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Red_slider,   pos.x,0,0,0,0 );  _SaveState(); break;
+		case Touch_fontSliderG:  _KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Green_slider, pos.x,0,0,0,0 );  _SaveState(); break;
+		case Touch_fontSliderB:  _KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Blue_slider,  pos.x,0,0,0,0 );  _SaveState(); break;
 		case Touch_fontSliderR_left:  _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Red_slider_left );   Test.step=5; _SaveState();  break;
 		case Touch_fontSliderR_right: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Red_slider_right );  Test.step=5; _SaveState();  break;
 		case Touch_fontSliderG_left: 	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Green_slider_left ); Test.step=5; _SaveState();  break;
 		case Touch_fontSliderG_right: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','G', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Green_slider_right );Test.step=5; _SaveState();  break;
 		case Touch_fontSliderB_left:  _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Blue_slider_left );  Test.step=5; _SaveState();  break;
 		case Touch_fontSliderB_right: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Blue_slider_right ); Test.step=5; _SaveState();  break;
-		case Touch_exmpl_4:  _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_exmpl_4 );   Test.step=5; _SaveState();  break;
-		case Touch_exmpl_1: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_exmpl_1 );  Test.step=5; _SaveState();  break;
-		case Touch_exmpl_5: 	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_exmpl_5 ); Test.step=5; _SaveState();  break;
-		case Touch_exmpl_2: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','G', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_exmpl_2 );Test.step=5; _SaveState();  break;
-		case Touch_exmpl_6:  _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_exmpl_6 );  Test.step=5; _SaveState();  break;
-		case Touch_exmpl_3: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_exmpl_3 ); Test.step=5; _SaveState();  break;
+		case Touch_sliderRm:  	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_sliderRm );  Test.step=5; _SaveState();  break;
+		case Touch_sliderRp: 	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_sliderRp );  Test.step=5; _SaveState();  break;
+		case Touch_sliderGm: 	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_sliderGm ); 	Test.step=5; _SaveState();  break;
+		case Touch_sliderGp: 	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','G', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_sliderGp );	Test.step=5; _SaveState();  break;
+		case Touch_sliderBm:  	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_sliderBm );  Test.step=5; _SaveState();  break;
+		case Touch_sliderBp: 	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_sliderBp );	Test.step=5; _SaveState();  break;
 
 		case Touch_bkRp: _KEYS_RELEASE_fontBk;	ChangeValRGB('b','R', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Red_plus );  	Test.step=5; _SaveState(); break;
 		case Touch_bkGp: _KEYS_RELEASE_fontBk;	ChangeValRGB('b','G', 1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_plus ); Test.step=5; _SaveState(); break;
@@ -1506,7 +1506,7 @@ void FILE_NAME(setTouch)(void)
 				KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_All_release );
 				Test.step=1;
 			}
-			if(_WasStateRange(Touch_exmpl_1, Touch_exmpl_6)){
+			if(_WasStateRange(Touch_sliderRp, Touch_sliderBm)){
 				KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_All_release );
 				Test.step=1;
 			}
