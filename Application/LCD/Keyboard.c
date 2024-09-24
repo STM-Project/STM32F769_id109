@@ -276,7 +276,7 @@ static void _KeysAllRelease_Slider(int nr, XY_Touch_Struct posKeys[],int *value,
 		elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, ChangeElemSliderSize(s[nr].wKey[nrWH],NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].heightKey,spaceTriangLine), colorTxtKeys[i], CONDITION(0==lineUnSelColor,colorTxtKeys[i],lineUnSelColor), colorTxtPressKeys[i], bkColor, SetValType(PERCENT_SCALE(*(value+i)+1,maxSliderValue+1),Percent), NoSel);
 		TxtDescrMidd_WidthKey(nr, posKeys[i], txtKeys[i], colorTxtPressKeys[i]);
 	}
-	//LCD_Display(0, s[nr].x, s[nr].y, widthAll, heightAll);
+	if(DispYes==disp) LCD_Display(0, s[nr].x, s[nr].y, widthAll, heightAll);
 }
 
 static void ElemSliderPressDisp_oneBlock(int nr, uint16_t x, XY_Touch_Struct posSlider, uint32_t spaceTringLine, int selElem, uint32_t lineColor, uint32_t lineSelColor, int *pVal, int valType, int maxSlidVal, VOID_FUNCTION *pfunc){
@@ -670,13 +670,13 @@ void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PA
 		const uint16_t dimKeys1[] = {1,3};
 	#endif
 
-	const char *txtKey2[]								= {"R+", "G+", "B+", "R-", "G-", "B-"};
-	const COLORS_DEFINITION colorTxtKey2[]			= {RED,GREEN,BLUE,RED,GREEN,BLUE};
+	const char *txtKey2[]								= {"R-","R+", "G-","G+", "B-","B+"};
+	const COLORS_DEFINITION colorTxtKey2[]			= {RED,RED,	GREEN,GREEN, BLUE,BLUE};
 	const COLORS_DEFINITION colorTxtPressKey2[]	= {DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE};
 	#ifdef _HORIZONTAL
 		const uint16_t dimKeys2[] = {6,1};
 	#else
-	 	const uint16_t dimKeys2[] = {1,6};
+	 	const uint16_t dimKeys2[] = {2,3};
 	#endif
 
 	uint32_t spaceTriangLine = 5;	/* DelTriang */
@@ -696,20 +696,20 @@ void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PA
 		structSize allSize1 = _SetDimAll(k,s[k].interSpace,head,(uint16_t*)dimKeys1,KEBOARD_1);
 		structSize allSize2 = _SetDimAll(k,s[k].interSpace,0,	  (uint16_t*)dimKeys2,KEBOARD_2);
 
-		_SetPosKey(k,posKey1,s[k].interSpace, head, 		  (uint16_t*)dimKeys1, 0, 	KEBOARD_1);
-		_SetPosKey(k,posKey2,s[k].interSpace, allSize1.h, (uint16_t*)dimKeys2, 500,KEBOARD_2);
-
 		widthAll  = allSize1.w;
 		heightAll = allSize1.h + allSize2.h;
+
+		_SetPosKey(k,posKey1,s[k].interSpace, head, 		  (uint16_t*)dimKeys1, 0, 										  KEBOARD_1);
+		_SetPosKey(k,posKey2,s[k].interSpace, allSize1.h, (uint16_t*)dimKeys2, MIDDLE(0, widthAll, allSize2.w), KEBOARD_2);
 	#else
 		structSize allSize1 = _SetDimAll(k,s[k].interSpace,head,(uint16_t*)dimKeys1,KEBOARD_1);
 		structSize allSize2 = _SetDimAll(k,s[k].interSpace,head,(uint16_t*)dimKeys2,KEBOARD_2);
 
-		_SetPosKey(k,posKey1,s[k].interSpace, head, (uint16_t*)dimKeys1, 0, 									  KEBOARD_1);
-		_SetPosKey(k,posKey2,s[k].interSpace, head, (uint16_t*)dimKeys2, allSize1.w - s[k].interSpace, KEBOARD_2);
-
 		widthAll  = (allSize1.w - s[k].interSpace) + allSize2.w;
 		heightAll = MAXVAL2(allSize1.h, allSize2.h);
+
+		_SetPosKey(k,posKey1,s[k].interSpace, head, (uint16_t*)dimKeys1, 0,			  						  KEBOARD_1);
+		_SetPosKey(k,posKey2,s[k].interSpace, head, (uint16_t*)dimKeys2, allSize1.w - s[k].interSpace, KEBOARD_2);
 	#endif
 
 	void _ElemSliderBlock(int nrSlid,SLIDER_PARAMS param){
@@ -735,10 +735,9 @@ void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PA
 		}
 		else{
 			INIT(nr,selBlockPress-(countKey1*NMB_SLIDER_ELEMENTS)-TOUCH_Action);
-			_KeyStrPressDisp_oneBlock(k, posKey2[nr], txtKey2[nr], colorTxtPressKey2[nr],KEBOARD_2);
-
-			if(nr < dimKeys2[0]) _ElemSliderBlock(nr,RightSel);
-			else						_ElemSliderBlock(nr-3,LeftSel);
+			_KeyStrPressDisp_oneBlock(k, posKey2[nr], txtKey2[nr], colorTxtPressKey2[nr], KEBOARD_2);
+			if(0==nr%2) _ElemSliderBlock(nr/2, LeftSel);
+			else			_ElemSliderBlock(nr/2, RightSel);
 		}
 	}
 	_SetTouch_Slider(k, startTouchIdx, elemSliderPos, (uint16_t*)dimKeys1, KEBOARD_1);

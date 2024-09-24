@@ -336,12 +336,12 @@ typedef enum{
 	Touch_fontSliderB_left,
 	Touch_fontSliderB,
 	Touch_fontSliderB_right,
-	Touch_sliderRp,
-	Touch_sliderGp,
-	Touch_sliderBp,
 	Touch_sliderRm,
+	Touch_sliderRp,
 	Touch_sliderGm,
+	Touch_sliderGp,
 	Touch_sliderBm,
+	Touch_sliderBp,
 	Touch_bkRp,
 	Touch_bkGp,
 	Touch_bkBp,
@@ -423,12 +423,12 @@ typedef enum{
 	KEY_Blue_slider_left,
 	KEY_Blue_slider,
 	KEY_Blue_slider_right,
-	KEY_sliderRp,
-	KEY_sliderGp,
-	KEY_sliderBp,
 	KEY_sliderRm,
+	KEY_sliderRp,
 	KEY_sliderGm,
+	KEY_sliderGp,
 	KEY_sliderBm,
+	KEY_sliderBp,
 
 	KEY_Style_1,
 	KEY_Style_2,
@@ -1282,7 +1282,7 @@ void FILE_NAME(setTouch)(void)
 	#define _KEYS_RELEASE_fontBk 			if(_WasStatePrev( Touch_fontRp,     	  Touch_bkBm)) 		 	KEYBOARD_TYPE( KEYBOARD_bkRGB,     KEY_All_release)
 	#define _KEYS_RELEASE_fontSize 		if(_WasStatePrev( Touch_size_plus,  	  Touch_size_minus))		KEYBOARD_TYPE( KEYBOARD_fontSize,  KEY_All_release_and_select_one)
 	#define _KEYS_RELEASE_fontCoeff 		if(_WasStatePrev( Touch_coeff_plus, 	  Touch_coeff_minus)) 	KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_All_release)
-	#define _KEYS_RELEASE_fontSliderRGB if(_WasStatePrev( Touch_fontSliderR_left,Touch_sliderBm)) 		KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_All_release)
+	#define _KEYS_RELEASE_fontSliderRGB if(_WasStatePrev( Touch_fontSliderR_left,Touch_sliderBp)) 		KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_All_release)
 	#define _KEYS_RELEASE_LenOffsWin 	if(_WasStatePrev( Touch_LenWin_plus, 	  Touch_ResetSpaces)) 	KEYBOARD_TYPE( KEYBOARD_LenOffsWin,KEY_All_release)
 	#define _KEYS_RELEASE_setTxt 			if(_WasStatePrev( Touch_Q, 				  Touch_enter)) 			KEYBOARD_TYPE( KEYBOARD_setTxt, 	  KEY_All_release)
 
@@ -1499,17 +1499,7 @@ void FILE_NAME(setTouch)(void)
 				Test.step=1;
 			}
 
-			if(_WasState(Touch_fontSliderR) || _WasState(Touch_fontSliderR_right) || _WasState(Touch_fontSliderR_left) ||
-				_WasState(Touch_fontSliderG) || _WasState(Touch_fontSliderG_right) || _WasState(Touch_fontSliderG_left) ||
-				_WasState(Touch_fontSliderB) || _WasState(Touch_fontSliderB_right) || _WasState(Touch_fontSliderB_left) )
-			{
-				KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_All_release );
-				Test.step=1;
-			}
-			if(_WasStateRange(Touch_sliderRp, Touch_sliderBm)){
-				KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_All_release );
-				Test.step=1;
-			}
+			if(_WasStateRange(Touch_fontSliderR_left, Touch_sliderBp)){		KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_All_release ); 	Test.step=1; 	}
 
 
 			if(_WasState(Touch_bkRp) || _WasState(Touch_bkRm) ||
