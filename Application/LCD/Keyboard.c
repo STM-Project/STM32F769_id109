@@ -54,7 +54,7 @@ static struct KEYBOARD_SETTINGS{
 	uint16_t wKey[MAXNMB_widthKey];
 	uint16_t hKey[MAXNMB_widthKey];
 	uint8_t interSpace;
-	uint8_t forTouchIdx;
+	uint8_t forTouchIdx;			/* is not used */
 	uint8_t startTouchIdx;
 	uint8_t nmbTouch;
 	uint8_t param;
@@ -84,7 +84,7 @@ static void _deleteAllTouchs(void){
 }
 static void _deleteAllTouchParams(void){
 	for(int j=0; j<MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY; ++j){
-		s[j].forTouchIdx = 0;  //NoTouch
+		s[j].forTouchIdx = NO_TOUCH;
 		s[j].nmbTouch = 0;
 	}
 }
@@ -93,7 +93,7 @@ static void _deleteTouchs(int nr){
 		LCD_TOUCH_DeleteSelectTouch(s[nr].startTouchIdx+i);
 }
 static void _deleteTouchParams(int nr){
-	s[nr].forTouchIdx = 0;  //NoTouch
+	s[nr].forTouchIdx = NO_TOUCH;
 	s[nr].nmbTouch = 0;
 }
 static int GetHeightHead(int nr){
@@ -265,7 +265,7 @@ static void SetTouchSlider(int nr,uint16_t idx, SHAPE_PARAMS posElemSlider){
 }
 static void KeysAllRelease_Slider(int nr, XY_Touch_Struct posKeys[],int *value, int maxSliderValue, uint32_t lineUnSelColor, uint32_t spaceTriangLine, SHAPE_PARAMS *elemSliderPos){
 	for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i){
-		elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, ChangeElemSliderSize(s[nr].widthKey,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].heightKey,spaceTriangLine), colorTxtKey[i], CONDITION(0==lineUnSelColor,colorTxtKey[i],lineUnSelColor), colorTxtPressKey[i], bkColor, SetValType(PERCENT_SCALE(*(value+i)+1,maxSliderValue+1),Percent), NoSel);
+		elemSliderPos[i] = LCD_SimpleSliderH(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, ChangeElemSliderSize(s[nr].widthKey,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].heightKey,spaceTriangLine), colorTxtKey[i], CONDITION(0==lineUnSelColor,colorTxtKey[i],lineUnSelColor), colorTxtPressKey[i], bkColor, SetValType(PERCENT_SCALE(*(value+i)+1,maxSliderValue+1),Percent), NoSel);
 		TxtDescrMidd_WidthKey(nr, posKeys[i], txtKey[i], colorTxtPressKey[i]);
 	}
 	LCD_Display(0, s[nr].x, s[nr].y, widthAll, heightAll);
@@ -273,7 +273,7 @@ static void KeysAllRelease_Slider(int nr, XY_Touch_Struct posKeys[],int *value, 
 static void _KeysAllRelease_Slider(int nr, XY_Touch_Struct posKeys[],int *value, int maxSliderValue, uint32_t lineUnSelColor, uint32_t spaceTriangLine, SHAPE_PARAMS *elemSliderPos, \
 			uint16_t dimKey[], char *txtKeys[], uint32_t colorTxtKeys[], uint32_t colorTxtPressKeys[], int nrWH, DISPLAY_YES_NO disp){
 	for(int i=0; i<dimKey[0]*dimKey[1]; ++i){
-		elemSliderPos[i] = LCD_SimpleSlider(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, ChangeElemSliderSize(s[nr].wKey[nrWH],NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].heightKey,spaceTriangLine), colorTxtKeys[i], CONDITION(0==lineUnSelColor,colorTxtKeys[i],lineUnSelColor), colorTxtPressKeys[i], bkColor, SetValType(PERCENT_SCALE(*(value+i)+1,maxSliderValue+1),Percent), NoSel);
+		elemSliderPos[i] = LCD_SimpleSliderH(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, ChangeElemSliderSize(s[nr].wKey[nrWH],NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].heightKey,spaceTriangLine), colorTxtKeys[i], CONDITION(0==lineUnSelColor,colorTxtKeys[i],lineUnSelColor), colorTxtPressKeys[i], bkColor, SetValType(PERCENT_SCALE(*(value+i)+1,maxSliderValue+1),Percent), NoSel);
 		TxtDescrMidd_WidthKey(nr, posKeys[i], txtKeys[i], colorTxtPressKeys[i]);
 	}
 	if(DispYes==disp) LCD_Display(0, s[nr].x, s[nr].y, widthAll, heightAll);
@@ -286,7 +286,7 @@ static void ElemSliderPressDisp_oneBlock(int nr, uint16_t x, XY_Touch_Struct pos
 		case Percent:	value = SetValType(PERCENT_SCALE(*pVal+1,maxSlidVal+1),Percent);  			  				  break;
 	}
 	LCD_ShapeWindow(LCD_Rectangle,0,s[nr].widthKey,s[nr].heightKey, 0,0, s[nr].widthKey,s[nr].heightKey, bkColor, bkColor,bkColor);
-	SHAPE_PARAMS slid = LCD_SimpleSlider(0, s[nr].widthKey, s[nr].heightKey, 0,0, ChangeElemSliderSize(s[nr].widthKey,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].heightKey,spaceTringLine), lineColor, lineSelColor ,selElem|0xFF000000, bkColor, value, selElem);
+	SHAPE_PARAMS slid = LCD_SimpleSliderH(0, s[nr].widthKey, s[nr].heightKey, 0,0, ChangeElemSliderSize(s[nr].widthKey,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].heightKey,spaceTringLine), lineColor, lineSelColor ,selElem|0xFF000000, bkColor, value, selElem);
 	LCD_Display(0, s[nr].x+posSlider.x, s[nr].y+posSlider.y, s[nr].widthKey, s[nr].heightKey);
 	if(PtrSel==SHIFT_RIGHT(selElem,24,F))
 		*pVal = SET_NEW_RANGE( ((maxSlidVal+1)*slid.param[0])/slid.param[1], slid.param[2],maxSlidVal-slid.param[2], 0,maxSlidVal );
@@ -299,7 +299,7 @@ static void _ElemSliderPressDisp_oneBlock(int nr, uint16_t x, XY_Touch_Struct po
 		case Percent:	value = SetValType(PERCENT_SCALE(*pVal+1,maxSlidVal+1),Percent);  			  				  break;
 	}
 	LCD_ShapeWindow(LCD_Rectangle,0,s[nr].wKey[nrWH],s[nr].hKey[nrWH], 0,0, s[nr].widthKey,s[nr].hKey[nrWH], bkColor, bkColor,bkColor);
-	SHAPE_PARAMS slid = LCD_SimpleSlider(0, s[nr].wKey[nrWH], s[nr].hKey[nrWH], 0,0, ChangeElemSliderSize(s[nr].wKey[nrWH],NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].hKey[nrWH],spaceTringLine), lineColor, lineSelColor ,selElem|0xFF000000, bkColor, value, selElem);
+	SHAPE_PARAMS slid = LCD_SimpleSliderH(0, s[nr].wKey[nrWH], s[nr].hKey[nrWH], 0,0, ChangeElemSliderSize(s[nr].wKey[nrWH],NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].hKey[nrWH],spaceTringLine), lineColor, lineSelColor ,selElem|0xFF000000, bkColor, value, selElem);
 	LCD_Display(0, s[nr].x+posSlider.x, s[nr].y+posSlider.y, s[nr].wKey[nrWH], s[nr].hKey[nrWH]);
 	if(PtrSel==SHIFT_RIGHT(selElem,24,F))
 		*pVal = SET_NEW_RANGE( ((maxSlidVal+1)*slid.param[0])/slid.param[1], slid.param[2],maxSlidVal-slid.param[2], 0,maxSlidVal );
@@ -552,13 +552,22 @@ int KEYBOARD_StartUp(int type, figureShape shape, uint8_t bold, uint16_t x, uint
 		s[k].widthKey = widthKey;
 		s[k].heightKey = heightKey;
 		s[k].interSpace = interSpace;
-		s[k].forTouchIdx = forTouchIdx;  //nigdzie nie uzywany !!!!!
+		s[k].forTouchIdx = forTouchIdx;
 		s[k].startTouchIdx = startTouchIdx;
 		s[k].nmbTouch = 0;
 		s[k].param = 0;
 		s[k].param2 = 0;
 	}
 	return 0;
+}
+
+static void WinInfo(char* txt, int x,int y, int w,int h, TIMER_ID tim){
+	uint32_t fillCol = BrightIncr(fillColor,0x1A);
+	LCD_ShapeWindow( LCD_RoundRectangle, 0, w,h, 0,0, w,h, SetBold2Color(frameColor,0), fillCol,bkColor );
+	LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,w),NULL,0,NoConstWidth);
+	LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,h));
+	LCD_StrDependOnColorsWindowIndirect(0,MIDDLE(0,LCD_X,w), y, w,h,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillCol, DARKRED,255, NoConstWidth);
+	vTimerService(TimerId_2,start_time,2000);
 }
 
 /* ----- User Function Definitions ----- */
@@ -780,9 +789,14 @@ void KEYBOARD_ServiceSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, in
 	SetTouch_Slider(k, startTouchIdx, elemSliderPos);
 }
 
+
+
+
+
+
 //SPACES DISP  numeracje dac ciemniejsza aby odroznic !!!!!!!!!!
 int KEYBOARD__ServiceLenOffsWin(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int touchRelease, int touchAction, int touchAction2, int touchTimer, char* txtDescr, char* txtDescr2, char* txtDescr3, char* txtDescr4, uint32_t colorDescr,FUNC_MAIN *pfunc,FUNC_MAIN_INIT)
-{extern uint32_t pLcd[];
+{extern uint32_t pLcd[]; //!!!!!!!!!!!!!!!!!!!!!!!!!!
 	#define _NMB2KEY	8
 	const char *txtKey[]								= {"(.......)", "(...)", "(.......)",	"(.......)", " _ ", " _ ", "|  |", "||", "Info spaces", "Write spaces", "Reset spaces"};
 	const COLORS_DEFINITION colorTxtKey[]		= {WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,	 WHITE,		WHITE,		 WHITE,			  WHITE};
@@ -841,13 +855,14 @@ int KEYBOARD__ServiceLenOffsWin(int k, int selBlockPress, INIT_KEYBOARD_PARAM, i
 	win.size.w *= LCD_GetWholeStrPxlWidth(fontID_descr,(char*)"a",0,NoConstWidth);
 
 	void _WinInfo(char* txt){
-		BKCOPY_VAL(fillColor_c[0],fillColor,BrightIncr(fillColor,0x1A));
-		LCD_ShapeWindow( s[k].shape, 0, win2.size.w, win2.size.h, 0,0, win2.size.w, win2.size.h, SetBold2Color(frameColor,s[k].bold), fillColor,bkColor );
-		LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.w),NULL,0,NoConstWidth);
-		LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.h));
-		LCD_StrDependOnColorsWindowIndirect(0,MIDDLE(0,LCD_X,win2.size.w) /* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, DARKRED,255, NoConstWidth);
-		BKCOPY(fillColor,fillColor_c[0]);
-		vTimerService(1,start_time,2000);
+		WinInfo(txt, win2.pos.x, win2.pos.y, win2.size.w, win2.size.h, TimerId_2);
+//		BKCOPY_VAL(fillColor_c[0],fillColor,BrightIncr(fillColor,0x1A));
+//		LCD_ShapeWindow( s[k].shape, 0, win2.size.w, win2.size.h, 0,0, win2.size.w, win2.size.h, SetBold2Color(frameColor,s[k].bold), fillColor,bkColor );
+//		LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.w),NULL,0,NoConstWidth);
+//		LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,win2.size.h));
+//		LCD_StrDependOnColorsWindowIndirect(0,MIDDLE(0,LCD_X,win2.size.w) /* win2.pos.x */, win2.pos.y, win2.size.w, win2.size.h,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillColor, DARKRED,255, NoConstWidth);
+//		BKCOPY(fillColor,fillColor_c[0]);
+//		vTimerService(TimerId_2,start_time,2000);
 	}
 	void _WindowSpacesInfo(uint16_t x,uint16_t y, uint16_t width,uint16_t height, int param){
 		int spaceFromFrame = 10;
