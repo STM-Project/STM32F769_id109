@@ -14,6 +14,7 @@
 #include "common.h"
 #include "touch.h" //to usunac !!!
 
+#define NO_TOUCH	0
 #define KEYBOARD_TYPE(type,key)						FILE_NAME(keyboard)(type,key,0,0,0,0,0,0,0,NoTouch,NoTouch,0)
 #define KEYBOARD_TYPE_PARAM(type,key,a,b,c,d,e)	FILE_NAME(keyboard)(type,key,0,0,a,b,c,d,e,NoTouch,NoTouch,0)
 
