@@ -3386,7 +3386,7 @@ SHAPE_PARAMS LCD_SimpleSliderH(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpS
 	if(DelTriang!=(int8_t)SHIFT_RIGHT(heightParam,16,FF))
 		LCD_SimpleTriangle	(posBuff,BkpSizeX, 				lineSel_posX-spaceTriangLine, MIDDLE(y,height,triang_Width), 	triang_Width/2,    triang_Height, 	elemColor[0], elemColor[0], BkpColor, 	Left);
 	LCD_LineH					(			BkpSizeX, 				lineSel_posX+1,					MIDDLE(y,height,line_Bold), 		lineSel_width, 							LineSelColor, 									line_Bold );
-	LCD_LittleRoundRectangle(posBuff,BkpSizeX, BkpSizeY, 	ptr_posX+1, 						MIDDLE(y,height,ptr_height), 		ptr_width, 		    ptr_height, 		elemColor[1], elemColor[1], BkpColor);
+	LCD_LittleRoundRectangle(posBuff,BkpSizeX, BkpSizeY, 	ptr_posX+1, 						MIDDLE(y,height,ptr_height)+1,	ptr_width, 		    ptr_height, 		elemColor[1], elemColor[1], BkpColor);
 	if(0<lineUnSel_width-2)
 		LCD_LineH				(			BkpSizeX, 				ptr_posX+1+ptr_width,			MIDDLE(y,height,line_Bold), 		lineUnSel_width-2, 						LineColor, 										line_Bold );
 	if(DelTriang!=(int8_t)SHIFT_RIGHT(heightParam,16,FF))
@@ -3470,7 +3470,7 @@ SHAPE_PARAMS LCD_SimpleSliderV(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpS
 	if(DelTriang!=(int8_t)SHIFT_RIGHT(heightParam,16,FF))
 		LCD_SimpleTriangle	(posBuff,BkpSizeX, 				MIDDLE(x,height,triang_Width), lineSel_posY-spaceTriangLine, 	triang_Width/2,    triang_Height, 	elemColor[0], elemColor[0], BkpColor, 	Up);
 	LCD_LineV					(			BkpSizeX, 				MIDDLE(x,height,line_Bold), 	 lineSel_posY+1,						lineSel_width, 							LineSelColor, 									line_Bold );
-	LCD_LittleRoundRectangle(posBuff,BkpSizeX, BkpSizeY, 	MIDDLE(x,height,ptr_height),	 ptr_posY+1, 					 		ptr_width, 		    ptr_height, 		elemColor[1], elemColor[1], BkpColor);
+	LCD_LittleRoundRectangle(posBuff,BkpSizeX, BkpSizeY, 	MIDDLE(x,height,ptr_height)+1, ptr_posY+1, 					 		ptr_height,			 ptr_width, 		elemColor[1], elemColor[1], BkpColor);
 	if(0<lineUnSel_width-2)
 		LCD_LineV				(			BkpSizeX, 				MIDDLE(x,height,line_Bold), 	 ptr_posY+1+ptr_width,				lineUnSel_width-2, 						LineColor, 										line_Bold );
 	if(DelTriang!=(int8_t)SHIFT_RIGHT(heightParam,16,FF))
@@ -3483,17 +3483,6 @@ SHAPE_PARAMS LCD_SimpleSliderV(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpS
 	#undef PTR_HEIGHT
 	#undef PTR_WIDTH
 }
-
-
-
-
-
-
-
-
-
-
-
 
 uint32_t SetLineBold2Width(uint32_t width, uint8_t bold){
 	return SHIFT_LEFT(width,bold,16);

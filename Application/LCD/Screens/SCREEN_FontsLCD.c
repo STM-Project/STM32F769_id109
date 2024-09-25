@@ -1204,18 +1204,18 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			break;
 
 		case KEYBOARD_sliderRGB:
-			KEYBOARD_KeyParamSet(StringTxt,1,3,"Red",					 "Green",			  "Blue");
-			KEYBOARD_KeyParamSet(Color1Txt,1,3, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
-			KEYBOARD_KeyParamSet(Color2Txt,1,3, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
-			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB);
-			/* KEYBOARD_Service_SliderButtonRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB); */
+//			KEYBOARD_KeyParamSet(StringTxt,1,3,"Red",					 "Green",			  "Blue");
+//			KEYBOARD_KeyParamSet(Color1Txt,1,3, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
+//			KEYBOARD_KeyParamSet(Color2Txt,1,3, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
+//			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB,Horizontal);
+			 KEYBOARD_Service_SliderButtonRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB);
 			break;
 
 		case KEYBOARD_sliderBkRGB:
-			KEYBOARD_KeyParamSet(StringTxt,1,3,"Red",					 "Green",			  "Blue");
-			KEYBOARD_KeyParamSet(Color1Txt,1,3, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
-			KEYBOARD_KeyParamSet(Color2Txt,1,3, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
-			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB);
+			KEYBOARD_KeyParamSet(StringTxt,3,1,"Red",					 "Green",			  "Blue");
+			KEYBOARD_KeyParamSet(Color1Txt,3,1, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
+			KEYBOARD_KeyParamSet(Color2Txt,3,1, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
+			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB, Vertical);
 			/* KEYBOARD_Service_SliderButtonRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB); */
 			break;
 
@@ -1366,7 +1366,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 223,46, 16, state, Touch_fontSliderR_left,KeysDel);
+				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 180,46, 16, state, Touch_fontSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
@@ -1376,7 +1376,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_BkColor2, BkColor,Press, TXT_BK_COLOR,252);
 			if(IsFunc())
-				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 223,46, 16, state, Touch_bkSliderR_left,KeysDel);
+				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 46,223, 16, state, Touch_bkSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontLenOffsWin, LenWin,Press, TXT_LENOFFS_WIN,252);
@@ -1454,9 +1454,9 @@ void FILE_NAME(setTouch)(void)
 		case Touch_bkGm: _KEYS_RELEASE_fontBk;	ChangeValRGB('b','G',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Green_minus );Test.step=5; _SaveState(); break;
 		case Touch_bkBm: _KEYS_RELEASE_fontBk;	ChangeValRGB('b','B',-1); KEYBOARD_TYPE( KEYBOARD_bkRGB, KEY_Blue_minus ); Test.step=5; _SaveState(); break;
 
-		case Touch_fontSliderR:  _KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Red_slider,   pos.x,0,0,0,0 );  _SaveState(); break;
-		case Touch_fontSliderG:  _KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Green_slider, pos.x,0,0,0,0 );  _SaveState(); break;
-		case Touch_fontSliderB:  _KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Blue_slider,  pos.x,0,0,0,0 );  _SaveState(); break;
+		case Touch_fontSliderR:  _KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Red_slider,   pos.x,pos.y,0,0,0 );  _SaveState(); break;
+		case Touch_fontSliderG:  _KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Green_slider, pos.x,pos.y,0,0,0 );  _SaveState(); break;
+		case Touch_fontSliderB:  _KEYS_RELEASE_fontSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderRGB, KEY_Blue_slider,  pos.x,pos.y,0,0,0 );  _SaveState(); break;
 		case Touch_fontSliderR_left:  _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Red_slider_left );   Test.step=5; _SaveState();  break;
 		case Touch_fontSliderR_right: _KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','R', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Red_slider_right );  Test.step=5; _SaveState();  break;
 		case Touch_fontSliderG_left: 	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','G',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_Green_slider_left ); Test.step=5; _SaveState();  break;
@@ -1470,9 +1470,9 @@ void FILE_NAME(setTouch)(void)
 		case Touch_fontSliderBm:  	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B',-1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_sliderBm );  Test.step=5; _SaveState();  break;
 		case Touch_fontSliderBp: 	_KEYS_RELEASE_fontSliderRGB;	ChangeValRGB('f','B', 1); KEYBOARD_TYPE( KEYBOARD_sliderRGB, KEY_sliderBp );	Test.step=5; _SaveState();  break;
 
-		case Touch_bkSliderR:  _KEYS_RELEASE_bkSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderBkRGB, KEY_Red_slider,   pos.x,0,0,0,0 );  _SaveState(); break;
-		case Touch_bkSliderG:  _KEYS_RELEASE_bkSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderBkRGB, KEY_Green_slider, pos.x,0,0,0,0 );  _SaveState(); break;
-		case Touch_bkSliderB:  _KEYS_RELEASE_bkSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderBkRGB, KEY_Blue_slider,  pos.x,0,0,0,0 );  _SaveState(); break;
+		case Touch_bkSliderR:  _KEYS_RELEASE_bkSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderBkRGB, KEY_Red_slider,   pos.x,pos.y,0,0,0 );  _SaveState(); break;
+		case Touch_bkSliderG:  _KEYS_RELEASE_bkSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderBkRGB, KEY_Green_slider, pos.x,pos.y,0,0,0 );  _SaveState(); break;
+		case Touch_bkSliderB:  _KEYS_RELEASE_bkSliderRGB;  KEYBOARD_TYPE_PARAM( KEYBOARD_sliderBkRGB, KEY_Blue_slider,  pos.x,pos.y,0,0,0 );  _SaveState(); break;
 		case Touch_bkSliderR_left:  _KEYS_RELEASE_bkSliderRGB;	ChangeValRGB('b','R',-1); KEYBOARD_TYPE( KEYBOARD_sliderBkRGB, KEY_Red_slider_left );   Test.step=5; _SaveState();  break;
 		case Touch_bkSliderR_right: _KEYS_RELEASE_bkSliderRGB;	ChangeValRGB('b','R', 1); KEYBOARD_TYPE( KEYBOARD_sliderBkRGB, KEY_Red_slider_right );  Test.step=5; _SaveState();  break;
 		case Touch_bkSliderG_left:  _KEYS_RELEASE_bkSliderRGB;	ChangeValRGB('b','G',-1); KEYBOARD_TYPE( KEYBOARD_sliderBkRGB, KEY_Green_slider_left ); Test.step=5; _SaveState();  break;
@@ -2182,9 +2182,9 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 
 
 
-LCD_SimpleSliderH(0, LCD_X,LCD_Y, 50,220, ChangeElemSliderSize(150,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(50,10), WHITE, GRAY , RED, v.COLOR_BkScreen, SetValType(50,Percent), ChangeElemSliderColor(LeftSel, BLUE));
+LCD_SimpleSliderH(0, LCD_X,LCD_Y, 50,220, ChangeElemSliderSize(200,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(54,10), WHITE, GRAY , RED, v.COLOR_BkScreen, SetValType(80,Percent), ChangeElemSliderColor(LeftSel, BLUE));
 
-LCD_SimpleSliderV(0, LCD_X,LCD_Y, 650,220, ChangeElemSliderSize(150,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(50,10), WHITE, GRAY , RED, v.COLOR_BkScreen, SetValType(50,Percent), ChangeElemSliderColor(LeftSel, BLUE));
+LCD_SimpleSliderV(0, LCD_X,LCD_Y, 650,220, ChangeElemSliderSize(200,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(54,10), WHITE, GRAY , RED, v.COLOR_BkScreen, SetValType(25,Percent), ChangeElemSliderColor(LeftSel, BLUE));
 
 
 
