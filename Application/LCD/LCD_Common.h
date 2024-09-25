@@ -48,6 +48,18 @@ typedef enum{
 }COLORS_DEFINITION;
 
 typedef enum{
+	TimerId_1,
+	TimerId_2,
+	TimerId_3,
+	TimerId_4,
+	TimerId_5,
+	TimerId_6,
+	TimerId_7,
+	TimerId_8,
+	TimerId_9,
+}TIMER_ID;
+
+typedef enum{
 	NoIndDisp,
 	IndDisp,
 	NoTxtDisp,
