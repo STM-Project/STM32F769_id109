@@ -59,7 +59,7 @@ typedef enum{
 	PtrSel,
 	RightSel,
 	Percent,
-	PosX,
+	PosXY,
 }SLIDER_PARAMS;
 
 extern uint32_t LCD_GetXSize(void);
