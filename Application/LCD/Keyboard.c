@@ -328,7 +328,7 @@ static void _ElemSliderPressDisp_oneBlock(int nr, uint16_t x,uint16_t y, XY_Touc
 			case Percent:	value = SetValType(PERCENT_SCALE(*pVal+1,maxSlidVal+1),Percent);  			  				  break;
 		}
 		LCD_ShapeWindow(LCD_Rectangle,0,s[nr].wKey[nrWH],s[nr].hKey[nrWH], 0,0, s[nr].widthKey,s[nr].hKey[nrWH], bkColor, bkColor,bkColor);
-		slid = LCD_SimpleSliderH(0, s[nr].wKey[nrWH], s[nr].hKey[nrWH], 0,0, ChangeElemSliderSize(s[nr].hKey[nrWH],NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].wKey[nrWH],spaceTringLine), lineColor, lineSelColor ,selElem|0xFF000000, bkColor, value, selElem);
+		slid = LCD_SimpleSliderV(0, s[nr].wKey[nrWH], s[nr].hKey[nrWH], 0,0, ChangeElemSliderSize(s[nr].hKey[nrWH],NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(s[nr].wKey[nrWH],spaceTringLine), lineColor, lineSelColor ,selElem|0xFF000000, bkColor, value, selElem);
 	}
 	else if(Horizontal == direct){
 		switch(valType){
@@ -713,7 +713,7 @@ void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PA
 	const COLORS_DEFINITION colorTxtPressKey1[]= {RED,  				  GREEN,  			   BLUE};					/* Color Press :  sides, pointers, lineSel */
 	#ifdef _SET_SLIDERS_HORIZONTAL
 		const uint16_t dimKeys1[] = {3,1};
-		DIRECTIONS direct = Vertical;
+		DIRECTIONS direct = Horizontal;
 	#else
 		const uint16_t dimKeys1[] = {1,3};
 		DIRECTIONS direct = Horizontal;
@@ -738,18 +738,18 @@ void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PA
 	XY_Touch_Struct posKey2[_GetPosKeySize((uint16_t*)dimKeys2)];
 	int head = GetHeightHead(k);
 
-	_SetDimKey_slider(k,shape,widthKey,heightKey,KEBOARD_1);			/* For slider has no 'KeysAutoSize' */
-	_SetDimKey(k,shape,KeysAutoSize,10,(uint16_t*)dimKeys2,(char**)txtKey2,KEBOARD_2);
+	_SetDimKey_slider(k,shape,widthKey,		heightKey,												   KEBOARD_1);			/* For slider has no 'KeysAutoSize' */
+	_SetDimKey		  (k,shape,KeysAutoSize,10,		  (uint16_t*)dimKeys2,(char**)txtKey2, KEBOARD_2);
 
 	#ifdef _SET_SLIDERS_HORIZONTAL
 		structSize allSize1 = _SetDimAll(k,s[k].interSpace,head,(uint16_t*)dimKeys1,KEBOARD_1);
 		structSize allSize2 = _SetDimAll(k,s[k].interSpace,0,	  (uint16_t*)dimKeys2,KEBOARD_2);
 
-		widthAll  = allSize1.w;
+		widthAll  = CONDITION(Horizontal==direct, allSize1.w, allSize2.w);
 		heightAll = allSize1.h + allSize2.h;
 
-		_SetPosKey(k,posKey1,s[k].interSpace, head, 		  (uint16_t*)dimKeys1, 0, 										  KEBOARD_1);
-		_SetPosKey(k,posKey2,s[k].interSpace, allSize1.h, (uint16_t*)dimKeys2, MIDDLE(0, widthAll, allSize2.w), KEBOARD_2);
+		_SetPosKey(k,posKey1,s[k].interSpace, head, 		  (uint16_t*)dimKeys1, 0, 										 												KEBOARD_1);
+		_SetPosKey(k,posKey2,s[k].interSpace, allSize1.h, (uint16_t*)dimKeys2, CONDITION(Horizontal==direct, MIDDLE(0, widthAll, allSize2.w), 0), KEBOARD_2);
 	#else
 		structSize allSize1 = _SetDimAll(k,s[k].interSpace,head,(uint16_t*)dimKeys1,KEBOARD_1);
 		structSize allSize2 = _SetDimAll(k,s[k].interSpace,head,(uint16_t*)dimKeys2,KEBOARD_2);

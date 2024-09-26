@@ -1278,6 +1278,17 @@ static void FILE_NAME(timer)(void)  //sprawdz czy nie uzyc RTOS timer CALLBACK !
 	}
 }
 
+void FUNC_ChangeValRGB(int k){
+	switch(k){
+	case 0: ChangeValRGB('f','R', 1); break;
+	case 1: ChangeValRGB('f','G', 1); break;
+	case 2: ChangeValRGB('f','B', 1); break;
+	case 3: ChangeValRGB('f','R',-1); break;
+	case 4: ChangeValRGB('f','G',-1); break;
+	case 5: ChangeValRGB('f','B',-1); break; }
+	Test.step=5;
+}
+
 void FILE_NAME(setTouch)(void)
 {/*
 	#define DESELECT_CURRENT_FONT(src,txt) \
@@ -1355,23 +1366,25 @@ void FILE_NAME(setTouch)(void)
 
 	int deltaForEndPress=0;
 
+	typedef void FUNC_SERVICE(int);
+
 	/* ---------- Assert Functions definitions ----------- */
 
-	void TouchService_RGB(uint16_t state, TOUCH_POINTS touchStart,TOUCH_POINTS touchStop, KEYBOARD_TYPES keyboard, SELECT_PRESS_BLOCK releaseAll,SELECT_PRESS_BLOCK keyStart)
+
+	void _Service_KeyBlock(uint16_t state, TOUCH_POINTS touchStart,TOUCH_POINTS touchStop, KEYBOARD_TYPES keyboard, SELECT_PRESS_BLOCK releaseAll,SELECT_PRESS_BLOCK keyStart, FUNC_SERVICE *func){
+		int nr = state-touchStart;
+		if(_WasStatePrev(touchStart,touchStop)) KEYBOARD_TYPE(keyboard,releaseAll);
+		func(nr);
+		KEYBOARD_TYPE(keyboard,keyStart+nr); _SaveState();
+	}
+
+	void TouchService_RGB(uint16_t state, TOUCH_POINTS touchStart,TOUCH_POINTS touchStop, KEYBOARD_TYPES keyboard, SELECT_PRESS_BLOCK releaseAll,SELECT_PRESS_BLOCK keyStart, FUNC_SERVICE *func)
 	{
 		if(IS_RANGE(state, touchStart, touchStop)){
-			void _func(int k){ switch(k){
-				case 0: ChangeValRGB('f','R', 1); break;
-				case 1: ChangeValRGB('f','G', 1); break;
-				case 2: ChangeValRGB('f','B', 1); break;
-				case 3: ChangeValRGB('f','R',-1); break;
-				case 4: ChangeValRGB('f','G',-1); break;
-				case 5: ChangeValRGB('f','B',-1); break; }
-				Test.step=5;
-			}
-			int nr = state-touchStart;
-			if(_WasStatePrev(touchStart,touchStop)) KEYBOARD_TYPE(keyboard,releaseAll);
-			_func(nr); KEYBOARD_TYPE(keyboard,keyStart+nr); _SaveState();
+			_Service_KeyBlock(state, touchStart, touchStop, keyboard, releaseAll, keyStart, func);
+//			int nr = state-touchStart;
+//			if(_WasStatePrev(touchStart,touchStop)) KEYBOARD_TYPE(keyboard,releaseAll);
+//			_func(nr); KEYBOARD_TYPE(keyboard,keyStart+nr); _SaveState();
 		}
 	}
 
@@ -1379,7 +1392,7 @@ void FILE_NAME(setTouch)(void)
 
 	state = LCD_TOUCH_GetTypeAndPosition(&pos);
 
-	TouchService_RGB(state, Touch_fontRp, Touch_fontBm, KEYBOARD_fontRGB, KEY_All_release, KEY_Red_plus);
+	TouchService_RGB(state, Touch_fontRp,Touch_fontBm, KEYBOARD_fontRGB, KEY_All_release,KEY_Red_plus, FUNC_ChangeValRGB);
 
 	switch(state)
 	{
@@ -1391,7 +1404,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252);
 			if(IsFunc())
-				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 46,180, 16, state, Touch_fontSliderR_left,KeysDel);
+				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 180,39, 16, state, Touch_fontSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
@@ -1401,7 +1414,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_BkColor2, BkColor,Press, TXT_BK_COLOR,252);
 			if(IsFunc())
-				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 46,223, 16, state, Touch_bkSliderR_left,KeysDel);
+				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 180,38, 16, state, Touch_bkSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontLenOffsWin, LenWin,Press, TXT_LENOFFS_WIN,252);
