@@ -157,6 +157,7 @@ typedef int FUNC_Keyboard(uint8_t,uint8_t,figureShape,uint8_t,uint16_t,uint16_t,
 typedef void VOID_FUNCTION(void);
 typedef SHAPE_PARAMS (*ShapeFunc)(uint32_t,SHAPE_PARAMS);
 typedef void FUNC_MAIN(int, char**);
+typedef void TOUCH_FUNC(int);
 
 
 /* --------- End Functions Definitations ----------- */
