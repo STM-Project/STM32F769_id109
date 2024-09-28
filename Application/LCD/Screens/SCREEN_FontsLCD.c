@@ -369,6 +369,25 @@ typedef enum{
 	Touch_bkSliderBm,
 	Touch_bkSliderBp,
 
+	Touch2_bkSliderR_left,
+	Touch2_bkSliderR,
+	Touch2_bkSliderR_right,
+	Touch2_bkSliderG_left,
+	Touch2_bkSliderG,
+	Touch2_bkSliderG_right,
+	Touch2_bkSliderB_left,
+	Touch2_bkSliderB,
+	Touch2_bkSliderB_right,
+	Touch2_fontSliderR_left,
+	Touch2_fontSliderR,
+	Touch2_fontSliderR_right,
+	Touch2_fontSliderG_left,
+	Touch2_fontSliderG,
+	Touch2_fontSliderG_right,
+	Touch2_fontSliderB_left,
+	Touch2_fontSliderB,
+	Touch2_fontSliderB_right,
+
 	Touch_style1,
 	Touch_style2,
 	Touch_style3,
@@ -426,7 +445,6 @@ typedef enum{
 	KEY_NO_RELEASE,
 	KEY_All_release,
 	KEY_Select_one,
-	KEY_All_release_and_select_one,
 	KEY_Timer,
 
 	KEY_Red_plus,
@@ -436,21 +454,56 @@ typedef enum{
 	KEY_Green_minus,
 	KEY_Blue_minus,
 
-	KEY_Red_slider_left,
-	KEY_Red_slider,
-	KEY_Red_slider_right,
-	KEY_Green_slider_left,
-	KEY_Green_slider,
-	KEY_Green_slider_right,
-	KEY_Blue_slider_left,
-	KEY_Blue_slider,
-	KEY_Blue_slider_right,
-	KEY_sliderRm,
-	KEY_sliderRp,
-	KEY_sliderGm,
-	KEY_sliderGp,
-	KEY_sliderBm,
-	KEY_sliderBp,
+	KEY_fontSliderR_left,
+	KEY_fontSliderR,
+	KEY_fontSliderR_right,
+	KEY_fontSliderG_left,
+	KEY_fontSliderG,
+	KEY_fontSliderG_right,
+	KEY_fontSliderB_left,
+	KEY_fontSliderB,
+	KEY_fontSliderB_right,
+	KEY_fontSliderRm,
+	KEY_fontSliderRp,
+	KEY_fontSliderGm,
+	KEY_fontSliderGp,
+	KEY_fontSliderBm,
+	KEY_fontSliderBp,
+
+	KEY_bkSliderR_left,
+	KEY_bkSliderR,
+	KEY_bkSliderR_right,
+	KEY_bkSliderG_left,
+	KEY_bkSliderG,
+	KEY_bkSliderG_right,
+	KEY_bkSliderB_left,
+	KEY_bkSliderB,
+	KEY_bkSliderB_right,
+	KEY_bkSliderRm,
+	KEY_bkSliderRp,
+	KEY_bkSliderGm,
+	KEY_bkSliderGp,
+	KEY_bkSliderBm,
+	KEY_bkSliderBp,
+
+	KEY2_bkSliderR_left,
+	KEY2_bkSliderR,
+	KEY2_bkSliderR_right,
+	KEY2_bkSliderG_left,
+	KEY2_bkSliderG,
+	KEY2_bkSliderG_right,
+	KEY2_bkSliderB_left,
+	KEY2_bkSliderB,
+	KEY2_bkSliderB_right,
+	KEY2_fontSliderR_left,
+	KEY2_fontSliderR,
+	KEY2_fontSliderR_right,
+	KEY2_fontSliderG_left,
+	KEY2_fontSliderG,
+	KEY2_fontSliderG_right,
+	KEY2_fontSliderB_left,
+	KEY2_fontSliderB,
+	KEY2_fontSliderB_right,
 
 	KEY_Style_1,
 	KEY_Style_2,
@@ -1187,59 +1240,73 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 	switch((int)type)
 	{
 		case KEYBOARD_fontRGB:
-			KEYBOARD_KeyParamSet(StringTxt,3,2,"Rafa"ł"", ""ó"lka", "W"ł"ujek", "Misia", "Six", "Markielowski");
-			KEYBOARD_KeyParamSet(Color1Txt,3,2,RED,GREEN,BLUE,RED,GREEN,BLUE);
-			KEYBOARD_KeyParamSet(Color2Txt,3,2,DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE);
+			KEYBOARD_KeyParamSet(XYsizeTxt,3,2);
+			KEYBOARD_KeyParamSet(StringTxt,"Rafa"ł"", ""ó"lka", "W"ł"ujek", "Misia", "Six", "Markielowski");
+			KEYBOARD_KeyParamSet(Color1Txt,RED,GREEN,BLUE,RED,GREEN,BLUE);
+			KEYBOARD_KeyParamSet(Color2Txt,DARKRED,DARKRED, LIGHTGREEN,LIGHTGREEN, DARKBLUE,DARKBLUE);
 			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8));
 			break;
 
 		case KEYBOARD_bkRGB:
-			KEYBOARD_KeyParamSet(StringTxt,3,2,"R+", "G+", "B+", "R-", "G-", "B-");
-			KEYBOARD_KeyParamSet(Color1Txt,3,2,RED,GREEN,BLUE,RED,GREEN,BLUE);
-			KEYBOARD_KeyParamSet(Color2Txt,3,2,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE);
+			KEYBOARD_KeyParamSet(XYsizeTxt,3,2);
+			KEYBOARD_KeyParamSet(StringTxt,"R+", "G+", "B+", "R-", "G-", "B-");
+			KEYBOARD_KeyParamSet(Color1Txt,RED,GREEN,BLUE,RED,GREEN,BLUE);
+			KEYBOARD_KeyParamSet(Color2Txt,WHITE,WHITE,WHITE,WHITE,WHITE,WHITE);
 			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8));
 			break;
 
 		case KEYBOARD_sliderRGB:
-//			KEYBOARD_KeyParamSet(StringTxt,1,3,"Red",					 "Green",			  "Blue");
-//			KEYBOARD_KeyParamSet(Color1Txt,1,3, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
-//			KEYBOARD_KeyParamSet(Color2Txt,1,3, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
-//			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB,Horizontal);
-			 KEYBOARD_Service_SliderButtonRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB);
+//			KEYBOARD_KeyParamSet(XYsizeTxt,1,3);
+//			KEYBOARD_KeyParamSet(StringTxt,"Red",					"Green",			  	 "Blue");
+//			KEYBOARD_KeyParamSet(Color1Txt, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
+//			KEYBOARD_KeyParamSet(Color2Txt, RED,  				 	GREEN,  			  	 BLUE); 					/* Color Press :  sides, pointers, lineSel */
+//			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_fontSliderR_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB,Horizontal);
+			 KEYBOARD_Service_SliderButtonRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_fontSliderR_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB, Horizontal);
 			break;
 
 		case KEYBOARD_sliderBkRGB:
-//			KEYBOARD_KeyParamSet(StringTxt,3,1,"Red",					 "Green",			  "Blue");
-//			KEYBOARD_KeyParamSet(Color1Txt,3,1, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
-//			KEYBOARD_KeyParamSet(Color2Txt,3,1, RED,  				 GREEN,  			  BLUE); 					/* Color Press :  sides, pointers, lineSel */
-//			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB, Vertical);
-			KEYBOARD_Service_SliderButtonRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_slider_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB);
+			KEYBOARD_KeyParamSet(XYsizeTxt,6,1);
+			KEYBOARD_KeyParamSet(StringTxt,"Red",					"Green",			  	 "Blue",				  "Red2",				"Green2",			 "Blue2");
+			KEYBOARD_KeyParamSet(Color1Txt, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
+			KEYBOARD_KeyParamSet(Color2Txt, RED,  				 	GREEN,  			  	 BLUE, 				  RED,  				 	GREEN,  			  	 BLUE); 					/* Color Press :  sides, pointers, lineSel */
+			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY2_bkSliderR_left, "Zmiana koloru t"ł"a i koloru czcionki", (int*)&Test.bk[0], RefreshValRGB, Vertical);
+
+//			KEYBOARD_KeyParamSet(XYsizeTxt,3,1);
+//			KEYBOARD_KeyParamSet(StringTxt,"Red",					"Green",			  	 "Blue");
+//			KEYBOARD_KeyParamSet(Color1Txt, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
+//			KEYBOARD_KeyParamSet(Color2Txt, RED,  				 	GREEN,  			  	 BLUE); 					/* Color Press :  sides, pointers, lineSel */
+//			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_bkSliderR_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB, Vertical);
+
+		   // KEYBOARD_Service_SliderButtonRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_bkSliderR_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB, Vertical);
 			break;
 
 		case KEYBOARD_fontCoeff:
-			KEYBOARD_KeyParamSet(StringTxt,1,2,"+", "-");
-			KEYBOARD_KeyParamSet(Color1Txt,1,2,WHITE,WHITE);
-			KEYBOARD_KeyParamSet(Color2Txt,1,2,LIGHTCYAN,LIGHTCYAN);
+			KEYBOARD_KeyParamSet(XYsizeTxt,2,1);
+			KEYBOARD_KeyParamSet(StringTxt,"+", "-");
+			KEYBOARD_KeyParamSet(Color1Txt,WHITE,WHITE);
+			KEYBOARD_KeyParamSet(Color2Txt,LIGHTCYAN,LIGHTCYAN);
 			KEYBOARD_SetGeneral(N,N,N, N,N, N,BrightIncr(v.COLOR_FillFrame,0xE), N,N,N);
 			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Coeff_plus, SL(LANG_CoeffKeyName));
 			break;
 
 		case KEYBOARD_fontStyle:
-			KEYBOARD_KeyParamSet(StringTxt,3,1,"Arial", "Times_New_Roman", "Comic_Saens_MS","1","2","3");
-			KEYBOARD_KeyParamSet(Color1Txt,3,1,WHITE,WHITE,WHITE,WHITE,WHITE,ORANGE);
-			KEYBOARD_KeyParamSet(Color2Txt,3,1,DARKRED,DARKRED,DARKBLUE,DARKRED,DARKRED,DARKBLUE);
+			KEYBOARD_KeyParamSet(XYsizeTxt,3,1);
+			KEYBOARD_KeyParamSet(StringTxt,"Arial", "Times_New_Roman", "Comic_Saens_MS","1","2","3");
+			KEYBOARD_KeyParamSet(Color1Txt,WHITE,WHITE,WHITE,WHITE,WHITE,ORANGE);
+			KEYBOARD_KeyParamSet(Color2Txt,DARKRED,DARKRED,DARKBLUE,DARKRED,DARKRED,DARKBLUE);
 			KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, NULL, Test.style);
 			break;
 
 		case KEYBOARD_fontType:
-			KEYBOARD_KeyParamSet(StringTxt,3,1,"(Gray-Green)", "(Gray-White)", "(White-Black)");
-			KEYBOARD_KeyParamSet(Color1Txt,3,1,WHITE,WHITE,WHITE);
-			KEYBOARD_KeyParamSet(Color2Txt,3,1,BLACK,BROWN,ORANGE);
+			KEYBOARD_KeyParamSet(XYsizeTxt,3,1);
+			KEYBOARD_KeyParamSet(StringTxt,"(Gray-Green)", "(Gray-White)", "(White-Black)");
+			KEYBOARD_KeyParamSet(Color1Txt,WHITE,WHITE,WHITE);
+			KEYBOARD_KeyParamSet(Color2Txt,BLACK,BROWN,ORANGE);
 			KEYBOARD_Select(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, NULL, Test.type);
 			break;
 
 		case KEYBOARD_fontSize:
-			KEYBOARD_ServiceSizeStyle(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release_and_select_one, KEY_Size_plus, SL(LANG_nazwa_0), Test.normBoldItal);
+			KEYBOARD_ServiceSizeStyle(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_Select_one, KEY_Size_plus, SL(LANG_nazwa_0), Test.normBoldItal);
 			break;
 
 		case KEYBOARD_fontSize2:
@@ -1329,6 +1396,40 @@ void FUNC_FontType(int k){ switch(k){
 	case 1: ReplaceLcdStrType(1); break;
 	case 2: ReplaceLcdStrType(2); break;}
 }
+void FUNC_FontSize(int k){ switch(k){
+  case -1: return;
+	case 0: IncFontSize(NONE_TYPE_REQ); break;
+	case 1: DecFontSize(); break;}
+}
+void FUNC_FontBoldItalNorm(int k){ switch(k){
+  case -1: return;
+	case 0: ChangeFontBoldItalNorm(0); break;
+	case 1: ChangeFontBoldItalNorm(1); break;
+	case 2: ChangeFontBoldItalNorm(2); break;}
+}
+void FUNC_FontCoeff(int k){ switch(k){
+  case -1: return;
+	case 0: IncCoeffRGB(); break;
+	case 1: DecCoeefRGB(); break;}
+}
+
+void FUNC_SliderBkFontFontRGB(int k){ switch(k){
+  case -1: Test.step=1;   return;
+  	case 1:case 4:case 7:case 10:case 13:case 16:  return;
+	case 0: ChangeValRGB('b','R',-1); break;
+	case 2: ChangeValRGB('b','R', 1); break;
+	case 3: ChangeValRGB('b','G',-1); break;
+	case 5: ChangeValRGB('b','G', 1); break;
+	case 6: ChangeValRGB('b','B',-1); break;
+	case 8: ChangeValRGB('b','B', 1); break;
+	case 9:  ChangeValRGB('f','R',-1); break;
+	case 11: ChangeValRGB('f','R', 1); break;
+	case 12: ChangeValRGB('f','G',-1); break;
+	case 14: ChangeValRGB('f','G', 1); break;
+	case 15: ChangeValRGB('f','B',-1); break;
+	case 17: ChangeValRGB('f','B', 1); break;}
+	Test.step=5;
+}
 
 void FILE_NAME(setTouch)(void)
 {/*
@@ -1359,8 +1460,6 @@ void FILE_NAME(setTouch)(void)
 				CLR_TOUCH(state);\
 			}
 
-	#define _KEYS_RELEASE_fontSize 		if(_WasStatePrev( Touch_size_plus,  	  Touch_size_minus))		KEYBOARD_TYPE( KEYBOARD_fontSize,   KEY_All_release_and_select_one)
-	#define _KEYS_RELEASE_fontCoeff 		if(_WasStatePrev( Touch_coeff_plus, 	  Touch_coeff_minus)) 	KEYBOARD_TYPE( KEYBOARD_fontCoeff,  KEY_All_release)
 	#define _KEYS_RELEASE_LenOffsWin 	if(_WasStatePrev( Touch_LenWin_plus, 	  Touch_ResetSpaces)) 	KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_All_release)
 	#define _KEYS_RELEASE_setTxt 			if(_WasStatePrev( Touch_Q, 				  Touch_enter)) 			KEYBOARD_TYPE( KEYBOARD_setTxt, 	   KEY_All_release)
 
@@ -1422,11 +1521,16 @@ void FILE_NAME(setTouch)(void)
 	_TouchService(Touch_fontRp, Touch_fontBm, KEYBOARD_fontRGB, KEY_All_release, KEY_Red_plus, FUNC_fontColorRGB);
 	_TouchService(Touch_bkRp, Touch_bkBm, 	   KEYBOARD_bkRGB,   KEY_All_release, KEY_Red_plus, FUNC_bkFontColorRGB);
 
-	_TouchService(Touch_fontSliderR_left, Touch_fontSliderBp, KEYBOARD_sliderRGB, 	KEY_All_release, KEY_Red_slider_left, FUNC_SliderFontRGB);
-	_TouchService(Touch_bkSliderR_left, Touch_bkSliderBp,	    KEYBOARD_sliderBkRGB,  KEY_All_release, KEY_Red_slider_left, FUNC_SliderBkFontRGB);
+	_TouchService(Touch_fontSliderR_left, Touch_fontSliderBp, 		KEYBOARD_sliderRGB, 	 KEY_All_release, KEY_fontSliderR_left, FUNC_SliderFontRGB);
+	_TouchService(Touch_bkSliderR_left, Touch_bkSliderBp,	    		KEYBOARD_sliderBkRGB, KEY_All_release, KEY_bkSliderR_left, 	 FUNC_SliderBkFontRGB);
+	_TouchService(Touch2_bkSliderR_left, Touch2_fontSliderB_right,	KEYBOARD_sliderBkRGB, KEY_All_release, KEY2_bkSliderR_left,  FUNC_SliderBkFontFontRGB);
 
 	_TouchService(Touch_style1, Touch_style3,	 KEYBOARD_fontStyle, 0, KEY_Select_one, FUNC_FontStyle);
 	_TouchService(Touch_type1, Touch_type3,	 KEYBOARD_fontType,  0, KEY_Select_one, FUNC_FontType);
+
+	_TouchService(Touch_size_plus, Touch_size_minus,	 KEYBOARD_fontSize,  KEY_Select_one,  KEY_Size_plus,	 FUNC_FontSize);
+	_TouchService(Touch_size_norm, Touch_size_italic,	 KEYBOARD_fontSize,  0, 				  KEY_Select_one,  FUNC_FontBoldItalNorm);
+	_TouchService(Touch_coeff_plus, Touch_coeff_minus,	 KEYBOARD_fontCoeff, KEY_All_release, KEY_Coeff_plus,  FUNC_FontCoeff);
 
 	switch(state)
 	{
@@ -1448,7 +1552,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_BkColor2, BkColor,Press, TXT_BK_COLOR,252);
 			if(IsFunc())
-				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 180,38, 16, state, Touch_bkSliderR_left,KeysDel);
+				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 40,120, 16, state, Touch2_bkSliderR_left,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontLenOffsWin, LenWin,Press, TXT_LENOFFS_WIN,252);
@@ -1474,7 +1578,7 @@ void FILE_NAME(setTouch)(void)
 
 		CASE_TOUCH_STATE(state,Touch_FontSize2, FontSize,Press, TXT_FONT_SIZE,252);
 			if(IsFunc())
-				FILE_NAME(keyboard)(KEYBOARD_fontSize, KEY_All_release_and_select_one, LCD_RoundRectangle,0, 410,170, KeysAutoSize,10/*80,40*/, 10, state, Touch_size_plus,KeysDel);
+				FILE_NAME(keyboard)(KEYBOARD_fontSize, KEY_Select_one, LCD_RoundRectangle,0, 410,170, KeysAutoSize,10/*80,40*/, 10, state, Touch_size_plus,KeysDel);
 			break;
 
 		CASE_TOUCH_STATE(state,Touch_FontSizeMove, FontSize,Press, TXT_FONT_SIZE,252);
@@ -1507,19 +1611,10 @@ void FILE_NAME(setTouch)(void)
 			if(!CHECK_TOUCH(Touch_FontSizeMove) && !_WasState(Touch_FontSizeMove)){
 				ChangeFontBoldItalNorm(NONE_TYPE_REQ);
 				if(CHECK_TOUCH(Touch_FontSize2))
-					KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one );
+					KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Select_one );
 				_SaveState();
 			}
 			break;
-
-		case Touch_size_plus: 	_KEYS_RELEASE_fontSize;	IncFontSize(NONE_TYPE_REQ);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_plus ); _SaveState();  break;
-		case Touch_size_minus:	_KEYS_RELEASE_fontSize; DecFontSize();  				  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Size_minus ); _SaveState();  break;
-		case Touch_size_norm: 	ChangeFontBoldItalNorm(0);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
-		case Touch_size_bold: 	ChangeFontBoldItalNorm(1);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
-		case Touch_size_italic: ChangeFontBoldItalNorm(2);  KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one ); _SaveState(); break;
-
-		case Touch_coeff_plus:  _KEYS_RELEASE_fontCoeff;	IncCoeffRGB(); KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Coeff_plus );    _SaveState(); break;
-		case Touch_coeff_minus: _KEYS_RELEASE_fontCoeff;	DecCoeefRGB(); KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_Coeff_minus );   _SaveState(); break;
 
 		case Touch_LenWin_plus: 		_KEYS_RELEASE_LenOffsWin;	 Inc_lenWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_plus ); 	 	_SaveState();  break;
 		case Touch_LenWin_minus: 		_KEYS_RELEASE_LenOffsWin;	 Dec_lenWin();  					KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_LenWin_minus ); 	 	_SaveState();  break;
@@ -1563,15 +1658,13 @@ void FILE_NAME(setTouch)(void)
 			_TouchEndService(Touch_fontRp, Touch_fontBm, KEYBOARD_fontRGB, KEY_All_release, FUNC_fontColorRGB);
 			_TouchEndService(Touch_bkRp, Touch_bkBm, 	   KEYBOARD_bkRGB,   KEY_All_release, FUNC_bkFontColorRGB);
 
-			_TouchEndService(Touch_fontSliderR_left, Touch_fontSliderBp,   KEYBOARD_sliderRGB,   KEY_All_release, FUNC_SliderFontRGB);
-			_TouchEndService(Touch_bkSliderR_left, Touch_bkSliderBp, 	   KEYBOARD_sliderBkRGB, KEY_All_release, FUNC_SliderBkFontRGB);
+			_TouchEndService(Touch_fontSliderR_left, Touch_fontSliderBp,  		 KEYBOARD_sliderRGB,   KEY_All_release, FUNC_SliderFontRGB);
+			_TouchEndService(Touch_bkSliderR_left, Touch_bkSliderBp, 	   	 KEYBOARD_sliderBkRGB, KEY_All_release, FUNC_SliderBkFontRGB);
+			_TouchEndService(Touch2_bkSliderR_left, Touch2_fontSliderB_right,  KEYBOARD_sliderBkRGB, KEY_All_release, FUNC_SliderBkFontFontRGB);
 
+			_TouchEndService(Touch_size_plus, Touch_size_minus, 	KEYBOARD_fontSize, 	KEY_Select_one,  FUNC_FontSize);
+			_TouchEndService(Touch_coeff_plus, Touch_coeff_minus, KEYBOARD_fontCoeff, 	KEY_All_release, FUNC_FontSize);
 
-			if(_WasState(Touch_size_plus) || _WasState(Touch_size_minus))
-				KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_All_release_and_select_one );
-
-			if(_WasState(Touch_coeff_plus) || _WasState(Touch_coeff_minus))
-				KEYBOARD_TYPE( KEYBOARD_fontCoeff, KEY_All_release );
 
 			if(_WasStateRange(Touch_LenWin_plus, Touch_ResetSpaces))
 				KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_All_release );
@@ -2093,23 +2186,6 @@ void FILE_NAME(main)(int argNmb, char **argVal)
 		FRAMES_GROUP_combined(argNmb,15,15,25,25,1);
 	else if(*(argVal+0)==(char*)FRAMES_GROUP_separat)
 		FRAMES_GROUP_separat(argNmb,15,15,25,25,FRAME_bold2Space(0,6));
-
-
-
-
-
-
-
-LCD_SimpleSliderH(0, LCD_X,LCD_Y, 50,220, ChangeElemSliderSize(200,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(54,10), WHITE, GRAY , RED, v.COLOR_BkScreen, SetValType(80,Percent), ChangeElemSliderColor(LeftSel, BLUE));
-
-LCD_SimpleSliderV(0, LCD_X,LCD_Y, 650,220, ChangeElemSliderSize(200,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(54,10), WHITE, GRAY , RED, v.COLOR_BkScreen, SetValType(25,Percent), ChangeElemSliderColor(LeftSel, BLUE));
-
-
-
-
-
-
-
 
 
 	/*	lenStr=LCD_StrDependOnColorsVar(STR_FONT_PARAM(CPUusage,FillMainFrame),450,0,TXT_CPU_USAGE,halfHight,0,255,ConstWidth); */

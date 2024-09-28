@@ -44,10 +44,10 @@ typedef enum{
 	DispNo,
 }DISPLAY_YES_NO;
 
-static char 				 txtKey			   [MAX_WIN_Y] [MAX_WIN_X];
-static COLORS_DEFINITION colorTxtKey		[MAX_WIN_Y];
-static COLORS_DEFINITION colorTxtPressKey [MAX_WIN_Y];
-static uint16_t dimKeys[2];
+static char 				 txtKey			   [MAX_WIN_Y] [MAX_WIN_X] = {0};
+static COLORS_DEFINITION colorTxtKey		[MAX_WIN_Y] = {0};
+static COLORS_DEFINITION colorTxtPressKey [MAX_WIN_Y] = {0};
+static uint16_t dimKeys[2] = {0};
 
 static struct KEYBOARD_SETTINGS{
 	figureShape shape;
@@ -524,29 +524,32 @@ static int _GetPosKeySize(uint16_t dimKey[]){
 	return countKey;
 }
 
-
 /*	-----------	General Functions -----------------*/
 
-void KEYBOARD_KeyParamSet(TXT_PARAM_KEY param, uint16_t dimX, uint16_t dimY, ...){
+void KEYBOARD_KeyParamSet(TXT_PARAM_KEY param, ...){
+	char *ptr= NULL;
+	int countParam= MINVAL2( dimKeys[0]*dimKeys[1], MAX_WIN_Y );
 	va_list va;
-	dimKeys[0] = dimX;
-	dimKeys[1] = dimY;
 	va_start(va,0);
-	for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i){
-		if(i<MAX_WIN_Y){
-		switch(param){
-			case StringTxt:
-				char *ptr= va_arg(va,char*);
-				if(strlen(ptr)>MAX_WIN_X-1) *(ptr+(MAX_WIN_X-1))=0;
-				strcpy(txtKey[i],ptr);
-				break;
-			case Color1Txt:
+	switch(param){
+		case StringTxt:
+			for(int i=0; i<countParam; ++i){
+				TXT_CUTTOFF(ptr=va_arg(va,char*),MAX_WIN_X);
+				strcpy(txtKey[i],ptr); }
+			break;
+		case Color1Txt:
+			for(int i=0; i<countParam; ++i)
 				colorTxtKey[i]= va_arg(va,COLORS_DEFINITION);
-				break;
-			case Color2Txt:
+			break;
+		case Color2Txt:
+			for(int i=0; i<countParam; ++i)
 				colorTxtPressKey[i]= va_arg(va,COLORS_DEFINITION);
-				break;
-	}}}
+			break;
+		case XYsizeTxt:
+			dimKeys[0]= va_arg(va,int);
+			dimKeys[1]= va_arg(va,int);
+			break;
+	}
 	va_end(va);
 }
 
@@ -703,7 +706,7 @@ void KEYBOARD_ServiceSizeStyle(int k, int selBlockPress, INIT_KEYBOARD_PARAM, in
 	_SetTouch_Select(k, startTouchIdx, posKey2, (uint16_t*)dimKeys2, KEBOARD_2);
 }
 
-void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int TOUCH_Action, char* txtDescr, int *value, VOID_FUNCTION *pfunc)
+void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int TOUCH_Action, char* txtDescr, int *value, VOID_FUNCTION *pfunc, DIRECTIONS direct)
 {
 	#define _SET_SLIDERS_HORIZONTAL
 	#define _SET_SLIDERSVERTICAL
@@ -713,10 +716,8 @@ void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PA
 	const COLORS_DEFINITION colorTxtPressKey1[]= {RED,  				  GREEN,  			   BLUE};					/* Color Press :  sides, pointers, lineSel */
 	#ifdef _SET_SLIDERS_HORIZONTAL
 		const uint16_t dimKeys1[] = {3,1};
-		DIRECTIONS direct = Horizontal;
 	#else
 		const uint16_t dimKeys1[] = {1,3};
-		DIRECTIONS direct = Horizontal;
 	#endif
 
 	const char *txtKey2[]								= {"R-","R+", "G-","G+", "B-","B+"};
@@ -730,7 +731,7 @@ void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PA
 
 	uint32_t spaceTriangLine = 5;	/* DelTriang */
 	int maxSliderValue = 255;
-	uint32_t lineUnSelColor = 0;
+	uint32_t lineUnSelColor = COLOR_GRAY(0x40);
 	int countKey1 = dimKeys1[0]*dimKeys1[1];
 	SHAPE_PARAMS elemSliderPos[countKey1];
 

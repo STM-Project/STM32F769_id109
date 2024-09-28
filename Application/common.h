@@ -42,6 +42,7 @@
 
 #define MIDDLE(startPos,widthBk,width)	((startPos)+((widthBk)-(width))/2)
 #define IS_RANGE(val,min,max) (val>=min)&&(val<=max)
+#define EQUAL2(val,eq1,eq2)			((eq1==val)||(eq2==val))
 
 #define SET_IN_RANGE(val,min,max) (((val)<(min))?(min):(((val)>(max))?(max):(val)))
 #define SET_NEW_RANGE(val,min,max,newMin,newMax) (((val)<(min))?(newMin):(((val)>(max))?(newMax):(val)))
@@ -90,12 +91,15 @@
 #define INIT(name,val)	int name=val
 #define CONDITION(condition,val1,val2)	((condition) ? (val1) : (val2))
 #define OPERATION(val,oper1,oper2,oper3)	_ReturnVal3(int val, int oper1,int oper2,int oper3)
-#define MAXVAL2(value1,value2)	value1 >= value2 ? value1 : value2
+#define MAXVAL2(value1,value2)	((value1) >= (value2) ? (value1) : (value2))
+#define MINVAL2(value1,value2)	((value1) <= (value2) ? (value1) : (value2))
 
 #define STRUCT_SIZE_SHAPE_POS		3
 
 #define FUNC_MAIN_INIT		int argNmb, char **argVal
 #define FUNC_MAIN_ARG		argNmb,argVal
+
+#define TXT_CUTTOFF(txt,len)	if(strlen(txt)>len-1) *((txt)+(len-1))=0
 
 typedef enum{
 	LoadWholeScreen,

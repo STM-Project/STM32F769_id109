@@ -1426,3 +1426,12 @@ HAL_TIM_Base_MspDeInit(&htim4);
 //		#undef _EX
 //	}
 //
+
+
+LCD_SimpleSliderH(0, LCD_X,LCD_Y, 50,220, ChangeElemSliderSize(200,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(54,10), WHITE, GRAY , RED, v.COLOR_BkScreen, SetValType(80,Percent), ChangeElemSliderColor(LeftSel, BLUE));
+
+LCD_SimpleSliderV(0, LCD_X,LCD_Y, 650,220, ChangeElemSliderSize(200,NORMAL_SLIDER_PARAM), SetSpaceTriangLineSlider(54,10), WHITE, GRAY , RED, v.COLOR_BkScreen, SetValType(25,Percent), ChangeElemSliderColor(LeftSel, BLUE));
+
+
+
+
