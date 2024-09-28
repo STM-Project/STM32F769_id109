@@ -1267,7 +1267,7 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 		case KEYBOARD_sliderBkRGB:
 			KEYBOARD_KeyParamSet(XYsizeTxt,6,1);
 			KEYBOARD_KeyParamSet(StringTxt,"Red",					"Green",			  	 "Blue",				  "Red2",				"Green2",			 "Blue2");
-			KEYBOARD_KeyParamSet(Color1Txt, COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
+			KEYBOARD_KeyParamSet(Color1Txt, COLOR_GRAY(0x60),  COLOR_GRAY(0x60),  COLOR_GRAY(0x60),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0),  COLOR_GRAY(0xA0)); 	/* Color noPress: sides, pointers, lineUnSel(alternative) */
 			KEYBOARD_KeyParamSet(Color2Txt, RED,  				 	GREEN,  			  	 BLUE, 				  RED,  				 	GREEN,  			  	 BLUE); 					/* Color Press :  sides, pointers, lineSel */
 			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY2_bkSliderR_left, "Zmiana koloru t"ł"a i koloru czcionki", (int*)&Test.bk[0], RefreshValRGB, Vertical);
 
