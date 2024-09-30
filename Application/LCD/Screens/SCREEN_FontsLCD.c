@@ -1247,19 +1247,19 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			break;
 
 		case KEYBOARD_bkRGB:
-			KEYBOARD_KeyAllParamSet(3,2, "R+","G+","B+", RED,GREEN,BLUE, WHITE,WHITE,WHITE);
+			KEYBOARD_KeyAllParamSet(3,2, "R+","G+","B+","R-","G-","B-", RED,GREEN,BLUE,RED,GREEN,BLUE, WHITE,WHITE,WHITE,WHITE,WHITE,WHITE);
 			KEYBOARD_Buttons(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY_Red_plus, SL(LANG_nazwa_8));
 			break;
 
 		case KEYBOARD_sliderRGB:
 			KEYBOARD_KeyAllParamSet(1,3, "Red","Green","Blue", COLOR_GRAY(0xA0),COLOR_GRAY(0xA0),COLOR_GRAY(0xA0), RED,GREEN,BLUE);
-			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY2_fontSliderR_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB, SetSliderDirect(widthKey,heightKey));
+			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY2_fontSliderR_left, SL(LANG_nazwa_1), (int*)&Test.font[0], RefreshValRGB);
 			break;
 
 		case KEYBOARD_sliderBkRGB:
-			INIT(color, CONDITION(EQUAL2(forTouchIdx,Touch_FontColorMove,Touch_BkColorMove),0x60,0xA0));
+			INIT(color, CONDITION(EQUAL2(forTouchIdx,Touch_FontColorMove,Touch_BkColorMove),COLOR_GRAY(0x60),COLOR_GRAY(0xA0)));
 			KEYBOARD_KeyAllParamSet(3,1, "Red","Green","Blue", color,color,color, RED,GREEN,BLUE);
-			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY2_bkSliderR_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB, SetSliderDirect(widthKey,heightKey));
+			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY2_bkSliderR_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB);
 			break;
 
 		case KEYBOARD_fontCoeff:
@@ -1419,8 +1419,9 @@ void FILE_NAME(setTouch)(void)
 		DESELECT_CURRENT_FONT(FontSize,	TXT_FONT_SIZE);\
 		DESELECT_CURRENT_FONT(FontStyle,	TXT_FONT_STYLE)
 */
-	#define CASE_TOUCH_STATE(state,touchPoint, src,dst, txt,coeff) \
+	#define CASE_TOUCH_STATE(state,touchPoint, src,dst, txt,coeff, touchX) \
 		case touchPoint:\
+		if(NotServiceTouchAboveWhenWasClearedThis(touchX)){\
 			if(0==CHECK_TOUCH(state)){\
 				if(GET_TOUCH){ FILE_NAME(main)(LoadPartScreen,(char**)ppMain); CLR_ALL_TOUCH; }\
 				SELECT_CURRENT_FONT(src, dst, txt, coeff);\
@@ -1431,7 +1432,7 @@ void FILE_NAME(setTouch)(void)
 				FILE_NAME(main)(LoadPartScreen,(char**)ppMain);\
 				KEYBOARD_TYPE(KEYBOARD_none,0);\
 				CLR_TOUCH(state);\
-			}
+			}}
 
 	#define _KEYS_RELEASE_LenOffsWin 	if(_WasStatePrev( Touch_LenWin_plus, 	  Touch_ResetSpaces)) 	KEYBOARD_TYPE( KEYBOARD_LenOffsWin, KEY_All_release)
 	#define _KEYS_RELEASE_setTxt 			if(_WasStatePrev( Touch_Q, 				  Touch_enter)) 			KEYBOARD_TYPE( KEYBOARD_setTxt, 	   KEY_All_release)
@@ -1473,6 +1474,11 @@ void FILE_NAME(setTouch)(void)
 		return 0;
 	}
 
+	int NotServiceTouchAboveWhenWasClearedThis(TOUCH_POINTS touch){
+		return CONDITION(NoTouch==touch, 1, !CHECK_TOUCH(touch) && !_WasState(touch));
+		//return ( !CHECK_TOUCH(Touch_FontSizeMove) && !_WasState(Touch_FontSizeMove) );
+	}
+
 	void _TouchService(TOUCH_POINTS touchStart,TOUCH_POINTS touchStop, KEYBOARD_TYPES keyboard, SELECT_PRESS_BLOCK releaseAll,SELECT_PRESS_BLOCK keyStart, TOUCH_FUNC *func){
 		if(IS_RANGE(state, touchStart, touchStop)){
 			int nr = state-touchStart;
@@ -1507,74 +1513,78 @@ void FILE_NAME(setTouch)(void)
 	switch(state)
 	{
 		/*	Initiation new Keyboard */
-		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252);			/* 'FontColor','Press' are suffix`s for elements of 'SCREEN_FONTS_SET_PARAMETERS' MACRO  */
+		CASE_TOUCH_STATE(state,Touch_FontColor, FontColor,Press, TXT_FONT_COLOR,252,Touch_FontColorMove);			/* 'FontColor','Press' are suffix`s for elements of 'SCREEN_FONTS_SET_PARAMETERS' MACRO  */
 			if(IsFunc())
 				FILE_NAME(keyboard)(KEYBOARD_fontRGB, KEY_All_release, LCD_RoundRectangle,0, 230,160, KeysAutoSize,12, 10, state, Touch_fontRp,KeysDel);
 			/* DisplayTouchPosXY(state,pos,"Touch_FontColor"); */
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252);
+		CASE_TOUCH_STATE(state,Touch_FontColor2, FontColor,Press, TXT_FONT_COLOR,252,NoTouch);
 			if(IsFunc())
 				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 180,39, 16, state, Touch2_fontSliderR_left,KeysDel);
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252);
+		CASE_TOUCH_STATE(state,Touch_BkColor, BkColor,Press, TXT_BK_COLOR,252,Touch_BkColorMove);
 			if(IsFunc())
 				FILE_NAME(keyboard)(KEYBOARD_bkRGB, KEY_All_release, LCD_RoundRectangle,0, 400,160, KeysAutoSize,12, 4, state, Touch_bkRp,KeysDel);
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_BkColor2, BkColor,Press, TXT_BK_COLOR,252);
+		CASE_TOUCH_STATE(state,Touch_BkColor2, BkColor,Press, TXT_BK_COLOR,252,NoTouch);
 			if(IsFunc())
 				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 10,160, 35,170, 16, state, Touch2_bkSliderR_left,KeysDel);
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontColorMove, FontColor,Press, TXT_FONT_COLOR,252);
+		CASE_TOUCH_STATE(state,Touch_FontColorMove, FontColor,Press, TXT_FONT_COLOR,252,NoTouch);
 			if(IsFunc()){
-				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, 	KEY_All_release, LCD_RoundRectangle,0,  50,160, 39,140, 16, state, Touch2_fontSliderR_left, KeysDel);
+				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, 	KEY_All_release, LCD_RoundRectangle,0,  50,160, 180,30, 16, state, Touch2_fontSliderR_left, KeysDel);
 				structSize temp = KEYBOARD_GetSize();
-				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 550,160, 39,140, 16, state, Touch2_bkSliderR_left,   KeysNotDel); }
+				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 550,160, 30,180, 16, state, Touch2_bkSliderR_left,   KeysNotDel);
+			}
+			else _SaveState();  //dac np funkcje nazew i wsrodku to ' _SaveState();'
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_BkColorMove, BkColor,Press, TXT_BK_COLOR,252);
+		CASE_TOUCH_STATE(state,Touch_BkColorMove, BkColor,Press, TXT_BK_COLOR,252,NoTouch);
 			if(IsFunc()){
-				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, 	KEY_All_release, LCD_RoundRectangle,0,  50,160, 39,140, 16, state, Touch2_fontSliderR_left, KeysDel);
-				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 550,160, 39,140, 16, state, Touch2_bkSliderR_left,   KeysNotDel); }
+				FILE_NAME(keyboard)(KEYBOARD_sliderRGB, 	KEY_All_release, LCD_RoundRectangle,0,  50,160, 180,39, 16, state, Touch2_fontSliderR_left, KeysDel);
+				FILE_NAME(keyboard)(KEYBOARD_sliderBkRGB, KEY_All_release, LCD_RoundRectangle,0, 550,160, 35,170, 16, state, Touch2_bkSliderR_left,   KeysNotDel);
+			}
+			else _SaveState();  //dac np funkcje nazew i wsrodku to ' _SaveState();'
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontLenOffsWin, LenWin,Press, TXT_LENOFFS_WIN,252);
+		CASE_TOUCH_STATE(state,Touch_FontLenOffsWin, LenWin,Press, TXT_LENOFFS_WIN,252,NoTouch);
 			if(IsFunc()){	FILE_NAME(keyboard)(KEYBOARD_LenOffsWin, KEY_All_release, LCD_RoundRectangle,0, 0,0, KeysAutoSize,8, 10, state, Touch_LenWin_plus,KeysDel);
 								LCDTOUCH_ActiveOnly(state,0,0,0,0,0,0,0,0,0,Touch_LenWin_plus,Touch_ResetSpaces); }
 			else LCD_TOUCH_RestoreAllSusspendedTouchs();
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontCoeff, Coeff,Press, TXT_COEFF,255);
+		CASE_TOUCH_STATE(state,Touch_FontCoeff, Coeff,Press, TXT_COEFF,255,NoTouch);
 			if(IsFunc())
 				FILE_NAME(keyboard)(KEYBOARD_fontCoeff, KEY_All_release, LCD_RoundRectangle,0, 400,205, KeysAutoSize,10, 10, state, Touch_coeff_plus,KeysDel);
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontStyle2, FontStyle,Press, TXT_FONT_STYLE,252);
+		CASE_TOUCH_STATE(state,Touch_FontStyle2, FontStyle,Press, TXT_FONT_STYLE,252,NoTouch);
 			if(IsFunc())
 				FILE_NAME(keyboard)(KEYBOARD_fontStyle, KEY_Select_one, LCD_Rectangle,0, 200,160, KeysAutoSize,10, 0, state, Touch_style1,KeysDel);
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontType2, FontType,Press, TXT_FONT_TYPE,252);
+		CASE_TOUCH_STATE(state,Touch_FontType2, FontType,Press, TXT_FONT_TYPE,252,NoTouch);
 			if(IsFunc())
 				FILE_NAME(keyboard)(KEYBOARD_fontType, KEY_Select_one, LCD_Rectangle,0, 400,160, KeysAutoSize,10, 0, state, Touch_type1,KeysDel);
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontSize2, FontSize,Press, TXT_FONT_SIZE,252);
+		CASE_TOUCH_STATE(state,Touch_FontSize2, FontSize,Press, TXT_FONT_SIZE,252,NoTouch);
 			if(IsFunc())
 				FILE_NAME(keyboard)(KEYBOARD_fontSize, KEY_Select_one, LCD_RoundRectangle,0, 410,170, KeysAutoSize,10/*80,40*/, 10, state, Touch_size_plus,KeysDel);
 			break;
 
-		CASE_TOUCH_STATE(state,Touch_FontSizeMove, FontSize,Press, TXT_FONT_SIZE,252);
+		CASE_TOUCH_STATE(state,Touch_FontSizeMove, FontSize,Press, TXT_FONT_SIZE,252,NoTouch);
 			if(IsFunc())
 				FILE_NAME(keyboard)(KEYBOARD_fontSize2, KEY_Select_one, LCD_Rectangle,0, 610,50, KeysAutoSize,10, 0, state, Touch_FontSizeRoll,KeysDel);
 			else
 				_SaveState();
 			break;
 
-		/*	Touch param txt and action */
+		/*	Touch parameter text and go to action */
 		case Touch_SetTxt:
 			FILE_NAME(keyboard)(KEYBOARD_setTxt,KEY_All_release,LCD_RoundRectangle,0,15,15,KeysAutoSize,10,10,state,Touch_Q,KeysDel);
 			LCDTOUCH_ActiveOnly(0,0,0,0,0,0,0,0,0,0,Touch_Q,Touch_enter);
@@ -1594,8 +1604,8 @@ void FILE_NAME(setTouch)(void)
 			_SaveState();
 			break;
 
-		case Touch_FontSize:		/* When 'Touch_FontSizeMove' was cleared then not service for release 'Touch_FontSize' */
-			if(!CHECK_TOUCH(Touch_FontSizeMove) && !_WasState(Touch_FontSizeMove)){
+		case Touch_FontSize:
+			if(NotServiceTouchAboveWhenWasClearedThis(Touch_FontSizeMove)){		/* When 'Touch_FontSizeMove' was cleared then not service for release 'Touch_FontSize' */
 				ChangeFontBoldItalNorm(NONE_TYPE_REQ);
 				if(CHECK_TOUCH(Touch_FontSize2))
 					KEYBOARD_TYPE( KEYBOARD_fontSize, KEY_Select_one );
@@ -1648,9 +1658,6 @@ void FILE_NAME(setTouch)(void)
 			_TouchEndService(Touch2_bkSliderR_left, Touch2_bkSliderB_right,  		KEYBOARD_sliderBkRGB,   KEY_All_release, FUNC_SliderBkFontRGB);
 			_TouchEndService(Touch2_fontSliderR_left, Touch2_fontSliderB_right, 	KEYBOARD_sliderRGB, 		KEY_All_release, FUNC_SliderFontRGB);
 
-			if(_WasState(Touch_FontColorMove));
-			if(_WasState(Touch_BkColorMove));
-
 			_TouchEndService(Touch_size_plus, Touch_size_minus, 	KEYBOARD_fontSize, 	KEY_Select_one,  FUNC_FontSize);
 			_TouchEndService(Touch_coeff_plus, Touch_coeff_minus, KEYBOARD_fontCoeff, 	KEY_All_release, FUNC_FontSize);
 
@@ -1697,6 +1704,8 @@ void FILE_NAME(setTouch)(void)
 			}
 
 			if(_WasState(Touch_FontSizeMove));
+			if(_WasState(Touch_FontColorMove));
+			if(_WasState(Touch_BkColorMove));
 
 			break;
 	}

@@ -3315,9 +3315,6 @@ uint32_t SetSpaceTriangLineSlider(uint16_t height, uint16_t param){
 uint32_t SetValType(uint16_t slidPos, uint16_t param){
 	return ((slidPos&0xFFFF) | param<<16);
 }
-DIRECTIONS SetSliderDirect(uint16_t width, uint16_t height){
-	return ( CONDITION(width>height,Horizontal,Vertical) );
-}
 
 SHAPE_PARAMS LCD_SimpleSliderH(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t widthParam, uint32_t heightParam, uint32_t ElementsColor, uint32_t LineColor, uint32_t LineSelColor, uint32_t BkpColor, uint32_t slidPos, int elemSel)
 {

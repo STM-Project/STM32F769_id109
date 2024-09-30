@@ -155,7 +155,6 @@ int ChangeElemSliderColor(SLIDER_PARAMS sel, uint32_t color);
 uint32_t ChangeElemSliderSize(uint16_t width, uint8_t coeffHeightTriang, uint8_t coeffLineBold, uint8_t coeffHeightPtr, uint8_t coeffWidthPtr);
 uint32_t SetSpaceTriangLineSlider(uint16_t height, uint16_t param);
 uint32_t SetValType(uint16_t slidPos, uint16_t param);
-DIRECTIONS SetSliderDirect(uint16_t width, uint16_t height);
 uint32_t SetLineBold2Width(uint32_t width, uint8_t bold);
 uint32_t SetTriangHeightCoeff2Height(uint32_t height, uint8_t coeff);
 
