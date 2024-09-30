@@ -526,8 +526,14 @@ static int _GetPosKeySize(uint16_t dimKey[]){
 
 /*	-----------	General Functions -----------------*/
 
+structSize KEYBOARD_GetSize(void){
+	structSize temp = {widthAll,heightAll};
+	return temp;
+}
+
 void KEYBOARD_KeyParamSet(TXT_PARAM_KEY param, ...){
 	char *ptr= NULL;
+	COLORS_DEFINITION temp= 0;
 	int countParam= MINVAL2( dimKeys[0]*dimKeys[1], MAX_WIN_Y );
 	va_list va;
 	va_start(va,0);
@@ -549,8 +555,51 @@ void KEYBOARD_KeyParamSet(TXT_PARAM_KEY param, ...){
 			dimKeys[0]= va_arg(va,int);
 			dimKeys[1]= va_arg(va,int);
 			break;
+		case StringTxtAll:
+			TXT_CUTTOFF(ptr=va_arg(va,char*),MAX_WIN_X);
+			for(int i=0; i<countParam; ++i)
+				strcpy(txtKey[i],ptr);
+			break;
+		case Color1TxtAll:
+			temp = va_arg(va,COLORS_DEFINITION);
+			for(int i=0; i<countParam; ++i)
+				colorTxtKey[i]= temp;
+			break;
+		case Color2TxtAll:
+			temp = va_arg(va,COLORS_DEFINITION);
+			for(int i=0; i<countParam; ++i)
+				colorTxtPressKey[i]= temp;
+			break;
 	}
 	va_end(va);
+}
+void KEYBOARD_KeyAllParamSet(uint16_t sizeX,uint16_t sizeY, ...){
+	char *ptr= NULL;
+	int countParam= MINVAL2(sizeX*sizeY,MAX_WIN_Y);
+	va_list va;
+	va_start(va,0);
+	dimKeys[0]= sizeX;
+	dimKeys[1]= sizeY;
+	for(int i=0; i<countParam; ++i){
+		TXT_CUTTOFF(ptr=va_arg(va,char*),MAX_WIN_X);
+		strcpy(txtKey[i],ptr); }
+	for(int i=0; i<countParam; ++i)
+		colorTxtKey[i]= va_arg(va,COLORS_DEFINITION);
+	for(int i=0; i<countParam; ++i)
+		colorTxtPressKey[i]= va_arg(va,COLORS_DEFINITION);
+}
+void KEYBOARD_KeyAllParamSet2(uint16_t sizeX,uint16_t sizeY, COLORS_DEFINITION color1,COLORS_DEFINITION color2, ...){
+	char *ptr= NULL;
+	va_list va;
+	va_start(va,0);
+	dimKeys[0]= sizeX;
+	dimKeys[1]= sizeY;
+	for(int i=0; i<MINVAL2(sizeX*sizeY,MAX_WIN_Y); ++i){
+		colorTxtKey[i]= color1;
+		colorTxtPressKey[i]= color2;
+		TXT_CUTTOFF(ptr=va_arg(va,char*),MAX_WIN_X);
+		strcpy(txtKey[i],ptr);
+	}
 }
 
 void KEYBOARD_SetGeneral(int vFontID,int vFontID_descr,int vColorDescr,int vFrameMainColor,int vFillMainColor,int vFrameColor,int vFillColor,int vFramePressColor,int vFillPressColor,int vBkColor){
@@ -799,8 +848,8 @@ void KEYBOARD_Service_SliderButtonRGB(int k, int selBlockPress, INIT_KEYBOARD_PA
 
 void KEYBOARD_ServiceSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int TOUCH_Action, char* txtDescr, int *value, VOID_FUNCTION *pfunc, DIRECTIONS direct)
 {
-	uint32_t spaceTriangLine = 5;	/* DelTriang */
-	int maxSliderValue = 255;
+	uint32_t spaceTriangLine = 5;	/* DelTriang */									/* 'Color1Txt' is no press color for: sides, pointers, lineUnSel(alternative) */
+	int maxSliderValue = 255;																/* 'Color2Txt' is 	press color for: sides, pointers, lineSel */
 	uint32_t lineUnSelColor = COLOR_GRAY(0x40);
 
 	int head = GetHeightHead(k);
