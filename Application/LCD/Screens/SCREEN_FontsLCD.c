@@ -1232,6 +1232,7 @@ static int RR=0;
 
 int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, INIT_KEYBOARD_PARAM)
 {
+	static uint32_t param= COLOR_GRAY(0xA0); //przenies nizej i zobacz !!!!
 	KEYBOARD_SetGeneral(v.FONT_ID_Press, v.FONT_ID_Descr, 	v.FONT_COLOR_Descr,
 								  	  	  	  	  	 v.COLOR_MainFrame,  v.COLOR_FillMainFrame,
 													 v.COLOR_Frame, 		v.COLOR_FillFrame,
@@ -1257,8 +1258,10 @@ int FILE_NAME(keyboard)(KEYBOARD_TYPES type, SELECT_PRESS_BLOCK selBlockPress, I
 			break;
 
 		case KEYBOARD_sliderBkRGB:
-			INIT(color, CONDITION(EQUAL2(forTouchIdx,Touch_FontColorMove,Touch_BkColorMove),COLOR_GRAY(0x60),COLOR_GRAY(0xA0)));
-			KEYBOARD_KeyAllParamSet(3,1, "Red","Green","Blue", color,color,color, RED,GREEN,BLUE);
+			if(EQUAL2(forTouchIdx,Touch_FontColorMove,Touch_BkColorMove)) param= COLOR_GRAY(0x60);
+			else if(forTouchIdx > 0)												  param= COLOR_GRAY(0x80);
+
+			KEYBOARD_KeyAllParamSet(3,1, "Red","Green","Blue", param,param,param, RED,GREEN,BLUE);
 			KEYBOARD_ServiceSliderRGB(type-1, selBlockPress, ARG_KEYBOARD_PARAM, KEY_All_release, KEY2_bkSliderR_left, SL(LANG_nazwa_6), (int*)&Test.bk[0], RefreshValRGB);
 			break;
 
