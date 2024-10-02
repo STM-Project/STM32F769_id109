@@ -259,11 +259,11 @@ static void LCD_CircleCorrect(void)
 	//LCD_OffsCircleLine(1,4);  LCD_OffsCircleLine(2,3); LCD_OffsCircleLine(3,2);  LCD_OffsCircleLine(3,1);
 }
 
-static uint16_t GetDegFromPosK( uint32_t posBuff, uint16_t x0, uint16_t y0, uint32_t BkpSizeX)
+static int16_t GetDegFromPosK( uint32_t posBuff, uint16_t x0, uint16_t y0, uint32_t BkpSizeX)
 {
 	pos = _GetPosXY(posBuff,BkpSizeX);
 	float deg = DEG(atan2(pos.y-y0, pos.x-x0));
-	return deg<0 ? 360+deg : deg;
+	return (int16_t)deg;//<0 ? 180.0+deg : deg;
 }
 
 static void OffsetKfromLineBuff(int itBuff, uint32_t BkpSizeX){
@@ -1773,20 +1773,24 @@ void _DrawArrayBuffRightDown_AA_new(uint32_t drawColor, uint32_t outColor, uint3
 		}
 	}
 }
+int16_t aaaa=0;
+
+void XXX(uint32_t BkpSizeX)  //to chyba test do usuniuecia :) !!!!!!!!!!!!!!!!!!
+{
+	aaaa=GetDegFromPosK(0, Circle.x0, Circle.y0, BkpSizeX);
+//	if(aaaa>=45 && aaaa<=135)
+//		_outColor=MYRED;
+//	else
+//		_outColor=outColor;
+}
 
 void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf)
 {
 	int j=buf[0], i=buf[1], p=2, i_prev;
 	uint32_t drawColor=_drawColor;
+	uint32_t _outColor=outColor;
 
-	void XXX(void)  //to chyba test do usuniuecia :) !!!!!!!!!!!!!!!!!!
-	{
-		uint16_t aaaa=GetDegFromPosK(0, Circle.x0, Circle.y0, BkpSizeX);
-		if(aaaa>145 && aaaa<170)
-			drawColor=MYRED;
-		else
-			drawColor=_drawColor;
-	}
+
 
 
 
@@ -1794,18 +1798,26 @@ void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, uint32_t
 	{
 		while(j--)
 		{
+
+			XXX(BkpSizeX);
+			if(j>buf[0]-10)
+				drawColor = YELLOW;
+			else
+				drawColor = BLACK;
+
+
 			i_prev=i;
 			while(i--){
-				pLcd[k++]=drawColor;  XXX();
+				pLcd[k++]=drawColor;
 			}
 
 			if(j){
 				i=buf[p++];
-				Set_AACoeff_Draw(i,drawColor,outColor,outRatioStart);
+				Set_AACoeff_Draw(i,drawColor,_outColor,outRatioStart);
 				for(int a=0;a<buff_AA[0];++a)
 					pLcd[k+a]=buff_AA[1+a];
 			}
-			k+=BkpSizeX;   XXX();
+			k+=BkpSizeX;
 
 			Set_AACoeff_Draw(i_prev,drawColor,inColor,inRatioStart);
 			for(int a=0;a<buff_AA[0];++a)
@@ -1816,6 +1828,13 @@ void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, uint32_t
 	{
 		while(j--)
 		{
+			XXX(BkpSizeX);
+			if(j>buf[0]-10)
+				drawColor = BLUE;
+			else
+				drawColor = GREEN;
+
+
 			i_prev=i;
 			while(i--){
 				pLcd[k]=drawColor;
@@ -1830,7 +1849,7 @@ void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, uint32_t
 			}
 			k++;
 
-			Set_AACoeff_Draw(i_prev,drawColor,outColor,outRatioStart);
+			Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
 			for(int a=0;a<buff_AA[0];++a)
 				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
 		}
@@ -2009,6 +2028,14 @@ void _DrawArrayBuffRightUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t in
 	{
 		while(j--)
 		{
+			XXX(BkpSizeX);
+			if(j>buf[0]-10)
+				drawColor = YELLOW;
+			else
+				drawColor = BLACK;
+
+
+
 			i_prev=i;
 			while(i--)
 				pLcd[k++]=drawColor;
@@ -2029,6 +2056,15 @@ void _DrawArrayBuffRightUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t in
 	{
 		while(j--)
 		{
+			XXX(BkpSizeX);
+			if(j>buf[0]-10)
+				drawColor = BLUE;
+			else
+				drawColor = GREEN;
+
+
+
+
 			i_prev=i;
 			while(i--){
 				pLcd[k]=drawColor;
@@ -2223,6 +2259,15 @@ void _DrawArrayBuffLeftDown_AA(uint32_t drawColor, uint32_t outColor, uint32_t i
 	{
 		while(j--)
 		{
+
+			XXX(BkpSizeX);
+			if(j>buf[0]-10)
+				drawColor = YELLOW;
+			else
+				drawColor = BLACK;
+
+
+
 			i_prev=i;
 			while(i--)
 				pLcd[k--]=drawColor;
@@ -2244,6 +2289,15 @@ void _DrawArrayBuffLeftDown_AA(uint32_t drawColor, uint32_t outColor, uint32_t i
 	{
 		while(j--)
 		{
+			XXX(BkpSizeX);
+			if(j>buf[0]-10)
+				drawColor = BLUE;
+			else
+				drawColor = GREEN;
+
+
+
+
 			i_prev=i;
 			while(i--){
 				pLcd[k]=drawColor;
@@ -2438,6 +2492,14 @@ void _DrawArrayBuffLeftUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t inC
 	{
 		while(j--)
 		{
+			XXX(BkpSizeX);
+			if(j>buf[0]-10)
+				drawColor = YELLOW;
+			else
+				drawColor = BLACK;
+
+
+
 			i_prev=i;
 			while(i--)
 				pLcd[k--]=drawColor;
@@ -2459,6 +2521,14 @@ void _DrawArrayBuffLeftUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t inC
 	{
 		while(j--)
 		{
+			XXX(BkpSizeX);
+			if(j>buf[0]-10)
+				drawColor = BLUE;
+			else
+				drawColor = GREEN;
+
+
+
 			i_prev=i;
 			while(i--){
 				pLcd[k]=drawColor;
@@ -3855,6 +3925,23 @@ void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x
 		LCD_SetCopyCircleWidth();
 	}
 	else LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor);
+}
+
+void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){
+	uint32_t width = _width&0xFFFF;
+	uint16_t param = _width>>16;
+	uint8_t thickness = 15;//FrameColor>>24;
+
+
+		LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor);
+		LCD_CopyCircleWidth();
+
+   	uint32_t width_new = width-2*thickness;
+		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
+
+		LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor);
+		LCD_SetCopyCircleWidth();
+
 }
 
 void LCD_HalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){

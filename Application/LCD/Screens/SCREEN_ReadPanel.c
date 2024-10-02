@@ -431,14 +431,26 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 	LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
 	StartMeasureTime_us();
-	//CorrectLineAA_on();
-	//LCD_Shape(480-LCD_GetYSize(),0,LCD_Circle, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetColorBoldFrame(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
+	CorrectLineAA_on();
 
 	//LCD_Shape(480-LCD_GetYSize()+10,10,LCD_Circle, Circle.width-20,Circle.width-20, _FrameColor(),  _FillColor(), MYGRAY);
 
 
-	//LCD_Shape(480-LCD_GetYSize(),0, LCD_Circle, Circle.width,Circle.width, SetBold2Color(WHITE/*_FrameColor()*/,Circle.bold), 		/*TRANSPARENT*/ _FillColor(), _BkColor());  //dla tRANSPARENT nie dziala bold na >niz 0 !!!!
-	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle, Circle.width,Circle.width, SetBold2Color(WHITE/*_FrameColor()*/,Circle.bold), 		/*TRANSPARENT*/ _FillColor(), _BkColor());  //dla tRANSPARENT nie dziala bold na >niz 0 !!!!
+	//--11111--// LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle, Circle.width,Circle.width, SetBold2Color(WHITE/*_FrameColor()*/,Circle.bold), 		/*TRANSPARENT*/ _FillColor(), _BkColor());  //dla tRANSPARENT nie dziala bold na >niz 0 !!!!
+
+	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -485,9 +497,10 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	// __Show_FrameAndCircle_Indirect(120,180, 54, 1);
 
 	// __Show_FrameAndCircle_Indirect(480-LCD_GetYSize(),0, Circle.width, Circle.bold);
-	 __Show_Circle_Indirect(LCD_GetXSize()-50,200, 50, 0);
 
-	 LCD_ShapeIndirect(400,350,LCD_Circle, 50,50, SetBold2Color(WHITE,0), RED, MYGRAY);
+
+	//-------999-----// __Show_Circle_Indirect(LCD_GetXSize()-50,200, 50, 0);
+	//-------10-----//LCD_ShapeIndirect(400,350,LCD_Circle, 50,50, SetBold2Color(WHITE,0), RED, MYGRAY);
 
 
 
@@ -663,7 +676,7 @@ void SCREEN_ReadPanel(void)
 
 
 	//if(IsRefreshScreenTimeout(refresh_7,40)) LCD_StrMovHIndirect_TEST(STR_ID_MovFonts_7,1);
-	//if(IsRefreshScreenTimeout(refresh_8,50)) LCD_StrMovVIndirect_TEST(STR_ID_MovFonts_8,1);
+	//if(IsRefreshScreenTimeout(refresh_8,50)) LCD_StrMovVI]]]]]]]\ndirect_TEST(STR_ID_MovFonts_8,1);
 
 
 

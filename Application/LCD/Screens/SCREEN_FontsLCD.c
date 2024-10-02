@@ -591,7 +591,7 @@ static RGB_BK_FONT Test;
 static void FRAMES_GROUP_combined(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int bold);
 static void FRAMES_GROUP_separat(int argNmb, int startOffsX,int startOffsY, int offsX,int offsY,  int boldFrame);
 
-extern uint32_t pLcd[];
+extern uint32_t pLcd[];  //!!!!!!!!!!!!!!!!
 
 static int *ppMain[7] = {(int*)FRAMES_GROUP_combined,(int*)FRAMES_GROUP_separat,(int*)"Rafal", (int*)&Test, NULL, NULL, NULL };
 /*
