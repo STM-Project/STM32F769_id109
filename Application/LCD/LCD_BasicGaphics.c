@@ -1779,7 +1779,7 @@ void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, uint32_t
 	int j=buf[0], i=buf[1], p=2, i_prev;
 	uint32_t drawColor=_drawColor;
 
-	void XXX(void)
+	void XXX(void)  //to chyba test do usuniuecia :) !!!!!!!!!!!!!!!!!!
 	{
 		uint16_t aaaa=GetDegFromPosK(0, Circle.x0, Circle.y0, BkpSizeX);
 		if(aaaa>145 && aaaa<170)
