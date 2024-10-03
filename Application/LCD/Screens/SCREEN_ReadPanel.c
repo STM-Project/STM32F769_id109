@@ -445,9 +445,9 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 
 
-	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Rectangle, Circle.width,Circle.width, _FillColor(), _FillColor(), _BkColor());
+	//LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Rectangle, Circle.width,Circle.width, _FillColor(), _FillColor(), _BkColor());
 
-	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
+	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
 
 
 

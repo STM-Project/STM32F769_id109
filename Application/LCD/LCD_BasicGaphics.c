@@ -4166,9 +4166,46 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 		_DrawArrayBuffRightUp_AA_TEST (PARAM_AA,0,buf_Inv);                       					PixelCorrect(PARAM, buf[1], 1);
 
 
+		if(FillColor!=TRANSPARENT)
+		{
+	   	 uint16_t fillWidth, fillHeight=0;
+
+			_StartDrawLine(posBuff,bkX,x,y);
+			fillWidth=0;
+			for(int i=0;i<buf[0];++i){
+				_IncDrawPos(bkX-buf[i+1]);	_CopyDrawPos(); k+=buf[i+1];	if(i>0) _DrawRight(2*fillWidth,FillColor);	_SetCopyDrawPos();	fillHeight++;
+				fillWidth += buf[i+1];
+			}
+
+			for(int i=0;i<buf[0];++i){
+				fillWidth++;
+				_IncDrawPos(-1);
+				for(int j=0; j<buf[buf[0]-i]; ++j){
+					_IncDrawPos(bkX);	_CopyDrawPos(); if(j==buf[buf[0]-i]-1){k+=1;_DrawRight(2*(fillWidth-1),FillColor);}else{k+=2;_DrawRight(2*(fillWidth-2),FillColor);}	_SetCopyDrawPos();	fillHeight++;
+				}
+			}
+
+			fillHeight = 2*fillHeight-1;
+
+			_StartDrawLine(posBuff,bkX,x,y+fillHeight);
+			fillWidth=0;
+			for(int i=0;i<buf[0];++i){
+				_IncDrawPos(-bkX-buf[i+1]);	_CopyDrawPos();	 k+=buf[i+1];	if(i>0) _DrawRight(2*fillWidth,FillColor);	_SetCopyDrawPos();
+				fillWidth += buf[i+1];
+			}
+
+			for(int i=0;i<buf[0];++i){
+				fillWidth++;
+				_IncDrawPos(-1);
+				for(int j=0; j<buf[buf[0]-i]; ++j){
+					_IncDrawPos(-bkX);	_CopyDrawPos();  if(j==buf[buf[0]-i]-1){k+=1;_DrawRight(2*(fillWidth-1),FillColor);}else{k+=2;_DrawRight(2*(fillWidth-2),FillColor);}	 _SetCopyDrawPos();
+				}
+			}
+		}
+
 	int __funcXY(void){
 		structPosition pos=_GetPosXY(posBuff,BkpSizeX);
-		if( ABS(pos.x-Circle.x0)>30 && ABS(pos.y-Circle.y0)>30)
+		if( ABS(pos.x-Circle.x0)>70 && ABS(pos.y-Circle.y0)>70)
 			return 1;
 		else return 0;
 	}
@@ -4178,7 +4215,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 		int circleLinesLenCorrect=0;
 		uint16_t fillWidth=0, fillHeight=0;
 
-		for(int i=0;i<Circle.degree[0];++i)
+		for(int i=0;i<Circle.degree[0];++i)  //20ms
 		{
 			if(IS_RANGE(Circle.degree[1+i],46,89)){
 				if(Circle.width<150) circleLinesLenCorrect=-1;
@@ -4192,7 +4229,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 				  	  else													circleLinesLenCorrect=-1;
 			}
 
-			if(i==0)
+			if(i==0)  //20ms
 				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,_FillColor,Circle.degColor[i+1]);
 			else if(i==Circle.degree[0]-1)
 				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,Circle.degColor[i],_FillColor);
@@ -4207,8 +4244,8 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 			int subj=0, deltaDeg;
 
 			while(j--)
-			{  if(0==__funcXY()) k++;
-				else{
+			{  //if(0==__funcXY()) k++;
+				//else{
 
 				if(pLcd[k]==FillColor){
 					for(int i=0;i<Circle.degree[0];++i)
@@ -4239,7 +4276,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 				if(pLcd[k]==FillColor){ if(j==0){ k--; break; } j--; subj=0; goto GOTO_ToFillCircle; }
 				k++;
 				if(subj==1){ subj=0; if(j>0) j--; else{ k--; break; }}
-			}}
+			}//}
 		}
 
 		void _Change_AA(int width)
@@ -4274,7 +4311,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 				k++;
 			}
 		}
-
+// to nmizej 26ms
 		_StartDrawLine(posBuff,bkX,x,y);
 		for(int i=0;i<buf[0];++i){
 			_IncDrawPos(bkX-buf[i+1]);	  _CopyDrawPos();   _Change_AA(buf[i+1]); 	if(i>0) _Fill(2*fillWidth); _Change_AA(buf[i+1]); _SetCopyDrawPos();	fillHeight++;
