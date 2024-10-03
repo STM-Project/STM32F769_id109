@@ -169,6 +169,11 @@ typedef void TOUCH_FUNC(int);
 int _ReturnVal(int val, int in);
 int _ReturnVal2(int val, int in1,int in2);
 int _ReturnVal3(int val, int in1,int in2,int in3);
+
+int _RetVal(int val, int in);
+int _RetVal2(int val, int in1,int in2);
+int _RetVal3(int val, int in1,int in2,int in3);
+
 void Int16ToCharBuff(char* buff, uint16_t val);
 void Int32ToCharBuff(char* buff, uint32_t val);
 uint16_t CharBuffToInt16(char* buff);
