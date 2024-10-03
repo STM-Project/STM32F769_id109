@@ -347,6 +347,10 @@ int test_len=100;
 
 void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad z jakims #udef ?????
 {
+
+	/* Not use functions
+	 ...
+	 */
    uint32_t _BkColor		(void){ return RGB2INT( Circle.bk[0],	  Circle.bk[1],    Circle.bk[2]    ); }
    uint32_t _FillColor	(void){ return RGB2INT( Circle.fill[0],  Circle.fill[1],  Circle.fill[2]  ); }
    uint32_t _FrameColor	(void){ return RGB2INT( Circle.frame[0], Circle.frame[1], Circle.frame[2] ); }
@@ -437,6 +441,11 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 
 	//--11111--// LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle, Circle.width,Circle.width, SetBold2Color(WHITE/*_FrameColor()*/,Circle.bold), 		/*TRANSPARENT*/ _FillColor(), _BkColor());  //dla tRANSPARENT nie dziala bold na >niz 0 !!!!
+
+
+
+
+	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Rectangle, Circle.width,Circle.width, _FillColor(), _FillColor(), _BkColor());
 
 	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
 
