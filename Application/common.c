@@ -8,9 +8,13 @@
 #include "stm32f7xx_hal.h"
 #include "common.h"
 
-int _ReturnVal(int val, int in){ return val; };
-int _ReturnVal2(int val, int in1,int in2){ return val; };
-int _ReturnVal3(int val, int in1,int in2,int in3){ return val; };
+int _ReturnVal (int val, int in)							{ return val; };
+int _ReturnVal2(int val, int in1, int in2)			{ return val; };
+int _ReturnVal3(int val, int in1, int in2,int in3)	{ return val; };
+
+int _RetVal	(int in, 						int val)	{ return val; };
+int _RetVal2(int in1,int in2, 			int val)	{ return val; };
+int _RetVal3(int in1,int in2,	int in3, int val)	{ return val; };
 
 void Int16ToCharBuff(char* buff, uint16_t val){
 	buff[0] = val>>8;
