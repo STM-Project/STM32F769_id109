@@ -88,24 +88,25 @@ void _DrawRightDown(int width,int height, uint32_t color,uint32_t BkpSizeX);
 void _DrawRightDown_AA(int width,int height, uint32_t color,uint32_t BkpSizeX);
 void _DrawArrayRightDown(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...);
 void _DrawArrayRightDown_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...);
-void _DrawArrayBuffRightDown_AA(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf);
+//void _DrawArrayBuffRightDown_AA(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf);
+
 void _DrawRightUp(int width,int height, uint32_t color,uint32_t BkpSizeX);
 void _DrawRightUp_AA(int width,int height, uint32_t color,uint32_t BkpSizeX);
 void _DrawArrayRightUp(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...);
 void _DrawArrayRightUp_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...);
-void _DrawArrayBuffRightUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf);
+//void _DrawArrayBuffRightUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf);
 
 void _DrawLeftDown(int width,int height, uint32_t color,uint32_t BkpSizeX);
 void _DrawLeftDown_AA(int width,int height, uint32_t color,uint32_t BkpSizeX);
 void _DrawArrayLeftDown(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...);
 void _DrawArrayLeftDown_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...);
-void _DrawArrayBuffLeftDown_AA(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf);
+//void _DrawArrayBuffLeftDown_AA(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf);
 
 void _DrawLeftUp(int width,int height, uint32_t color,uint32_t BkpSizeX);
 void _DrawLeftUp_AA(int width,int height, uint32_t color,uint32_t BkpSizeX);
 void _DrawArrayLeftUp(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...);
 void _DrawArrayLeftUp_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...);
-void _DrawArrayBuffLeftUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf);
+//void _DrawArrayBuffLeftUp_AA(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf);
 
 void LCD_LineH(uint32_t BkpSizeX, uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold);
 void LCD_LineV(uint32_t BkpSizeX, uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold);
