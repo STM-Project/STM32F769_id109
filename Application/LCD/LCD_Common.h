@@ -40,6 +40,7 @@ typedef enum{
 
 	MYGRAY    	 = ((uint32_t)0xFF404040),
 	MYGRAY2    	 = ((uint32_t)0xFF414141),
+	MYGRAY3    	 = ((uint32_t)0xFF616161),
 	MYBLUE    	 = ((uint32_t)0xFF50C8FF),
 	MYRED    	 = ((uint32_t)0xffff7878),
 	MYGREEN    	 = ((uint32_t)0xff50FF50),

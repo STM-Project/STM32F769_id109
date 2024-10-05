@@ -336,14 +336,24 @@ typedef struct{
 	float ratioBk;
 	float ratioFill;
 	uint32_t speed;
+	uint32_t speedSum;
 	uint8_t bold;
 	uint8_t halfCircle;
 	uint16_t deg[10];
 	uint32_t degColor[10];
 } CIRCLE_PARAM;
-static CIRCLE_PARAM Circle;
+static CIRCLE_PARAM Circle ={0};
 
 int test_len=100;
+
+void temp_Start(){
+	StartMeasureTime_us();
+}
+void temp_Stop(){
+	uint32_t aaa = StopMeasureTime_us("");
+	Circle.speedSum += aaa;
+	Circle.speed = MAXVAL2(Circle.speed,aaa);  //dac jeszcze MINVAL2 !!!!
+}
 
 void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad z jakims #udef ?????
 {
@@ -447,7 +457,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 	//LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Rectangle, Circle.width,Circle.width, _FillColor(), _FillColor(), _BkColor());
 
-	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
+	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
 
 
 
@@ -474,7 +484,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	Circle.speed=StopMeasureTime_us("");
 
 
-	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,8), StrAll(3,"Speed: ",INT2STR_TIME(Circle.speed)," us"), 	 halfHight,0,_BkColor(),1,1);
+	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,8), StrAll(5,"Speed Max: ",INT2STR_TIME(Circle.speed)," us    Speed Sum: ",INT2STR_TIME(Circle.speedSum)," us"), 	 halfHight,0,_BkColor(),1,1);
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,8), StrAll(2,"Bold: ",Int2Str(Circle.bold,' ',2,Sign_none)), halfHight,0,_BkColor(),1,1);
 
 
@@ -523,7 +533,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 }
 
 
-int SCREEN_number=0;  //LOAD IMAGE !!!!!
+int SCREEN_number=4;  //LOAD IMAGE !!!!!
 
 void SCREEN_ReadPanel(void)
 {
