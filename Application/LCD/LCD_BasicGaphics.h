@@ -11,9 +11,6 @@
 #include "stm32f7xx_hal.h"
 #include "common.h"
 
-#define INCR_WIDTH_CIRCLE_STEP 	6  //??????
-#define MAX_WIDTH_CIRCLE 	(LCD_GetYSize()/6)*6
-
 #define RATIO_AA_VALUE_MIN 	1.0
 #define RATIO_AA_VALUE_MAX 	0.0
 

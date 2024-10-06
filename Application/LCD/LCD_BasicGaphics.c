@@ -4020,6 +4020,14 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 				  	  else													circleLinesLenCorrect=-1;
 			}
 
+			if((Circle.degree[1+i]>=315-11 && Circle.degree[1+i]<=315+11)||
+			   (Circle.degree[1+i]>=225-11 && Circle.degree[1+i]<=225+11)||
+			   (Circle.degree[1+i]>=135-11 && Circle.degree[1+i]<=135+11)||
+			   (Circle.degree[1+i]>=45-11  && Circle.degree[1+i]<=45+11))
+			{
+				if(Circle.width > 359) circleLinesLenCorrect=+5;
+			}
+
 			if(i==0)
 				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,_FillColor,Circle.degColor[i+1]);
 			else if(i==Circle.degree[0]-1)

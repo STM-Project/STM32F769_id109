@@ -355,6 +355,9 @@ void temp_Stop(){
 	Circle.speed = MAXVAL2(Circle.speed,aaa);  //dac jeszcze MINVAL2 !!!!
 }
 
+#define INCR_WIDTH_CIRCLE_STEP 	(1)
+#define MAX_WIDTH_CIRCLE 	((LCD_GetYSize()/6)*6)
+
 void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad z jakims #udef ?????
 {
 
@@ -404,9 +407,9 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		Circle.halfCircle=0;
 
 		Circle.deg[0]=45;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] mam fillColor !!!!
-		Circle.deg[1]=170;	Circle.degColor[1]=MYRED;
-		Circle.deg[2]=185;   Circle.degColor[2]=DARKYELLOW;
-		Circle.deg[3]=215;   Circle.degColor[3]=DARKGREEN;
+		Circle.deg[1]=135;	Circle.degColor[1]=MYRED;
+		Circle.deg[2]=225;   Circle.degColor[2]=DARKYELLOW;
+		Circle.deg[3]=315;   Circle.degColor[3]=DARKGREEN;
 		Circle.deg[4]=240;   Circle.degColor[4]=DARKBLUE;
 		Circle.deg[5]=249;   Circle.degColor[5]=DARKCYAN;
 		Circle.deg[6]=310;   Circle.degColor[6]=BROWN;
@@ -423,7 +426,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	LCD_SetCircleDegColors(4,Circle.degColor[0],Circle.degColor[1],Circle.degColor[2],Circle.degColor[3],Circle.degColor[4],Circle.degColor[5],Circle.degColor[6]);
 	LCD_SetCircleDegColorsBuff(4,Circle.degColor); */
 
-	LCD_SetCirclePercentParam(2,Circle.deg,Circle.degColor);
+	LCD_SetCirclePercentParam(4,Circle.deg,Circle.degColor);
 	LCD_Clear(RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //dac opisy b: to bold !!!!!! na lcd ekranie
 
 
