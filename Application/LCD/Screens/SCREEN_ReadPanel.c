@@ -394,18 +394,18 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		Circle.frame[1]=G_PART(WHITE);
 		Circle.frame[2]=B_PART(WHITE);
 
-		Circle.fill[0]=R_PART(MYGRAY);
-		Circle.fill[1]=G_PART(MYGRAY);
-		Circle.fill[2]=B_PART(MYGRAY);
+		Circle.fill[0]=R_PART(MYGRAY3);
+		Circle.fill[1]=G_PART(MYGRAY3);
+		Circle.fill[2]=B_PART(MYGRAY3);
 
 		Circle.ratioBk=0.0;
 		Circle.ratioFill=0.0;
 		Circle.bold=0;
 		Circle.halfCircle=0;
 
-		Circle.deg[0]=45;//45;		Circle.degColor[0]=MYGRAY; //nie wykorzystane !!!!!
-		Circle.deg[1]=170;	   Circle.degColor[1]=MYRED;
-		Circle.deg[2]=360; /*185 !!!*/    Circle.degColor[2]=DARKYELLOW;
+		Circle.deg[0]=45;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] mam fillColor !!!!
+		Circle.deg[1]=170;	Circle.degColor[1]=MYRED;
+		Circle.deg[2]=185;   Circle.degColor[2]=DARKYELLOW;
 		Circle.deg[3]=215;   Circle.degColor[3]=DARKGREEN;
 		Circle.deg[4]=240;   Circle.degColor[4]=DARKBLUE;
 		Circle.deg[5]=249;   Circle.degColor[5]=DARKCYAN;
@@ -418,10 +418,11 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 	CorrectLineAA_off();
 
-	//LCD_SetCircleDegrees(4,Circle.deg[0],Circle.deg[1],Circle.deg[2],Circle.deg[3],Circle.deg[4],Circle.deg[5],Circle.deg[6]);
-	//LCD_SetCircleDegreesBuff(4,Circle.deg);
-	//LCD_SetCircleDegColors(4,Circle.degColor[0],Circle.degColor[1],Circle.degColor[2],Circle.degColor[3],Circle.degColor[4],Circle.degColor[5],Circle.degColor[6]);
-	//LCD_SetCircleDegColorsBuff(4,Circle.degColor);
+/*	LCD_SetCircleDegrees(4,Circle.deg[0],Circle.deg[1],Circle.deg[2],Circle.deg[3],Circle.deg[4],Circle.deg[5],Circle.deg[6]);
+	LCD_SetCircleDegreesBuff(4,Circle.deg);
+	LCD_SetCircleDegColors(4,Circle.degColor[0],Circle.degColor[1],Circle.degColor[2],Circle.degColor[3],Circle.degColor[4],Circle.degColor[5],Circle.degColor[6]);
+	LCD_SetCircleDegColorsBuff(4,Circle.degColor); */
+
 	LCD_SetCirclePercentParam(2,Circle.deg,Circle.degColor);
 	LCD_Clear(RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //dac opisy b: to bold !!!!!! na lcd ekranie
 

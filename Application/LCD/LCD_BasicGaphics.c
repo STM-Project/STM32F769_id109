@@ -2867,7 +2867,7 @@ structPosition DrawLine(uint32_t posBuff,uint16_t x0, uint16_t y0, uint16_t len,
 		{
 			uint32_t bk1Color_, bk2Color_;
 			if((degree<=135 && degree>=135-11)||
-				(degree>45   && degree<=45+11)){		bk1Color_=bk2Color; bk2Color_=bk1Color;	}
+				(degree<315  && degree>=315-11)){	bk1Color_=bk2Color; bk2Color_=bk1Color;	}
 			else{												bk1Color_=bk1Color; bk2Color_=bk2Color;	}
 
 			Set_AACoeff(stepAA,lineColor,bk1Color_,0.0);
@@ -4011,7 +4011,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 			if(IS_RANGE(Circle.degree[1+i],46,89)){
 				if(Circle.width<150) circleLinesLenCorrect=-1;
 			}
-			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;
+			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;  //empirycznie wyznaczyć !!!!
 			else if(IS_RANGE(Circle.degree[1+i],201,247)) circleLinesLenCorrect=3;
 			else if(IS_RANGE(Circle.degree[1+i],270,292)) circleLinesLenCorrect=-1;
 			else if(IS_RANGE(Circle.degree[1+i],293,338)){
