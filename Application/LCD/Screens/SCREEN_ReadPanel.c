@@ -387,7 +387,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	if(Circle.startFlag!=0x52)
 	{
 		Circle.startFlag=0x52;
-		Circle.width=270;
+		Circle.width=438;
 
 		Circle.bk[0]=R_PART(MYGRAY);
 		Circle.bk[1]=G_PART(MYGRAY);
@@ -536,7 +536,8 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 }
 
-
+int _ROPA=0;
+float _ERR=0.0;
 int SCREEN_number=4;  //LOAD IMAGE !!!!!
 
 void SCREEN_ReadPanel(void)
@@ -668,8 +669,14 @@ void SCREEN_ReadPanel(void)
 			else if(DEBUG_RcvStr("n")){ DECR_FLOAT_WRAP(Circle.ratioBk  ,0.10, 0.00, 1.00);  SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("m")){ DECR_FLOAT_WRAP(Circle.ratioFill,0.10, 0.00, 1.00);  SCREEN_Test_Circle(); }
 
-			else if(DEBUG_RcvStr("g")){ INCR_WRAP(Circle.bold,1,0,Circle.width/6-1);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("b")){ DECR_WRAP(Circle.bold,1,0,Circle.width/6-1);  SCREEN_Test_Circle(); }
+
+
+
+			else if(DEBUG_RcvStr("g")){ _ROPA=1-_ROPA;  SCREEN_Test_Circle(); }
+			else if(DEBUG_RcvStr("b")){ INCR(_ERR,0.1,2.0);  SCREEN_Test_Circle(); }
+
+//			else if(DEBUG_RcvStr("g")){ INCR_WRAP(Circle.bold,1,0,Circle.width/6-1);  SCREEN_Test_Circle(); }
+//			else if(DEBUG_RcvStr("b")){ DECR_WRAP(Circle.bold,1,0,Circle.width/6-1);  SCREEN_Test_Circle(); }
 
 			else if(DEBUG_RcvStr("o")){ INCR_WRAP(Circle.halfCircle,1,0,3);  SCREEN_Test_Circle(); }
 

@@ -3872,6 +3872,8 @@ void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x
 	else LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor);
 }
 
+extern int _ROPA;
+extern float _ERR;
 static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t __x, uint32_t __y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
 {
 	int matchWidth=0, circleFlag=0;
@@ -3893,7 +3895,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 		GOTO_ToCalculateRadius:
 	   _width=(width&0x0000FFFF)-matchWidth;
 
-		uint32_t R=_width/2, err=0.5;
+		float R=((float)_width)/2;
 		uint32_t pxl_width = R/3;
 
 		x=__x+_width/2 + matchWidth/2;
@@ -3903,6 +3905,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 		float _x=(float)x, _y=(float)y;
 		float x0=(float)x, y0=(float)y+R;
 
+		float err=0.5;
 		float param_y = pow(y0-_y,2);
 		float param_x = pow(_x-x0,2);
 		float decision = pow(R+err,2);
@@ -3911,8 +3914,24 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 
 		buf[0]=pxl_width;
 		do{
-			_x++;  pxl_line++;
-			param_x = pow(_x-x0,2);						if( i > ((8*pxl_width)/10) ){ err= 4.5; decision = pow(R+err,2); }   // to zmienic !!!zeby nie caly czas !!!
+			_x++;  pxl_line++;                     //if( i >= ((7*pxl_width)/10) && i <= ((8*pxl_width)/10) ){ err= 1.0; decision = pow(R+err,2); }
+			param_x = pow(_x-x0,2);
+
+    if(_ROPA){
+			if( i >= ((8*pxl_width)/10) )
+			{
+				err= _ERR;
+				decision = pow(R+err,2);
+			}
+    }
+//			if( i > ((9*pxl_width)/10) && i <= ((10*pxl_width)/10) )
+//			{
+//				err= 1.5;
+//				decision = pow(R+err,2);
+//			}
+
+
+
 			if((param_x+param_y) > decision){
 				_y++;
 				param_y = pow(y0-_y,2);
