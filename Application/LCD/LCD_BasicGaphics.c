@@ -274,9 +274,9 @@ static void _OffsetLeftUp(uint32_t BkpSizeX, int direction, uint8_t *buf){
 
 static void LCD_CircleCorrect(void)
 {
-	//LCD_OffsCircleLine(1,1);  LCD_OffsCircleLine(2,-1);
-	//LCD_OffsCircleLine(1,2);  LCD_OffsCircleLine(2,-1); LCD_OffsCircleLine(3,-1);
-	//LCD_OffsCircleLine(1,4);  LCD_OffsCircleLine(2,3); LCD_OffsCircleLine(3,2);  LCD_OffsCircleLine(3,1);
+/*	LCD_OffsCircleLine(1,1);  LCD_OffsCircleLine(2,-1);
+	LCD_OffsCircleLine(1,2);  LCD_OffsCircleLine(2,-1); LCD_OffsCircleLine(3,-1);
+	LCD_OffsCircleLine(1,4);  LCD_OffsCircleLine(2,3); LCD_OffsCircleLine(3,2);  LCD_OffsCircleLine(3,1); */
 }
 
 static int16_t GetDegFromPosK( uint32_t posBuff, uint16_t x0, uint16_t y0, uint32_t BkpSizeX)
@@ -3912,7 +3912,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 		buf[0]=pxl_width;
 		do{
 			_x++;  pxl_line++;
-			param_x = pow(_x-x0,2);
+			param_x = pow(_x-x0,2);						if( i > ((8*pxl_width)/10) ){ err= 4.5; decision = pow(R+err,2); }   // to zmienic !!!zeby nie caly czas !!!
 			if((param_x+param_y) > decision){
 				_y++;
 				param_y = pow(y0-_y,2);
@@ -4020,13 +4020,13 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 				  	  else													circleLinesLenCorrect=-1;
 			}
 
-			if((Circle.degree[1+i]>=315-11 && Circle.degree[1+i]<=315+11)||
-			   (Circle.degree[1+i]>=225-11 && Circle.degree[1+i]<=225+11)||
-			   (Circle.degree[1+i]>=135-11 && Circle.degree[1+i]<=135+11)||
-			   (Circle.degree[1+i]>=45-11  && Circle.degree[1+i]<=45+11))
-			{
-				if(Circle.width > 359) circleLinesLenCorrect=+5;
-			}
+//			if((Circle.degree[1+i]>=315-11 && Circle.degree[1+i]<=315+11)||
+//			   (Circle.degree[1+i]>=225-11 && Circle.degree[1+i]<=225+11)||
+//			   (Circle.degree[1+i]>=135-11 && Circle.degree[1+i]<=135+11)||
+//			   (Circle.degree[1+i]>=45-11  && Circle.degree[1+i]<=45+11))
+//			{
+//				if(Circle.width > 359) circleLinesLenCorrect=+5;
+//			}
 
 			if(i==0)
 				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,_FillColor,Circle.degColor[i+1]);
