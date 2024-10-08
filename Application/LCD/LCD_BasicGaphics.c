@@ -49,7 +49,7 @@ typedef struct
 	uint16_t correctPercDeg;
 	float errorDecision;
 }Circle_Param;
-static Circle_Param Circle = {.correctPercDeg = 80, .errorDecision = 0.1};
+static Circle_Param Circle = {.correctPercDeg = 80, .errorDecision = 0.4};
 
 static void Set_AACoeff(int pixelsInOneSide, uint32_t colorFrom, uint32_t colorTo, float ratioStart)
 {
@@ -1054,17 +1054,16 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 		float _x=(float)x, _y=(float)y;
 		float x0=(float)x, y0=(float)y+R;
 
-		float err=0.5;
 		float param_y = pow(y0-_y,2);
 		float param_x = pow(_x-x0,2);
-		float decision = pow(R+err,2);
+		float decision = pow(R,2);
 
 		int pxl_line=0,i=0;
 
 		uint8_t block=1;
 		void _CorrectDecision(void){
-			if(block){
-				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+err+Circle.errorDecision,2); }
+			if(block && R>200){
+				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
 		}}
 
 		buf[0]=pxl_width;
@@ -1356,17 +1355,16 @@ static void LCD_DrawHalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSi
 		float _x=(float)x, _y=(float)y;
 		float x0=(float)x, y0=(float)y+R;
 
-		float err=0.5;
 		float param_y = pow(y0-_y,2);
 		float param_x = pow(_x-x0,2);
-		float decision = pow(R+err,2);
+		float decision = pow(R,2);
 
 		int pxl_line=0,i=0;
 
 		uint8_t block=1;
 		void _CorrectDecision(void){
-			if(block){
-				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+err+Circle.errorDecision,2); }
+			if(block && R>200){
+				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
 		}}
 
 		buf[0]=pxl_width;
@@ -3831,17 +3829,16 @@ uint16_t LCD_CalculateCircleWidth(uint32_t width)
 	float _x=(float)x, _y=(float)y;
 	float x0=(float)x, y0=(float)y+R;
 
-	float err=0.5;
 	float param_y = pow(y0-_y,2);
 	float param_x = pow(_x-x0,2);
-	float decision = pow(R+err,2);
+	float decision = pow(R,2);
 
 	int pxl_line=0,i=0;
 
 	uint8_t block=1;
 	void _CorrectDecision(void){
-		if(block){
-			if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+err+Circle.errorDecision,2); }
+		if(block && R>200){
+			if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
 	}}
 
 	buf[0]=pxl_width;
@@ -3926,17 +3923,16 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 		float _x=(float)x, _y=(float)y;
 		float x0=(float)x, y0=(float)y+R;
 
-		float err=0.5;
 		float param_y = pow(y0-_y,2);
 		float param_x = pow(_x-x0,2);
-		float decision = pow(R+err,2);
+		float decision = pow(R,2);
 
 		int pxl_line=0,i=0;
 
 		uint8_t block=1;
 		void _CorrectDecision(void){
-			if(block){
-				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+err+Circle.errorDecision,2); }
+			if(block && R>200){
+				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
 		}}
 
 		buf[0]=pxl_width;
