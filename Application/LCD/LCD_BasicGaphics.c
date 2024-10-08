@@ -46,8 +46,10 @@ typedef struct
 	float tang[MAX_DEGREE_CIRCLE];
 	float coeff[MAX_DEGREE_CIRCLE];
 	uint8_t rot[MAX_DEGREE_CIRCLE];
+	uint16_t correctPercDeg;
+	float errorDecision;
 }Circle_Param;
-static Circle_Param Circle;
+static Circle_Param Circle = {.correctPercDeg = 80, .errorDecision = 0.1};
 
 static void Set_AACoeff(int pixelsInOneSide, uint32_t colorFrom, uint32_t colorTo, float ratioStart)
 {
@@ -1042,7 +1044,7 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 		GOTO_ToCalculateRadius:
 	   _width=(width&0x0000FFFF)-matchWidth;
 
-		uint32_t R=_width/2, err=0.5;
+	   float R=((float)_width)/2;
 		uint32_t pxl_width = R/3;
 
 		x=__x+_width/2 + matchWidth/2;
@@ -1052,16 +1054,23 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 		float _x=(float)x, _y=(float)y;
 		float x0=(float)x, y0=(float)y+R;
 
+		float err=0.5;
 		float param_y = pow(y0-_y,2);
 		float param_x = pow(_x-x0,2);
 		float decision = pow(R+err,2);
 
 		int pxl_line=0,i=0;
 
+		uint8_t block=1;
+		void _CorrectDecision(void){
+			if(block){
+				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+err+Circle.errorDecision,2); }
+		}}
+
 		buf[0]=pxl_width;
 		do{
 			_x++;  pxl_line++;
-			param_x = pow(_x-x0,2);
+			param_x = pow(_x-x0,2);		_CorrectDecision();
 			if((param_x+param_y) > decision){
 				_y++;
 				param_y = pow(y0-_y,2);
@@ -1337,7 +1346,7 @@ static void LCD_DrawHalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSi
 		GOTO_ToCalculateRadius:
 	   _width=(width&0x0000FFFF)-matchWidth;
 
-		uint32_t R=_width/2, err=0.5;
+	   float R=((float)_width)/2;
 		uint32_t pxl_width = R/3;
 
 		x=__x+_width/2 + matchWidth/2;
@@ -1347,16 +1356,23 @@ static void LCD_DrawHalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSi
 		float _x=(float)x, _y=(float)y;
 		float x0=(float)x, y0=(float)y+R;
 
+		float err=0.5;
 		float param_y = pow(y0-_y,2);
 		float param_x = pow(_x-x0,2);
 		float decision = pow(R+err,2);
 
 		int pxl_line=0,i=0;
 
+		uint8_t block=1;
+		void _CorrectDecision(void){
+			if(block){
+				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+err+Circle.errorDecision,2); }
+		}}
+
 		buf[0]=pxl_width;
 		do{
 			_x++;  pxl_line++;
-			param_x = pow(_x-x0,2);
+			param_x = pow(_x-x0,2);		_CorrectDecision();
 			if((param_x+param_y) > decision){
 				_y++;
 				param_y = pow(y0-_y,2);
@@ -3805,7 +3821,7 @@ uint16_t LCD_CalculateCircleWidth(uint32_t width)
 	GOTO_ToCalculateRadius:
 	  _width=(width&0x0000FFFF)-matchWidth;
 
-	uint32_t R=_width/2, err=0.5;
+	float R=((float)_width)/2;
 	uint32_t pxl_width = R/3;
 
 	x=_width/2 + matchWidth/2;
@@ -3815,16 +3831,23 @@ uint16_t LCD_CalculateCircleWidth(uint32_t width)
 	float _x=(float)x, _y=(float)y;
 	float x0=(float)x, y0=(float)y+R;
 
+	float err=0.5;
 	float param_y = pow(y0-_y,2);
 	float param_x = pow(_x-x0,2);
 	float decision = pow(R+err,2);
 
 	int pxl_line=0,i=0;
 
+	uint8_t block=1;
+	void _CorrectDecision(void){
+		if(block){
+			if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+err+Circle.errorDecision,2); }
+	}}
+
 	buf[0]=pxl_width;
 	do{
 		_x++;  pxl_line++;
-		param_x = pow(_x-x0,2);
+		param_x = pow(_x-x0,2);		_CorrectDecision();
 		if((param_x+param_y) > decision){
 			_y++;
 			param_y = pow(y0-_y,2);
@@ -3872,8 +3895,6 @@ void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x
 	else LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor);
 }
 
-extern int _ROPA;
-extern float _ERR;
 static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t __x, uint32_t __y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
 {
 	int matchWidth=0, circleFlag=0;
@@ -3890,7 +3911,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 	uint32_t bkX = BkpSizeX;
 	uint32_t x=__x, y=__y;
 
-	if((_width==height)&&(_width>0)&&(height>0))
+	if((_width==height)&&(_width>0)&&(height>0))  //zmierz tera czas tego
 	{
 		GOTO_ToCalculateRadius:
 	   _width=(width&0x0000FFFF)-matchWidth;
@@ -3912,26 +3933,16 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 
 		int pxl_line=0,i=0;
 
+		uint8_t block=1;
+		void _CorrectDecision(void){
+			if(block){
+				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+err+Circle.errorDecision,2); }
+		}}
+
 		buf[0]=pxl_width;
 		do{
-			_x++;  pxl_line++;                     //if( i >= ((7*pxl_width)/10) && i <= ((8*pxl_width)/10) ){ err= 1.0; decision = pow(R+err,2); }
-			param_x = pow(_x-x0,2);
-
-    if(_ROPA){
-			if( i >= ((8*pxl_width)/10) )
-			{
-				err= _ERR;
-				decision = pow(R+err,2);
-			}
-    }
-//			if( i > ((9*pxl_width)/10) && i <= ((10*pxl_width)/10) )
-//			{
-//				err= 1.5;
-//				decision = pow(R+err,2);
-//			}
-
-
-
+			_x++;  pxl_line++;
+			param_x = pow(_x-x0,2);		_CorrectDecision();
 			if((param_x+param_y) > decision){
 				_y++;
 				param_y = pow(y0-_y,2);
