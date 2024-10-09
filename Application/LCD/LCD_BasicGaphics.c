@@ -15,6 +15,7 @@
 #define MAX_SIZE_TAB_AA		500   //!!!!!!!!!!  tREBA if >MAX_SIZE_TAB_AA to break; !!!! bo inaczej sa czarne kropki !!!!!
 #define MAX_LINE_BUFF_CIRCLE_SIZE  500
 #define MAX_DEGREE_CIRCLE  10
+#define CORRECT_FOR_RADIUS  200
 
 ALIGN_32BYTES(SDRAM uint32_t pLcd[LCD_BUFF_XSIZE*LCD_BUFF_YSIZE]);
 
@@ -834,7 +835,7 @@ static void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, u
 			while(i--){
 				pLcd[k++]=drawColor;
 			}
-
+			_outColor = pLcd[k];
 			if(j){
 				i=buf[p++];
 				Set_AACoeff_Draw(i,drawColor,_outColor,outRatioStart);
@@ -857,7 +858,6 @@ static void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, u
 				pLcd[k]=drawColor;
 				k+=BkpSizeX;
 			}
-
 			if(j){
 				i=buf[p++];
 				Set_AACoeff_Draw(i,drawColor,inColor,inRatioStart);
@@ -865,10 +865,11 @@ static void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, u
 					pLcd[k+a*BkpSizeX]=buff_AA[1+a];
 			}
 			k++;
-
+			_outColor = pLcd[k-BkpSizeX];
 			Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
-			for(int a=0;a<buff_AA[0];++a)
+			for(int a=0;a<buff_AA[0];++a){	if(pLcd[k-(a+1)*BkpSizeX] != _outColor) break;
 				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
+			}
 		}
 	}
 }
@@ -1062,7 +1063,7 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 
 		uint8_t block=1;
 		void _CorrectDecision(void){
-			if(block && R>200){
+			if(block && R>CORRECT_FOR_RADIUS){
 				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
 		}}
 
@@ -1363,7 +1364,7 @@ static void LCD_DrawHalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSi
 
 		uint8_t block=1;
 		void _CorrectDecision(void){
-			if(block && R>200){
+			if(block && R>CORRECT_FOR_RADIUS){
 				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
 		}}
 
@@ -3837,7 +3838,7 @@ uint16_t LCD_CalculateCircleWidth(uint32_t width)
 
 	uint8_t block=1;
 	void _CorrectDecision(void){
-		if(block && R>200){
+		if(block && R>CORRECT_FOR_RADIUS){
 			if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
 	}}
 
@@ -3908,7 +3909,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 	uint32_t bkX = BkpSizeX;
 	uint32_t x=__x, y=__y;
 
-	if((_width==height)&&(_width>0)&&(height>0))  //zmierz tera czas tego
+	if((_width==height)&&(_width>0)&&(height>0))
 	{
 		GOTO_ToCalculateRadius:
 	   _width=(width&0x0000FFFF)-matchWidth;
@@ -3931,7 +3932,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 
 		uint8_t block=1;
 		void _CorrectDecision(void){
-			if(block && R>200){
+			if(block && R>CORRECT_FOR_RADIUS){
 				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
 		}}
 
@@ -4037,7 +4038,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 			if(IS_RANGE(Circle.degree[1+i],46,89)){
 				if(Circle.width<150) circleLinesLenCorrect=-1;
 			}
-			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;  //empirycznie wyznaczyć !!!!
+			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;
 			else if(IS_RANGE(Circle.degree[1+i],201,247)) circleLinesLenCorrect=3;
 			else if(IS_RANGE(Circle.degree[1+i],270,292)) circleLinesLenCorrect=-1;
 			else if(IS_RANGE(Circle.degree[1+i],293,338)){
@@ -4046,13 +4047,13 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 				  	  else													circleLinesLenCorrect=-1;
 			}
 
-//			if((Circle.degree[1+i]>=315-11 && Circle.degree[1+i]<=315+11)||
-//			   (Circle.degree[1+i]>=225-11 && Circle.degree[1+i]<=225+11)||
-//			   (Circle.degree[1+i]>=135-11 && Circle.degree[1+i]<=135+11)||
-//			   (Circle.degree[1+i]>=45-11  && Circle.degree[1+i]<=45+11))
-//			{
-//				if(Circle.width > 359) circleLinesLenCorrect=+5;
-//			}
+			if(IS_RANGE(Circle.degree[1+i], 315-11, 315+11) ||
+				IS_RANGE(Circle.degree[1+i], 225-11, 225+11) ||
+				IS_RANGE(Circle.degree[1+i], 135-11, 135+11) ||
+				IS_RANGE(Circle.degree[1+i], 45-11, 45+11))
+			{
+				if(Circle.width > 359) circleLinesLenCorrect=+5;
+			}
 
 			if(i==0)
 				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,_FillColor,Circle.degColor[i+1]);
@@ -4177,13 +4178,13 @@ void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uin
 
 
 		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor);
-//		LCD_CopyCircleWidth();
-//
-//   	uint32_t width_new = width-2*thickness;
-//		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
-//
-//		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor);
-//		LCD_SetCopyCircleWidth();
+		LCD_CopyCircleWidth();
+
+   	uint32_t width_new = width-2*thickness;
+		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
+
+		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor);
+		LCD_SetCopyCircleWidth();
 
 }
 
