@@ -839,8 +839,9 @@ static void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, u
 			if(j){
 				i=buf[p++];
 				Set_AACoeff_Draw(i,drawColor,_outColor,outRatioStart);
-				for(int a=0;a<buff_AA[0];++a)
+				for(int a=0;a<buff_AA[0];++a){	if(pLcd[k+a] != _outColor) break;
 					pLcd[k+a]=buff_AA[1+a];
+				}
 			}
 			k+=BkpSizeX;
 
