@@ -406,8 +406,8 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		Circle.bold=0;
 		Circle.halfCircle=0;
 
-		Circle.deg[0]=45;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] mam fillColor !!!!
-		Circle.deg[1]=135;	Circle.degColor[1]=MYRED;
+		Circle.deg[0]=100;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] mam fillColor !!!!
+		Circle.deg[1]=120;	Circle.degColor[1]=MYRED;
 		Circle.deg[2]=225;   Circle.degColor[2]=DARKYELLOW;
 		Circle.deg[3]=315;   Circle.degColor[3]=DARKGREEN;
 		Circle.deg[4]=240;   Circle.degColor[4]=DARKBLUE;
@@ -426,7 +426,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	LCD_SetCircleDegColors(4,Circle.degColor[0],Circle.degColor[1],Circle.degColor[2],Circle.degColor[3],Circle.degColor[4],Circle.degColor[5],Circle.degColor[6]);
 	LCD_SetCircleDegColorsBuff(4,Circle.degColor); */
 
-	LCD_SetCirclePercentParam(4,Circle.deg,Circle.degColor);
+	LCD_SetCirclePercentParam(2,Circle.deg,Circle.degColor);
 	LCD_Clear(RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //dac opisy b: to bold !!!!!! na lcd ekranie
 
 
