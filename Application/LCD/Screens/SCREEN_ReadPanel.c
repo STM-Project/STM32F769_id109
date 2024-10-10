@@ -407,7 +407,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		Circle.halfCircle=0;
 
 		Circle.deg[0]=100;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] mam fillColor !!!!
-		Circle.deg[1]=120;	Circle.degColor[1]=MYRED;
+		Circle.deg[1]=360;	Circle.degColor[1]=MYRED;
 		Circle.deg[2]=225;   Circle.degColor[2]=DARKYELLOW;
 		Circle.deg[3]=315;   Circle.degColor[3]=DARKGREEN;
 		Circle.deg[4]=240;   Circle.degColor[4]=DARKBLUE;

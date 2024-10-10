@@ -835,11 +835,11 @@ static void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, u
 			while(i--){
 				pLcd[k++]=drawColor;
 			}
-			//_outColor = pLcd[k];
+			if(0==outColor) _outColor = pLcd[k];
 			if(j){
 				i=buf[p++];
 				Set_AACoeff_Draw(i,drawColor,_outColor,outRatioStart);
-				for(int a=0;a<buff_AA[0];++a){	//if(pLcd[k+a] != _outColor) break;
+				for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k+a] != _outColor) break; }
 					pLcd[k+a]=buff_AA[1+a];
 				}
 			}
@@ -866,9 +866,9 @@ static void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, u
 					pLcd[k+a*BkpSizeX]=buff_AA[1+a];
 			}
 			k++;
-			//_outColor = pLcd[k-BkpSizeX];
+			if(0==outColor) _outColor = pLcd[k-BkpSizeX];
 			Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
-			for(int a=0;a<buff_AA[0];++a){	//if(pLcd[k-(a+1)*BkpSizeX] != _outColor) break;
+			for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k-(a+1)*BkpSizeX] != _outColor) break; }
 				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
 			}
 		}
@@ -895,9 +895,9 @@ static void _DrawArrayBuffLeftDown_AA(uint32_t drawColor, uint32_t outColor, uin
 					pLcd[k-a]=buff_AA[1+a];
 			}
 			k+=BkpSizeX;
-			//_outColor = pLcd[k];
+			if(0==outColor) _outColor = pLcd[k];
 			Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
-			for(int a=0;a<buff_AA[0];++a){	//if(pLcd[k+1+a] != _outColor) break;
+			for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k+1+a] != _outColor) break; }
 				pLcd[k+1+a]=buff_AA[1+a];
 			}
 		}
@@ -911,11 +911,11 @@ static void _DrawArrayBuffLeftDown_AA(uint32_t drawColor, uint32_t outColor, uin
 				pLcd[k]=drawColor;
 				k+=BkpSizeX;
 			}
-			//_outColor = pLcd[k];
+			if(0==outColor) _outColor = pLcd[k];
 			if(j){
 				i=buf[p++];
 				Set_AACoeff_Draw(i,drawColor,_outColor,outRatioStart);
-				for(int a=0;a<buff_AA[0];++a){	//if(pLcd[k+a*BkpSizeX] != _outColor) break;
+				for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k+a*BkpSizeX] != _outColor) break; }
 					pLcd[k+a*BkpSizeX]=buff_AA[1+a];
 				}
 			}
@@ -940,11 +940,11 @@ static void _DrawArrayBuffLeftUp_AA(uint32_t drawColor, uint32_t outColor, uint3
 			while(i--)
 				pLcd[k--]=drawColor;
 
-			//_outColor = pLcd[k];
+			if(0==outColor) _outColor = pLcd[k];
 			if(j){
 				i=buf[p++];
 				Set_AACoeff_Draw(i,drawColor,_outColor,outRatioStart);
-				for(int a=0;a<buff_AA[0];++a){	//if(pLcd[k-a] != _outColor) break;
+				for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k-a] != _outColor) break; }
 					pLcd[k-a]=buff_AA[1+a];
 				}
 			}
@@ -972,9 +972,9 @@ static void _DrawArrayBuffLeftUp_AA(uint32_t drawColor, uint32_t outColor, uint3
 					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
 			}
 			k--;
-			//_outColor = pLcd[k+BkpSizeX];
+			if(0==outColor) _outColor = pLcd[k+BkpSizeX];
 			Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
-			for(int a=0;a<buff_AA[0];++a){	//if(pLcd[k+(a+1)*BkpSizeX] != _outColor) break;
+			for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k+(a+1)*BkpSizeX] != _outColor) break; }
 				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
 			}
 		}
@@ -1003,10 +1003,10 @@ static void _DrawArrayBuffRightUp_AA(uint32_t drawColor, uint32_t outColor, uint
 			}
 			if(k >= BkpSizeX) k -= BkpSizeX;
 			else 					k = buff_AA[0];
-			//k -= BkpSizeX;
-			//_outColor = pLcd[k-1];
+
+			if(0==outColor) _outColor = pLcd[k-1];
 			Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
-			for(int a=0;a<buff_AA[0];++a){	//if(pLcd[k-1-a] != _outColor) break;
+			for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k-1-a] != _outColor) break; }
 				pLcd[k-1-a]=buff_AA[1+a];
 			}
 		}
@@ -1020,11 +1020,11 @@ static void _DrawArrayBuffRightUp_AA(uint32_t drawColor, uint32_t outColor, uint
 				pLcd[k]=drawColor;
 				k-=BkpSizeX;
 			}
-			//_outColor = pLcd[k];
+			if(0==outColor) _outColor = pLcd[k];
 			if(j){
 				i=buf[p++];
 				Set_AACoeff_Draw(i,drawColor,_outColor,outRatioStart);
-				for(int a=0;a<buff_AA[0];++a){	//if(pLcd[k-a*BkpSizeX] != _outColor) break;
+				for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k-a*BkpSizeX] != _outColor) break; }
 					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
 				}
 			}
@@ -3906,7 +3906,7 @@ void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x
 	else LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor);
 }
 
-static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t __x, uint32_t __y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t __x, uint32_t __y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, int outColorRead)
 {
 	int matchWidth=0, circleFlag=0;
 	uint16_t param =width>>16;
@@ -3991,6 +3991,8 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 
 	_StartDrawLine(posBuff,bkX,x,y);
 
+	uint32_t BkpColor_copy = BkpColor;
+	if(outColorRead) BkpColor=0;
 		_DrawArrayBuffRightDown_AA(PARAM_AA,0,buf); 	    _CopyDrawPos(); _IncDrawPos(-bkX); PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
 		_DrawArrayBuffRightDown_AA(PARAM_AA,1,buf_Inv);                      				   PixelCorrect(PARAM, buf[1],bkX);   _IncDrawPos(-1);
 
@@ -4002,7 +4004,7 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 
 		_DrawArrayBuffRightUp_AA (PARAM_AA,1,buf);       _CopyDrawPos(); _IncDrawPos(-1);  	PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
 		_DrawArrayBuffRightUp_AA (PARAM_AA,0,buf_Inv);                       					PixelCorrect(PARAM, buf[1], 1);
-
+	if(outColorRead) BkpColor = BkpColor_copy;
 
 		if(FillColor!=TRANSPARENT)
 		{
@@ -4043,29 +4045,38 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 
 	if(param==Percent_Circle && circleFlag)
 	{
-		int circleLinesLenCorrect=0;
+		int circleLinesLenCorrect;
 		uint16_t fillWidth=0, fillHeight=0;
 
 		for(int i=0;i<Circle.degree[0];++i)
 		{
-			if(IS_RANGE(Circle.degree[1+i],46,89)){
-				if(Circle.width<150) circleLinesLenCorrect=-1;
-			}
-			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;
-			else if(IS_RANGE(Circle.degree[1+i],201,247)) circleLinesLenCorrect=3;
-			else if(IS_RANGE(Circle.degree[1+i],270,292)) circleLinesLenCorrect=-1;
-			else if(IS_RANGE(Circle.degree[1+i],293,338)){
-				  	  if((Circle.width>100)&&(Circle.width<260)) circleLinesLenCorrect=1;
-				  	  else if(Circle.width>260) 						circleLinesLenCorrect=2;
-				  	  else													circleLinesLenCorrect=-1;
-			}
+			circleLinesLenCorrect=0;
 
-			if(IS_RANGE(Circle.degree[1+i], 315-11, 315+11) ||
-				IS_RANGE(Circle.degree[1+i], 225-11, 225+11) ||
-				IS_RANGE(Circle.degree[1+i], 135-11, 135+11) ||
-				IS_RANGE(Circle.degree[1+i], 45-11, 45+11))
+//			if(IS_RANGE(Circle.degree[1+i],46,89)){
+//				if(Circle.width<150) circleLinesLenCorrect=-1;
+//			}
+//			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;
+//			else if(IS_RANGE(Circle.degree[1+i],201,247)) circleLinesLenCorrect=3;
+//			else if(IS_RANGE(Circle.degree[1+i],270,292)) circleLinesLenCorrect=-1;
+//			else if(IS_RANGE(Circle.degree[1+i],293,338)){
+//				  	  if((Circle.width>100)&&(Circle.width<260)) circleLinesLenCorrect=1;
+//				  	  else if(Circle.width>260) 						circleLinesLenCorrect=2;
+//				  	  else													circleLinesLenCorrect=-1;
+//			}
+
+			//147-149  206-214  224-225   237-240  300-303   327  330
+
+//			if(IS_RANGE(Circle.degree[1+i], 315-11, 315+11) ||
+//				IS_RANGE(Circle.degree[1+i], 225-11, 225+11) ||
+//				IS_RANGE(Circle.degree[1+i], 135-11, 135+11) ||
+//				IS_RANGE(Circle.degree[1+i], 45-11, 45+11))
+
+			if(IS_RANGE(Circle.degree[1+i], 300, 330) ||
+				IS_RANGE(Circle.degree[1+i], 206, 240) ||
+				IS_RANGE(Circle.degree[1+i], 124, 149) ||
+				IS_RANGE(Circle.degree[1+i],  34,  56))
 			{
-				if(Circle.width > 359) circleLinesLenCorrect=+5;
+					circleLinesLenCorrect = 4;
 			}
 
 			if(i==0)
@@ -4190,14 +4201,14 @@ void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uin
 	uint8_t thickness = 15;//FrameColor>>24;
 
 
-		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor);
-//		LCD_CopyCircleWidth();
-//
-//   	uint32_t width_new = width-2*thickness;
-//		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
-//
-//		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor);
-//		LCD_SetCopyCircleWidth();
+		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor, 0);
+		LCD_CopyCircleWidth();
+
+   	uint32_t width_new = width-2*thickness;
+		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
+
+		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor, 1);
+		LCD_SetCopyCircleWidth();
 
 }
 
