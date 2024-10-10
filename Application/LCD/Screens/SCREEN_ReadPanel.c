@@ -682,10 +682,8 @@ void SCREEN_ReadPanel(void)
 
 			else if(DEBUG_RcvStr("k")){ DECR(Circle.deg[0],1,0);   SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("l")){ INCR(Circle.deg[0],1,Circle.deg[1]-1);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("k")){ DECR(Circle.deg[0],1,0);   SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("l")){ INCR(Circle.deg[0],1,360);  SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr(",")){ DECR(Circle.deg[1],1,Circle.deg[0]+1);    SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr(".")){ INCR(Circle.deg[1],1,Circle.deg[2]-1);   SCREEN_Test_Circle(); }
+			else if(DEBUG_RcvStr(".")){ INCR(Circle.deg[1],1,360/*Circle.deg[2]-1*/);   SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("9")){ DECR(Circle.deg[2],1,Circle.deg[1]+1);    SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("0")){ INCR(Circle.deg[2],1,Circle.deg[3]-1);   SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("7")){ DECR(Circle.deg[3],1,Circle.deg[2]+1);    SCREEN_Test_Circle(); }
