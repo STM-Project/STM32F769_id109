@@ -15,7 +15,7 @@
 #define MAX_SIZE_TAB_AA		500   //!!!!!!!!!!  tREBA if >MAX_SIZE_TAB_AA to break; !!!! bo inaczej sa czarne kropki !!!!!
 #define MAX_LINE_BUFF_CIRCLE_SIZE  500
 #define MAX_DEGREE_CIRCLE  10
-#define CORRECT_FOR_RADIUS  200
+#define CORRECT_FOR_RADIUS  100
 
 ALIGN_32BYTES(SDRAM uint32_t pLcd[LCD_BUFF_XSIZE*LCD_BUFF_YSIZE]);
 
@@ -4072,8 +4072,8 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 //				IS_RANGE(Circle.degree[1+i], 45-11, 45+11))
 
 			if(IS_RANGE(Circle.degree[1+i], 300, 330) ||
-				IS_RANGE(Circle.degree[1+i], 206, 240) ||
-				IS_RANGE(Circle.degree[1+i], 124, 149) ||
+				IS_RANGE(Circle.degree[1+i], 206, 244) ||
+				IS_RANGE(Circle.degree[1+i], 122, 149) ||
 				IS_RANGE(Circle.degree[1+i],  34,  56))
 			{
 					circleLinesLenCorrect = 4;
@@ -4196,6 +4196,12 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 }
 
 void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){
+
+//	SHAPE_PARAMS params = {.bkSize.x=bkpSizeX, .bkSize.y=bkpSizeY, .pos[0].x=x, .pos[0].y=y, .size[0].w=width, .size[0].h=height, .color[0].frame=frameColor, .color[0].fill=fillColor, .color[0].bk=bkpColor, .param[0]=direct};
+//
+//	if(ToStructAndReturn == posBuff)
+//		return params;
+
 	uint32_t width = _width&0xFFFF;
 	uint16_t param = _width>>16;
 	uint8_t thickness = 15;//FrameColor>>24;
@@ -4210,6 +4216,9 @@ void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uin
 		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor, 1);
 		LCD_SetCopyCircleWidth();
 
+}
+SHAPE_PARAMS LCDSHAPE_CircleTEST(uint32_t posBuff, SHAPE_PARAMS param){
+	//return LCD_Arrow(posBuff,param.bkSize.x,param.bkSize.y, param.pos[0].x,param.pos[0].y, param.size[0].w,param.size[0].h, param.color[0].frame, param.color[0].fill, param.color[0].bk, param.param[0]);
 }
 
 

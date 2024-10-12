@@ -358,12 +358,12 @@ static uint16_t GetTouchType(int *param)
 					{
 						if(2 < ServiceTouch.idx)
 						{
-							if( ServiceTouch.pos[0].x >= Touch[i].pos[0].x
+							if( ServiceTouch.pos[0].x >= Touch[i].pos[1].x
 								&& ServiceTouch.pos[0].y >= Touch[i].pos[0].y && ServiceTouch.pos[0].y <= Touch[i].pos[1].y )
 							{
 								for(int j=1; j<ServiceTouch.idx; ++j)
 								{
-									if( ServiceTouch.pos[j].x <= Touch[i].pos[1].x
+									if( ServiceTouch.pos[j].x <= Touch[i].pos[0].x
 										&& ServiceTouch.pos[j].y >= Touch[i].pos[0].y && ServiceTouch.pos[j].y <= Touch[i].pos[1].y ){
 										*param = j;
 										return Touch[i].index;
@@ -400,12 +400,12 @@ static uint16_t GetTouchType(int *param)
 					{
 						if(2 < ServiceTouch.idx)
 						{
-							if( ServiceTouch.pos[0].y >= Touch[i].pos[0].y
+							if( ServiceTouch.pos[0].y >= Touch[i].pos[1].y
 								&& ServiceTouch.pos[0].x >= Touch[i].pos[0].x && ServiceTouch.pos[0].x <= Touch[i].pos[1].x )
 							{
 								for(int j=1; j<ServiceTouch.idx; ++j)
 								{
-									if( ServiceTouch.pos[j].y <= Touch[i].pos[1].y
+									if( ServiceTouch.pos[j].y <= Touch[i].pos[0].y
 										&& ServiceTouch.pos[j].x >= Touch[i].pos[0].x && ServiceTouch.pos[j].x <= Touch[i].pos[1].x ){
 										*param = j;
 										return Touch[i].index;

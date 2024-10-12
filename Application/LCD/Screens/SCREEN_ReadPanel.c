@@ -406,7 +406,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		Circle.bold=0;
 		Circle.halfCircle=0;
 
-		Circle.deg[0]=100;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] mam fillColor !!!!
+		Circle.deg[0]=100;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] moze fillColor !!!!???
 		Circle.deg[1]=360;	Circle.degColor[1]=MYRED;
 		Circle.deg[2]=225;   Circle.degColor[2]=DARKYELLOW;
 		Circle.deg[3]=315;   Circle.degColor[3]=DARKGREEN;
@@ -430,7 +430,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	LCD_Clear(RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //dac opisy b: to bold !!!!!! na lcd ekranie
 
 
-	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,SetPos,0), LCD_Ypos(lenStr,SetPos,0), StrAll(2,"Radius } | ",Int2Str(Circle.width,' ',3,Sign_none)), 	 fullHight,0,_BkColor(),1,1);  //'znak' w opisie !!!!!
+	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,SetPos,0), LCD_Ypos(lenStr,SetPos,0), StrAll(2,"Radius } | ",Int2Str(Circle.width/2,' ',3,Sign_none)), 	 fullHight,0,_BkColor(),1,1);  //'znak' w opisie !!!!!
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,IncPos,10), LCD_Ypos(lenStr,GetPos,0), StrAll(2,"angle:",INT2STR_TIME(Circle.deg[0])),fullHight,0,_BkColor(),1,0);
 
 	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,SetPos,0), LCD_Ypos(lenStr,IncPos,8), StrAll(6,"Frame: ",INT2STR(Circle.frame[0])," ",INT2STR(Circle.frame[1])," ",INT2STR(Circle.frame[2])),  halfHight,0,_BkColor(),1,1);
@@ -538,7 +538,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 //int _ROPA=0;
 //float _ERR=0.0;
-int SCREEN_number=4;  //LOAD IMAGE !!!!!
+int SCREEN_number=0;  //LOAD IMAGE !!!!!
 
 void SCREEN_ReadPanel(void)
 {

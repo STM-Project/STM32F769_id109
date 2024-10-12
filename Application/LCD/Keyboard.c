@@ -885,6 +885,28 @@ void KEYBOARD_ServiceSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, in
 	SetTouch_Slider(k, startTouchIdx, elemSliderPos);
 }
 
+void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int TOUCH_Action, char* txtDescr, int *value, VOID_FUNCTION *pfunc)
+{
+	/* 'Color1Txt' is no press color for: outline, pointer */
+	/* 'Color2Txt' is 	press color for: pointer, lineSel */
+	uint16_t deg[2] = {100,223};
+	uint32_t degColor[2] = {RED,MYRED};
+	LCD_SetCirclePercentParam(2,deg,degColor);
+	LCD_SetCircleAA(0.0, 0.0);
+	CorrectLineAA_on();
+
+	int head = 0;//GetHeightHead(k);
+
+	SetDimAll(k, s[k].interSpace, head);
+	ShapeWin(k,widthAll,heightAll);
+
+	LCD_Circle_TEST__(0, widthAll,heightAll, s[k].interSpace,s[k].interSpace, SetParamWidthCircle(Percent_Circle,widthKey),heightKey, SetBold2Color(frameColor,bold), fillColor, bkColor);
+
+	LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
+
+
+}
+
 
 
 
