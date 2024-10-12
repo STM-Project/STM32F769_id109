@@ -1001,14 +1001,27 @@ static void _DrawArrayBuffRightUp_AA(uint32_t drawColor, uint32_t outColor, uint
 					pLcd[k+a]=buff_AA[1+a];
 				}
 			}
-			if(k >= BkpSizeX) k -= BkpSizeX;
-			else 					k = buff_AA[0];
 
-			if(0==outColor) _outColor = pLcd[k-1];
-			Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
-			for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k-1-a] != _outColor) break; }
-				pLcd[k-1-a]=buff_AA[1+a];
+//			Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
+//			if(k >= BkpSizeX)  k -= BkpSizeX;
+//			if(k < buff_AA[0]) k = buff_AA[0];
+
+
+			if(k > BkpSizeX) k -= BkpSizeX;
+			{
+				if(k>0){
+					if(0==outColor) _outColor = pLcd[k-1];
+					Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
+					for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k-1-a] != _outColor) break; }
+						pLcd[k-1-a]=buff_AA[1+a];
+					}
+				}
+
 			}
+
+
+
+
 		}
 	}
 	else
@@ -3985,10 +3998,8 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 	else if((_width==0)&&(height==0));
 	else return;
 
-
 	uint8_t buf_Inv[buf[0]+1];
 	InverseAndCopyBuff(buf_Inv,buf);
-
 	_StartDrawLine(posBuff,bkX,x,y);
 
 	uint32_t BkpColor_copy = BkpColor;
@@ -4051,33 +4062,10 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 		for(int i=0;i<Circle.degree[0];++i)
 		{
 			circleLinesLenCorrect=0;
-
-//			if(IS_RANGE(Circle.degree[1+i],46,89)){
-//				if(Circle.width<150) circleLinesLenCorrect=-1;
-//			}
-//			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;
-//			else if(IS_RANGE(Circle.degree[1+i],201,247)) circleLinesLenCorrect=3;
-//			else if(IS_RANGE(Circle.degree[1+i],270,292)) circleLinesLenCorrect=-1;
-//			else if(IS_RANGE(Circle.degree[1+i],293,338)){
-//				  	  if((Circle.width>100)&&(Circle.width<260)) circleLinesLenCorrect=1;
-//				  	  else if(Circle.width>260) 						circleLinesLenCorrect=2;
-//				  	  else													circleLinesLenCorrect=-1;
-//			}
-
-			//147-149  206-214  224-225   237-240  300-303   327  330
-
-//			if(IS_RANGE(Circle.degree[1+i], 315-11, 315+11) ||
-//				IS_RANGE(Circle.degree[1+i], 225-11, 225+11) ||
-//				IS_RANGE(Circle.degree[1+i], 135-11, 135+11) ||
-//				IS_RANGE(Circle.degree[1+i], 45-11, 45+11))
-
 			if(IS_RANGE(Circle.degree[1+i], 300, 330) ||
 				IS_RANGE(Circle.degree[1+i], 206, 244) ||
-				IS_RANGE(Circle.degree[1+i], 122, 149) ||
-				IS_RANGE(Circle.degree[1+i],  34,  56))
-			{
-					circleLinesLenCorrect = 4;
-			}
+				IS_RANGE(Circle.degree[1+i], 122, 149) )	circleLinesLenCorrect = 4;
+			else if(IS_RANGE(Circle.degree[1+i],  34,  56)) circleLinesLenCorrect = 2;
 
 			if(i==0)
 				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,_FillColor,Circle.degColor[i+1]);
@@ -4195,10 +4183,10 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 	#undef buf
 }
 
-void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){
+void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+{
+	//SHAPE_PARAMS params = {.bkSize.x=BkpSizeX, .bkSize.y=BkpSizeY, .pos[0].x=x, .pos[0].y=y, .size[0].w=_width, .size[0].h=height, .color[0].frame=FrameColor, .color[0].fill=FillColor, .color[0].bk=BkpColor};
 
-//	SHAPE_PARAMS params = {.bkSize.x=bkpSizeX, .bkSize.y=bkpSizeY, .pos[0].x=x, .pos[0].y=y, .size[0].w=width, .size[0].h=height, .color[0].frame=frameColor, .color[0].fill=fillColor, .color[0].bk=bkpColor, .param[0]=direct};
-//
 //	if(ToStructAndReturn == posBuff)
 //		return params;
 
@@ -4208,18 +4196,20 @@ void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uin
 
 
 		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor, 0);
-		LCD_CopyCircleWidth();
+//		LCD_CopyCircleWidth();
+//
+//   	uint32_t width_new = width-2*thickness;
+//		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
+//
+//		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor, 1);
+//		LCD_SetCopyCircleWidth();
 
-   	uint32_t width_new = width-2*thickness;
-		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
-
-		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor, 1);
-		LCD_SetCopyCircleWidth();
+	//return params;
 
 }
-SHAPE_PARAMS LCDSHAPE_CircleTEST(uint32_t posBuff, SHAPE_PARAMS param){
-	//return LCD_Arrow(posBuff,param.bkSize.x,param.bkSize.y, param.pos[0].x,param.pos[0].y, param.size[0].w,param.size[0].h, param.color[0].frame, param.color[0].fill, param.color[0].bk, param.param[0]);
-}
+//SHAPE_PARAMS LCDSHAPE_CircleTEST(uint32_t posBuff, SHAPE_PARAMS param){
+//	return LCD_Circle_TEST__(posBuff,param.bkSize.x,param.bkSize.y, param.pos[0].x,param.pos[0].y, param.size[0].w,param.size[0].h, param.color[0].frame, param.color[0].fill, param.color[0].bk);
+//}
 
 
 

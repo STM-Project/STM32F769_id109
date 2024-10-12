@@ -1513,14 +1513,14 @@ void FILE_NAME(setTouch)(void)
 		if(IS_RANGE(state, touchStart, touchStop)){
 			int nr = state-touchStart;
 			if(releaseAll){  if(_WasStatePrev(touchStart,touchStop)) KEYBOARD_TYPE(keyboard,releaseAll);  }
-			func(nr);
+			if(func) func(nr);
 			if(KEY_Select_one==keyStart) nr=0;
 			KEYBOARD_TYPE_PARAM(keyboard,keyStart+nr,pos.x,pos.y,0,0,0); _SaveState();
 	}}
 	void _TouchEndService(TOUCH_POINTS touchStart,TOUCH_POINTS touchStop, KEYBOARD_TYPES keyboard, SELECT_PRESS_BLOCK releaseAll, TOUCH_FUNC *func){
 		if(_WasStateRange(touchStart, touchStop)){
 			KEYBOARD_TYPE(keyboard, releaseAll);
-			func(-1);
+			if(func) func(-1);
 	}}
 
 	int deltaForEndPress=0;
@@ -1539,6 +1539,8 @@ void FILE_NAME(setTouch)(void)
 	_TouchService(Touch_size_plus, Touch_size_minus,	 KEYBOARD_fontSize,  KEY_Select_one,  KEY_Size_plus,	 FUNC_FontSize);
 	_TouchService(Touch_size_norm, Touch_size_italic,	 KEYBOARD_fontSize,  0, 				  KEY_Select_one,  FUNC_FontBoldItalNorm);
 	_TouchService(Touch_coeff_plus, Touch_coeff_minus,	 KEYBOARD_fontCoeff, KEY_All_release, KEY_Coeff_plus,  FUNC_FontCoeff);
+
+	_TouchService(Touch_fontCircleSliderR, Touch_fontCircleSliderB,	KEYBOARD_circleSliderRGB, 		KEY_All_release, KEY_fontCircleSliderR, NULL);
 
 	switch(state)
 	{
@@ -1699,6 +1701,8 @@ void FILE_NAME(setTouch)(void)
 
 			_TouchEndService(Touch_size_plus, Touch_size_minus, 	KEYBOARD_fontSize, 	KEY_Select_one,  FUNC_FontSize);
 			_TouchEndService(Touch_coeff_plus, Touch_coeff_minus, KEYBOARD_fontCoeff, 	KEY_All_release, FUNC_FontSize);
+
+			_TouchEndService(Touch_fontCircleSliderR, Touch_fontCircleSliderB, 	KEYBOARD_circleSliderRGB, 		KEY_All_release, NULL);
 
 
 			if(_WasStateRange(Touch_LenWin_plus, Touch_ResetSpaces))
