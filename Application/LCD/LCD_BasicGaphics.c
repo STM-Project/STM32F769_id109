@@ -1002,26 +1002,12 @@ static void _DrawArrayBuffRightUp_AA(uint32_t drawColor, uint32_t outColor, uint
 				}
 			}
 
-//			Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
-//			if(k >= BkpSizeX)  k -= BkpSizeX;
-//			if(k < buff_AA[0]) k = buff_AA[0];
-
-
 			if(k > BkpSizeX) k -= BkpSizeX;
-			{
-				if(k>0){
-					if(0==outColor) _outColor = pLcd[k-1];
-					Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
-					for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k-1-a] != _outColor) break; }
-						pLcd[k-1-a]=buff_AA[1+a];
-					}
-				}
-
-			}
-
-
-
-
+			{	if(0==outColor) _outColor = pLcd[k-1];
+				Set_AACoeff_Draw(i_prev,drawColor,_outColor,outRatioStart);
+				for(int a=0;a<buff_AA[0];++a){	if(0==outColor){ if(pLcd[k-1-a] != _outColor) break; } 	if(k < 1+a) break;
+					pLcd[k-1-a]=buff_AA[1+a];
+			}}
 		}
 	}
 	else
