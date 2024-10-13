@@ -899,6 +899,9 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 {
 	/* 'Color1Txt' is no press color for: outline, pointer */
 	/* 'Color2Txt' is 	press color for: pointer, lineSel */
+	uint16_t rCir;
+	structPosition pCir = GetCircleMiddPoint(&rCir);
+
 	LCD_SetCircleAA(0.0, 0.0);
 	CorrectLineAA_on();
 
@@ -911,6 +914,8 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 
 	int _WskCirc(int nr, int posX){
 		return posX - (s[k].x + posKey[nr].x);
+
+		57.295 * acos(pCir.x-posX);
 	}
 
 	bkColor = fillMainColor;

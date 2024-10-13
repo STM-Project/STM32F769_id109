@@ -4169,6 +4169,12 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 	#undef buf
 }
 
+structPosition GetCircleMiddPoint(uint16_t *radius){
+	structPosition pos = {Circle.x0, Circle.y0};
+	*radius = Circle.width;
+	return pos;
+}
+
 void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
 {
 	//SHAPE_PARAMS params = {.bkSize.x=BkpSizeX, .bkSize.y=BkpSizeY, .pos[0].x=x, .pos[0].y=y, .size[0].w=_width, .size[0].h=height, .color[0].frame=FrameColor, .color[0].fill=FillColor, .color[0].bk=BkpColor};

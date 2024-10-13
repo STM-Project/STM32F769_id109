@@ -191,7 +191,7 @@ void LCD_HalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32
 
 
 
-
+structPosition GetCircleMiddPoint(uint16_t *radius);
 void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor);
 SHAPE_PARAMS LCDSHAPE_CircleTEST(uint32_t posBuff, SHAPE_PARAMS param);
 
