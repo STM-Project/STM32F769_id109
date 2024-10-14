@@ -13,6 +13,7 @@
 #include "touch.h"
 #include "SCREEN_ReadPanel.h"
 #include "common.h"
+#include "math.h"
 
 #define FONT_COEFF	252  //!!!!!!!!!!!!!!!!!!
 
@@ -899,8 +900,7 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 {
 	/* 'Color1Txt' is no press color for: outline, pointer */
 	/* 'Color2Txt' is 	press color for: pointer, lineSel */
-	uint16_t rCir;
-	structPosition pCir = GetCircleMiddPoint(&rCir);
+	float radius = ((float)LCD_GetCircleWidth())/2;
 
 	LCD_SetCircleAA(0.0, 0.0);
 	CorrectLineAA_on();
@@ -912,18 +912,32 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 	SetPosKey(k,posKey,interSpaceForButtons,head);
 	SetDimAll(k,interSpaceForButtons,head);
 
-	int _WskCirc(int nr, int posX){
-		return posX - (s[k].x + posKey[nr].x);
-
-		57.295 * acos(pCir.x-posX);
+	uint16_t _GetDegFromVal(int val){
+		return ((360*val)/256);
 	}
+	uint16_t _GetValFromDeg(uint16_t deg){
+		return ((256*deg)/360);
+	}
+	uint16_t _GetDegFromPosX(int nr){
+		float stretch = radius-(float)( x-(s[k].x+posKey[nr].x) );
+		uint16_t deg = (uint16_t)(57.295*acos(stretch/radius));
+		if(y > s[k].y+posKey[nr].y+(uint16_t)radius)
+			deg = 360 - deg;
+		return deg;
+	}
+
+	//256 v - 360 st
+	//val   - x_st
+
+	//x_st = (360*value)/256
+	//val = (256*x_st)/360
 
 	bkColor = fillMainColor;
 	if(TOUCH_Release == selBlockPress){
 		ShapeWin(k,widthAll,heightAll);
 		TxtDescr(k, 0,0, txtDescr);
 		for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i){
-			uint16_t deg[2] = {0, *(value+i)}; // to trzeba w funkcji zamnkąć !!!!!
+			uint16_t deg[2] = {0, _GetDegFromVal(*(value+i)) };   // to trzeba w funkcji zamnkąć !!!!!
 			uint32_t degColor[2] = {colorTxtPressKey[i],colorTxtPressKey[i]};
 			LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
 			LCD_Circle_TEST__(0, widthAll,heightAll, posKey[i].x, posKey[i].y, SetParamWidthCircle(Percent_Circle,s[k].widthKey),s[k].heightKey, SetBold2Color(frameColor,bold), fillColor, bkColor);
@@ -931,20 +945,21 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 		}
 	}
 	else{
-		INIT(nrCircSlid, selBlockPress-TOUCH_Action);
-		ShapeBkClear(k, s[k].widthKey,s[k].heightKey, fillColor);
+		if(IS_RANGE(((uint32_t)x*(uint32_t)x+(uint32_t)y*(uint32_t)y), VALPERC(radius,65)*VALPERC(radius,65), (uint32_t)radius*(uint32_t)radius))
+		{
+			INIT(nrCircSlid, selBlockPress-TOUCH_Action);
+			ShapeBkClear(k, s[k].widthKey,s[k].heightKey, fillColor);
 
-      int ddddd = _WskCirc(nrCircSlid,x);
-		*(value+nrCircSlid) = ddddd;
+			int degPosX = _GetDegFromPosX(nrCircSlid);
+			*(value+nrCircSlid) = _GetValFromDeg(degPosX);
 
-
-		uint16_t deg[2] = {0, *(value+nrCircSlid)}; // to trzeba w funkcji zamnkąć !!!!!
-		uint32_t degColor[2] = {colorTxtPressKey[nrCircSlid],colorTxtPressKey[nrCircSlid]};
-		LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
-		LCD_Circle_TEST__(0, s[k].widthKey,s[k].heightKey, 0,0, SetParamWidthCircle(Percent_Circle,s[k].widthKey),s[k].heightKey, SetBold2Color(frameColor,s[k].bold), fillColor, bkColor);
-		LCD_Display(0, s[k].x+posKey[nrCircSlid].x, s[k].y+posKey[nrCircSlid].y, s[k].widthKey, s[k].heightKey);
-		if(pfunc) pfunc();
-	}
+			uint16_t deg[2] = {0, degPosX}; // to trzeba w funkcji zamnkąć !!!!!
+			uint32_t degColor[2] = {colorTxtPressKey[nrCircSlid],colorTxtPressKey[nrCircSlid]};
+			LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
+			LCD_Circle_TEST__(0, s[k].widthKey,s[k].heightKey, 0,0, SetParamWidthCircle(Percent_Circle,s[k].widthKey),s[k].heightKey, SetBold2Color(frameColor,s[k].bold), fillColor, bkColor);
+			LCD_Display(0, s[k].x+posKey[nrCircSlid].x, s[k].y+posKey[nrCircSlid].y, s[k].widthKey, s[k].heightKey);
+			if(pfunc) pfunc();
+	}}
 
 	SetTouch_CircleSlider(k, startTouchIdx, posKey);
 
