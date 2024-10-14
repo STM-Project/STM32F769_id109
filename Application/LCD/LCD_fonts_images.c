@@ -43,6 +43,27 @@ const char *TxtFontStyle[]={
 		"Times_New_Roman",
 		"Comic_Saens_MS"
 };
+const char *BkColorFontFilePath[]={
+		"BackGround_darkGray/",
+		"BackGround_black/",
+		"BackGround_brown/",
+		"BackGround_white/"
+};
+const char *ColorFontFilePath[]={
+		"Color_white/",
+		"Color_blue/",
+		"Color_red/",
+		"Color_green/",
+		"Color_black/"
+};
+const char *StyleFontFilePath[]={
+		"Arial_Narrow/",
+		"Calibri_Light/",
+		"Bodoni_MT_Condenset/",
+		"Comic_Saens_MS/",
+		"Times_New_Roman/",
+		"Arial/"
+};
 const char *TxtFontSize[]={
 		"font_8",
 		"font_8_bold",
@@ -1626,68 +1647,71 @@ int LCD_LoadFont(int fontSize, int fontStyle, uint32_t backgroundColor, uint32_t
 		return -2;
 	char fileOpenName[100]="Fonts/";
 
-	switch(backgroundColor)
-	{
-	case DARKGRAY:
-		strncat(fileOpenName,"BackGround_darkGray/",20);
-		break;
-	case BLACK:
-		strncat(fileOpenName,"BackGround_black/",17);
-		break;
-	case BROWN:
-		strncat(fileOpenName,"BackGround_brown/",17);
-		break;
-	case WHITE:
-		strncat(fileOpenName,"BackGround_white/",17);
-		break;
-	default:
-		break;
-	}
+//	switch(backgroundColor)
+//	{
+//	case DARKGRAY:
+//		strncat(fileOpenName,"BackGround_darkGray/",20);
+//		break;
+//	case BLACK:
+//		strncat(fileOpenName,"BackGround_black/",17);
+//		break;
+//	case BROWN:
+//		strncat(fileOpenName,"BackGround_brown/",17);
+//		break;
+//	case WHITE:
+//		strncat(fileOpenName,"BackGround_white/",17);
+//		break;
+//	default:
+//		break;
+//	}
+	strncat(fileOpenName,BkColorFontFilePath[backgroundColor],strlen(BkColorFontFilePath[backgroundColor]));
 
-	switch(fontColor)
-	{
-	case WHITE:
-		strncat(fileOpenName,"Color_white/",12);
-		break;
-	case MYBLUE:
-		strncat(fileOpenName,"Color_blue/",11);
-		break;
-	case MYRED:
-		strncat(fileOpenName,"Color_red/",10);
-		break;
-	case MYGREEN:
-		strncat(fileOpenName,"Color_green/",12);
-		break;
-	case BLACK:
-		strncat(fileOpenName,"Color_black/",12);
-		break;
-	default:
-		break;
-	}
+//	switch(fontColor)
+//	{
+//	case WHITE:
+//		strncat(fileOpenName,"Color_white/",12);
+//		break;
+//	case MYBLUE:
+//		strncat(fileOpenName,"Color_blue/",11);
+//		break;
+//	case MYRED:
+//		strncat(fileOpenName,"Color_red/",10);
+//		break;
+//	case MYGREEN:
+//		strncat(fileOpenName,"Color_green/",12);
+//		break;
+//	case BLACK:
+//		strncat(fileOpenName,"Color_black/",12);
+//		break;
+//	default:
+//		break;
+//	}
+	strncat(fileOpenName,ColorFontFilePath[fontColor],strlen(ColorFontFilePath[fontColor]));
 
-	switch(fontStyle)
-	{
-	case Arial_Narrow:
-		strncat(fileOpenName,"Arial_Narrow/",13);
-		break;
-	case Calibri_Light:
-		strncat(fileOpenName,"Calibri_Light/",14);
-		break;
-	case Bodoni_MT_Condenset:
-		strncat(fileOpenName,"Bodoni_MT_Condenset/",20);
-		break;
-	case Comic_Saens_MS:
-		strncat(fileOpenName,"Comic_Saens_MS/",15);
-		break;
-	case Times_New_Roman:
-		strncat(fileOpenName,"Times_New_Roman/",16);
-		break;
-	case Arial:
-		strncat(fileOpenName,"Arial/",6);
-		break;
-	default:
-		break;
-	}
+//	switch(fontStyle)
+//	{
+//	case Arial_Narrow:
+//		strncat(fileOpenName,"Arial_Narrow/",13);
+//		break;
+//	case Calibri_Light:
+//		strncat(fileOpenName,"Calibri_Light/",14);
+//		break;
+//	case Bodoni_MT_Condenset:
+//		strncat(fileOpenName,"Bodoni_MT_Condenset/",20);
+//		break;
+//	case Comic_Saens_MS:
+//		strncat(fileOpenName,"Comic_Saens_MS/",15);
+//		break;
+//	case Times_New_Roman:
+//		strncat(fileOpenName,"Times_New_Roman/",16);
+//		break;
+//	case Arial:
+//		strncat(fileOpenName,"Arial/",6);
+//		break;
+//	default:
+//		break;
+//	}
+	strncat(fileOpenName,StyleFontFilePath[fontStyle],strlen(StyleFontFilePath[fontStyle]));
 
 	strncat(fileOpenName,TxtFontSize[fontSize],strlen(TxtFontSize[fontSize]));
 	strncat(fileOpenName,TxtBMP,strlen(TxtBMP));
