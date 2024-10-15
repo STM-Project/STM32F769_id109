@@ -4050,8 +4050,15 @@ static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t Bk
 			circleLinesLenCorrect=0;
 			if(IS_RANGE(Circle.degree[1+i], 300, 330) ||
 				IS_RANGE(Circle.degree[1+i], 206, 244) ||
-				IS_RANGE(Circle.degree[1+i], 122, 149) )	circleLinesLenCorrect = 4;
-			else if(IS_RANGE(Circle.degree[1+i],  34,  56)) circleLinesLenCorrect = 2;
+				IS_RANGE(Circle.degree[1+i], 122, 149) )
+			{
+				if(Circle.width/2 < CORRECT_FOR_RADIUS)
+					circleLinesLenCorrect = 5;
+				else
+					circleLinesLenCorrect = 4;
+			}
+			else if(IS_RANGE(Circle.degree[1+i],  34,  56))
+				circleLinesLenCorrect = 2;
 
 			if(i==0)
 				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,_FillColor,Circle.degColor[i+1]);

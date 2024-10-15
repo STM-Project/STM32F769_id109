@@ -912,6 +912,9 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 	SetPosKey(k,posKey,interSpaceForButtons,head);
 	SetDimAll(k,interSpaceForButtons,head);
 
+	uint32_t _GetPosX(int nr){	return x-(s[k].x+posKey[nr].x); }
+	uint32_t _GetPosY(int nr){	return y-(s[k].y+posKey[nr].y); }
+
 	uint16_t _GetDegFromVal(int val){
 		return ((360*val)/256);
 	}
@@ -919,9 +922,9 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 		return ((256*deg)/360);
 	}
 	uint16_t _GetDegFromPosX(int nr){
-		float stretch = radius-(float)( x-(s[k].x+posKey[nr].x) );
+		float stretch = radius-(float)_GetPosX(nr);
 		uint16_t deg = (uint16_t)(57.295*acos(stretch/radius));
-		if(y > s[k].y+posKey[nr].y+(uint16_t)radius)
+		if(_GetPosY(nr) > (uint16_t)radius)
 			deg = 360 - deg;
 		return deg;
 	}
@@ -941,14 +944,23 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 			uint32_t degColor[2] = {colorTxtPressKey[i],colorTxtPressKey[i]};
 			LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
 			LCD_Circle_TEST__(0, widthAll,heightAll, posKey[i].x, posKey[i].y, SetParamWidthCircle(Percent_Circle,s[k].widthKey),s[k].heightKey, SetBold2Color(frameColor,bold), fillColor, bkColor);
-			LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 		}
+		LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 	}
 	else{
-		if(IS_RANGE(((uint32_t)x*(uint32_t)x+(uint32_t)y*(uint32_t)y), VALPERC(radius,65)*VALPERC(radius,65), (uint32_t)radius*(uint32_t)radius))
+
+//		int aaa = VALPERC(radius,65)*VALPERC(radius,65);
+//		int bbb = (uint32_t)radius*(uint32_t)radius;
+
+		INIT(nrCircSlid, selBlockPress-TOUCH_Action);
+
+		INIT(xPosFromMidd_Pow2, ((int)radius-(int)_GetPosX(nrCircSlid)) );		xPosFromMidd_Pow2 *= xPosFromMidd_Pow2;
+		INIT(yPosFromMidd_Pow2, ((int)radius-(int)_GetPosY(nrCircSlid)) );		yPosFromMidd_Pow2 *= yPosFromMidd_Pow2;
+		INIT(radiusTouch_Pow2, xPosFromMidd_Pow2 + yPosFromMidd_Pow2 );
+
+		if( IS_RANGE(radiusTouch_Pow2, (int)(VALPERC(radius,65)*VALPERC(radius,65)), (int)(radius*radius)) )
 		{
-			INIT(nrCircSlid, selBlockPress-TOUCH_Action);
-			ShapeBkClear(k, s[k].widthKey,s[k].heightKey, fillColor);
+			ShapeBkClear(k, s[k].widthKey,s[k].heightKey, bkColor);
 
 			int degPosX = _GetDegFromPosX(nrCircSlid);
 			*(value+nrCircSlid) = _GetValFromDeg(degPosX);
