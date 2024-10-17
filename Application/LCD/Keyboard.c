@@ -922,8 +922,16 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 		return ((256*deg)/360);
 	}
 	uint16_t _GetDegFromPosX(int nr){
-		float stretch = radius-(float)_GetPosX(nr);
-		uint16_t deg = (uint16_t)(57.295*acos(stretch/radius));
+		uint16_t deg=0;
+		float radi = sqrt( (radius-(float)_GetPosX(nr))*(radius-(float)_GetPosX(nr)) + (radius-(float)_GetPosY(nr))*(radius-(float)_GetPosY(nr)) );
+//		if(x > y){
+//			float stretch = radius-(float)_GetPosY(nr);
+//			deg = (uint16_t)(57.295*asin(stretch/radius));
+//		}
+//		else{
+			float stretch = radius-(float)_GetPosX(nr);
+			deg = (uint16_t)(57.295*acos(stretch/radi));
+//		}
 		if(_GetPosY(nr) > (uint16_t)radius)
 			deg = 360 - deg;
 		return deg;
