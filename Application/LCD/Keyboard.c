@@ -254,6 +254,19 @@ static void _KeyStrPressDisp_oneKey(int nr, XY_Touch_Struct pos, int nrTab, char
 static void TxtDescrMidd_WidthKey(int nr, XY_Touch_Struct pos, char *txtKeys, uint32_t colorDescr){
 	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		MIDDLE(pos.x, s[nr].widthKey, LCD_GetWholeStrPxlWidth(fontID_descr,txtKeys,0,NoConstWidth)),   pos.y-GetHeightFontDescr(), 	 txtKeys, fullHight, 0, bkColor, colorDescr,255, NoConstWidth);
 }
+static void ShapeBkClear(int nr, int width_all, int height_all, uint32_t bkColor){
+	LCD_ShapeWindow( s[nr].shape,0,width_all,height_all, 0,0, width_all,height_all, bkColor, bkColor,bkColor );
+}
+static void TxtDescr(int nr, uint16_t xPos, uint16_t yPos, char* txtDescr){
+	XY_Touch_Struct posHead = {xPos,yPos};
+	StrDescr(nr, posHead, txtDescr, colorDescr);
+}
+static void TxtDescrMidd(int nr, int head, char* txtDescr){
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		MIDDLE(0,widthAll,LCD_GetWholeStrPxlWidth(fontID_descr,txtDescr,0,NoConstWidth)),  MIDDLE(0,head,GetHeightFontDescr()), 	 txtDescr, fullHight, 0, bkColor, colorDescr,255, NoConstWidth);
+}
+static void ShapeWin(int nr, int width_all, int height_all){
+	LCD_ShapeWindow( s[nr].shape,0,width_all,height_all, 0,0, width_all,height_all, SetBold2Color(frameMainColor,s[nr].bold), fillMainColor,bkColor );
+}
 
 static void KeyShapePressDisp_oneBlock(int nr, XY_Touch_Struct pos, ShapeFunc pShape, SHAPE_PARAMS param){
 	LCD_ShapeWindow( s[nr].shape, 0, s[nr].widthKey,s[nr].heightKey, 0,0, s[nr].widthKey,s[nr].heightKey, SetBold2Color(framePressColor,s[nr].bold),fillPressColor,bkColor);
@@ -346,6 +359,55 @@ static void _ElemSliderPressDisp_oneBlock(int nr, uint16_t x,uint16_t y, XY_Touc
 	if(pfunc) pfunc();
 }
 
+static void KeysAllRelease_CircleSlider(int nr, XY_Touch_Struct posKeys[],int *value){
+	uint16_t _GetDegFromVal(int val){
+		return ((360*val)/256);
+	}
+	for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i){
+		uint16_t deg[2] = {0, _GetDegFromVal(*(value+i)) };
+		uint32_t degColor[2] = {colorTxtPressKey[i],colorTxtPressKey[i]};
+		TxtDescrMidd_WidthKey(nr, posKeys[i], txtKey[i], colorTxtPressKey[i]);
+		LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
+		LCD_Circle_TEST__(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, SetParamWidthCircle(Percent_Circle,s[nr].widthKey),s[nr].heightKey, SetBold2Color(frameColor,s[nr].bold), fillColor, bkColor);
+	}
+	LCD_Display(0, s[nr].x, s[nr].y, widthAll, heightAll);
+}
+static void KeyPress_CircleSlider(int nr, uint16_t x,uint16_t y, XY_Touch_Struct posKeys, float radius, int *value, VOID_FUNCTION *pfunc, uint32_t colorPress)
+{
+	uint32_t _GetPosX(void){	return x-(s[nr].x+posKeys.x); }
+	uint32_t _GetPosY(void){	return y-(s[nr].y+posKeys.y); }
+	uint16_t _GetValFromDeg(uint16_t deg){
+		return ((256*deg)/360);
+	}
+	uint16_t _GetDegFromPosX(void){
+		uint16_t deg=0;
+		float radi = sqrt( (radius-(float)_GetPosX())*(radius-(float)_GetPosX()) + (radius-(float)_GetPosY())*(radius-(float)_GetPosY()) );
+		float stretch = radius-(float)_GetPosX();
+		deg = (uint16_t)(57.295*acos(stretch/radi));
+		if(_GetPosY() > (uint16_t)radius)
+			deg = 360 - deg;
+		return deg;
+	}
+	INIT(xPosFromMidd_Pow2, ((int)radius-(int)_GetPosX()) );		xPosFromMidd_Pow2 *= xPosFromMidd_Pow2;
+	INIT(yPosFromMidd_Pow2, ((int)radius-(int)_GetPosY()) );		yPosFromMidd_Pow2 *= yPosFromMidd_Pow2;
+	INIT(radiusTouch_Pow2, xPosFromMidd_Pow2 + yPosFromMidd_Pow2 );
+
+	if( IS_RANGE(radiusTouch_Pow2, (int)(VALPERC(radius,45)*VALPERC(radius,45)), (int)(radius*radius)) )
+	{
+		int degPosX = _GetDegFromPosX();
+		uint16_t deg[2] = {0, degPosX};
+		uint32_t degColor[2] = {colorPress,colorPress};
+
+		ShapeBkClear(nr, s[nr].widthKey,s[nr].heightKey, bkColor);
+		*value = _GetValFromDeg(degPosX);
+
+		LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
+		LCD_Circle_TEST__(0, s[nr].widthKey,s[nr].heightKey, 0,0, SetParamWidthCircle(Percent_Circle,s[nr].widthKey),s[nr].heightKey, SetBold2Color(frameColor,s[nr].bold), fillColor, bkColor);
+		LCD_Display(0, s[nr].x+posKeys.x, s[nr].y+posKeys.y, s[nr].widthKey, s[nr].heightKey);
+		if(pfunc) pfunc();
+	}
+}
+
 static void SetTouch_Slider(int nr, uint16_t startTouchIdx, SHAPE_PARAMS *elemSliderPos){
 	if(startTouchIdx){
 		for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i)
@@ -432,20 +494,6 @@ static void _SetDimKey_slider(int nr, figureShape shape, uint16_t width, uint16_
 		s[nr].wKey[nrWH] = width;
 		s[nr].hKey[nrWH] = height;
 	}
-}
-
-static void ShapeWin(int nr, int width_all, int height_all){
-	LCD_ShapeWindow( s[nr].shape,0,width_all,height_all, 0,0, width_all,height_all, SetBold2Color(frameMainColor,s[nr].bold), fillMainColor,bkColor );
-}
-static void ShapeBkClear(int nr, int width_all, int height_all, uint32_t bkColor){
-	LCD_ShapeWindow( s[nr].shape,0,width_all,height_all, 0,0, width_all,height_all, bkColor, bkColor,bkColor );
-}
-static void TxtDescr(int nr, uint16_t xPos, uint16_t yPos, char* txtDescr){
-	XY_Touch_Struct posHead = {xPos,yPos};
-	StrDescr(nr, posHead, txtDescr, colorDescr);
-}
-static void TxtDescrMidd(int nr, int head, char* txtDescr){
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		MIDDLE(0,widthAll,LCD_GetWholeStrPxlWidth(fontID_descr,txtDescr,0,NoConstWidth)),  MIDDLE(0,head,GetHeightFontDescr()), 	 txtDescr, fullHight, 0, bkColor, colorDescr,255, NoConstWidth);
 }
 
 static void SetDimAll(int nr, int interSpace, int head){
@@ -898,76 +946,35 @@ void KEYBOARD_ServiceSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, in
 
 void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int TOUCH_Release, int TOUCH_Action, char* txtDescr, int *value, VOID_FUNCTION *pfunc)
 {
-	/* 'Color1Txt' is no press color for: outline, pointer */
-	/* 'Color2Txt' is 	press color for: pointer, lineSel */
-	float radius = ((float)LCD_GetCircleWidth())/2;
+	float radius = ((float)LCD_GetCircleWidth())/2;				/* 'Color1Txt' is no press color for: outline, pointer */
+	int head 	 = GetHeightHead(k);									/* 'Color2Txt' is 	press color for: pointer, lineSel */
+	int interSp  = VALPERC(s[k].interSpace,60);
+	XY_Touch_Struct posKey[GetPosKeySize()];
 
 	LCD_SetCircleAA(0.0, 0.0);
 	CorrectLineAA_on();
 
-	int head = GetHeightHead(k);
-	int interSpaceForButtons = VALPERC(s[k].interSpace,60);
-	XY_Touch_Struct posKey[GetPosKeySize()];
-
-	SetPosKey(k,posKey,interSpaceForButtons,head);
-	SetDimAll(k,interSpaceForButtons,head);
-
-	uint32_t _GetPosX(int nr){	return x-(s[k].x+posKey[nr].x); }
-	uint32_t _GetPosY(int nr){	return y-(s[k].y+posKey[nr].y); }
-
-	uint16_t _GetDegFromVal(int val){
-		return ((360*val)/256);
-	}
-	uint16_t _GetValFromDeg(uint16_t deg){
-		return ((256*deg)/360);
-	}
-	uint16_t _GetDegFromPosX(int nr){
-		uint16_t deg=0;
-		float radi = sqrt( (radius-(float)_GetPosX(nr))*(radius-(float)_GetPosX(nr)) + (radius-(float)_GetPosY(nr))*(radius-(float)_GetPosY(nr)) );
-		float stretch = radius-(float)_GetPosX(nr);
-		deg = (uint16_t)(57.295*acos(stretch/radi));
-		if(_GetPosY(nr) > (uint16_t)radius)
-			deg = 360 - deg;
-		return deg;
-	}
+	SetPosKey(k,posKey,interSp,head);
+	SetDimAll(k,interSp,head);
 
 	bkColor = fillMainColor;
 	if(TOUCH_Release == selBlockPress){
 		ShapeWin(k,widthAll,heightAll);
 		TxtDescr(k, 0,0, txtDescr);
-		for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i){
-			uint16_t deg[2] = {0, _GetDegFromVal(*(value+i)) };   // to trzeba w funkcji zamnkąć !!!!!
-			uint32_t degColor[2] = {colorTxtPressKey[i],colorTxtPressKey[i]};
-			LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
-			LCD_Circle_TEST__(0, widthAll,heightAll, posKey[i].x, posKey[i].y, SetParamWidthCircle(Percent_Circle,s[k].widthKey),s[k].heightKey, SetBold2Color(frameColor,bold), fillColor, bkColor);
-		}
-		LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
+		KeysAllRelease_CircleSlider(k, posKey,value);
 	}
 	else{
 		INIT(nrCircSlid, selBlockPress-TOUCH_Action);
-
-		INIT(xPosFromMidd_Pow2, ((int)radius-(int)_GetPosX(nrCircSlid)) );		xPosFromMidd_Pow2 *= xPosFromMidd_Pow2;
-		INIT(yPosFromMidd_Pow2, ((int)radius-(int)_GetPosY(nrCircSlid)) );		yPosFromMidd_Pow2 *= yPosFromMidd_Pow2;
-		INIT(radiusTouch_Pow2, xPosFromMidd_Pow2 + yPosFromMidd_Pow2 );
-
-		if( IS_RANGE(radiusTouch_Pow2, (int)(VALPERC(radius,45)*VALPERC(radius,45)), (int)(radius*radius)) )
-		{
-			ShapeBkClear(k, s[k].widthKey,s[k].heightKey, bkColor);
-
-			int degPosX = _GetDegFromPosX(nrCircSlid);
-			*(value+nrCircSlid) = _GetValFromDeg(degPosX);
-
-			uint16_t deg[2] = {0, degPosX}; // to trzeba w funkcji zamnkąć !!!!!
-			uint32_t degColor[2] = {colorTxtPressKey[nrCircSlid],colorTxtPressKey[nrCircSlid]};
-			LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
-			LCD_Circle_TEST__(0, s[k].widthKey,s[k].heightKey, 0,0, SetParamWidthCircle(Percent_Circle,s[k].widthKey),s[k].heightKey, SetBold2Color(frameColor,s[k].bold), fillColor, bkColor);
-			LCD_Display(0, s[k].x+posKey[nrCircSlid].x, s[k].y+posKey[nrCircSlid].y, s[k].widthKey, s[k].heightKey);
-			if(pfunc) pfunc();
-	}}
-
+		KeyPress_CircleSlider(k, x,y, posKey[nrCircSlid], radius, value, pfunc, colorTxtPressKey[nrCircSlid]);
+	}
 	SetTouch_CircleSlider(k, startTouchIdx, posKey);
-
 }
+
+
+
+
+
+
 
 
 
@@ -1399,12 +1406,12 @@ void KEYBOARD__ServiceSetTxt(int k, int selBlockPress, INIT_KEYBOARD_PARAM, int 
 		int widthDescr = LCD_GetWholeStrPxlWidth(fontID_descr,ptrTxt,0,ConstWidth);
 		int heightTxt = LCD_GetFontHeight(fontID);
 
-		if(release==act){	 StrDescr_XYoffs(posKey[nr], s[k].widthKey-VALPERC(widthDescr,180), VALPERC(widthDescr,35), ptrTxt, 		BrightIncr(colorDescr,0x20));
-								 Str_Xmidd_Yoffs(k,posKey[nr], s[k].heightKey-VALPERC(heightTxt,115), 								txtKey[nr],  colorTxtKey[nr]);
+		if(release==act){	 StrDescr_XYoffs(posKey[nr], s[k].widthKey-VALPERC(widthDescr,180),  VALPERC(widthDescr,35), ptrTxt, 		BrightIncr(colorDescr,0x20));
+								 Str_Xmidd_Yoffs(k,posKey[nr], s[k].heightKey-VALPERC(heightTxt,115), 							   txtKey[nr], colorTxtKey[nr]);
 		}
 		else{			BKCOPY_VAL(fillColor_c[0],fillColor,fillPressColor);
-								StrDescrWin_XYoffs(k,s[k].widthKey-VALPERC(widthDescr,180), VALPERC(widthDescr,35), ptrTxt, 	  BrightIncr(colorDescr,0x20));
-								StrWin_Xmidd_Yoffs(k,s[k].heightKey-VALPERC(heightTxt,115), 								  txtKey[nr], colorTxtPressKey[nr]);
+								StrDescrWin_XYoffs(k,s[k].widthKey-VALPERC(widthDescr,180), VALPERC(widthDescr,35), ptrTxt, 	   BrightIncr(colorDescr,0x20));
+								StrWin_Xmidd_Yoffs(k,s[k].heightKey-VALPERC(heightTxt,115), 								txtKey[nr], colorTxtPressKey[nr]);
 						BKCOPY(fillColor,fillColor_c[0]);
 		}
 		if(press==act) LCD_Display(0,s[k].x+posKey[nr].x,s[k].y+posKey[nr].y,s[k].widthKey,s[k].heightKey);
