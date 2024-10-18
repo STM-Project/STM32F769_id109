@@ -924,24 +924,12 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 	uint16_t _GetDegFromPosX(int nr){
 		uint16_t deg=0;
 		float radi = sqrt( (radius-(float)_GetPosX(nr))*(radius-(float)_GetPosX(nr)) + (radius-(float)_GetPosY(nr))*(radius-(float)_GetPosY(nr)) );
-//		if(x > y){
-//			float stretch = radius-(float)_GetPosY(nr);
-//			deg = (uint16_t)(57.295*asin(stretch/radius));
-//		}
-//		else{
-			float stretch = radius-(float)_GetPosX(nr);
-			deg = (uint16_t)(57.295*acos(stretch/radi));
-//		}
+		float stretch = radius-(float)_GetPosX(nr);
+		deg = (uint16_t)(57.295*acos(stretch/radi));
 		if(_GetPosY(nr) > (uint16_t)radius)
 			deg = 360 - deg;
 		return deg;
 	}
-
-	//256 v - 360 st
-	//val   - x_st
-
-	//x_st = (360*value)/256
-	//val = (256*x_st)/360
 
 	bkColor = fillMainColor;
 	if(TOUCH_Release == selBlockPress){
@@ -956,17 +944,13 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 		LCD_Display(0, s[k].x, s[k].y, widthAll, heightAll);
 	}
 	else{
-
-//		int aaa = VALPERC(radius,65)*VALPERC(radius,65);
-//		int bbb = (uint32_t)radius*(uint32_t)radius;
-
 		INIT(nrCircSlid, selBlockPress-TOUCH_Action);
 
 		INIT(xPosFromMidd_Pow2, ((int)radius-(int)_GetPosX(nrCircSlid)) );		xPosFromMidd_Pow2 *= xPosFromMidd_Pow2;
 		INIT(yPosFromMidd_Pow2, ((int)radius-(int)_GetPosY(nrCircSlid)) );		yPosFromMidd_Pow2 *= yPosFromMidd_Pow2;
 		INIT(radiusTouch_Pow2, xPosFromMidd_Pow2 + yPosFromMidd_Pow2 );
 
-		if( IS_RANGE(radiusTouch_Pow2, (int)(VALPERC(radius,65)*VALPERC(radius,65)), (int)(radius*radius)) )
+		if( IS_RANGE(radiusTouch_Pow2, (int)(VALPERC(radius,45)*VALPERC(radius,45)), (int)(radius*radius)) )
 		{
 			ShapeBkClear(k, s[k].widthKey,s[k].heightKey, bkColor);
 
