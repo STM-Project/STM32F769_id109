@@ -356,7 +356,9 @@ void temp_Stop(){
 }
 
 #define INCR_WIDTH_CIRCLE_STEP 	(1)
-#define MAX_WIDTH_CIRCLE 	((LCD_GetYSize()/6)*6)
+#define MAX_WIDTH_CIRCLE 	(VALPERC(LCD_GetYSize(),96))
+#define MIN_WIDTH_CIRCLE 	(20)
+
 
 void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad z jakims #udef ?????
 {
@@ -387,7 +389,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	if(Circle.startFlag!=0x52)
 	{
 		Circle.startFlag=0x52;
-		Circle.width=438;
+		Circle.width=200;
 
 		Circle.bk[0]=R_PART(MYGRAY);
 		Circle.bk[1]=G_PART(MYGRAY);
@@ -406,7 +408,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		Circle.bold=0;
 		Circle.halfCircle=0;
 
-		Circle.deg[0]=45;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] moze fillColor !!!!???
+		Circle.deg[0]=45;		Circle.degColor[0]=RED;  /* not use yet*/
 		Circle.deg[1]=125;	Circle.degColor[1]=MYRED;
 		Circle.deg[2]=170;   Circle.degColor[2]=DARKYELLOW;
 		Circle.deg[3]=225;   Circle.degColor[3]=DARKGREEN;
@@ -451,17 +453,11 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	StartMeasureTime_us();
 	CorrectLineAA_on();
 
-	//LCD_Shape(480-LCD_GetYSize()+10,10,LCD_Circle, Circle.width-20,Circle.width-20, _FrameColor(),  _FillColor(), MYGRAY);
-
-
-	//--11111--// LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle, Circle.width,Circle.width, SetBold2Color(WHITE/*_FrameColor()*/,Circle.bold), 		/*TRANSPARENT*/ _FillColor(), _BkColor());  //dla tRANSPARENT nie dziala bold na >niz 0 !!!!
 
 
 
 
-	//LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Rectangle, Circle.width,Circle.width, _FillColor(), _FillColor(), _BkColor());
-
-	LCD_Shape(LCD_GetXSize()-Circle.width-10, LCD_GetYSize()-Circle.width-10, LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
+	LCD_Shape(LCD_GetXSize()-LCD_CalculateCircleWidth(Circle.width)-10, LCD_GetYSize()-LCD_CalculateCircleWidth(Circle.width)-10, LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor() /*TRANSPARENT*/, _BkColor());
 
 
 
@@ -471,17 +467,6 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 
 
-
-
-
-
-
-
-
-	//LCD_Shape(200,            200,LCD_Circle, 50,       	50, 			  SetColorBoldFrame(WHITE/*_FrameColor()*/,Circle.bold),   TRANSPARENT/* _FillColor()*/, _BkColor());
-	//LCD_Shape(480-LCD_GetYSize()+6,6,LCD_Circle, Circle.width-5,Circle.width-5, _FrameColor(),  TRANSPARENT/*_FillColor()*/, MYRED);
-
-	//LCD_Shape(480-LCD_GetYSize(),0,LCD_Circle, SetParamWidthCircle(Degree_Circle,Circle.width),Circle.width, SetColorBoldFrame(RED,Circle.bold), _FillColor(), _BkColor());
 
 	//LCD_Shape(480-LCD_GetYSize(),0, LCD_HalfCircle, SetParamWidthCircle(Circle.halfCircle,Circle.width),Circle.width, SetColorBoldFrame(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
 	//LCD_Shape(480-LCD_GetYSize(),0,LCD_Frame, LCD_GetCircleWidth(),LCD_GetCircleWidth(), _FrameColor(), _BkColor(), _BkColor()); //RAMKA KWADRATOWA
@@ -640,8 +625,8 @@ void SCREEN_ReadPanel(void)
 			break;
 
 		case 4:
-				  if(DEBUG_RcvStr("]")){ INCR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("\\")){ DECR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE);  SCREEN_Test_Circle(); }
+				  if(DEBUG_RcvStr("]")){  if(Circle.width < MAX_WIDTH_CIRCLE) Circle.width=LCD_GetNextIncrCircleWidth(Circle.width); /*INCR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE);*/  SCREEN_Test_Circle(); }  //zrobic test screenn dla percent circle i opisac znaki klawiatury na LCD |!!!!
+			else if(DEBUG_RcvStr("\\")){ if(Circle.width > MIN_WIDTH_CIRCLE) Circle.width=LCD_GetNextDecrCircleWidth(Circle.width); /*DECR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE);*/  SCREEN_Test_Circle(); }
 
 			else if(DEBUG_RcvStr("1")){ INCR_WRAP(Circle.frame[0],1,0,255);  SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("2")){ INCR_WRAP(Circle.frame[1],1,0,255);  SCREEN_Test_Circle(); }

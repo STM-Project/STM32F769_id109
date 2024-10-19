@@ -25,7 +25,6 @@ enum CircleParam{
 	Half_Circle_180,
 	Half_Circle_270,
 	Percent_Circle,
-	Degree_Circle
 };
 
 enum COPY_TO_SHAPE_STRUCT{
@@ -185,6 +184,8 @@ uint16_t LCD_GetCircleWidth(void);
 void LCD_CopyCircleWidth(void);
 void LCD_SetCopyCircleWidth(void);
 uint16_t LCD_CalculateCircleWidth(uint32_t width);
+uint16_t LCD_GetNextIncrCircleWidth(uint32_t width);
+uint16_t LCD_GetNextDecrCircleWidth(uint32_t width);
 void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor);
 void LCD_HalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor);
 

@@ -1073,16 +1073,16 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 
 		int pxl_line=0,i=0;
 
-		uint8_t block=1;
-		void _CorrectDecision(void){
-			if(block && R>CORRECT_FOR_RADIUS){
-				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
-		}}
+//		uint8_t block=1;
+//		void _CorrectDecision(void){
+//			if(block && R>CORRECT_FOR_RADIUS){
+//				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
+//		}}
 
 		buf[0]=pxl_width;
 		do{
 			_x++;  pxl_line++;
-			param_x = pow(_x-x0,2);		_CorrectDecision();
+			param_x = pow(_x-x0,2);		//_CorrectDecision();
 			if((param_x+param_y) > decision){
 				_y++;
 				param_y = pow(y0-_y,2);
@@ -1119,37 +1119,7 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 	InverseAndCopyBuff(buf_Inv,buf);
 
 	_StartDrawLine(posBuff,bkX,x,y);
-	if(param==Degree_Circle && circleFlag)
-	{
-		uint8_t pFill=0;
-		if(_DrawArrayBuffRightDown_AA___(posBuff,&pFill,PARAM_AA,0,buf)){ return; 	}   _CopyDrawPos(); _IncDrawPos(-bkX); PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
-		if(_DrawArrayBuffRightDown_AA___(posBuff,&pFill,PARAM_AA,1,buf_Inv)){ return; }                      				   PixelCorrect(PARAM, buf[1],bkX);   _IncDrawPos(-1);
 
-		if(_DrawArrayBuffLeftDown_AA___ (posBuff,&pFill,PARAM_AA,1,buf)){ return; 	} 		 _CopyDrawPos(); _IncDrawPos(1);    PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
-		if(_DrawArrayBuffLeftDown_AA___ (posBuff,&pFill,PARAM_AA,0,buf_Inv)){ return; 	}                      					PixelCorrect(PARAM, buf[1],-1);    _IncDrawPos(-bkX);
-
-//		_DrawArrayBuffLeftUp_AA___  (posBuff,&pFill,PARAM_AA,0,buf);       _CopyDrawPos(); _IncDrawPos(bkX);  PixelCorrect(PARAM, 1,     -bkX);  _SetCopyDrawPos();
-//		_DrawArrayBuffLeftUp_AA___  (posBuff,&pFill,PARAM_AA,1,buf_Inv);  						    					PixelCorrect(PARAM, buf[1],-bkX);  _IncDrawPos(1);
-//
-//		_DrawArrayBuffRightUp_AA___ (posBuff,&pFill,PARAM_AA,1,buf);       _CopyDrawPos(); _IncDrawPos(-1);  	PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
-//		_DrawArrayBuffRightUp_AA___ (posBuff,&pFill,PARAM_AA,0,buf_Inv);                       					PixelCorrect(PARAM, buf[1], 1);
-
-		return;
-//		if(Circle.rot[0]==3){ _DrawArrayBuffRightDown_AA___(posBuff,PARAM_AA,0,buf); return; }     else _DrawArrayBuffRightDown_AA(PARAM_AA,0,buf); 	  _CopyDrawPos(); _IncDrawPos(-bkX); PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
-//		if(Circle.rot[0]==4){ _DrawArrayBuffRightDown_AA___(posBuff,PARAM_AA,1,buf_Inv); return; } else _DrawArrayBuffRightDown_AA(PARAM_AA,1,buf_Inv);                     				    PixelCorrect(PARAM, buf[1],bkX);   _IncDrawPos(-1);
-//
-//		if(Circle.rot[0]==5){ _DrawArrayBuffLeftDown_AA___ (PARAM_AA,1,buf); return; }     else _DrawArrayBuffLeftDown_AA(PARAM_AA,1,buf); 		 _CopyDrawPos(); _IncDrawPos(1);    PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
-//		if(Circle.rot[0]==6){ _DrawArrayBuffLeftDown_AA___ (PARAM_AA,0,buf_Inv); return; } else _DrawArrayBuffLeftDown_AA(PARAM_AA,0,buf_Inv);                     					   PixelCorrect(PARAM, buf[1],-1);    _IncDrawPos(-bkX);
-//
-//		if(Circle.rot[0]==7){ _DrawArrayBuffLeftUp_AA___   (PARAM_AA,0,buf); return; }     else _DrawArrayBuffLeftUp_AA(PARAM_AA,0,buf);       _CopyDrawPos(); _IncDrawPos(bkX);  PixelCorrect(PARAM, 1,     -bkX);  _SetCopyDrawPos();
-//		if(Circle.rot[0]==8){ _DrawArrayBuffLeftUp_AA___   (PARAM_AA,1,buf_Inv); return; } else _DrawArrayBuffLeftUp_AA(PARAM_AA,1,buf_Inv); 						    					  PixelCorrect(PARAM, buf[1],-bkX);  _IncDrawPos(1);
-//
-//		if(Circle.rot[0]==1){ _DrawArrayBuffRightUp_AA___  (PARAM_AA,1,buf); return; }     else _DrawArrayBuffRightUp_AA(PARAM_AA,1,buf);       _CopyDrawPos(); _IncDrawPos(-1);  	PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
-//		if(Circle.rot[0]==2){ _DrawArrayBuffRightUp_AA___  (PARAM_AA,0,buf_Inv); return; } else _DrawArrayBuffRightUp_AA(PARAM_AA,0,buf_Inv);                       					PixelCorrect(PARAM, buf[1], 1);
-
-	}
-	else
-	{
 		_DrawArrayBuffRightDown_AA(PARAM_AA,0,buf); 	    _CopyDrawPos(); _IncDrawPos(-bkX); PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
 		_DrawArrayBuffRightDown_AA(PARAM_AA,1,buf_Inv);                      				   PixelCorrect(PARAM, buf[1],bkX);   _IncDrawPos(-1);
 
@@ -1161,7 +1131,7 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 
 		_DrawArrayBuffRightUp_AA (PARAM_AA,1,buf);       _CopyDrawPos(); _IncDrawPos(-1);  	PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
 		_DrawArrayBuffRightUp_AA (PARAM_AA,0,buf_Inv);                       					PixelCorrect(PARAM, buf[1], 1);
-	}
+
 
 	if(FillColor!=TRANSPARENT)
 	{
@@ -3822,7 +3792,7 @@ void LCD_SetCopyCircleWidth(void){
 
 uint16_t LCD_CalculateCircleWidth(uint32_t width)
 {
-	#define buf			Circle.lineBuff
+	#define buf	 Circle.lineBuff
 
 	uint32_t x=0, y=0;
 	int matchWidth=0;
@@ -3879,6 +3849,17 @@ uint16_t LCD_CalculateCircleWidth(uint32_t width)
 	return _height;
 	#undef buf
 }
+uint16_t LCD_GetNextIncrCircleWidth(uint32_t width){
+	uint32_t width_start=0;
+	for(int i=0;	i<30 && width_start<=width; 	width_start=LCD_CalculateCircleWidth(width+i++));
+	return width_start;
+}
+uint16_t LCD_GetNextDecrCircleWidth(uint32_t width){
+	uint32_t width_start=width;
+	for(int i=0;   i<30 && width_start>=width; 	width_start=LCD_CalculateCircleWidth(width-i++));
+	return width_start;
+}
+
 //MOZLIWOSC rysowania polkul np dla zakonczen ramek !!!!!!!
 void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){
 	uint32_t width = _width&0xFFFF;
@@ -3889,7 +3870,7 @@ void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x
 	else
 		thickness=3*thickness;
 
-	if((param==Percent_Circle)||(param==Degree_Circle))   //Degree_Circle usunac
+	if(param==Percent_Circle)
 		thickness=0;
 
 	if(thickness){
@@ -3907,7 +3888,7 @@ void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x
 
 static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t __x, uint32_t __y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, int outColorRead)
 {
-	int matchWidth=0, circleFlag=0;
+	int matchWidth=0, circleFlag=0;													/* Circle.degColor[0] - is free space for future variable */
 	uint16_t param =width>>16;
 	uint32_t _FillColor, _width=(width&0x0000FFFF)-matchWidth;
 

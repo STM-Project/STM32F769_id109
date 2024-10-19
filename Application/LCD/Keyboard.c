@@ -366,7 +366,7 @@ static void KeysAllRelease_CircleSlider(int nr, XY_Touch_Struct posKeys[],int *v
 	}
 	for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i){
 		uint16_t deg[2] = {0, _GetDegFromVal(*(value+i)) };
-		uint32_t degColor[2] = {colorTxtPressKey[i], CONDITION(deg[1]==deg[0],fillColor,colorTxtPressKey[i]) };
+		uint32_t degColor[2] = {0, CONDITION(deg[1]==deg[0],fillColor,colorTxtPressKey[i]) };
 		posK = posKeys[i];	posK.y -= VALPERC(GetHeightFontDescr(),40);		TxtDescrMidd_WidthKey(nr, posK, txtKey[i], colorTxtPressKey[i]);
 		LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
 		LCD_Circle_TEST__(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, SetParamWidthCircle(Percent_Circle,s[nr].widthKey),s[nr].heightKey, SetBold2Color(frameColor,s[nr].bold), fillColor, bkColor);
@@ -397,7 +397,7 @@ static void KeyPress_CircleSlider(int nr, uint16_t x,uint16_t y, XY_Touch_Struct
 	{
 		int degPosX = _GetDegFromPosX();
 		uint16_t deg[2] = {0, degPosX};
-		uint32_t degColor[2] = {colorPress,CONDITION(deg[1]==deg[0],fillColor,colorPress)};
+		uint32_t degColor[2] = {0,CONDITION(deg[1]==deg[0],fillColor,colorPress)};
 
 		ShapeBkClear(nr, s[nr].widthKey,s[nr].heightKey, bkColor);
 		*value = _GetValFromDeg(degPosX);
