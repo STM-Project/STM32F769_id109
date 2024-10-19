@@ -1210,7 +1210,7 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 			if(IS_RANGE(Circle.degree[1+i],46,89)){
 				if(Circle.width<150) circleLinesLenCorrect=-1;
 			}
-			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;  //to w fazie koncowej trzeba uregulowac ostatecznie
+			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;
 			else if(IS_RANGE(Circle.degree[1+i],201,247)) circleLinesLenCorrect=3;
 			else if(IS_RANGE(Circle.degree[1+i],270,292)) circleLinesLenCorrect=-1;
 			else if(IS_RANGE(Circle.degree[1+i],293,338)){

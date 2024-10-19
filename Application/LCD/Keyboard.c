@@ -360,13 +360,14 @@ static void _ElemSliderPressDisp_oneBlock(int nr, uint16_t x,uint16_t y, XY_Touc
 }
 
 static void KeysAllRelease_CircleSlider(int nr, XY_Touch_Struct posKeys[],int *value){
+	XY_Touch_Struct posK;
 	uint16_t _GetDegFromVal(int val){
-		return ((360*val)/256);
+		return ((360*val)/255);
 	}
 	for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i){
 		uint16_t deg[2] = {0, _GetDegFromVal(*(value+i)) };
-		uint32_t degColor[2] = {colorTxtPressKey[i],colorTxtPressKey[i]};
-		TxtDescrMidd_WidthKey(nr, posKeys[i], txtKey[i], colorTxtPressKey[i]);
+		uint32_t degColor[2] = {colorTxtPressKey[i], CONDITION(deg[1]==deg[0],fillColor,colorTxtPressKey[i]) };
+		posK = posKeys[i];	posK.y -= VALPERC(GetHeightFontDescr(),40);		TxtDescrMidd_WidthKey(nr, posK, txtKey[i], colorTxtPressKey[i]);
 		LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
 		LCD_Circle_TEST__(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, SetParamWidthCircle(Percent_Circle,s[nr].widthKey),s[nr].heightKey, SetBold2Color(frameColor,s[nr].bold), fillColor, bkColor);
 	}
@@ -377,7 +378,7 @@ static void KeyPress_CircleSlider(int nr, uint16_t x,uint16_t y, XY_Touch_Struct
 	uint32_t _GetPosX(void){	return x-(s[nr].x+posKeys.x); }
 	uint32_t _GetPosY(void){	return y-(s[nr].y+posKeys.y); }
 	uint16_t _GetValFromDeg(uint16_t deg){
-		return ((256*deg)/360);
+		return ((255*deg)/360);
 	}
 	uint16_t _GetDegFromPosX(void){
 		uint16_t deg=0;
@@ -396,7 +397,7 @@ static void KeyPress_CircleSlider(int nr, uint16_t x,uint16_t y, XY_Touch_Struct
 	{
 		int degPosX = _GetDegFromPosX();
 		uint16_t deg[2] = {0, degPosX};
-		uint32_t degColor[2] = {colorPress,colorPress};
+		uint32_t degColor[2] = {colorPress,CONDITION(deg[1]==deg[0],fillColor,colorPress)};
 
 		ShapeBkClear(nr, s[nr].widthKey,s[nr].heightKey, bkColor);
 		*value = _GetValFromDeg(degPosX);
@@ -965,7 +966,7 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 	}
 	else{
 		INIT(nrCircSlid, selBlockPress-TOUCH_Action);
-		KeyPress_CircleSlider(k, x,y, posKey[nrCircSlid], radius, value, pfunc, colorTxtPressKey[nrCircSlid]);
+		KeyPress_CircleSlider(k, x,y, posKey[nrCircSlid], radius, value+nrCircSlid, pfunc, colorTxtPressKey[nrCircSlid]);
 	}
 	SetTouch_CircleSlider(k, startTouchIdx, posKey);
 }

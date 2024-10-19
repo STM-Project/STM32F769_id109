@@ -406,13 +406,13 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		Circle.bold=0;
 		Circle.halfCircle=0;
 
-		Circle.deg[0]=100;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] moze fillColor !!!!???
-		Circle.deg[1]=360;	Circle.degColor[1]=MYRED;
-		Circle.deg[2]=225;   Circle.degColor[2]=DARKYELLOW;
-		Circle.deg[3]=315;   Circle.degColor[3]=DARKGREEN;
-		Circle.deg[4]=240;   Circle.degColor[4]=DARKBLUE;
-		Circle.deg[5]=249;   Circle.degColor[5]=DARKCYAN;
-		Circle.deg[6]=310;   Circle.degColor[6]=BROWN;
+		Circle.deg[0]=45;		Circle.degColor[0]=RED; //nie wykorzystane !!!!! zamiast deg[0] moze fillColor !!!!???
+		Circle.deg[1]=125;	Circle.degColor[1]=MYRED;
+		Circle.deg[2]=170;   Circle.degColor[2]=DARKYELLOW;
+		Circle.deg[3]=225;   Circle.degColor[3]=DARKGREEN;
+		Circle.deg[4]=280;   Circle.degColor[4]=DARKBLUE;
+		Circle.deg[5]=320;   Circle.degColor[5]=DARKCYAN;
+		Circle.deg[6]=360;   Circle.degColor[6]=BROWN;
 
 		SCREEN_ResetAllParameters();
 		LCD_LoadFont_DarkgrayWhite(FONT_10, Arial, fontID_1);
@@ -426,7 +426,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	LCD_SetCircleDegColors(4,Circle.degColor[0],Circle.degColor[1],Circle.degColor[2],Circle.degColor[3],Circle.degColor[4],Circle.degColor[5],Circle.degColor[6]);
 	LCD_SetCircleDegColorsBuff(4,Circle.degColor); */
 
-	LCD_SetCirclePercentParam(2,Circle.deg,Circle.degColor);
+	LCD_SetCirclePercentParam(7,Circle.deg,Circle.degColor);
 	LCD_Clear(RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //dac opisy b: to bold !!!!!! na lcd ekranie
 
 
@@ -683,7 +683,7 @@ void SCREEN_ReadPanel(void)
 			else if(DEBUG_RcvStr("k")){ DECR(Circle.deg[0],1,0);   SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("l")){ INCR(Circle.deg[0],1,Circle.deg[1]-1);  SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr(",")){ DECR(Circle.deg[1],1,Circle.deg[0]+1);    SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr(".")){ INCR(Circle.deg[1],1,360/*Circle.deg[2]-1*/);   SCREEN_Test_Circle(); }
+			else if(DEBUG_RcvStr(".")){ INCR(Circle.deg[1],1,Circle.deg[2]-1);   SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("9")){ DECR(Circle.deg[2],1,Circle.deg[1]+1);    SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("0")){ INCR(Circle.deg[2],1,Circle.deg[3]-1);   SCREEN_Test_Circle(); }
 			else if(DEBUG_RcvStr("7")){ DECR(Circle.deg[3],1,Circle.deg[2]+1);    SCREEN_Test_Circle(); }
