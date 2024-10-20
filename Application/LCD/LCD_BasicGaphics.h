@@ -19,6 +19,7 @@
 
 #define NMB_SLIDER_ELEMENTS	3
 
+#define CIRCLE_POS_XY(width,offsX,offsY)		LCD_GetXSize()-LCD_CalculateCircleWidth(width)-(offsX), LCD_GetYSize()-LCD_CalculateCircleWidth(width)-(offsY)
 enum CircleParam{
 	Half_Circle_0,
 	Half_Circle_90,

@@ -428,7 +428,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	LCD_SetCircleDegColors(4,Circle.degColor[0],Circle.degColor[1],Circle.degColor[2],Circle.degColor[3],Circle.degColor[4],Circle.degColor[5],Circle.degColor[6]);
 	LCD_SetCircleDegColorsBuff(4,Circle.degColor); */
 
-	LCD_SetCirclePercentParam(7,Circle.deg,Circle.degColor);
+	////////////////LCD_SetCirclePercentParam(7,Circle.deg,Circle.degColor);
 	LCD_Clear(RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //dac opisy b: to bold !!!!!! na lcd ekranie
 
 
@@ -442,8 +442,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,5), StrAll(4,"AA out:",Float2Str(Circle.ratioBk,' ',1,Sign_none,2),"  AA in:",Float2Str(Circle.ratioFill,' ',1,Sign_none,2)), 	 halfHight,0,_BkColor(),1,1);
 
 
-//	LCD_SetCircleParam(0.01,0.01,14, 5,4,4,3,3,2,2,2,2,2, 2,2,1,1); // dla tej konfig nie ma Bold  x to srodek kola
-//	LCD_Shape(60,160, LCD_Circle, 0,0, _FrameColor(), _FillColor(), _BkColor());
+
 
 
 	if(Circle.bold > Circle.width/INCR_WIDTH_CIRCLE_STEP-1)
@@ -452,12 +451,19 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
 	StartMeasureTime_us();
 	CorrectLineAA_on();
+/*
+//  ZOSTAWIAMY TO !!!!!
+//tu sam podajesz punkty po ktorym bedzie kreslonw kolo
+	LCD_SetCircleParam(0.01,0.01,14, 5,4,4,3,3,2,2,2,2,2, 2,2,1,1); // dla tej konfig nie ma Bold  x to srodek kola
+	LCD_Shape(60,160, LCD_Circle_TEST__, 0,0, _FrameColor(), _FillColor(), _BkColor());
+*/
+
+	///////////////LCD_Shape(CIRCLE_POS_XY(Circle.width,10,10), LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor() /*TRANSPARENT*/, _BkColor());
 
 
 
 
 
-	LCD_Shape(LCD_GetXSize()-LCD_CalculateCircleWidth(Circle.width)-10, LCD_GetYSize()-LCD_CalculateCircleWidth(Circle.width)-10, LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor() /*TRANSPARENT*/, _BkColor());
 
 
 
@@ -465,11 +471,8 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 
 
+	/////LCD_Shape(LCD_X-LCD_CalculateCircleWidth(Circle.width)/2-10, LCD_Y-LCD_CalculateCircleWidth(Circle.width)-10 , LCD_HalfCircle, SetParamWidthCircle(Half_Circle_270,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
 
-
-
-	//LCD_Shape(480-LCD_GetYSize(),0, LCD_HalfCircle, SetParamWidthCircle(Circle.halfCircle,Circle.width),Circle.width, SetColorBoldFrame(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
-	//LCD_Shape(480-LCD_GetYSize(),0,LCD_Frame, LCD_GetCircleWidth(),LCD_GetCircleWidth(), _FrameColor(), _BkColor(), _BkColor()); //RAMKA KWADRATOWA
 	Circle.speed=StopMeasureTime_us("");
 
 
@@ -704,6 +707,12 @@ void SCREEN_ReadPanel(void)
 //	LCD_Znak_XX(0,LCD_X,LCD_Y, 240,136, 30,15, LIGHTGRAY,WHITE,WHITE);
 //	StopMeasureTime_us("\r\nLCD_Znak_XX:");
 
+
+/*
+ Jak czytam zycie ludzi swietych kazdego dnia jak jest wspomnienie w kosciolacj to jest to heroizm, Aga mowi ze to luzie chorzy psychicznie i ma racje w 100% jesli myslimy wylacznie po ludzku
+
+ Bo jak jest napisane "Głupstwem je st dla boga madrosc ludzka i odwrotnie dla ludzi madrosc boga"
+ */
 
 
 
