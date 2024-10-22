@@ -350,10 +350,10 @@ typedef struct{
 } CIRCLE_PARAM;
 static CIRCLE_PARAM Circle ={0};
 
-void temp_Start(){
+void Measure_Start(){
 	StartMeasureTime_us();
 }
-void temp_Stop(){
+void Measure_Stop(){
 	uint32_t aaa = StopMeasureTime_us("");
 	Circle.speedSum += aaa;
 	Circle.speed = MAXVAL2(Circle.speed,aaa);
@@ -506,7 +506,6 @@ static void DBG_SCREEN_Test_Circle(void)
 
 	SCREEN_Test_Circle();
 }
-
 /* ########### --- END SCREEN_Test_Circle --- ############ */
 
 
@@ -520,15 +519,8 @@ void SCREEN_ReadPanel(void)
 		switch(SCREEN_number)  //DYNAMICZNE ZARZADZANIE PAMIECIA FONT Z SDRAM zeby tyle nie zajmowalo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		{
 		case 0:
-
-//			SCREEN_Calibration_funcSet(CALIBRATION_FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(CALIBRATION_FONT_SIZE_Title));
-//			SCREEN_Calibration_funcSet(CALIBRATION_FONT_SIZE_PosLog, SCREEN_Calibration_funcGet(CALIBRATION_FONT_SIZE_CircleName));
-//			SCREEN_Calibration_funcSet(CALIBRATION_COLOR_BkScreen, MYGRAY);
-//			SCREEN_Calibration_funcSet(CALIBRATION_FONT_COLOR_CircleName, RED);
-//			SCREEN_Calibration_funcSet(CALIBRATION_COLOR_CircleFill, LIGHTRED);
-//			SCREEN_Calibration_funcSet(CALIBRATION_COEFF_COLOR_PosLog, 254);
-//			SCREEN_Calibration_printInfo();
-			//NOWY_0();
+/*			SCREEN_Fonts_funcSet(FONTS_FONT_COLOR_FontColor, MYRED);
+			SCREEN_Fonts_printInfo();	*/
 			SCREEN_Fonts_main(argNmb,argVal);
 			startScreen=1;
 			break;
@@ -543,14 +535,19 @@ void SCREEN_ReadPanel(void)
 		case 3:
 			NOWY_3();
 			startScreen=1;
-//			SCREEN_Fonts_funcSet(FONTS_FONT_COLOR_FontColor, MYRED);
-//			SCREEN_Fonts_printInfo();
 			break;
 		case 4:
 			SCREEN_Test_Circle();
 			startScreen=1;
 			break;
 		case 5:
+/*			SCREEN_Calibration_funcSet(CALIBRATION_FONT_SIZE_PosPhys, SCREEN_Calibration_funcGet(CALIBRATION_FONT_SIZE_Title));
+			SCREEN_Calibration_funcSet(CALIBRATION_FONT_SIZE_PosLog, SCREEN_Calibration_funcGet(CALIBRATION_FONT_SIZE_CircleName));
+			SCREEN_Calibration_funcSet(CALIBRATION_COLOR_BkScreen, MYGRAY);
+			SCREEN_Calibration_funcSet(CALIBRATION_FONT_COLOR_CircleName, RED);
+			SCREEN_Calibration_funcSet(CALIBRATION_COLOR_CircleFill, LIGHTRED);
+			SCREEN_Calibration_funcSet(CALIBRATION_COEFF_COLOR_PosLog, 254);
+			SCREEN_Calibration_printInfo();	*/
 			SCREEN_Calibration_main(argNmb,argVal);
 			startScreen=1;
 			break;
