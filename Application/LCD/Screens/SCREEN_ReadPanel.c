@@ -360,12 +360,8 @@ void temp_Stop(){
 #define MIN_WIDTH_CIRCLE 	(20)
 
 
-void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad z jakims #udef ?????
+void SCREEN_Test_Circle(void)
 {
-
-	/* Not use functions
-	 ...
-	 */
    uint32_t _BkColor		(void){ return RGB2INT( Circle.bk[0],	  Circle.bk[1],    Circle.bk[2]    ); }
    uint32_t _FillColor	(void){ return RGB2INT( Circle.fill[0],  Circle.fill[1],  Circle.fill[2]  ); }
    uint32_t _FrameColor	(void){ return RGB2INT( Circle.frame[0], Circle.frame[1], Circle.frame[2] ); }
@@ -375,15 +371,15 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		int widthCalculated=LCD_CalculateCircleWidth(width);
 		LCD_ClearPartScreen(3333,widthCalculated,widthCalculated,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
-		LCD_ShapeWindow	         (LCD_Circle,3333,widthCalculated,widthCalculated, 0,0, width,          width,          SetBold2Color(_FrameColor(),bold), _FillColor(),_BkColor());
-		LCD_ShapeWindowIndirect(x,y,LCD_Frame, 3333,widthCalculated,widthCalculated, 0,0, widthCalculated,widthCalculated,                  _FrameColor(),       _BkColor(),  _BkColor());
+		LCD_ShapeWindow	         (LCD_Circle_TEST__,3333,widthCalculated,widthCalculated, 0,0, width,          width,      		SetBold2Color(_FrameColor(),bold), _FillColor(),_BkColor());
+		LCD_ShapeWindowIndirect(x,y,LCD_Frame, 		 3333,widthCalculated,widthCalculated, 0,0, widthCalculated,widthCalculated,                _FrameColor(),       _BkColor(),  _BkColor());
 	}
 
 	void __Show_Circle_Indirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold)
 	{
 		LCD_ClearPartScreen(0,width,width,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
-		LCD_ShapeIndirect(x,y,LCD_Circle, width,width, SetBold2Color(_FrameColor(),bold), _FillColor(), _BkColor());
+		LCD_ShapeIndirect(x,y,LCD_Circle_TEST__, width,width, SetBold2Color(_FrameColor(),bold), _FillColor(), _BkColor());
 	}
 
 	if(Circle.startFlag!=0x52)
@@ -408,7 +404,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 		Circle.bold=0;
 		Circle.halfCircle=0;
 
-		Circle.deg[0]=45;		Circle.degColor[0]=RED;  /* not use yet*/
+		Circle.deg[0]=45;		Circle.degColor[0]=RED;  /* not use yet*/			/* example in future:  float Circle.deg[0]=45.4;*/
 		Circle.deg[1]=125;	Circle.degColor[1]=MYRED;
 		Circle.deg[2]=170;   Circle.degColor[2]=DARKYELLOW;
 		Circle.deg[3]=225;   Circle.degColor[3]=DARKGREEN;
@@ -428,8 +424,8 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	LCD_SetCircleDegColors(4,Circle.degColor[0],Circle.degColor[1],Circle.degColor[2],Circle.degColor[3],Circle.degColor[4],Circle.degColor[5],Circle.degColor[6]);
 	LCD_SetCircleDegColorsBuff(4,Circle.degColor); */
 
-	////////////////LCD_SetCirclePercentParam(7,Circle.deg,Circle.degColor);
-	LCD_Clear(RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //dac opisy b: to bold !!!!!! na lcd ekranie
+	LCD_SetCirclePercentParam(7,Circle.deg,Circle.degColor);
+	LCD_Clear(RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 
 
 	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,SetPos,0), LCD_Ypos(lenStr,SetPos,0), StrAll(2,"Radius } | ",Int2Str(Circle.width/2,' ',3,Sign_none)), 	 fullHight,0,_BkColor(),1,1);  //'znak' w opisie !!!!!
@@ -458,7 +454,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	LCD_Shape(60,160, LCD_Circle_TEST__, 0,0, _FrameColor(), _FillColor(), _BkColor());
 */
 
-	///////////////LCD_Shape(CIRCLE_POS_XY(Circle.width,10,10), LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor() /*TRANSPARENT*/, _BkColor());
+	LCD_Shape(CIRCLE_POS_XY(Circle.width,10,10), LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor() /*TRANSPARENT*/, _BkColor());
 
 
 
@@ -471,7 +467,7 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 
 
 
-	/////LCD_Shape(LCD_X-LCD_CalculateCircleWidth(Circle.width)/2-10, LCD_Y-LCD_CalculateCircleWidth(Circle.width)-10 , LCD_HalfCircle, SetParamWidthCircle(Half_Circle_270,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
+	//LCD_Shape(LCD_X-LCD_CalculateCircleWidth(Circle.width)/2-10, LCD_Y-LCD_CalculateCircleWidth(Circle.width)-10 , LCD_HalfCircle, SetParamWidthCircle(Half_Circle_270,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
 
 	Circle.speed=StopMeasureTime_us("");
 
@@ -479,47 +475,13 @@ void SCREEN_Test_Circle(void)  //skopiowac pliki do innego projektu bo mam blad 
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,8), StrAll(5,"Speed Max: ",INT2STR_TIME(Circle.speed)," us    Speed Sum: ",INT2STR_TIME(Circle.speedSum)," us"), 	 halfHight,0,_BkColor(),1,1);
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,8), StrAll(2,"Bold: ",Int2Str(Circle.bold,' ',2,Sign_none)), halfHight,0,_BkColor(),1,1);
 
-
-
-
-
-
-//--------------------- LINE --------
-//	DrawLine(0,130,135,test_len,Circle.deg[0],WHITE,LCD_GetXSize(), Circle.ratioBk,Circle.ratioFill, RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]),RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //okreslic jako wewn funkcja !!!! dla bkColor
-//	DrawLine(0,230,135,test_len,Circle.deg[0],WHITE,LCD_GetXSize(), 1,1/*Circle.ratioBk,Circle.ratioFill*/, RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]),RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //okreslic jako wewn funkcja !!!! dla bkColor
-//	CorrectLineAA_on();
-//	DrawLine(0,330,135,test_len,Circle.deg[0],WHITE,LCD_GetXSize(), Circle.ratioBk,Circle.ratioFill, RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]),RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));  //okreslic jako wewn funkcja !!!! dla bkColor
-//--------------------------------------
-
-
-
-
-
-
-
-	//ZMIENIC na float deg aby dac np 92.4
-
-
-	//	DrawLine(0,130,190,150,200,MYBLUE,LCD_GetXSize(), Circle.ratioBk,Circle.ratioFill, RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]),RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
-//	DrawLine(0,130,190,150,210,MYBLUE,LCD_GetXSize(), Circle.ratioBk,Circle.ratioFill, RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]),RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
-//	DrawLine(0,130,190,150,250,MYBLUE,LCD_GetXSize(), Circle.ratioBk,Circle.ratioFill, RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]),RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 	LCD_Show();
 
-	// __Show_FrameAndCircle_Indirect(120,180, 54, 1);
-
-	// __Show_FrameAndCircle_Indirect(480-LCD_GetYSize(),0, Circle.width, Circle.bold);
-
-
-	//-------999-----// __Show_Circle_Indirect(LCD_GetXSize()-50,200, 50, 0);
-	//-------10-----//LCD_ShapeIndirect(400,350,LCD_Circle, 50,50, SetBold2Color(WHITE,0), RED, MYGRAY);
-
-
-
-
-//Zrobic kr�z�cy cykl znaczku na okregu w zaleznosci od keyboarda !!!!!!!!!!!!
-
-
-
+/*
+	__Show_FrameAndCircle_Indirect(CIRCLE_POS_XY(Circle.width,10,20), Circle.width, Circle.bold);
+	__Show_Circle_Indirect(LCD_GetXSize()-50,200, 50, 0);
+	LCD_ShapeIndirect(400,350,LCD_Circle, 50,50, SetBold2Color(WHITE,0), RED, MYGRAY);
+*/
 
 
 }

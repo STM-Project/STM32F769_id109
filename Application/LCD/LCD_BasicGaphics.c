@@ -4174,16 +4174,16 @@ void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uin
 	uint16_t param = _width>>16;
 	uint8_t thickness = 15;//FrameColor>>24;
 
-
+	if(thickness){
 		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor, 0);
-//		LCD_CopyCircleWidth();
-//
-//   	uint32_t width_new = width-2*thickness;
-//		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
-//
-//		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor, 1);
-//		LCD_SetCopyCircleWidth();
+		LCD_CopyCircleWidth();
 
+   	uint32_t width_new = width-2*thickness;
+		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
+
+		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor, 1);
+		LCD_SetCopyCircleWidth();
+	}
 	//return params;
 
 }
