@@ -15,7 +15,7 @@
 #include "common.h"
 #include "math.h"
 
-#define FONT_COEFF	252  //!!!!!!!!!!!!!!!!!!
+#define FONT_COEFF	252
 
 #define MAX_NUMBER_OPENED_KEYBOARD_SIMULTANEOUSLY		20
 #define KEYBOARD_NONE	0
@@ -111,46 +111,46 @@ static int GetHeightFontDescr(void){
 	return LCD_GetFontHeight(fontID_descr);
 }
 static void Str(const char *txt, uint32_t color){
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,252, NoConstWidth);  //rozwiazac definem to 252 !!!!!
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrDescr_XYoffs(XY_Touch_Struct pos,int offsX,int offsY, const char *txt, uint32_t color){
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr, pos.x+offsX, pos.y+offsY,(char*)txt, fullHight, 0, fillColor, color,252, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr, pos.x+offsX, pos.y+offsY,(char*)txt, fullHight, 0, fillColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrDescrWin_XYoffs(int nr,int offsX,int offsY, const char *txt, uint32_t color){
-	LCD_StrDependOnColorsWindow(0,s[nr].widthKey,s[nr].heightKey,fontID_descr, offsX,offsY,(char*)txt, fullHight, 0, fillColor, color,252, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,s[nr].widthKey,s[nr].heightKey,fontID_descr, offsX,offsY,(char*)txt, fullHight, 0, fillColor, color,FONT_COEFF, NoConstWidth);
 }
 static void Str_Xmidd_Yoffs(int nr,XY_Touch_Struct pos,int offsY, const char *txt, uint32_t color){
 	LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(pos.x,s[nr].widthKey),NULL,0,NoConstWidth);
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt), pos.y+offsY,(char*)txt, fullHight, 0, fillColor, color,252, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt), pos.y+offsY,(char*)txt, fullHight, 0, fillColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrWin_Xmidd_Yoffs(int nr,int offsY, const char *txt, uint32_t color){
 	LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,s[nr].widthKey),NULL,0,NoConstWidth);
-	LCD_StrDependOnColorsWindow(0,s[nr].widthKey, s[nr].heightKey,fontID, GET_X((char*)txt),offsY,(char*)txt, fullHight, 0, fillColor, color,252, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,s[nr].widthKey, s[nr].heightKey,fontID, GET_X((char*)txt),offsY,(char*)txt, fullHight, 0, fillColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrLeft(int nr, const char *txt, XY_Touch_Struct pos, uint32_t color){
 	LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(pos.y,s[nr].heightKey));
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x+LCD_GetFontHeight(fontID)/2, GET_Y, (char*)txt, fullHight, 0, fillColor, color,252, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x+LCD_GetFontHeight(fontID)/2, GET_Y, (char*)txt, fullHight, 0, fillColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrDescr_Xmidd_Yoffs(XY_Touch_Struct pos,int offsY, const char *txt, uint32_t color){  //to usunac a nizej jest lepsze i zawiera sie w tym
 	LCD_Xmiddle(MIDDLE_NR+1,SetPos,SetPosAndWidth(0,widthAll),NULL,0,NoConstWidth);
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		LCD_Xmiddle(MIDDLE_NR+1,GetPos,fontID_descr,(char*)txt,0,NoConstWidth),	pos.y+offsY, 	(char*)txt, fullHight, 0, bkColor, color,252, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		LCD_Xmiddle(MIDDLE_NR+1,GetPos,fontID_descr,(char*)txt,0,NoConstWidth),	pos.y+offsY, 	(char*)txt, fullHight, 0, bkColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrDescr(int nr,XY_Touch_Struct pos, const char *txt, uint32_t color){
 	LCD_Xmiddle(MIDDLE_NR+1,SetPos,SetPosAndWidth(pos.x,widthAll),NULL,0,NoConstWidth);
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		LCD_Xmiddle(MIDDLE_NR+1,GetPos,fontID_descr,(char*)txt,0,NoConstWidth),		s[nr].interSpace+pos.y,		(char*)txt, fullHight, 0, bkColor, color,252, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		LCD_Xmiddle(MIDDLE_NR+1,GetPos,fontID_descr,(char*)txt,0,NoConstWidth),		s[nr].interSpace+pos.y,		(char*)txt, fullHight, 0, bkColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrPress(const char *txt, uint32_t color){
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, color,255, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrPressLeft(int nr,const char *txt, XY_Touch_Struct pos, uint32_t color){
 	LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(pos.y,s[nr].heightKey));
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x+10,GET_Y,(char*)txt, fullHight, 0, fillPressColor, color,255, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID, pos.x+10,GET_Y,(char*)txt, fullHight, 0, fillPressColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrDisp(int nr,const char *txt, uint32_t color){
-	LCD_StrDependOnColorsWindowIndirect(0, s[nr].x, s[nr].y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,255, NoConstWidth);
+	LCD_StrDependOnColorsWindowIndirect(0, s[nr].x, s[nr].y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillColor, color,FONT_COEFF, NoConstWidth);
 }
 static void StrPressDisp(int nr,const char *txt, uint32_t color){
-	LCD_StrDependOnColorsWindowIndirect(0, s[nr].x, s[nr].y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, color,255, NoConstWidth);
+	LCD_StrDependOnColorsWindowIndirect(0, s[nr].x, s[nr].y, widthAll,heightAll,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, color,FONT_COEFF, NoConstWidth);
 }
 
 static void TxtPos(int nr,XY_Touch_Struct pos){
@@ -237,12 +237,12 @@ static void _KeyStrPressDisp(int nr, XY_Touch_Struct pos, const char *txt, uint3
 static void KeyStrPressDisp_oneBlock(int nr, XY_Touch_Struct pos, const char *txt, uint32_t colorTxt){
 	LCD_ShapeWindow( s[nr].shape, 0, s[nr].widthKey,s[nr].heightKey, 0,0, s[nr].widthKey,s[nr].heightKey, SetBold2Color(framePressColor,s[nr].bold),fillPressColor,bkColor);
 	TxtPos(nr,(XY_Touch_Struct){0});
-	LCD_StrDependOnColorsWindowIndirect(0, s[nr].x+pos.x, s[nr].y+pos.y, s[nr].widthKey, s[nr].heightKey,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,255, NoConstWidth);
+	LCD_StrDependOnColorsWindowIndirect(0, s[nr].x+pos.x, s[nr].y+pos.y, s[nr].widthKey, s[nr].heightKey,fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,FONT_COEFF, NoConstWidth);
 }
 static void _KeyStrPressDisp_oneBlock(int nr, XY_Touch_Struct pos, const char *txt, uint32_t colorTxt, int nrWH){
 	LCD_ShapeWindow( s[nr].shape, 0, s[nr].wKey[nrWH], s[nr].hKey[nrWH], 0,0, s[nr].wKey[nrWH], s[nr].hKey[nrWH], SetBold2Color(framePressColor,s[nr].bold),fillPressColor,bkColor);
 	_TxtPos(nr,(XY_Touch_Struct){0},nrWH);
-	LCD_StrDependOnColorsWindowIndirect(0, s[nr].x+pos.x, s[nr].y+pos.y, s[nr].wKey[nrWH], s[nr].hKey[nrWH],fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,255, NoConstWidth);
+	LCD_StrDependOnColorsWindowIndirect(0, s[nr].x+pos.x, s[nr].y+pos.y, s[nr].wKey[nrWH], s[nr].hKey[nrWH],fontID, GET_X((char*)txt),GET_Y,(char*)txt, fullHight, 0, fillPressColor, colorTxt,FONT_COEFF, NoConstWidth);
 }
 static void KeyStrPressDisp_oneKey(int nr, XY_Touch_Struct pos, int nrTab){
 	KeyStrPressDisp_oneBlock(nr, pos, txtKey[nrTab], colorTxtPressKey[nrTab]);
@@ -252,7 +252,7 @@ static void _KeyStrPressDisp_oneKey(int nr, XY_Touch_Struct pos, int nrTab, char
 }
 
 static void TxtDescrMidd_WidthKey(int nr, XY_Touch_Struct pos, char *txtKeys, uint32_t colorDescr){
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		MIDDLE(pos.x, s[nr].widthKey, LCD_GetWholeStrPxlWidth(fontID_descr,txtKeys,0,NoConstWidth)),   pos.y-GetHeightFontDescr(), 	 txtKeys, fullHight, 0, bkColor, colorDescr,255, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		MIDDLE(pos.x, s[nr].widthKey, LCD_GetWholeStrPxlWidth(fontID_descr,txtKeys,0,NoConstWidth)),   pos.y-GetHeightFontDescr(), 	 txtKeys, fullHight, 0, bkColor, colorDescr,FONT_COEFF, NoConstWidth);
 }
 static void ShapeBkClear(int nr, int width_all, int height_all, uint32_t bkColor){
 	LCD_ShapeWindow( s[nr].shape,0,width_all,height_all, 0,0, width_all,height_all, bkColor, bkColor,bkColor );
@@ -262,7 +262,7 @@ static void TxtDescr(int nr, uint16_t xPos, uint16_t yPos, char* txtDescr){
 	StrDescr(nr, posHead, txtDescr, colorDescr);
 }
 static void TxtDescrMidd(int nr, int head, char* txtDescr){
-	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		MIDDLE(0,widthAll,LCD_GetWholeStrPxlWidth(fontID_descr,txtDescr,0,NoConstWidth)),  MIDDLE(0,head,GetHeightFontDescr()), 	 txtDescr, fullHight, 0, bkColor, colorDescr,255, NoConstWidth);
+	LCD_StrDependOnColorsWindow(0,widthAll,heightAll,fontID_descr,		MIDDLE(0,widthAll,LCD_GetWholeStrPxlWidth(fontID_descr,txtDescr,0,NoConstWidth)),  MIDDLE(0,head,GetHeightFontDescr()), 	 txtDescr, fullHight, 0, bkColor, colorDescr,FONT_COEFF, NoConstWidth);
 }
 static void ShapeWin(int nr, int width_all, int height_all){
 	LCD_ShapeWindow( s[nr].shape,0,width_all,height_all, 0,0, width_all,height_all, SetBold2Color(frameMainColor,s[nr].bold), fillMainColor,bkColor );
@@ -589,7 +589,7 @@ static void WinInfo(char* txt, int x,int y, int w,int h, TIMER_ID tim){
 	LCD_ShapeWindow( LCD_RoundRectangle, 0, w,h, 0,0, w,h, SetBold2Color(frameColor,0), fillCol,bkColor );
 	LCD_Xmiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,w),NULL,0,NoConstWidth);
 	LCD_Ymiddle(MIDDLE_NR,SetPos,SetPosAndWidth(0,h));
-	LCD_StrDependOnColorsWindowIndirect(0,MIDDLE(0,LCD_X,w), y, w,h,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillCol, DARKRED,255, NoConstWidth);
+	LCD_StrDependOnColorsWindowIndirect(0,MIDDLE(0,LCD_X,w), y, w,h,fontID, GET_X(txt),GET_Y,txt, fullHight, 0, fillCol, DARKRED,FONT_COEFF, NoConstWidth);
 	vTimerService(TimerId_2,start_time,2000);
 }
 
@@ -1086,7 +1086,7 @@ int KEYBOARD__ServiceLenOffsWin(int k, int selBlockPress, INIT_KEYBOARD_PARAM, i
 		}
 
 		LCD_ShapeWindow( s[k].shape, 0, width,height, 0,0, width,height, SetBold2Color(frameColor,s[k].bold), bkColor,bkColor );
-		posTxt_temp = LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,pCHAR_PLCD(width*height),NULL)+_GetCurrPosTxt(),fullHight,0,fillColor,colorDescr,255,NoConstWidth).inChar;
+		posTxt_temp = LCD_TxtWin(0,width,height,fontID_descr,spaceFromFrame,spaceFromFrame,LCD_DisplayRemeberedSpacesBetweenFonts(1,pCHAR_PLCD(width*height),NULL)+_GetCurrPosTxt(),fullHight,0,fillColor,colorDescr,FONT_COEFF,NoConstWidth).inChar;
 		if(posTxt_temp){
 			_SetCurrPosTxt(_GetCurrPosTxt()+posTxt_temp);
 			if(i_posTxtTab<sizeof(posTxtTab)-2)
