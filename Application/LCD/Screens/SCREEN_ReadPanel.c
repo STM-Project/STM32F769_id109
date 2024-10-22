@@ -327,6 +327,12 @@ void NOWY_3(void)  //dac mozliwosc zablokowania Dbg definem!!!
 
 }
 
+/* ########### --- SCREEN_Test_Circle --- ############ */
+
+#define INCR_WIDTH_CIRCLE_STEP 	(1)
+#define MAX_WIDTH_CIRCLE 	(VALPERC(LCD_GetYSize(),96))
+#define MIN_WIDTH_CIRCLE 	(20)
+
 typedef struct{
 	uint8_t startFlag;
 	uint16_t width;
@@ -344,42 +350,33 @@ typedef struct{
 } CIRCLE_PARAM;
 static CIRCLE_PARAM Circle ={0};
 
-int test_len=100;
-
 void temp_Start(){
 	StartMeasureTime_us();
 }
 void temp_Stop(){
 	uint32_t aaa = StopMeasureTime_us("");
 	Circle.speedSum += aaa;
-	Circle.speed = MAXVAL2(Circle.speed,aaa);  //dac jeszcze MINVAL2 !!!!
+	Circle.speed = MAXVAL2(Circle.speed,aaa);
 }
 
-#define INCR_WIDTH_CIRCLE_STEP 	(1)
-#define MAX_WIDTH_CIRCLE 	(VALPERC(LCD_GetYSize(),96))
-#define MIN_WIDTH_CIRCLE 	(20)
-
-
-void SCREEN_Test_Circle(void)
+static void SCREEN_Test_Circle(void)
 {
    uint32_t _BkColor		(void){ return RGB2INT( Circle.bk[0],	  Circle.bk[1],    Circle.bk[2]    ); }
    uint32_t _FillColor	(void){ return RGB2INT( Circle.fill[0],  Circle.fill[1],  Circle.fill[2]  ); }
    uint32_t _FrameColor	(void){ return RGB2INT( Circle.frame[0], Circle.frame[1], Circle.frame[2] ); }
 
-	void __Show_FrameAndCircle_Indirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold)
-	{
+	void __Show_FrameAndCircle_Indirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold){
 		int widthCalculated=LCD_CalculateCircleWidth(width);
 		LCD_ClearPartScreen(3333,widthCalculated,widthCalculated,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
-		LCD_ShapeWindow	         (LCD_Circle_TEST__,3333,widthCalculated,widthCalculated, 0,0, width,          width,      		SetBold2Color(_FrameColor(),bold), _FillColor(),_BkColor());
-		LCD_ShapeWindowIndirect(x,y,LCD_Frame, 		 3333,widthCalculated,widthCalculated, 0,0, widthCalculated,widthCalculated,                _FrameColor(),       _BkColor(),  _BkColor());
+		LCD_ShapeWindow	         (LCD_Circle,3333,widthCalculated,widthCalculated, 0,0, width,          width,      		SetBold2Color(_FrameColor(),bold), _FillColor(),_BkColor());
+		LCD_ShapeWindowIndirect(x,y,LCD_Frame, 3333,widthCalculated,widthCalculated, 0,0, widthCalculated,widthCalculated,              _FrameColor(),       _BkColor(),  _BkColor());
 	}
 
-	void __Show_Circle_Indirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold)
-	{
+	void __Show_Circle_Indirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold){
 		LCD_ClearPartScreen(0,width,width,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
-		LCD_ShapeIndirect(x,y,LCD_Circle_TEST__, width,width, SetBold2Color(_FrameColor(),bold), _FillColor(), _BkColor());
+		LCD_ShapeIndirect(x,y,LCD_Circle, width,width, SetBold2Color(_FrameColor(),bold), _FillColor(), _BkColor());
 	}
 
 	if(Circle.startFlag!=0x52)
@@ -413,81 +410,107 @@ void SCREEN_Test_Circle(void)
 		Circle.deg[6]=360;   Circle.degColor[6]=BROWN;
 
 		SCREEN_ResetAllParameters();
-		LCD_LoadFont_DarkgrayWhite(FONT_10, Arial, fontID_1);
+		LCD_LoadFont_DarkgrayWhite(FONT_10, 	  Arial, fontID_1);
 		LCD_LoadFont_DarkgrayWhite(FONT_10_bold, Arial, fontID_2);
 	}
 
 	CorrectLineAA_off();
 
+/* --- Worse set for percent circle --- */
 /*	LCD_SetCircleDegrees(4,Circle.deg[0],Circle.deg[1],Circle.deg[2],Circle.deg[3],Circle.deg[4],Circle.deg[5],Circle.deg[6]);
 	LCD_SetCircleDegreesBuff(4,Circle.deg);
 	LCD_SetCircleDegColors(4,Circle.degColor[0],Circle.degColor[1],Circle.degColor[2],Circle.degColor[3],Circle.degColor[4],Circle.degColor[5],Circle.degColor[6]);
-	LCD_SetCircleDegColorsBuff(4,Circle.degColor); */
-
+	LCD_SetCircleDegColorsBuff(4,Circle.degColor);
+*/
 	LCD_SetCirclePercentParam(7,Circle.deg,Circle.degColor);
 	LCD_Clear(RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 
-
-	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,SetPos,0), LCD_Ypos(lenStr,SetPos,0), StrAll(2,"Radius } | ",Int2Str(Circle.width/2,' ',3,Sign_none)), 	 fullHight,0,_BkColor(),1,1);  //'znak' w opisie !!!!!
+	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,SetPos,0),  LCD_Ypos(lenStr,SetPos,0), StrAll(2,"Radius } | ",Int2Str(Circle.width/2,' ',3,Sign_none)), 	 fullHight,0,_BkColor(),1,1);
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,IncPos,10), LCD_Ypos(lenStr,GetPos,0), StrAll(2,"angle:",INT2STR_TIME(Circle.deg[0])),fullHight,0,_BkColor(),1,0);
-
 	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,SetPos,0), LCD_Ypos(lenStr,IncPos,8), StrAll(6,"Frame: ",INT2STR(Circle.frame[0])," ",INT2STR(Circle.frame[1])," ",INT2STR(Circle.frame[2])),  halfHight,0,_BkColor(),1,1);
 	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,5), StrAll(6,"Fill:  ",INT2STR(Circle.fill[0]), " ",INT2STR(Circle.fill[1]), " ",INT2STR(Circle.fill[2])),   halfHight,0,_BkColor(),1,1);
 	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,5), StrAll(6,"Backup:",INT2STR(Circle.bk[0]),   " ",INT2STR(Circle.bk[1]),   " ",INT2STR(Circle.bk[2])),   halfHight,0,_BkColor(),1,1);
-
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,5), StrAll(4,"AA out:",Float2Str(Circle.ratioBk,' ',1,Sign_none,2),"  AA in:",Float2Str(Circle.ratioFill,' ',1,Sign_none,2)), 	 halfHight,0,_BkColor(),1,1);
-
-
-
-
 
 	if(Circle.bold > Circle.width/INCR_WIDTH_CIRCLE_STEP-1)
 		Circle.bold=Circle.width/INCR_WIDTH_CIRCLE_STEP-1;
 
 	LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
-	StartMeasureTime_us();
 	CorrectLineAA_on();
-/*
-//  ZOSTAWIAMY TO !!!!!
-//tu sam podajesz punkty po ktorym bedzie kreslonw kolo
-	LCD_SetCircleParam(0.01,0.01,14, 5,4,4,3,3,2,2,2,2,2, 2,2,1,1); // dla tej konfig nie ma Bold  x to srodek kola
-	LCD_Shape(60,160, LCD_Circle_TEST__, 0,0, _FrameColor(), _FillColor(), _BkColor());
-*/
+	StartMeasureTime_us();
 
-	LCD_Shape(CIRCLE_POS_XY(Circle.width,10,10), LCD_Circle_TEST__, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor() /*TRANSPARENT*/, _BkColor());
+/* --- Set points to draw own circle --- */
+/*	LCD_SetCircleParam(0.01,0.01,14, 5,4,4,3,3,2,2,2,2,2, 2,2,1,1);
+	LCD_Shape(60,160, LCD_Circle, 0,0, _FrameColor(), _FillColor(), _BkColor());	*/
 
+	LCD_Shape(CIRCLE_POS_XY(Circle.width,10,10), LCD_Circle, SetParamWidthCircle(Percent_Circle,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor() /*TRANSPARENT*/, _BkColor());
 
-
-
-
-
-
-
-
-
-
-
-	//LCD_Shape(LCD_X-LCD_CalculateCircleWidth(Circle.width)/2-10, LCD_Y-LCD_CalculateCircleWidth(Circle.width)-10 , LCD_HalfCircle, SetParamWidthCircle(Half_Circle_270,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor());
+/*	LCD_Shape(LCD_X-LCD_CalculateCircleWidth(Circle.width)/2-10, LCD_Y-LCD_CalculateCircleWidth(Circle.width)-10 , LCD_HalfCircle, SetParamWidthCircle(Half_Circle_270,Circle.width),Circle.width, SetBold2Color(_FrameColor(),Circle.bold), _FillColor(), _BkColor()); */
 
 	Circle.speed=StopMeasureTime_us("");
 
-
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,8), StrAll(5,"Speed Max: ",INT2STR_TIME(Circle.speed)," us    Speed Sum: ",INT2STR_TIME(Circle.speedSum)," us"), 	 halfHight,0,_BkColor(),1,1);
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,8), StrAll(2,"Bold: ",Int2Str(Circle.bold,' ',2,Sign_none)), halfHight,0,_BkColor(),1,1);
-
 	LCD_Show();
 
-/*
-	__Show_FrameAndCircle_Indirect(CIRCLE_POS_XY(Circle.width,10,20), Circle.width, Circle.bold);
+/*	__Show_FrameAndCircle_Indirect(CIRCLE_POS_XY(Circle.width,10,20), Circle.width, Circle.bold);
 	__Show_Circle_Indirect(LCD_GetXSize()-50,200, 50, 0);
-	LCD_ShapeIndirect(400,350,LCD_Circle, 50,50, SetBold2Color(WHITE,0), RED, MYGRAY);
-*/
-
+	LCD_ShapeIndirect(400,350,LCD_Circle, 50,50, SetBold2Color(WHITE,0), RED, MYGRAY);	*/
 
 }
 
-//int _ROPA=0;
-//float _ERR=0.0;
+static void DBG_SCREEN_Test_Circle(void)
+{
+		  if(DEBUG_RcvStr("]")) { if(Circle.width < MAX_WIDTH_CIRCLE) Circle.width=LCD_GetNextIncrCircleWidth(Circle.width); /* INCR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE); */ }
+	else if(DEBUG_RcvStr("\\")){ if(Circle.width > MIN_WIDTH_CIRCLE) Circle.width=LCD_GetNextDecrCircleWidth(Circle.width); /* DECR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE); */ }
+
+	else if(DEBUG_RcvStr("1")) INCR_WRAP(Circle.frame[0],1,0,255);
+	else if(DEBUG_RcvStr("2")) INCR_WRAP(Circle.frame[1],1,0,255);
+	else if(DEBUG_RcvStr("3")) INCR_WRAP(Circle.frame[2],1,0,255);
+	else if(DEBUG_RcvStr("q")) DECR_WRAP(Circle.frame[0],1,0,255);
+	else if(DEBUG_RcvStr("w")) DECR_WRAP(Circle.frame[1],1,0,255);
+	else if(DEBUG_RcvStr("e")) DECR_WRAP(Circle.frame[2],1,0,255);
+
+	else if(DEBUG_RcvStr("a")) INCR_WRAP(Circle.bk[0],1,0,255);
+	else if(DEBUG_RcvStr("s")) INCR_WRAP(Circle.bk[1],1,0,255);
+	else if(DEBUG_RcvStr("d")) INCR_WRAP(Circle.bk[2],1,0,255);
+	else if(DEBUG_RcvStr("z")) DECR_WRAP(Circle.bk[0],1,0,255);
+	else if(DEBUG_RcvStr("x")) DECR_WRAP(Circle.bk[1],1,0,255);
+	else if(DEBUG_RcvStr("c")) DECR_WRAP(Circle.bk[2],1,0,255);
+
+	else if(DEBUG_RcvStr("4")) INCR_WRAP(Circle.fill[0],1,0,255);
+	else if(DEBUG_RcvStr("5")) INCR_WRAP(Circle.fill[1],1,0,255);
+	else if(DEBUG_RcvStr("6")) INCR_WRAP(Circle.fill[2],1,0,255);
+	else if(DEBUG_RcvStr("r")) DECR_WRAP(Circle.fill[0],1,0,255);
+	else if(DEBUG_RcvStr("t")) DECR_WRAP(Circle.fill[1],1,0,255);
+	else if(DEBUG_RcvStr("y")) DECR_WRAP(Circle.fill[2],1,0,255);
+
+	else if(DEBUG_RcvStr("h")) INCR_FLOAT_WRAP(Circle.ratioBk,  0.10, 0.00, 1.00);
+	else if(DEBUG_RcvStr("j")) INCR_FLOAT_WRAP(Circle.ratioFill,0.10, 0.00, 1.00);
+	else if(DEBUG_RcvStr("n")) DECR_FLOAT_WRAP(Circle.ratioBk  ,0.10, 0.00, 1.00);
+	else if(DEBUG_RcvStr("m")) DECR_FLOAT_WRAP(Circle.ratioFill,0.10, 0.00, 1.00);
+
+	else if(DEBUG_RcvStr("g")) INCR_WRAP(Circle.bold,1,0,Circle.width/6-1);
+	else if(DEBUG_RcvStr("b")) DECR_WRAP(Circle.bold,1,0,Circle.width/6-1);
+
+	else if(DEBUG_RcvStr("o")) INCR_WRAP(Circle.halfCircle,1,0,3);
+
+	else if(DEBUG_RcvStr("k")) DECR(Circle.deg[0],1,0);
+	else if(DEBUG_RcvStr("l")) INCR(Circle.deg[0],1,Circle.deg[1]-1);
+	else if(DEBUG_RcvStr(",")) DECR(Circle.deg[1],1,Circle.deg[0]+1);
+	else if(DEBUG_RcvStr(".")) INCR(Circle.deg[1],1,Circle.deg[2]-1);
+	else if(DEBUG_RcvStr("9")) DECR(Circle.deg[2],1,Circle.deg[1]+1);
+	else if(DEBUG_RcvStr("0")) INCR(Circle.deg[2],1,Circle.deg[3]-1);
+	else if(DEBUG_RcvStr("7")) DECR(Circle.deg[3],1,Circle.deg[2]+1);
+	else if(DEBUG_RcvStr("8")) INCR(Circle.deg[3],1,360);
+
+	SCREEN_Test_Circle();
+}
+
+/* ########### --- END SCREEN_Test_Circle --- ############ */
+
+
+
 int SCREEN_number=0;  //LOAD IMAGE !!!!!
 
 void SCREEN_ReadPanel(void)
@@ -590,57 +613,7 @@ void SCREEN_ReadPanel(void)
 			break;
 
 		case 4:
-				  if(DEBUG_RcvStr("]")){  if(Circle.width < MAX_WIDTH_CIRCLE) Circle.width=LCD_GetNextIncrCircleWidth(Circle.width); /*INCR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE);*/  SCREEN_Test_Circle(); }  //zrobic test screenn dla percent circle i opisac znaki klawiatury na LCD |!!!!
-			else if(DEBUG_RcvStr("\\")){ if(Circle.width > MIN_WIDTH_CIRCLE) Circle.width=LCD_GetNextDecrCircleWidth(Circle.width); /*DECR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE);*/  SCREEN_Test_Circle(); }
-
-			else if(DEBUG_RcvStr("1")){ INCR_WRAP(Circle.frame[0],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("2")){ INCR_WRAP(Circle.frame[1],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("3")){ INCR_WRAP(Circle.frame[2],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("q")){ DECR_WRAP(Circle.frame[0],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("w")){ DECR_WRAP(Circle.frame[1],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("e")){ DECR_WRAP(Circle.frame[2],1,0,255);  SCREEN_Test_Circle(); }
-
-			else if(DEBUG_RcvStr("a")){ INCR_WRAP(Circle.bk[0],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("s")){ INCR_WRAP(Circle.bk[1],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("d")){ INCR_WRAP(Circle.bk[2],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("z")){ DECR_WRAP(Circle.bk[0],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("x")){ DECR_WRAP(Circle.bk[1],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("c")){ DECR_WRAP(Circle.bk[2],1,0,255);  SCREEN_Test_Circle(); }
-
-			else if(DEBUG_RcvStr("4")){ INCR_WRAP(Circle.fill[0],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("5")){ INCR_WRAP(Circle.fill[1],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("6")){ INCR_WRAP(Circle.fill[2],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("r")){ DECR_WRAP(Circle.fill[0],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("t")){ DECR_WRAP(Circle.fill[1],1,0,255);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("y")){ DECR_WRAP(Circle.fill[2],1,0,255);  SCREEN_Test_Circle(); }
-
-			else if(DEBUG_RcvStr("h")){ INCR_FLOAT_WRAP(Circle.ratioBk,  0.10, 0.00, 1.00);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("j")){ INCR_FLOAT_WRAP(Circle.ratioFill,0.10, 0.00, 1.00);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("n")){ DECR_FLOAT_WRAP(Circle.ratioBk  ,0.10, 0.00, 1.00);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("m")){ DECR_FLOAT_WRAP(Circle.ratioFill,0.10, 0.00, 1.00);  SCREEN_Test_Circle(); }
-
-
-
-
-//			else if(DEBUG_RcvStr("g")){ _ROPA=1-_ROPA;  SCREEN_Test_Circle(); }
-//			else if(DEBUG_RcvStr("b")){ INCR(_ERR,0.1,2.0);  SCREEN_Test_Circle(); }
-
-			else if(DEBUG_RcvStr("g")){ INCR_WRAP(Circle.bold,1,0,Circle.width/6-1);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("b")){ DECR_WRAP(Circle.bold,1,0,Circle.width/6-1);  SCREEN_Test_Circle(); }
-
-			else if(DEBUG_RcvStr("o")){ INCR_WRAP(Circle.halfCircle,1,0,3);  SCREEN_Test_Circle(); }
-
-			else if(DEBUG_RcvStr("k")){ DECR(Circle.deg[0],1,0);   SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("l")){ INCR(Circle.deg[0],1,Circle.deg[1]-1);  SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr(",")){ DECR(Circle.deg[1],1,Circle.deg[0]+1);    SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr(".")){ INCR(Circle.deg[1],1,Circle.deg[2]-1);   SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("9")){ DECR(Circle.deg[2],1,Circle.deg[1]+1);    SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("0")){ INCR(Circle.deg[2],1,Circle.deg[3]-1);   SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("7")){ DECR(Circle.deg[3],1,Circle.deg[2]+1);    SCREEN_Test_Circle(); }
-			else if(DEBUG_RcvStr("8")){ INCR(Circle.deg[3],1,360);   SCREEN_Test_Circle(); }  //TU ograniczenie do ostatniego degree a nie do 360 !!!!
-
-			//else if(DEBUG_RcvStr("-")){ INCR(test_len,1,360);   SCREEN_Test_Circle(); }
-
+			DBG_SCREEN_Test_Circle();
 			break;
 //rozpisac wyswietlanie wszystkich degree i uatwic circleLinesLenCorrect  !!!!!!!!!!!!!!!!
 		}
