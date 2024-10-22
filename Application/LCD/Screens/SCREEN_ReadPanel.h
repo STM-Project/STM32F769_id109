@@ -23,7 +23,7 @@ int SCREEN_ConfigTouchForStrVar(uint16_t ID_touch, uint16_t idx_touch, uint8_t p
 int SCREEN_ConfigTouchForStrVar_2(uint16_t ID_touch, uint16_t idx_touch, uint8_t param_touch, int idVar, int nrTouchIdx, StructFieldPos field);
 int SCREEN_SetTouchForNewEndPos(int idVar, int touchIdx, StructTxtPxlLen lenStr);
 
-void temp_Start();
-void temp_Stop();
+void Measure_Start();
+void Measure_Stop();
 
 #endif /* LCD_SCREENS_SCREEN_READPANEL_H_ */
