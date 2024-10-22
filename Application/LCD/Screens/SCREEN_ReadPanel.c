@@ -36,6 +36,8 @@
 int argNmb = 0;
 char **argVal = NULL;
 
+int SCREEN_number=0, SCREEN_number_prev=-1;  //LOAD IMAGE !!!!!
+
 
 StructTxtPxlLen lenStr;
 int startScreen=0;
@@ -359,6 +361,12 @@ void Measure_Stop(){
 	Circle.speed = MAXVAL2(Circle.speed,aaa);
 }
 
+int START_SCREEN_Test_Circle(void){
+	if(SCREEN_number_prev != SCREEN_number)
+		return 1;
+	return 0;
+}
+
 static void SCREEN_Test_Circle(void)
 {
    uint32_t _BkColor		(void){ return RGB2INT( Circle.bk[0],	  Circle.bk[1],    Circle.bk[2]    ); }
@@ -377,6 +385,13 @@ static void SCREEN_Test_Circle(void)
 		LCD_ClearPartScreen(0,width,width,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
 		LCD_ShapeIndirect(x,y,LCD_Circle, width,width, SetBold2Color(_FrameColor(),bold), _FillColor(), _BkColor());
+	}
+
+	if(START_SCREEN_Test_Circle())
+	{
+		SCREEN_ResetAllParameters();
+		LCD_LoadFont_DarkgrayWhite(FONT_10, 	  Arial, fontID_1);
+		LCD_LoadFont_DarkgrayWhite(FONT_10_bold, Arial, fontID_2);
 	}
 
 	if(Circle.startFlag!=0x52)
@@ -408,10 +423,6 @@ static void SCREEN_Test_Circle(void)
 		Circle.deg[4]=280;   Circle.degColor[4]=DARKBLUE;
 		Circle.deg[5]=320;   Circle.degColor[5]=DARKCYAN;
 		Circle.deg[6]=360;   Circle.degColor[6]=BROWN;
-
-		SCREEN_ResetAllParameters();
-		LCD_LoadFont_DarkgrayWhite(FONT_10, 	  Arial, fontID_1);
-		LCD_LoadFont_DarkgrayWhite(FONT_10_bold, Arial, fontID_2);
 	}
 
 	CorrectLineAA_off();
@@ -461,6 +472,8 @@ static void SCREEN_Test_Circle(void)
 
 static void DBG_SCREEN_Test_Circle(void)
 {
+	int refresh_Screen=1;
+
 		  if(DEBUG_RcvStr("]")) { if(Circle.width < MAX_WIDTH_CIRCLE) Circle.width=LCD_GetNextIncrCircleWidth(Circle.width); /* INCR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE); */ }
 	else if(DEBUG_RcvStr("\\")){ if(Circle.width > MIN_WIDTH_CIRCLE) Circle.width=LCD_GetNextDecrCircleWidth(Circle.width); /* DECR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE); */ }
 
@@ -490,8 +503,14 @@ static void DBG_SCREEN_Test_Circle(void)
 	else if(DEBUG_RcvStr("n")) DECR_FLOAT_WRAP(Circle.ratioBk  ,0.10, 0.00, 1.00);
 	else if(DEBUG_RcvStr("m")) DECR_FLOAT_WRAP(Circle.ratioFill,0.10, 0.00, 1.00);
 
-	else if(DEBUG_RcvStr("g")) INCR_WRAP(Circle.bold,1,0,Circle.width/6-1);
-	else if(DEBUG_RcvStr("b")) DECR_WRAP(Circle.bold,1,0,Circle.width/6-1);
+	else if(DEBUG_RcvStr("g")){
+		uint16_t width_temp = Circle.width-2*Circle.bold;
+		while(LCD_CalculateCircleWidth(Circle.width-2*INCR_WRAP(Circle.bold,1,0,Circle.width/2-1)) == LCD_CalculateCircleWidth(width_temp));  //DAC funkcie grubosc zwiekszajaca w LCD_BASIC.... !!!!
+	}
+	else if(DEBUG_RcvStr("b")){
+		uint16_t width_temp = Circle.width-2*Circle.bold;
+		while(LCD_CalculateCircleWidth(Circle.width-2*DECR_WRAP(Circle.bold,1,0,Circle.width/2-1)) == LCD_CalculateCircleWidth(width_temp));
+	}
 
 	else if(DEBUG_RcvStr("o")) INCR_WRAP(Circle.halfCircle,1,0,3);
 
@@ -504,13 +523,13 @@ static void DBG_SCREEN_Test_Circle(void)
 	else if(DEBUG_RcvStr("7")) DECR(Circle.deg[3],1,Circle.deg[2]+1);
 	else if(DEBUG_RcvStr("8")) INCR(Circle.deg[3],1,360);
 
-	SCREEN_Test_Circle();
+	else refresh_Screen=0;
+
+	if(refresh_Screen) SCREEN_Test_Circle();
 }
 /* ########### --- END SCREEN_Test_Circle --- ############ */
 
 
-
-int SCREEN_number=0;  //LOAD IMAGE !!!!!
 
 void SCREEN_ReadPanel(void)
 {
@@ -552,6 +571,7 @@ void SCREEN_ReadPanel(void)
 			startScreen=1;
 			break;
 		}
+		SCREEN_number_prev = SCREEN_number;
 	}
 	else
 	{
