@@ -71,6 +71,769 @@ static void Set_AACoeff2(int pixelsInOneSide, uint32_t colorFrom, uint32_t color
 		buff2_AA[1+i]= GetTransitionColor(colorFrom,colorTo, ratioStart+i*incr);
 }}
 
+static void _FillBuff(int itCount, uint32_t color)
+{
+	if(itCount>10)
+	{
+		int j=itCount/2;
+		int a=j;
+
+		uint64_t *pLcd64=(uint64_t*) (pLcd+k);
+		uint64_t color64=(((uint64_t)color)<<32)|((uint64_t)color);
+
+		j--;
+		while (j)
+			pLcd64[j--]=color64;
+
+		pLcd64[j]=color64;
+		k+=a+itCount/2;
+
+		if (itCount%2)
+			pLcd[k++]=color;
+	}
+	else
+	{
+		for(int i=0;i<itCount;++i)
+			pLcd[k++]=color;
+	}
+}
+
+static void _CopyDrawPos(void){
+	kCopy=k;
+}
+static void _SetCopyDrawPos(void){
+	k=kCopy;
+}
+static void _IncDrawPos(int pos){
+	k+=pos;
+}
+
+static void _StartDrawLine(uint32_t posBuff,uint32_t BkpSizeX,uint32_t x,uint32_t y){
+	k=posBuff+(y*BkpSizeX+x);
+}
+static uint32_t _GetPosK(uint32_t posBuff,uint32_t BkpSizeX,uint32_t x,uint32_t y){
+	return (posBuff+(y*BkpSizeX+x));
+}
+static uint32_t _GetPosY(uint32_t posBuff,uint32_t BkpSizeX){
+	return ((k-posBuff)/BkpSizeX);
+}
+static uint32_t _GetPosX(uint32_t posBuff,uint32_t BkpSizeX){
+	return ((k-posBuff)-_GetPosY(posBuff,BkpSizeX)*BkpSizeX);
+}
+static structPosition _GetPosXY(uint32_t posBuff, uint32_t BkpSizeX){
+	structPosition temp;
+	int kOffs = k-posBuff;
+	temp.y = (kOffs/BkpSizeX);
+	temp.x = (kOffs-temp.y*BkpSizeX);
+	return temp;
+}
+static structPosition _GetPosXY___(uint32_t posBuff, int k, uint32_t BkpSizeX){
+	structPosition temp;
+	int kOffs = k-posBuff;
+	temp.y = (kOffs/BkpSizeX);
+	temp.x = (kOffs-temp.y*BkpSizeX);
+	return temp;
+}
+static void _NextDrawLine(uint32_t BkpSizeX,uint32_t width){
+	k+=(BkpSizeX-width);
+}
+
+static void _DrawRight(int width, uint32_t color)
+{
+	int j=width;
+	uint32_t *p = pLcd+k;
+	while(j--)
+		*(p++)=color;
+	k+=width;
+}
+
+static void _DrawLeft(int width, uint32_t color)
+{
+	int j=width;
+	uint32_t *p = pLcd+k;
+	while(j--)
+		*(p--)=color;
+	k-=width;
+}
+
+static void _DrawDown(int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j=height;
+	while(j--)
+	{
+		pLcd[k]=color;
+		k+=BkpSizeX;
+	}
+}
+
+static void _DrawUp(int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j=height;
+	while(j--)
+	{
+		pLcd[k]=color;
+		k-=BkpSizeX;
+	}
+}
+
+static void _DrawRightDown(int width,int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j,i,x;
+
+	if(width >= height)
+	{
+		x=width/height;
+		j=height;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+				pLcd[k++]=color;
+			k+=BkpSizeX;
+		}
+	}
+	else
+	{
+		x=height/width;
+		j=width;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+			{
+				pLcd[k]=color;
+				k+=BkpSizeX;
+			}
+			k++;
+		}
+	}
+}
+
+static void _DrawRightDown_AA(int width,int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j,i,x;
+
+	if(width >= height)
+	{
+		x=width/height;
+		j=height;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+				pLcd[k++]=color;
+
+			if(j){
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k+a]=buff_AA[1+a];
+			}
+			k+=BkpSizeX;
+
+			for(int a=0;a<buff_AA[0];++a)
+				pLcd[k-1-a]=buff_AA[1+a];
+		}
+	}
+	else
+	{
+		x=height/width;
+		j=width;
+		while(j--)
+		{
+			i=x;
+			while(i--){
+				pLcd[k]=color;
+				k+=BkpSizeX;
+			}
+
+			if(j){
+			for(int a=0;a<buff_AA[0];++a)
+				pLcd[k+a*BkpSizeX]=buff_AA[1+a];
+			}
+			k++;
+
+			for(int a=0;a<buff_AA[0];++a)
+				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
+		}
+	}
+}
+
+static void _DrawArrayRightDown(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...)
+{
+	int j=len,i;
+	va_list va;
+	va_start(va,0);
+
+	if(0==direction)
+	{
+		while(j--)
+		{
+			i=va_arg(va,int);
+			while(i--)
+				pLcd[k++]=color;
+			k+=BkpSizeX;
+		}
+	}
+	else
+	{
+		while(j--)
+		{
+			i=va_arg(va,int);
+			while(i--){
+				pLcd[k]=color;
+				k+=BkpSizeX;
+			}
+			k++;
+		}
+	}
+	va_end(va);
+}
+
+static void _DrawArrayRightDown_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...)
+{
+	va_list va;
+	va_start(va,0);
+	int j=len, i=va_arg(va,int), i_prev;
+
+	if(0==direction)
+	{
+		while(j--)
+		{
+			i_prev=i;
+			while(i--)
+				pLcd[k++]=drawColor;
+
+			i=va_arg(va,int);
+			if(j){
+				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
+				for(int a=0;a<i;++a)
+					pLcd[k+a]=buff_AA[1+a];
+			}
+			k+=BkpSizeX;
+			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
+			for(int a=0;a<i_prev;++a)
+				pLcd[k-1-a]=buff_AA[1+a];
+		}
+	}
+	else
+	{
+		while(j--)
+		{
+			i_prev=i;
+			while(i--){
+				pLcd[k]=drawColor;
+				k+=BkpSizeX;
+			}
+
+			i=va_arg(va,int);
+			if(j){
+				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k+a*BkpSizeX]=buff_AA[1+a];
+			}
+			k++;
+
+			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
+			for(int a=0;a<i_prev;++a)
+				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
+		}
+	}
+	va_end(va);
+}
+
+static void _DrawRightUp(int width,int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j,i,x;
+
+	if(width >= height)
+	{
+		x=width/height;
+		j=height;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+				pLcd[k++]=color;
+			k-=BkpSizeX;
+		}
+	}
+	else
+	{
+		x=height/width;
+		j=width;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+			{
+				pLcd[k]=color;
+				k-=BkpSizeX;
+			}
+			k++;
+		}
+	}
+}
+
+static void _DrawRightUp_AA(int width,int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j,i,x;
+
+	if(width >= height)
+	{
+		x=width/height;
+		j=height;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+				pLcd[k++]=color;
+
+			if(j){
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k+a]=buff_AA[1+a];
+			}
+			k-=BkpSizeX;
+
+			for(int a=0;a<buff_AA[0];++a)
+				pLcd[k-1-a]=buff_AA[1+a];
+		}
+	}
+	else
+	{
+		x=height/width;
+		j=width;
+		while(j--)
+		{
+			i=x;
+			while(i--){
+				pLcd[k]=color;
+				k-=BkpSizeX;
+			}
+
+			if(j){
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
+			}
+			k++;
+
+			for(int a=0;a<buff_AA[0];++a)
+				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
+		}
+	}
+}
+
+static void _DrawArrayRightUp(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...)
+{
+	int j=len,i;
+	va_list va;
+	va_start(va,0);
+
+	if(0==direction)
+	{
+		while(j--)
+		{
+			i=va_arg(va,int);
+			while(i--)
+				pLcd[k++]=color;
+			k-=BkpSizeX;
+		}
+	}
+	else
+	{
+		while(j--)
+		{
+			i=va_arg(va,int);
+			while(i--){
+				pLcd[k]=color;
+				k-=BkpSizeX;
+			}
+			k++;
+		}
+	}
+	va_end(va);
+}
+
+static void _DrawArrayRightUp_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...)
+{
+	va_list va;
+	va_start(va,0);
+	int j=len, i=va_arg(va,int), i_prev;
+
+	if(0==direction)
+	{
+		while(j--)
+		{
+			i_prev=i;
+			while(i--)
+				pLcd[k++]=drawColor;
+
+			i=va_arg(va,int);
+			if(j){
+				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
+				for(int a=0;a<i;++a)
+					pLcd[k+a]=buff_AA[1+a];
+			}
+			k-=BkpSizeX;
+			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
+			for(int a=0;a<i_prev;++a)
+				pLcd[k-1-a]=buff_AA[1+a];
+		}
+	}
+	else
+	{
+		while(j--)
+		{
+			i_prev=i;
+			while(i--){
+				pLcd[k]=drawColor;
+				k-=BkpSizeX;
+			}
+
+			i=va_arg(va,int);
+			if(j){
+				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
+			}
+			k++;
+
+			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
+			for(int a=0;a<i_prev;++a)
+				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
+		}
+	}
+	va_end(va);
+}
+
+static void _DrawLeftDown(int width,int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j,i,x;
+
+	if(width >= height)
+	{
+		x=width/height;
+		j=height;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+				pLcd[k--]=color;
+			k+=BkpSizeX;
+		}
+	}
+	else
+	{
+		x=height/width;
+		j=width;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+			{
+				pLcd[k]=color;
+				k+=BkpSizeX;
+			}
+			k--;
+		}
+	}
+}
+
+static void _DrawLeftDown_AA(int width,int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j,i,x;
+
+	if(width >= height)
+	{
+		x=width/height;
+		j=height;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+				pLcd[k--]=color;
+
+			if(j){
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k-a]=buff_AA[1+a];
+			}
+			k+=BkpSizeX;
+
+			for(int a=0;a<buff_AA[0];++a)
+				pLcd[k+1+a]=buff_AA[1+a];
+		}
+	}
+	else
+	{
+		x=height/width;
+		j=width;
+		while(j--)
+		{
+			i=x;
+			while(i--){
+				pLcd[k]=color;
+				k+=BkpSizeX;
+			}
+
+			if(j){
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k+a*BkpSizeX]=buff_AA[1+a];
+			}
+			k--;
+
+			for(int a=0;a<buff_AA[0];++a)
+				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
+		}
+	}
+}
+
+static void _DrawArrayLeftDown(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...)
+{
+	int j=len,i;
+	va_list va;
+	va_start(va,0);
+
+	if(0==direction)
+	{
+		while(j--)
+		{
+			i=va_arg(va,int);
+			while(i--)
+				pLcd[k--]=color;
+			k+=BkpSizeX;
+		}
+	}
+	else
+	{
+		while(j--)
+		{
+			i=va_arg(va,int);
+			while(i--){
+				pLcd[k]=color;
+				k+=BkpSizeX;
+			}
+			k--;
+		}
+	}
+	va_end(va);
+}
+
+static void _DrawArrayLeftDown_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...)
+{
+	va_list va;
+	va_start(va,0);
+	int j=len, i=va_arg(va,int), i_prev;
+
+	if(0==direction)
+	{
+		while(j--)
+		{
+			i_prev=i;
+			while(i--)
+				pLcd[k--]=drawColor;
+
+			i=va_arg(va,int);
+			if(j){
+				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
+				for(int a=0;a<i;++a)
+					pLcd[k-a]=buff_AA[1+a];
+			}
+			k+=BkpSizeX;
+
+			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
+			for(int a=0;a<i_prev;++a)
+				pLcd[k+1+a]=buff_AA[1+a];
+		}
+	}
+	else
+	{
+		while(j--)
+		{
+			i_prev=i;
+			while(i--){
+				pLcd[k]=drawColor;
+				k+=BkpSizeX;
+			}
+
+			i=va_arg(va,int);
+			if(j){
+				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k+a*BkpSizeX]=buff_AA[1+a];
+			}
+			k--;
+
+			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
+			for(int a=0;a<i_prev;++a)
+				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
+		}
+	}
+	va_end(va);
+}
+
+static void _DrawLeftUp(int width,int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j,i,x;
+
+	if(width >= height)
+	{
+		x=width/height;
+		j=height;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+				pLcd[k--]=color;
+			k-=BkpSizeX;
+		}
+	}
+	else
+	{
+		x=height/width;
+		j=width;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+			{
+				pLcd[k]=color;
+				k-=BkpSizeX;
+			}
+			k--;
+		}
+	}
+}
+
+static void _DrawLeftUp_AA(int width,int height, uint32_t color,uint32_t BkpSizeX)
+{
+	int j,i,x;
+
+	if(width >= height)
+	{
+		x=width/height;
+		j=height;
+		while(j--)
+		{
+			i=x;
+			while(i--)
+				pLcd[k--]=color;
+
+			if(j){
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k-a]=buff_AA[1+a];
+			}
+			k-=BkpSizeX;
+
+			for(int a=0;a<buff_AA[0];++a)
+				pLcd[k+1+a]=buff_AA[1+a];
+		}
+	}
+	else
+	{
+		x=height/width;
+		j=width;
+		while(j--)
+		{
+			i=x;
+			while(i--){
+				pLcd[k]=color;
+				k-=BkpSizeX;
+			}
+
+			if(j){
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
+			}
+			k--;
+
+			for(int a=0;a<buff_AA[0];++a)
+				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
+		}
+	}
+}
+
+static void _DrawArrayLeftUp(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...)
+{
+	int j=len,i;
+	va_list va;
+	va_start(va,0);
+
+	if(0==direction)
+	{
+		while(j--)
+		{
+			i=va_arg(va,int);
+			while(i--)
+				pLcd[k--]=color;
+			k-=BkpSizeX;
+		}
+	}
+	else
+	{
+		while(j--)
+		{
+			i=va_arg(va,int);
+			while(i--){
+				pLcd[k]=color;
+				k-=BkpSizeX;
+			}
+			k--;
+		}
+	}
+	va_end(va);
+}
+
+static void _DrawArrayLeftUp_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...)
+{
+	va_list va;
+	va_start(va,0);
+	int j=len, i=va_arg(va,int), i_prev;
+
+	if(0==direction)
+	{
+		while(j--)
+		{
+			i_prev=i;
+			while(i--)
+				pLcd[k--]=drawColor;
+
+			i=va_arg(va,int);
+			if(j){
+				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
+				for(int a=0;a<i;++a)
+					pLcd[k-a]=buff_AA[1+a];
+			}
+			k-=BkpSizeX;
+
+			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
+			for(int a=0;a<i_prev;++a)
+				pLcd[k+1+a]=buff_AA[1+a];
+		}
+	}
+	else
+	{
+		while(j--)
+		{
+			i_prev=i;
+			while(i--){
+				pLcd[k]=drawColor;
+				k-=BkpSizeX;
+			}
+
+			i=va_arg(va,int);
+			if(j){
+				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
+				for(int a=0;a<buff_AA[0];++a)
+					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
+			}
+			k--;
+
+			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
+			for(int a=0;a<i_prev;++a)
+				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
+		}
+	}
+	va_end(va);
+}
+
 static void _Middle_RoundRectangleFrame(int rectangleFrame, int fillHeight, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpSizeX, uint32_t width, uint32_t height){
 	int _height = height-fillHeight;
 	int _width = width-2;
@@ -455,371 +1218,6 @@ static uint8_t LCD_SearchRadiusPoints(int posBuff, int nrDeg, uint32_t BkpSizeX)
 		else
 			return 3;
 }
-structPosition _GetPosXY___(uint32_t posBuff, int k, uint32_t BkpSizeX);
-static uint8_t LCD_SearchRadiusPoints___(int posBuff, int k, int nrDeg, uint32_t BkpSizeX)
-{
-	float tang= Circle.tang[nrDeg];
-	float coeff=Circle.coeff[nrDeg];
-	uint16_t deg = Circle.degree[1+nrDeg];
-
-   	pos = _GetPosXY___(posBuff,k,BkpSizeX);
-   	float xxx = pos.x - Circle.x0;
-		float yyy = pos.y - Circle.y0;
-		float _yyy = tang*xxx;
-
-		if(deg>0 && deg<=45)
-		{
-				  if(yyy<_yyy)	                                return 0;
-			else if( (yyy>=_yyy) && (yyy<tang*(xxx+coeff)) )  return 1;
-			else															  return 2;
-		}
-		else if(deg>45 && deg<=90)
-		{
-			  if(yyy<_yyy)	                                return 0;
-		else if( (yyy>=_yyy) && (yyy<tang*(xxx+1)) )      return 1;
-		else															  return 2;
-		}
-
-		else if(deg>90 && deg<=135)
-		{
-			  if(yyy>_yyy)	                                return 0;
-		else if( (yyy<=_yyy) && (yyy>tang*(xxx+1)) )      return 1;
-		else															  return 2;
-		}
-		else if(deg>135 && deg<=180)
-		{
-			  if(yyy>_yyy)	                                return 0;
-		else if( (yyy<=_yyy) && (yyy>tang*(xxx+coeff)) )  return 1;
-		else															  return 2;
-		}
-
-		else if(deg>180 && deg<=225)
-		{
-				  if(yyy<_yyy)	                                return 2;
-			else if( (yyy>=_yyy) && (yyy<tang*(xxx+coeff)) )  return 1;
-			else															  return 0;
-		}
-		else if(deg>225 && deg<=270)
-		{
-			  if(yyy<_yyy)	                                return 2;
-		else if( (yyy>=_yyy) && (yyy<tang*(xxx+1)) )      return 1;
-		else															  return 0;
-		}
-
-		else if(deg>270 && deg<=315)
-		{
-			  if(yyy>_yyy)	                                return 2;
-		else if( (yyy<=_yyy) && (yyy>tang*(xxx+1)) )      return 1;
-		else															  return 0;
-		}
-		else if(deg>315 && deg<=360)
-		{
-			  if(yyy>_yyy)	                                return 2;
-		else if( (yyy<=_yyy) && (yyy>tang*(xxx+coeff)) )  return 1;
-		else															  return 0;
-		}
-
-		else
-			return 3;
-}
-
-static uint8_t _DrawArrayBuffRightDown_AA___(uint32_t posBuff, uint8_t *pFill, uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf)
-{
-	int j=buf[0], i=buf[1], p=2, i_prev;
-	uint8_t thershold;
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				thershold=LCD_SearchRadiusPoints(posBuff,*pFill,BkpSizeX);
-				if((0==thershold)||(1==thershold)){
-					if(*pFill==0) *pFill=1;
-					else return 1;
-					pLcd[k++]=drawColor;
-				}
-				else{
-					if(*pFill==0)
-						k++;
-					else
-						pLcd[k++]=drawColor;
-				}
-			}
-
-			if(j){
-				i=buf[p++];
-				if(*pFill==1){
-					Set_AACoeff_Draw(i,drawColor,outColor,outRatioStart);
-					for(int a=0;a<buff_AA[0];++a){
-						thershold=LCD_SearchRadiusPoints___(posBuff,k+a,*pFill,BkpSizeX);
-						if(2==thershold)
-							pLcd[k+a]=buff_AA[1+a];
-						else
-							break;
-					}
-			}}
-			k+=BkpSizeX;
-
-			if(*pFill==1){
-				Set_AACoeff_Draw(i_prev,drawColor,inColor,inRatioStart);
-				for(int a=0;a<buff_AA[0];++a){
-					thershold=LCD_SearchRadiusPoints___(posBuff,k-1-a,*pFill,BkpSizeX);
-					if(2==thershold)
-						pLcd[k-1-a]=buff_AA[1+a];
-					else break;
-				}
-			}
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				thershold=LCD_SearchRadiusPoints(posBuff,*pFill,BkpSizeX);
-				if((0==thershold)||(1==thershold)){
-					if(*pFill==0) *pFill=1;
-					else return 1;
-					pLcd[k]=drawColor;
-					k+=BkpSizeX;
-				}
-				else{
-					if(*pFill==0)
-						k+=BkpSizeX;
-					else{
-						pLcd[k]=drawColor;
-						k+=BkpSizeX;
-					}
-				}
-			}
-
-			if(j){
-				i=buf[p++];
-				if(*pFill==1){
-					Set_AACoeff_Draw(i,drawColor,inColor,inRatioStart);
-					for(int a=0;a<buff_AA[0];++a){
-						thershold=LCD_SearchRadiusPoints___(posBuff,k+a*BkpSizeX,*pFill,BkpSizeX);
-						if(2==thershold)
-							pLcd[k+a*BkpSizeX]=buff_AA[1+a];
-						else break;
-					}
-			}}
-			k++;
-
-			if(*pFill==1){
-				Set_AACoeff_Draw(i_prev,drawColor,outColor,outRatioStart);
-				for(int a=0;a<buff_AA[0];++a){
-					thershold=LCD_SearchRadiusPoints___(posBuff,k-(a+1)*BkpSizeX,*pFill,BkpSizeX);
-					if(0==thershold)
-						pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
-					else break;
-				}
-			}
-		}
-	}
-	return 0;
-}
-
-static uint8_t _DrawArrayBuffLeftDown_AA___(uint32_t posBuff, uint8_t *pFill, uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf)
-{
-	int j=buf[0], i=buf[1], p=2, i_prev;
-	uint8_t thershold;
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				thershold=LCD_SearchRadiusPoints(posBuff,*pFill,BkpSizeX);
-				if((0==thershold)||(1==thershold)){
-					if(*pFill==0) *pFill=1;
-					else return 1;
-					pLcd[k--]=drawColor;
-				}
-				else{
-					if(*pFill==0)
-						k--;
-					else
-						pLcd[k--]=drawColor;
-				}
-			}
-
-			if(j){
-				i=buf[p++];
-				if(*pFill==1){
-					Set_AACoeff_Draw(i,drawColor,inColor,inRatioStart);
-					for(int a=0;a<buff_AA[0];++a)
-						pLcd[k-a]=buff_AA[1+a];
-			}}
-			k+=BkpSizeX;
-
-			if(*pFill==1){
-				Set_AACoeff_Draw(i_prev,drawColor,outColor,outRatioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k+1+a]=buff_AA[1+a];
-			}
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				thershold=LCD_SearchRadiusPoints(posBuff,*pFill,BkpSizeX);
-				if((0==thershold)||(1==thershold)){
-					if(*pFill==0) *pFill=1;
-					else return 1;
-					pLcd[k]=drawColor;
-					k+=BkpSizeX;
-				}
-				else{
-					if(*pFill==0)
-						k+=BkpSizeX;
-					else{
-						pLcd[k]=drawColor;
-						k+=BkpSizeX;
-					}
-				}
-			}
-
-			if(j){
-				i=buf[p++];
-				if(*pFill==1){
-					Set_AACoeff_Draw(i,drawColor,outColor,outRatioStart);
-					for(int a=0;a<buff_AA[0];++a)
-						pLcd[k+a*BkpSizeX]=buff_AA[1+a];
-			}}
-			k--;
-
-			if(*pFill==1){
-				Set_AACoeff_Draw(i_prev,drawColor,inColor,inRatioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
-			}
-		}
-	}
-	return 0;
-}
-
-static uint8_t _DrawArrayBuffLeftUp_AA___(uint32_t posBuff, uint8_t *pFill, uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf)
-{
-	int j=buf[0], i=buf[1], p=2, i_prev;
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				if(0==LCD_SearchRadiusPoints(0,0,BkpSizeX))  //posBuff !!!!!!
-					return 1;
-				else
-					pLcd[k--]=drawColor;
-			}
-
-			if(j){
-				i=buf[p++];
-				Set_AACoeff_Draw(i,drawColor,outColor,outRatioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-a]=buff_AA[1+a];
-			}
-			k-=BkpSizeX;
-
-			Set_AACoeff_Draw(i_prev,drawColor,inColor,inRatioStart);
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k+1+a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				if(0==LCD_SearchRadiusPoints(0,0,BkpSizeX))  //posBuff !!!!!!
-					return 1;
-				else
-					pLcd[k]=drawColor;
-				k-=BkpSizeX;
-			}
-
-			if(j){
-				i=buf[p++];
-				Set_AACoeff_Draw(i,drawColor,inColor,inRatioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
-			}
-			k--;
-
-			Set_AACoeff_Draw(i_prev,drawColor,outColor,outRatioStart);
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-	return 0;
-}
-
-static uint8_t _DrawArrayBuffRightUp_AA___(uint32_t posBuff, uint8_t *pFill, uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf)
-{
-	int j=buf[0], i=buf[1], p=2, i_prev;
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				if(0==LCD_SearchRadiusPoints(0,0,BkpSizeX))  //posBuff !!!!!!
-					return 1;
-				else
-					pLcd[k++]=drawColor;
-			}
-
-			if(j){
-				i=buf[p++];
-				Set_AACoeff_Draw(i,drawColor,inColor,inRatioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k+a]=buff_AA[1+a];
-			}
-			k-=BkpSizeX;
-			Set_AACoeff_Draw(i_prev,drawColor,outColor,outRatioStart);
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k-1-a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				if(0==LCD_SearchRadiusPoints(0,0,BkpSizeX))  //posBuff !!!!!!
-					return 1;
-				else
-					pLcd[k]=drawColor;
-				k-=BkpSizeX;
-			}
-
-			if(j){
-				i=buf[p++];
-				Set_AACoeff_Draw(i,drawColor,outColor,outRatioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
-			}
-			k++;
-
-			Set_AACoeff_Draw(i_prev,drawColor,inColor,inRatioStart);
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-	return 0;
-}
 
 static void _DrawArrayBuffRightDown_AA(uint32_t _drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf)
 {
@@ -1035,10 +1433,9 @@ static void _DrawArrayBuffRightUp_AA(uint32_t drawColor, uint32_t outColor, uint
 	}
 }
 
-//Rozgraniczyc LCD_DrawCircle() od LCD_DrawCircle z podzialem procentowym jako inne LCD_DrawCircle() !!!!
-static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t __x, uint32_t __y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
+static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t __x, uint32_t __y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, int outColorRead)
 {
-	int matchWidth=0, circleFlag=0;
+	int matchWidth=0, circleFlag=0;													/* Circle.degColor[0] - is free space for future variable */
 	uint16_t param =width>>16;
 	uint32_t _FillColor, _width=(width&0x0000FFFF)-matchWidth;
 
@@ -1057,7 +1454,7 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 		GOTO_ToCalculateRadius:
 	   _width=(width&0x0000FFFF)-matchWidth;
 
-	   float R=((float)_width)/2;
+		float R=((float)_width)/2;
 		uint32_t pxl_width = R/3;
 
 		x=__x+_width/2 + matchWidth/2;
@@ -1073,16 +1470,16 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 
 		int pxl_line=0,i=0;
 
-//		uint8_t block=1;
-//		void _CorrectDecision(void){
-//			if(block && R>CORRECT_FOR_RADIUS){
-//				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
-//		}}
+		uint8_t block=1;
+		void _CorrectDecision(void){
+			if(block && R>CORRECT_FOR_RADIUS){
+				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
+		}}
 
 		buf[0]=pxl_width;
 		do{
 			_x++;  pxl_line++;
-			param_x = pow(_x-x0,2);		//_CorrectDecision();
+			param_x = pow(_x-x0,2);		_CorrectDecision();
 			if((param_x+param_y) > decision){
 				_y++;
 				param_y = pow(y0-_y,2);
@@ -1117,9 +1514,10 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 
 	uint8_t buf_Inv[buf[0]+1];
 	InverseAndCopyBuff(buf_Inv,buf);
-
 	_StartDrawLine(posBuff,bkX,x,y);
 
+	uint32_t BkpColor_copy = BkpColor;
+	if(outColorRead) BkpColor=0;
 		_DrawArrayBuffRightDown_AA(PARAM_AA,0,buf); 	    _CopyDrawPos(); _IncDrawPos(-bkX); PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
 		_DrawArrayBuffRightDown_AA(PARAM_AA,1,buf_Inv);                      				   PixelCorrect(PARAM, buf[1],bkX);   _IncDrawPos(-1);
 
@@ -1131,63 +1529,64 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 
 		_DrawArrayBuffRightUp_AA (PARAM_AA,1,buf);       _CopyDrawPos(); _IncDrawPos(-1);  	PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
 		_DrawArrayBuffRightUp_AA (PARAM_AA,0,buf_Inv);                       					PixelCorrect(PARAM, buf[1], 1);
+	if(outColorRead) BkpColor = BkpColor_copy;
 
+		if(FillColor!=TRANSPARENT)
+		{
+	   	 uint16_t fillWidth, fillHeight=0;
 
-	if(FillColor!=TRANSPARENT)
-	{
-   	 uint16_t fillWidth, fillHeight=0;
+			_StartDrawLine(posBuff,bkX,x,y);
+			fillWidth=0;
+			for(int i=0;i<buf[0];++i){
+				_IncDrawPos(bkX-buf[i+1]);	_CopyDrawPos(); k+=buf[i+1];	if(i>0) _DrawRight(2*fillWidth,FillColor);	_SetCopyDrawPos();	fillHeight++;
+				fillWidth += buf[i+1];
+			}
 
-		_StartDrawLine(posBuff,bkX,x,y);
-		fillWidth=0;
-		for(int i=0;i<buf[0];++i){
-			_IncDrawPos(bkX-buf[i+1]);	_CopyDrawPos(); k+=buf[i+1];	if(i>0) _DrawRight(2*fillWidth,FillColor);	_SetCopyDrawPos();	fillHeight++;
-			fillWidth += buf[i+1];
-		}
+			for(int i=0;i<buf[0];++i){
+				fillWidth++;
+				_IncDrawPos(-1);
+				for(int j=0; j<buf[buf[0]-i]; ++j){
+					_IncDrawPos(bkX);	_CopyDrawPos(); if(j==buf[buf[0]-i]-1){k+=1;_DrawRight(2*(fillWidth-1),FillColor);}else{k+=2;_DrawRight(2*(fillWidth-2),FillColor);}	_SetCopyDrawPos();	fillHeight++;
+				}
+			}
 
-		for(int i=0;i<buf[0];++i){
-			fillWidth++;
-			_IncDrawPos(-1);
-			for(int j=0; j<buf[buf[0]-i]; ++j){
-				_IncDrawPos(bkX);	_CopyDrawPos(); if(j==buf[buf[0]-i]-1){k+=1;_DrawRight(2*(fillWidth-1),FillColor);}else{k+=2;_DrawRight(2*(fillWidth-2),FillColor);}	_SetCopyDrawPos();	fillHeight++;
+			fillHeight = 2*fillHeight-1;
+
+			_StartDrawLine(posBuff,bkX,x,y+fillHeight);
+			fillWidth=0;
+			for(int i=0;i<buf[0];++i){
+				_IncDrawPos(-bkX-buf[i+1]);	_CopyDrawPos();	 k+=buf[i+1];	if(i>0) _DrawRight(2*fillWidth,FillColor);	_SetCopyDrawPos();
+				fillWidth += buf[i+1];
+			}
+
+			for(int i=0;i<buf[0];++i){
+				fillWidth++;
+				_IncDrawPos(-1);
+				for(int j=0; j<buf[buf[0]-i]; ++j){
+					_IncDrawPos(-bkX);	_CopyDrawPos();  if(j==buf[buf[0]-i]-1){k+=1;_DrawRight(2*(fillWidth-1),FillColor);}else{k+=2;_DrawRight(2*(fillWidth-2),FillColor);}	 _SetCopyDrawPos();
+				}
 			}
 		}
-
-		fillHeight = 2*fillHeight-1;
-
-		_StartDrawLine(posBuff,bkX,x,y+fillHeight);
-		fillWidth=0;
-		for(int i=0;i<buf[0];++i){
-			_IncDrawPos(-bkX-buf[i+1]);	_CopyDrawPos();	 k+=buf[i+1];	if(i>0) _DrawRight(2*fillWidth,FillColor);	_SetCopyDrawPos();
-			fillWidth += buf[i+1];
-		}
-
-		for(int i=0;i<buf[0];++i){
-			fillWidth++;
-			_IncDrawPos(-1);
-			for(int j=0; j<buf[buf[0]-i]; ++j){
-				_IncDrawPos(-bkX);	_CopyDrawPos();  if(j==buf[buf[0]-i]-1){k+=1;_DrawRight(2*(fillWidth-1),FillColor);}else{k+=2;_DrawRight(2*(fillWidth-2),FillColor);}	 _SetCopyDrawPos();
-			}
-		}
-	}
 
 	if(param==Percent_Circle && circleFlag)
 	{
-		int circleLinesLenCorrect=0;
+		int circleLinesLenCorrect;
 		uint16_t fillWidth=0, fillHeight=0;
 
 		for(int i=0;i<Circle.degree[0];++i)
 		{
-			if(IS_RANGE(Circle.degree[1+i],46,89)){
-				if(Circle.width<150) circleLinesLenCorrect=-1;
+			circleLinesLenCorrect=0;
+			if(IS_RANGE(Circle.degree[1+i], 300, 330) ||
+				IS_RANGE(Circle.degree[1+i], 206, 244) ||
+				IS_RANGE(Circle.degree[1+i], 122, 149) )
+			{
+				if(Circle.width/2 < CORRECT_FOR_RADIUS)
+					circleLinesLenCorrect = 2;
+				else
+					circleLinesLenCorrect = 4;
 			}
-			else if(IS_RANGE(Circle.degree[1+i],113,157)) circleLinesLenCorrect=2;
-			else if(IS_RANGE(Circle.degree[1+i],201,247)) circleLinesLenCorrect=3;
-			else if(IS_RANGE(Circle.degree[1+i],270,292)) circleLinesLenCorrect=-1;
-			else if(IS_RANGE(Circle.degree[1+i],293,338)){
-				  	  if((Circle.width>100)&&(Circle.width<260)) circleLinesLenCorrect=1;
-				  	  else if(Circle.width>260) 						circleLinesLenCorrect=2;
-				  	  else													circleLinesLenCorrect=-1;
-			}
+			else if(IS_RANGE(Circle.degree[1+i],  34,  56))
+				circleLinesLenCorrect = 2;
 
 			if(i==0)
 				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,_FillColor,Circle.degColor[i+1]);
@@ -1202,33 +1601,37 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 			int j=width;
 			uint8_t threshold[Circle.degree[0]];
 			int subj=0, deltaDeg;
+			uint32_t colorDeg=0;	uint8_t flagPermission=0;
+
+			int _GGGG(void){
+				for(int i=0;i<Circle.degree[0]-1;++i){
+					deltaDeg=Circle.degree[1+i+1]-Circle.degree[1+i];
+					if( ((deltaDeg>0)&&(deltaDeg<=180)) || (deltaDeg<-180) ){
+						if((threshold[i]==0)&&(threshold[i+1]==2)){
+							colorDeg= Circle.degColor[1+i];
+							return 1;
+						}
+					}
+					else{
+						if((threshold[i]==0)||(threshold[i+1]==2)){
+							colorDeg= Circle.degColor[1+i];
+							return 2;
+				}}}
+				return 0;
+			}
 
 			while(j--)
 			{
 				if(pLcd[k]==FillColor){
 					for(int i=0;i<Circle.degree[0];++i)
 						threshold[i]=LCD_SearchRadiusPoints(posBuff,i,bkX);
+					flagPermission=_GGGG();
 				}
 
 				GOTO_ToFillCircle:
 				if(pLcd[k]==FillColor)
 				{
-					for(int i=0;i<Circle.degree[0]-1;++i)
-					{
-						deltaDeg=Circle.degree[1+i+1]-Circle.degree[1+i];
-						if( ((deltaDeg>0)&&(deltaDeg<=180)) || (deltaDeg<-180) ){
-							if((threshold[i]==0)&&(threshold[i+1]==2)){
-								pLcd[k]=Circle.degColor[1+i];
-								break;
-							}
-						}
-						else{
-							if((threshold[i]==0)||(threshold[i+1]==2)){
-								pLcd[k]=Circle.degColor[1+i];
-								break;
-							}
-						}
-					}
+					if(flagPermission) pLcd[k]= colorDeg;
 					k++; subj=1;
 				}
 				if(pLcd[k]==FillColor){ if(j==0){ k--; break; } j--; subj=0; goto GOTO_ToFillCircle; }
@@ -1263,29 +1666,24 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 						if((threshold[i]==0)||(threshold[i+1]==2)){
 							pLcd[k]=GetTransitionColor(FrameColor, Circle.degColor[1+i], GetTransitionCoeff(FrameColor,FillColor,pLcd[k]));
 							break;
-						}
-					}
-				}
+				}}}
 				k++;
-			}
-		}
+		}}
 
 		_StartDrawLine(posBuff,bkX,x,y);
 		for(int i=0;i<buf[0];++i){
 			_IncDrawPos(bkX-buf[i+1]);	  _CopyDrawPos();   _Change_AA(buf[i+1]); 	if(i>0) _Fill(2*fillWidth); _Change_AA(buf[i+1]); _SetCopyDrawPos();	fillHeight++;
 			fillWidth += buf[i+1];
 		}
-
 		for(int i=0;i<buf[0];++i){
 			fillWidth++;
 			_IncDrawPos(-1);
 			for(int j=0; j<buf[buf[0]-i]; ++j){
-				_IncDrawPos(bkX);	_CopyDrawPos(); if(j==buf[buf[0]-i]-1){ _Change_AA(1); _Fill(2*(fillWidth-1)); _Change_AA(1); }else{ _Change_AA(2); _Fill(2*(fillWidth-2)); _Change_AA(2); }	_SetCopyDrawPos();	fillHeight++;
+				_IncDrawPos(bkX);	_CopyDrawPos(); if(j==buf[buf[0]-i]-1){ _Change_AA(1); _Fill(2*(fillWidth-1)); _Change_AA(1); }else{  _Change_AA(2); _Fill(2*(fillWidth-2)); _Change_AA(2); }	_SetCopyDrawPos();	fillHeight++;
 			}
 		}
 
 		fillHeight = 2*fillHeight-1;
-
 		_StartDrawLine(posBuff,bkX,x,y+fillHeight);
 		fillWidth=0;
 		for(int i=0;i<buf[0];++i){
@@ -1301,13 +1699,11 @@ static void LCD_DrawCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY,
 			}
 		}
 	}
-
 	#undef PARAM
 	#undef PARAM_AA
 	#undef buf
 }
 
-// LCD_QuarterCircle
 static void LCD_DrawHalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t __x, uint32_t __y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
 {
 	int matchWidth=0;
@@ -1571,11 +1967,7 @@ static void LCD_DrawHalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSi
 	#undef buf
 }
 
-
 //################################## -- Global Declarations -- #########################################################
-//################################## -- Global Declarations -- #########################################################
-//################################## -- Global Declarations -- #########################################################
-
 void CorrectLineAA_on(void){
 	correctLine_AA=1;
 }
@@ -1586,111 +1978,6 @@ void CorrectLineAA_off(void){
 void Set_AACoeff_RoundFrameRectangle(float coeff_1, float coeff_2){
 	AA.c1 = coeff_1;
 	AA.c2 = coeff_2;
-}
-
-void _FillBuff(int itCount, uint32_t color)
-{
-	if(itCount>10)
-	{
-		int j=itCount/2;
-		int a=j;
-
-		uint64_t *pLcd64=(uint64_t*) (pLcd+k);
-		uint64_t color64=(((uint64_t)color)<<32)|((uint64_t)color);
-
-		j--;
-		while (j)
-			pLcd64[j--]=color64;
-
-		pLcd64[j]=color64;
-		k+=a+itCount/2;
-
-		if (itCount%2)
-			pLcd[k++]=color;
-	}
-	else
-	{
-		for(int i=0;i<itCount;++i)
-			pLcd[k++]=color;
-	}
-}
-
-void _CopyDrawPos(void){
-	kCopy=k;
-}
-void _SetCopyDrawPos(void){
-	k=kCopy;
-}
-void _IncDrawPos(int pos){
-	k+=pos;
-}
-
-void _StartDrawLine(uint32_t posBuff,uint32_t BkpSizeX,uint32_t x,uint32_t y){
-	k=posBuff+(y*BkpSizeX+x);
-}
-uint32_t _GetPosK(uint32_t posBuff,uint32_t BkpSizeX,uint32_t x,uint32_t y){
-	return (posBuff+(y*BkpSizeX+x));
-}
-uint32_t _GetPosY(uint32_t posBuff,uint32_t BkpSizeX){
-	return ((k-posBuff)/BkpSizeX);
-}
-uint32_t _GetPosX(uint32_t posBuff,uint32_t BkpSizeX){
-	return ((k-posBuff)-_GetPosY(posBuff,BkpSizeX)*BkpSizeX);
-}
-structPosition _GetPosXY(uint32_t posBuff, uint32_t BkpSizeX){
-	structPosition temp;
-	int kOffs = k-posBuff;
-	temp.y = (kOffs/BkpSizeX);
-	temp.x = (kOffs-temp.y*BkpSizeX);
-	return temp;
-}
-structPosition _GetPosXY___(uint32_t posBuff, int k, uint32_t BkpSizeX){
-	structPosition temp;
-	int kOffs = k-posBuff;
-	temp.y = (kOffs/BkpSizeX);
-	temp.x = (kOffs-temp.y*BkpSizeX);
-	return temp;
-}
-void _NextDrawLine(uint32_t BkpSizeX,uint32_t width){
-	k+=(BkpSizeX-width);
-}
-
-void _DrawRight(int width, uint32_t color)
-{
-	int j=width;
-	uint32_t *p = pLcd+k;
-	while(j--)
-		*(p++)=color;
-	k+=width;
-}
-
-void _DrawLeft(int width, uint32_t color)
-{
-	int j=width;
-	uint32_t *p = pLcd+k;
-	while(j--)
-		*(p--)=color;
-	k-=width;
-}
-
-void _DrawDown(int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j=height;
-	while(j--)
-	{
-		pLcd[k]=color;
-		k+=BkpSizeX;
-	}
-}
-
-void _DrawUp(int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j=height;
-	while(j--)
-	{
-		pLcd[k]=color;
-		k-=BkpSizeX;
-	}
 }
 
 void Set_AACoeff_Draw(int pixelsInOneSide, uint32_t colorFrom, uint32_t colorTo, float ratioStart)
@@ -1708,783 +1995,6 @@ void Set_AACoeff_Draw(int pixelsInOneSide, uint32_t colorFrom, uint32_t colorTo,
 			break;
 		buff_AA[1+i]= GetTransitionColor(colorFrom,colorTo, ratioStart+i*incr);
 	}
-}
-
-void _DrawRightDown(int width,int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j,i,x;
-
-	if(width >= height)
-	{
-		x=width/height;
-		j=height;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-				pLcd[k++]=color;
-			k+=BkpSizeX;
-		}
-	}
-	else
-	{
-		x=height/width;
-		j=width;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-			{
-				pLcd[k]=color;
-				k+=BkpSizeX;
-			}
-			k++;
-		}
-	}
-}
-
-void _DrawRightDown_AA(int width,int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j,i,x;
-
-	if(width >= height)
-	{
-		x=width/height;
-		j=height;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-				pLcd[k++]=color;
-
-			if(j){
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k+a]=buff_AA[1+a];
-			}
-			k+=BkpSizeX;
-
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k-1-a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		x=height/width;
-		j=width;
-		while(j--)
-		{
-			i=x;
-			while(i--){
-				pLcd[k]=color;
-				k+=BkpSizeX;
-			}
-
-			if(j){
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k+a*BkpSizeX]=buff_AA[1+a];
-			}
-			k++;
-
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-}
-
-void _DrawArrayRightDown(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...)
-{
-	int j=len,i;
-	va_list va;
-	va_start(va,0);
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i=va_arg(va,int);
-			while(i--)
-				pLcd[k++]=color;
-			k+=BkpSizeX;
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i=va_arg(va,int);
-			while(i--){
-				pLcd[k]=color;
-				k+=BkpSizeX;
-			}
-			k++;
-		}
-	}
-	va_end(va);
-}
-
-void _DrawArrayRightDown_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...)
-{
-	va_list va;
-	va_start(va,0);
-	int j=len, i=va_arg(va,int), i_prev;
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--)
-				pLcd[k++]=drawColor;
-
-			i=va_arg(va,int);
-			if(j){
-				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
-				for(int a=0;a<i;++a)
-					pLcd[k+a]=buff_AA[1+a];
-			}
-			k+=BkpSizeX;
-			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
-			for(int a=0;a<i_prev;++a)
-				pLcd[k-1-a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				pLcd[k]=drawColor;
-				k+=BkpSizeX;
-			}
-
-			i=va_arg(va,int);
-			if(j){
-				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k+a*BkpSizeX]=buff_AA[1+a];
-			}
-			k++;
-
-			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
-			for(int a=0;a<i_prev;++a)
-				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-	va_end(va);
-}
-
-void _DrawArrayBuffRightDown_AA_new(uint32_t drawColor, uint32_t outColor, uint32_t inColor, float outRatioStart, float inRatioStart, uint32_t BkpSizeX, int direction, uint8_t *buf)
-{
-	int j=buf[0], i=buf[1], i_prev, p=2;  int m=0;  int s=0;   int kk=0;  int yy=0;  int licz2=0;
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			if(i==1)
-			{
-				if(s==0)
-				{
-					if(yy==0)
-					{
-						for(int x=m+1;x<buf[0];++x){
-							if(buf[1+x]==1)
-								s++;
-							else
-								break;
-						}
-						kk=1;
-						s++;
-						Set_AACoeff_Draw(s+1,drawColor,outColor,outRatioStart);
-					}
-				}
-			}
-			else
-			{
-				Set_AACoeff_Draw(i+2,drawColor,outColor,outRatioStart); s=0;  kk=0; yy=0;
-			}
-
-
-
-			while(i--)
-			{
-
-				if(kk)
-					pLcd[k-1]=buff_AA[1+buff_AA[0]-s];
-				else
-				{
-					if(i_prev>2)
-					{
-						k-=BkpSizeX;
-						pLcd[k]=buff_AA[buff_AA[0]-i];
-						k+=BkpSizeX;
-						licz2=0;
-					}
-					else if(i_prev==2)
-					{
-						if(licz2==0){
-							licz2=1;
-							pLcd[k-1]=WHITE;//buff_AA[1+buff_AA[0]];
-						}
-					}
-					else
-						licz2=0;
-				}
-
-				pLcd[k]=drawColor;  //kkkkkkkkkkkkkkkkkkkkkkkkkk
-
-				if(kk)
-					pLcd[k+1]=buff_AA[1+s];
-				else
-				{
-					if(i_prev>2)
-					{
-						k+=BkpSizeX;
-						pLcd[k]=buff_AA[1+i+2];
-						k-=BkpSizeX;
-						licz2=0;
-					}
-					else if(i_prev==2)
-					{
-						if(licz2==1){
-							licz2=3;
-							pLcd[k+1]=WHITE;//buff_AA[1+buff_AA[0]];
-						}
-					}
-					else
-						licz2=0;
-				}
-				k++;
-
-				if(s)
-					s--;
-
-				if(s==0){
-					if(i_prev==1)
-						yy=1;
-				}
-
-			}
-			if(j)
-				i=buf[p++];
-			i_prev=i;
-			k+=BkpSizeX;
-			m++;
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			if(i==1) Set_AACoeff_Draw(4,drawColor,outColor,outRatioStart);
-			else 		Set_AACoeff_Draw(i,drawColor,outColor,outRatioStart);
-
-			while(i--)
-			{
-				pLcd[k-1]=buff_AA[buff_AA[0]-i];
-				pLcd[k]=drawColor;
-				pLcd[k+1]=buff_AA[1+i];
-				k+=BkpSizeX;
-			}
-			if(j) i=buf[p++];
-			k++;
-		}
-	}
-}
-
-void _DrawRightUp(int width,int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j,i,x;
-
-	if(width >= height)
-	{
-		x=width/height;
-		j=height;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-				pLcd[k++]=color;
-			k-=BkpSizeX;
-		}
-	}
-	else
-	{
-		x=height/width;
-		j=width;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-			{
-				pLcd[k]=color;
-				k-=BkpSizeX;
-			}
-			k++;
-		}
-	}
-}
-
-void _DrawRightUp_AA(int width,int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j,i,x;
-
-	if(width >= height)
-	{
-		x=width/height;
-		j=height;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-				pLcd[k++]=color;
-
-			if(j){
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k+a]=buff_AA[1+a];
-			}
-			k-=BkpSizeX;
-
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k-1-a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		x=height/width;
-		j=width;
-		while(j--)
-		{
-			i=x;
-			while(i--){
-				pLcd[k]=color;
-				k-=BkpSizeX;
-			}
-
-			if(j){
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
-			}
-			k++;
-
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-}
-
-void _DrawArrayRightUp(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...)
-{
-	int j=len,i;
-	va_list va;
-	va_start(va,0);
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i=va_arg(va,int);
-			while(i--)
-				pLcd[k++]=color;
-			k-=BkpSizeX;
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i=va_arg(va,int);
-			while(i--){
-				pLcd[k]=color;
-				k-=BkpSizeX;
-			}
-			k++;
-		}
-	}
-	va_end(va);
-}
-
-void _DrawArrayRightUp_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...)
-{
-	va_list va;
-	va_start(va,0);
-	int j=len, i=va_arg(va,int), i_prev;
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--)
-				pLcd[k++]=drawColor;
-
-			i=va_arg(va,int);
-			if(j){
-				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
-				for(int a=0;a<i;++a)
-					pLcd[k+a]=buff_AA[1+a];
-			}
-			k-=BkpSizeX;
-			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
-			for(int a=0;a<i_prev;++a)
-				pLcd[k-1-a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				pLcd[k]=drawColor;
-				k-=BkpSizeX;
-			}
-
-			i=va_arg(va,int);
-			if(j){
-				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
-			}
-			k++;
-
-			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
-			for(int a=0;a<i_prev;++a)
-				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-	va_end(va);
-}
-
-void _DrawLeftDown(int width,int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j,i,x;
-
-	if(width >= height)
-	{
-		x=width/height;
-		j=height;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-				pLcd[k--]=color;
-			k+=BkpSizeX;
-		}
-	}
-	else
-	{
-		x=height/width;
-		j=width;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-			{
-				pLcd[k]=color;
-				k+=BkpSizeX;
-			}
-			k--;
-		}
-	}
-}
-
-void _DrawLeftDown_AA(int width,int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j,i,x;
-
-	if(width >= height)
-	{
-		x=width/height;
-		j=height;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-				pLcd[k--]=color;
-
-			if(j){
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-a]=buff_AA[1+a];
-			}
-			k+=BkpSizeX;
-
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k+1+a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		x=height/width;
-		j=width;
-		while(j--)
-		{
-			i=x;
-			while(i--){
-				pLcd[k]=color;
-				k+=BkpSizeX;
-			}
-
-			if(j){
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k+a*BkpSizeX]=buff_AA[1+a];
-			}
-			k--;
-
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-}
-
-void _DrawArrayLeftDown(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...)
-{
-	int j=len,i;
-	va_list va;
-	va_start(va,0);
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i=va_arg(va,int);
-			while(i--)
-				pLcd[k--]=color;
-			k+=BkpSizeX;
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i=va_arg(va,int);
-			while(i--){
-				pLcd[k]=color;
-				k+=BkpSizeX;
-			}
-			k--;
-		}
-	}
-	va_end(va);
-}
-
-void _DrawArrayLeftDown_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...)
-{
-	va_list va;
-	va_start(va,0);
-	int j=len, i=va_arg(va,int), i_prev;
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--)
-				pLcd[k--]=drawColor;
-
-			i=va_arg(va,int);
-			if(j){
-				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
-				for(int a=0;a<i;++a)
-					pLcd[k-a]=buff_AA[1+a];
-			}
-			k+=BkpSizeX;
-
-			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
-			for(int a=0;a<i_prev;++a)
-				pLcd[k+1+a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				pLcd[k]=drawColor;
-				k+=BkpSizeX;
-			}
-
-			i=va_arg(va,int);
-			if(j){
-				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k+a*BkpSizeX]=buff_AA[1+a];
-			}
-			k--;
-
-			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
-			for(int a=0;a<i_prev;++a)
-				pLcd[k-(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-	va_end(va);
-}
-
-void _DrawLeftUp(int width,int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j,i,x;
-
-	if(width >= height)
-	{
-		x=width/height;
-		j=height;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-				pLcd[k--]=color;
-			k-=BkpSizeX;
-		}
-	}
-	else
-	{
-		x=height/width;
-		j=width;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-			{
-				pLcd[k]=color;
-				k-=BkpSizeX;
-			}
-			k--;
-		}
-	}
-}
-
-void _DrawLeftUp_AA(int width,int height, uint32_t color,uint32_t BkpSizeX)
-{
-	int j,i,x;
-
-	if(width >= height)
-	{
-		x=width/height;
-		j=height;
-		while(j--)
-		{
-			i=x;
-			while(i--)
-				pLcd[k--]=color;
-
-			if(j){
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-a]=buff_AA[1+a];
-			}
-			k-=BkpSizeX;
-
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k+1+a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		x=height/width;
-		j=width;
-		while(j--)
-		{
-			i=x;
-			while(i--){
-				pLcd[k]=color;
-				k-=BkpSizeX;
-			}
-
-			if(j){
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
-			}
-			k--;
-
-			for(int a=0;a<buff_AA[0];++a)
-				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-}
-
-void _DrawArrayLeftUp(uint32_t color,uint32_t BkpSizeX, int direction, int len, ...)
-{
-	int j=len,i;
-	va_list va;
-	va_start(va,0);
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i=va_arg(va,int);
-			while(i--)
-				pLcd[k--]=color;
-			k-=BkpSizeX;
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i=va_arg(va,int);
-			while(i--){
-				pLcd[k]=color;
-				k-=BkpSizeX;
-			}
-			k--;
-		}
-	}
-	va_end(va);
-}
-
-void _DrawArrayLeftUp_AA(uint32_t drawColor, uint32_t bkColor, float ratioStart, uint32_t BkpSizeX, int direction, int len, ...)
-{
-	va_list va;
-	va_start(va,0);
-	int j=len, i=va_arg(va,int), i_prev;
-
-	if(0==direction)
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--)
-				pLcd[k--]=drawColor;
-
-			i=va_arg(va,int);
-			if(j){
-				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
-				for(int a=0;a<i;++a)
-					pLcd[k-a]=buff_AA[1+a];
-			}
-			k-=BkpSizeX;
-
-			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
-			for(int a=0;a<i_prev;++a)
-				pLcd[k+1+a]=buff_AA[1+a];
-		}
-	}
-	else
-	{
-		while(j--)
-		{
-			i_prev=i;
-			while(i--){
-				pLcd[k]=drawColor;
-				k-=BkpSizeX;
-			}
-
-			i=va_arg(va,int);
-			if(j){
-				Set_AACoeff_Draw(i,drawColor,bkColor,ratioStart);
-				for(int a=0;a<buff_AA[0];++a)
-					pLcd[k-a*BkpSizeX]=buff_AA[1+a];
-			}
-			k--;
-
-			Set_AACoeff_Draw(i_prev,drawColor,bkColor,ratioStart);
-			for(int a=0;a<i_prev;++a)
-				pLcd[k+(a+1)*BkpSizeX]=buff_AA[1+a];
-		}
-	}
-	va_end(va);
 }
 
 void LCD_LineH(uint32_t BkpSizeX, uint16_t x, uint16_t y, uint16_t width,  uint32_t color, uint16_t bold){
@@ -2700,7 +2210,6 @@ void LCD_BoldFrame(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32
 		_FillBuff(width, FrameColor);
 	}
 }
-
 
 void LCD_RoundFrame(uint32_t posBuff, uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x,uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){
 	LCD_DrawRoundRectangleFrame(0,posBuff,BkpSizeX,BkpSizeY,x,y,width,height,FrameColor,FillColor,BkpColor);
@@ -3860,343 +3369,30 @@ uint16_t LCD_GetNextDecrCircleWidth(uint32_t width){
 	return width_start;
 }
 
-//MOZLIWOSC rysowania polkul np dla zakonczen ramek !!!!!!!
-void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){
-	uint32_t width = _width&0xFFFF;
-	uint16_t param = _width>>16;
-	uint8_t thickness = FrameColor>>24;
-	if((thickness==0)||(thickness==255))
-		thickness=0;
-	else
-		thickness=3*thickness;
-
-	if(param==Percent_Circle)
-		thickness=0;
-
-	if(thickness){
-		LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x,y, width,height, FrameColor, FrameColor, BkpColor);
-		LCD_CopyCircleWidth();
-
-   	uint32_t width_new = width-2*thickness;
-		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
-
-		LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FrameColor);
-		LCD_SetCopyCircleWidth();
-	}
-	else LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor);
-}
-
-static void LCD_DrawCircle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t __x, uint32_t __y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor, int outColorRead)
-{
-	int matchWidth=0, circleFlag=0;													/* Circle.degColor[0] - is free space for future variable */
-	uint16_t param =width>>16;
-	uint32_t _FillColor, _width=(width&0x0000FFFF)-matchWidth;
-
-	if(FillColor!=TRANSPARENT) _FillColor=FillColor;
-	else								_FillColor=BkpColor;
-
-	#define PARAM 		FrameColor, BkpColor, Circle.outRatioStart
-	#define PARAM_AA 	FrameColor, BkpColor, _FillColor, Circle.outRatioStart, Circle.inRatioStart, BkpSizeX
-	#define buf			Circle.lineBuff
-
-	uint32_t bkX = BkpSizeX;
-	uint32_t x=__x, y=__y;
-
-	if((_width==height)&&(_width>0)&&(height>0))
-	{
-		GOTO_ToCalculateRadius:
-	   _width=(width&0x0000FFFF)-matchWidth;
-
-		float R=((float)_width)/2;
-		uint32_t pxl_width = R/3;
-
-		x=__x+_width/2 + matchWidth/2;
-		if(_width%2) x++;
-		y=__y;
-
-		float _x=(float)x, _y=(float)y;
-		float x0=(float)x, y0=(float)y+R;
-
-		float param_y = pow(y0-_y,2);
-		float param_x = pow(_x-x0,2);
-		float decision = pow(R,2);
-
-		int pxl_line=0,i=0;
-
-		uint8_t block=1;
-		void _CorrectDecision(void){
-			if(block && R>CORRECT_FOR_RADIUS){
-				if(i >= VALPERC(pxl_width,Circle.correctPercDeg)){	block=0; decision= pow(R+Circle.errorDecision,2); }
-		}}
-
-		buf[0]=pxl_width;
-		do{
-			_x++;  pxl_line++;
-			param_x = pow(_x-x0,2);		_CorrectDecision();
-			if((param_x+param_y) > decision){
-				_y++;
-				param_y = pow(y0-_y,2);
-				buf[1+i++]=pxl_line-1;
-				pxl_line=1;
-			}
-		}while(i<pxl_width);
-
-		LCD_CircleCorrect();
-
-  	 uint16_t _height=buf[0];
-  	 for(int i=0;i<buf[0];++i) _height+=buf[buf[0]-i];
-  	 _height = 2*_height;
-
-		if(height>=_height)
-			y= y+(height-_height)/2;
-		else{
-			matchWidth+=1;
-			goto GOTO_ToCalculateRadius;
-		}
-
-		x-=(x-__x-_height/2);
-		y-=(y-__y);
-
-		Circle.width=_height;
-		Circle.x0=x;
-		Circle.y0=y+Circle.width/2;
-		circleFlag=1;
-	}
-	else if((_width==0)&&(height==0));
-	else return;
-
-	uint8_t buf_Inv[buf[0]+1];
-	InverseAndCopyBuff(buf_Inv,buf);
-	_StartDrawLine(posBuff,bkX,x,y);
-
-	uint32_t BkpColor_copy = BkpColor;
-	if(outColorRead) BkpColor=0;
-		_DrawArrayBuffRightDown_AA(PARAM_AA,0,buf); 	    _CopyDrawPos(); _IncDrawPos(-bkX); PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
-		_DrawArrayBuffRightDown_AA(PARAM_AA,1,buf_Inv);                      				   PixelCorrect(PARAM, buf[1],bkX);   _IncDrawPos(-1);
-
-		_DrawArrayBuffLeftDown_AA (PARAM_AA,1,buf); 		 _CopyDrawPos(); _IncDrawPos(1);    PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
-		_DrawArrayBuffLeftDown_AA (PARAM_AA,0,buf_Inv);                      					PixelCorrect(PARAM, buf[1],-1);    _IncDrawPos(-bkX);
-
-		_DrawArrayBuffLeftUp_AA  (PARAM_AA,0,buf);       _CopyDrawPos(); _IncDrawPos(bkX);  PixelCorrect(PARAM, 1,     -bkX);  _SetCopyDrawPos();
-		_DrawArrayBuffLeftUp_AA  (PARAM_AA,1,buf_Inv);  						    					PixelCorrect(PARAM, buf[1],-bkX);  _IncDrawPos(1);
-
-		_DrawArrayBuffRightUp_AA (PARAM_AA,1,buf);       _CopyDrawPos(); _IncDrawPos(-1);  	PixelCorrect(PARAM, 1,      1);    _SetCopyDrawPos();
-		_DrawArrayBuffRightUp_AA (PARAM_AA,0,buf_Inv);                       					PixelCorrect(PARAM, buf[1], 1);
-	if(outColorRead) BkpColor = BkpColor_copy;
-
-		if(FillColor!=TRANSPARENT)
-		{
-	   	 uint16_t fillWidth, fillHeight=0;
-
-			_StartDrawLine(posBuff,bkX,x,y);
-			fillWidth=0;
-			for(int i=0;i<buf[0];++i){
-				_IncDrawPos(bkX-buf[i+1]);	_CopyDrawPos(); k+=buf[i+1];	if(i>0) _DrawRight(2*fillWidth,FillColor);	_SetCopyDrawPos();	fillHeight++;
-				fillWidth += buf[i+1];
-			}
-
-			for(int i=0;i<buf[0];++i){
-				fillWidth++;
-				_IncDrawPos(-1);
-				for(int j=0; j<buf[buf[0]-i]; ++j){
-					_IncDrawPos(bkX);	_CopyDrawPos(); if(j==buf[buf[0]-i]-1){k+=1;_DrawRight(2*(fillWidth-1),FillColor);}else{k+=2;_DrawRight(2*(fillWidth-2),FillColor);}	_SetCopyDrawPos();	fillHeight++;
-				}
-			}
-
-			fillHeight = 2*fillHeight-1;
-
-			_StartDrawLine(posBuff,bkX,x,y+fillHeight);
-			fillWidth=0;
-			for(int i=0;i<buf[0];++i){
-				_IncDrawPos(-bkX-buf[i+1]);	_CopyDrawPos();	 k+=buf[i+1];	if(i>0) _DrawRight(2*fillWidth,FillColor);	_SetCopyDrawPos();
-				fillWidth += buf[i+1];
-			}
-
-			for(int i=0;i<buf[0];++i){
-				fillWidth++;
-				_IncDrawPos(-1);
-				for(int j=0; j<buf[buf[0]-i]; ++j){
-					_IncDrawPos(-bkX);	_CopyDrawPos();  if(j==buf[buf[0]-i]-1){k+=1;_DrawRight(2*(fillWidth-1),FillColor);}else{k+=2;_DrawRight(2*(fillWidth-2),FillColor);}	 _SetCopyDrawPos();
-				}
-			}
-		}
-
-	if(param==Percent_Circle && circleFlag)
-	{
-		int circleLinesLenCorrect;
-		uint16_t fillWidth=0, fillHeight=0;
-
-		for(int i=0;i<Circle.degree[0];++i)
-		{
-			circleLinesLenCorrect=0;
-			if(IS_RANGE(Circle.degree[1+i], 300, 330) ||
-				IS_RANGE(Circle.degree[1+i], 206, 244) ||
-				IS_RANGE(Circle.degree[1+i], 122, 149) )
-			{
-				if(Circle.width/2 < CORRECT_FOR_RADIUS)
-					circleLinesLenCorrect = 2;
-				else
-					circleLinesLenCorrect = 4;
-			}
-			else if(IS_RANGE(Circle.degree[1+i],  34,  56))
-				circleLinesLenCorrect = 2;
-
-			if(i==0)
-				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,_FillColor,Circle.degColor[i+1]);
-			else if(i==Circle.degree[0]-1)
-				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,Circle.degColor[i],_FillColor);
-			else
-				DrawLine(0,Circle.x0,Circle.y0,(Circle.width-4-circleLinesLenCorrect)/2-1,Circle.degree[1+i],FrameColor,BkpSizeX, Circle.outRatioStart,Circle.inRatioStart,Circle.degColor[i],Circle.degColor[i+1]);
-		}
-
-		void _Fill(int width)
-		{
-			int j=width;
-			uint8_t threshold[Circle.degree[0]];
-			int subj=0, deltaDeg;
-			uint32_t colorDeg=0;	uint8_t flagPermission=0;
-
-			int _GGGG(void){
-				for(int i=0;i<Circle.degree[0]-1;++i){
-					deltaDeg=Circle.degree[1+i+1]-Circle.degree[1+i];
-					if( ((deltaDeg>0)&&(deltaDeg<=180)) || (deltaDeg<-180) ){
-						if((threshold[i]==0)&&(threshold[i+1]==2)){
-							colorDeg= Circle.degColor[1+i];
-							return 1;
-						}
-					}
-					else{
-						if((threshold[i]==0)||(threshold[i+1]==2)){
-							colorDeg= Circle.degColor[1+i];
-							return 2;
-				}}}
-				return 0;
-			}
-
-			while(j--)
-			{
-				if(pLcd[k]==FillColor){
-					for(int i=0;i<Circle.degree[0];++i)
-						threshold[i]=LCD_SearchRadiusPoints(posBuff,i,bkX);
-					flagPermission=_GGGG();
-				}
-
-				GOTO_ToFillCircle:
-				if(pLcd[k]==FillColor)
-				{
-					if(flagPermission) pLcd[k]= colorDeg;
-					k++; subj=1;
-				}
-				if(pLcd[k]==FillColor){ if(j==0){ k--; break; } j--; subj=0; goto GOTO_ToFillCircle; }
-				k++;
-				if(subj==1){ subj=0; if(j>0) j--; else{ k--; break; }}
-			}
-		}
-
-		void _Change_AA(int width)
-		{
-			int j=width;
-			int threshold[Circle.degree[0]];
-			int deltaDeg;
-
-			while(j--)
-			{
-				for(int i=0;i<Circle.degree[0];++i)
-					threshold[i]=LCD_SearchRadiusPoints(posBuff,i,bkX);
-
-				for(int i=0;i<Circle.degree[0]-1;++i)
-				{
-					deltaDeg=Circle.degree[1+i+1]-Circle.degree[1+i];
-					if( ((deltaDeg>0)&&(deltaDeg<=180)) || (deltaDeg<-180) )
-					{
-						if((threshold[i]==0)&&(threshold[i+1]==2)){
-							pLcd[k]=GetTransitionColor(FrameColor, Circle.degColor[1+i], GetTransitionCoeff(FrameColor,FillColor,pLcd[k]));
-							break;
-						}
-					}
-					else
-					{
-						if((threshold[i]==0)||(threshold[i+1]==2)){
-							pLcd[k]=GetTransitionColor(FrameColor, Circle.degColor[1+i], GetTransitionCoeff(FrameColor,FillColor,pLcd[k]));
-							break;
-				}}}
-				k++;
-		}}
-
-		_StartDrawLine(posBuff,bkX,x,y);
-		for(int i=0;i<buf[0];++i){
-			_IncDrawPos(bkX-buf[i+1]);	  _CopyDrawPos();   _Change_AA(buf[i+1]); 	if(i>0) _Fill(2*fillWidth); _Change_AA(buf[i+1]); _SetCopyDrawPos();	fillHeight++;
-			fillWidth += buf[i+1];
-		}
-		for(int i=0;i<buf[0];++i){
-			fillWidth++;
-			_IncDrawPos(-1);
-			for(int j=0; j<buf[buf[0]-i]; ++j){
-				_IncDrawPos(bkX);	_CopyDrawPos(); if(j==buf[buf[0]-i]-1){ _Change_AA(1); _Fill(2*(fillWidth-1)); _Change_AA(1); }else{  _Change_AA(2); _Fill(2*(fillWidth-2)); _Change_AA(2); }	_SetCopyDrawPos();	fillHeight++;
-			}
-		}
-
-		fillHeight = 2*fillHeight-1;
-		_StartDrawLine(posBuff,bkX,x,y+fillHeight);
-		fillWidth=0;
-		for(int i=0;i<buf[0];++i){
-			_IncDrawPos(-bkX-buf[i+1]);	_CopyDrawPos();	_Change_AA(buf[i+1]); if(i>0) _Fill(2*fillWidth); _Change_AA(buf[i+1]);	_SetCopyDrawPos();
-			fillWidth += buf[i+1];
-		}
-
-		for(int i=0;i<buf[0];++i){
-			fillWidth++;
-			_IncDrawPos(-1);
-			for(int j=0; j<buf[buf[0]-i]; ++j){
-				_IncDrawPos(-bkX);	_CopyDrawPos();  if(j==buf[buf[0]-i]-1){ _Change_AA(1); _Fill(2*(fillWidth-1)); _Change_AA(1);}else{ _Change_AA(2); _Fill(2*(fillWidth-2)); _Change_AA(2);}	 _SetCopyDrawPos();
-			}
-		}
-	}
-	#undef PARAM
-	#undef PARAM_AA
-	#undef buf
-}
-
 structPosition GetCircleMiddPoint(uint16_t *radius){
 	structPosition pos = {Circle.x0, Circle.y0};
 	*radius = Circle.width;
 	return pos;
 }
 
-void LCD_Circle_TEST__(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor)
-{
-	//SHAPE_PARAMS params = {.bkSize.x=BkpSizeX, .bkSize.y=BkpSizeY, .pos[0].x=x, .pos[0].y=y, .size[0].w=_width, .size[0].h=height, .color[0].frame=FrameColor, .color[0].fill=FillColor, .color[0].bk=BkpColor};
-
-//	if(ToStructAndReturn == posBuff)
-//		return params;
-
+void LCD_Circle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t _width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){
 	uint32_t width = _width&0xFFFF;
 	uint16_t param = _width>>16;
-	uint8_t thickness = 15;//FrameColor>>24;
+	uint8_t thickness = FrameColor>>24;
+
+	if(0 == param && thickness)
+		LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FrameColor, BkpColor, 0);
+	else
+		LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor, 0);
 
 	if(thickness){
-		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x,y, _width,height, FrameColor, FillColor, BkpColor, 0);
 		LCD_CopyCircleWidth();
-
    	uint32_t width_new = width-2*thickness;
 		int offs= (Circle.width-LCD_CalculateCircleWidth(width_new))/2;
-
-		LCD_DrawCircle_TEST__(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor, 1);
+		LCD_DrawCircle(posBuff,BkpSizeX,BkpSizeY,x+offs,y+offs, width_new,width_new, FrameColor, FillColor, FillColor, 1);
 		LCD_SetCopyCircleWidth();
 	}
-	//return params;
-
 }
-//SHAPE_PARAMS LCDSHAPE_CircleTEST(uint32_t posBuff, SHAPE_PARAMS param){
-//	return LCD_Circle_TEST__(posBuff,param.bkSize.x,param.bkSize.y, param.pos[0].x,param.pos[0].y, param.size[0].w,param.size[0].h, param.color[0].frame, param.color[0].fill, param.color[0].bk);
-//}
-
-
-
-
-
-
-
 
 void LCD_HalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint32_t FrameColor, uint32_t FillColor, uint32_t BkpColor){
 	uint8_t thickness = FrameColor>>24;
@@ -4218,6 +3414,4 @@ void LCD_HalfCircle(uint32_t posBuff,uint32_t BkpSizeX,uint32_t BkpSizeY, uint32
 	}
 	else LCD_DrawHalfCircle(posBuff,BkpSizeX,BkpSizeY,x,y, width,height, FrameColor, FillColor, BkpColor);
 }
-
-
 
