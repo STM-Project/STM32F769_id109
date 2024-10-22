@@ -369,7 +369,7 @@ static void KeysAllRelease_CircleSlider(int nr, XY_Touch_Struct posKeys[],int *v
 		uint32_t degColor[2] = {0, CONDITION(deg[1]==deg[0],fillColor,colorTxtPressKey[i]) };
 		posK = posKeys[i];	posK.y -= VALPERC(GetHeightFontDescr(),40);		TxtDescrMidd_WidthKey(nr, posK, txtKey[i], colorTxtPressKey[i]);
 		LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
-		LCD_Circle_TEST__(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, SetParamWidthCircle(Percent_Circle,s[nr].widthKey),s[nr].heightKey, SetBold2Color(frameColor,s[nr].bold), fillColor, bkColor);
+		LCD_Circle(0, widthAll,heightAll, posKeys[i].x, posKeys[i].y, SetParamWidthCircle(Percent_Circle,s[nr].widthKey),s[nr].heightKey, SetBold2Color(frameColor,s[nr].bold), fillColor, bkColor);
 	}
 	LCD_Display(0, s[nr].x, s[nr].y, widthAll, heightAll);
 }
@@ -403,7 +403,7 @@ static void KeyPress_CircleSlider(int nr, uint16_t x,uint16_t y, XY_Touch_Struct
 		*value = _GetValFromDeg(degPosX);
 
 		LCD_SetCirclePercentParam(2,deg,(uint32_t*)degColor);
-		LCD_Circle_TEST__(0, s[nr].widthKey,s[nr].heightKey, 0,0, SetParamWidthCircle(Percent_Circle,s[nr].widthKey),s[nr].heightKey, SetBold2Color(frameColor,s[nr].bold), fillColor, bkColor);
+		LCD_Circle(0, s[nr].widthKey,s[nr].heightKey, 0,0, SetParamWidthCircle(Percent_Circle,s[nr].widthKey),s[nr].heightKey, SetBold2Color(frameColor,s[nr].bold), fillColor, bkColor);
 		LCD_Display(0, s[nr].x+posKeys.x, s[nr].y+posKeys.y, s[nr].widthKey, s[nr].heightKey);
 		if(pfunc) pfunc();
 	}
