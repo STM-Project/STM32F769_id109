@@ -3358,14 +3358,26 @@ uint16_t LCD_CalculateCircleWidth(uint32_t width)
 	return _height;
 	#undef buf
 }
+uint16_t LCD_IncrCircleBold(uint16_t width, uint16_t bold){
+	uint16_t width_temp= width-2*bold, bold_temp= bold, i=0;
+	while(LCD_CalculateCircleWidth(width-2*INCR_WRAP(bold_temp,1,0,width/2-1)) == LCD_CalculateCircleWidth(width_temp) && 20>i) i++;
+	if(20==i) return bold;
+	else		 return bold_temp;
+}
+uint16_t LCD_DecrCircleBold(uint16_t width, uint16_t bold){
+	uint16_t width_temp= width-2*bold, bold_temp= bold, i=0;
+	while(LCD_CalculateCircleWidth(width-2*DECR_WRAP(bold_temp,1,0,width/2-1)) == LCD_CalculateCircleWidth(width_temp) && 20>i) i++;
+	if(20==i) return bold;
+	else		 return bold_temp;
+}
 uint16_t LCD_GetNextIncrCircleWidth(uint32_t width){
-	uint32_t width_start=0;
-	for(int i=0;	i<30 && width_start<=width; 	width_start=LCD_CalculateCircleWidth(width+i++));
+	uint32_t width_start= width;
+	for(int i=0;	i<20 && width_start<=width; 	width_start=LCD_CalculateCircleWidth(width+i++));
 	return width_start;
 }
 uint16_t LCD_GetNextDecrCircleWidth(uint32_t width){
-	uint32_t width_start=width;
-	for(int i=0;   i<30 && width_start>=width; 	width_start=LCD_CalculateCircleWidth(width-i++));
+	uint32_t width_start= width;
+	for(int i=0;   i<20 && width_start>=width; 	width_start=LCD_CalculateCircleWidth(width-i++));
 	return width_start;
 }
 
