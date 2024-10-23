@@ -28,8 +28,8 @@
 #define TOOGLE(x)  ((x)=1-(x))
 #define INCR(x,step,max)  ((x+step>max) ? (x=max) : (x+=step))
 #define DECR(x,step,min)  ((x-step<min) ? (x=min) : (x-=step))
-#define INCR_WRAP(x,step,min,max)  ((x+step>max) ? (x=min) : (x+=step))
-#define DECR_WRAP(x,step,min,max)  ((x-step<min) ? (x=max) : (x-=step))
+#define INCR_WRAP(x,step,min,max)  (((x)+(step)>(max)) ? ((x)=(min)) : ((x)+=(step)))
+#define DECR_WRAP(x,step,min,max)  (((x)-(step)<(min)) ? ((x)=(max)) : ((x)-=(step)))
 #define INTEGER(f)	 ((int)f)
 #define FRACTION(f)	 (f-(int)f)
 #define ROUND_VAL(val,fraction)	 ((FRACTION(val)>fraction) ? (INTEGER(val)+1) : (INTEGER(val)));
@@ -90,7 +90,6 @@
 
 #define INIT(name,val)	int name=val
 #define CONDITION(condition,val1,val2)	((condition) ? (val1) : (val2))
-#define OPERATION(val,oper1,oper2,oper3)	_ReturnVal3(int val, int oper1,int oper2,int oper3)
 #define MAXVAL2(value1,value2)	((value1) >= (value2) ? (value1) : (value2))
 #define MINVAL2(value1,value2)	((value1) <= (value2) ? (value1) : (value2))
 

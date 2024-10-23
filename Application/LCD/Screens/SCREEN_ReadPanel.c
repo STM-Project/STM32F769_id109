@@ -502,16 +502,8 @@ static void DBG_SCREEN_Test_Circle(void)
 	else if(DEBUG_RcvStr("n")) DECR_FLOAT_WRAP(Circle.ratioBk  ,0.10, 0.00, 1.00);
 	else if(DEBUG_RcvStr("m")) DECR_FLOAT_WRAP(Circle.ratioFill,0.10, 0.00, 1.00);
 
-	else if(DEBUG_RcvStr("g")){
-		Circle.bold= LCD_IncrCircleBold(Circle.width,Circle.bold);
-//		uint16_t width_temp = Circle.width-2*Circle.bold;
-//		while(LCD_CalculateCircleWidth(Circle.width-2*INCR_WRAP(Circle.bold,1,0,Circle.width/2-1)) == LCD_CalculateCircleWidth(width_temp));
-	}
-	else if(DEBUG_RcvStr("b")){
-		Circle.bold= LCD_DecrCircleBold(Circle.width,Circle.bold);
-//		uint16_t width_temp = Circle.width-2*Circle.bold;
-//		while(LCD_CalculateCircleWidth(Circle.width-2*DECR_WRAP(Circle.bold,1,0,Circle.width/2-1)) == LCD_CalculateCircleWidth(width_temp));
-	}
+	else if(DEBUG_RcvStr("g")) Circle.bold= LCD_IncrCircleBold(Circle.width,Circle.bold);
+	else if(DEBUG_RcvStr("b")) Circle.bold= LCD_DecrCircleBold(Circle.width,Circle.bold);
 
 	else if(DEBUG_RcvStr("o")) INCR_WRAP(Circle.halfCircle,1,0,3);
 

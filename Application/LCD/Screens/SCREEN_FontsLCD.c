@@ -521,6 +521,7 @@ typedef enum{
 	KEY_fontCircleSliderR,
 	KEY_fontCircleSliderG,
 	KEY_fontCircleSliderB,
+	KEY_CircleSliderStyle,
 	KEY_bkCircleSliderR,
 	KEY_bkCircleSliderG,
 	KEY_bkCircleSliderB,
@@ -1507,7 +1508,6 @@ void FILE_NAME(setTouch)(void)
 
 	int NotServiceTouchAboveWhenWasClearedThis(TOUCH_POINTS touch){
 		return CONDITION(NoTouch==touch, 1, !CHECK_TOUCH(touch) && !_WasState(touch));
-		//return ( !CHECK_TOUCH(Touch_FontSizeMove) && !_WasState(Touch_FontSizeMove) );
 	}
 
 	void _TouchService(TOUCH_POINTS touchStart,TOUCH_POINTS touchStop, KEYBOARD_TYPES keyboard, SELECT_PRESS_BLOCK releaseAll,SELECT_PRESS_BLOCK keyStart, TOUCH_FUNC *func){
@@ -1703,7 +1703,7 @@ void FILE_NAME(setTouch)(void)
 			_TouchEndService(Touch_size_plus, Touch_size_minus, 	KEYBOARD_fontSize, 	KEY_Select_one,  FUNC_FontSize);
 			_TouchEndService(Touch_coeff_plus, Touch_coeff_minus, KEYBOARD_fontCoeff, 	KEY_All_release, FUNC_FontSize);
 
-			_TouchEndService(Touch_fontCircleSliderR, Touch_CircleSliderStyle, 	KEYBOARD_circleSliderRGB, 		KEY_All_release, NULL);
+		/* _TouchEndService(Touch_fontCircleSliderR, Touch_CircleSliderStyle, 	KEYBOARD_circleSliderRGB, 		KEY_All_release, NULL); */		/* For circle slider is not needed */
 
 
 			if(_WasStateRange(Touch_LenWin_plus, Touch_ResetSpaces))
@@ -1763,7 +1763,7 @@ void FILE_NAME(setTouch)(void)
 
 void FILE_NAME(debugRcvStr)(void)
 {
-	if(DEBUG_RcvStr("0"))  ///daj w funkcji keyboarda !!!
+	if(DEBUG_RcvStr("0"))
 		DisplayFontsWithChangeColorOrNot();
 
 	else if(DEBUG_RcvStr("]"))
