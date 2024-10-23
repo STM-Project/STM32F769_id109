@@ -394,6 +394,7 @@ typedef enum{
 	Touch_fontCircleSliderR,
 	Touch_fontCircleSliderG,
 	Touch_fontCircleSliderB,
+	Touch_CircleSliderStyle,
 	Touch_bkCircleSliderR,
 	Touch_bkCircleSliderG,
 	Touch_bkCircleSliderB,
@@ -1540,7 +1541,7 @@ void FILE_NAME(setTouch)(void)
 	_TouchService(Touch_size_norm, Touch_size_italic,	 KEYBOARD_fontSize,  0, 				  KEY_Select_one,  FUNC_FontBoldItalNorm);
 	_TouchService(Touch_coeff_plus, Touch_coeff_minus,	 KEYBOARD_fontCoeff, KEY_All_release, KEY_Coeff_plus,  FUNC_FontCoeff);
 
-	_TouchService(Touch_fontCircleSliderR, Touch_fontCircleSliderB,	KEYBOARD_circleSliderRGB, 		KEY_All_release, KEY_fontCircleSliderR, NULL);
+	_TouchService(Touch_fontCircleSliderR, Touch_CircleSliderStyle,	KEYBOARD_circleSliderRGB, 		KEY_All_release, KEY_fontCircleSliderR, NULL);
 
 	switch(state)
 	{
@@ -1702,7 +1703,7 @@ void FILE_NAME(setTouch)(void)
 			_TouchEndService(Touch_size_plus, Touch_size_minus, 	KEYBOARD_fontSize, 	KEY_Select_one,  FUNC_FontSize);
 			_TouchEndService(Touch_coeff_plus, Touch_coeff_minus, KEYBOARD_fontCoeff, 	KEY_All_release, FUNC_FontSize);
 
-			_TouchEndService(Touch_fontCircleSliderR, Touch_fontCircleSliderB, 	KEYBOARD_circleSliderRGB, 		KEY_All_release, NULL);
+			_TouchEndService(Touch_fontCircleSliderR, Touch_CircleSliderStyle, 	KEYBOARD_circleSliderRGB, 		KEY_All_release, NULL);
 
 
 			if(_WasStateRange(Touch_LenWin_plus, Touch_ResetSpaces))
