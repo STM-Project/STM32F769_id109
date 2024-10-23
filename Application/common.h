@@ -113,6 +113,9 @@ typedef struct{
 	uint32_t len;
 }DATA_TO_SEND;
 
+//typedef struct { I16P x,y; } GUI_POINT;
+//typedef struct { I16 x0,y0,x1,y1; } LCD_RECT;
+
 typedef struct{
 	int x;
 	int y;
