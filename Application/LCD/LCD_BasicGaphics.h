@@ -118,6 +118,8 @@ uint16_t LCD_GetCircleWidth(void);
 void LCD_CopyCircleWidth(void);
 void LCD_SetCopyCircleWidth(void);
 uint16_t LCD_CalculateCircleWidth(uint32_t width);
+uint16_t LCD_IncrCircleBold(uint16_t width, uint16_t bold);
+uint16_t LCD_DecrCircleBold(uint16_t width, uint16_t bold);
 uint16_t LCD_GetNextIncrCircleWidth(uint32_t width);
 uint16_t LCD_GetNextDecrCircleWidth(uint32_t width);
 structPosition GetCircleMiddPoint(uint16_t *radius);
