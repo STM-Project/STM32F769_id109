@@ -331,7 +331,6 @@ void NOWY_3(void)  //dac mozliwosc zablokowania Dbg definem!!!
 
 /* ########### --- SCREEN_Test_Circle --- ############ */
 
-#define INCR_WIDTH_CIRCLE_STEP 	(1)
 #define MAX_WIDTH_CIRCLE 	(VALPERC(LCD_GetYSize(),96))
 #define MIN_WIDTH_CIRCLE 	(20)
 
@@ -372,7 +371,7 @@ static void SCREEN_Test_Circle(void)
    uint32_t _BkColor		(void){ return RGB2INT( Circle.bk[0],	  Circle.bk[1],    Circle.bk[2]    ); }
    uint32_t _FillColor	(void){ return RGB2INT( Circle.fill[0],  Circle.fill[1],  Circle.fill[2]  ); }
    uint32_t _FrameColor	(void){ return RGB2INT( Circle.frame[0], Circle.frame[1], Circle.frame[2] ); }
-
+/*
 	void __Show_FrameAndCircle_Indirect(uint16_t x, uint16_t y, uint16_t width, uint8_t bold){
 		int widthCalculated=LCD_CalculateCircleWidth(width);
 		LCD_ClearPartScreen(3333,widthCalculated,widthCalculated,RGB2INT(Circle.bk[0],Circle.bk[1],Circle.bk[2]));
@@ -386,7 +385,7 @@ static void SCREEN_Test_Circle(void)
 		LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
 		LCD_ShapeIndirect(x,y,LCD_Circle, width,width, SetBold2Color(_FrameColor(),bold), _FillColor(), _BkColor());
 	}
-
+*/
 	if(START_SCREEN_Test_Circle())
 	{
 		SCREEN_ResetAllParameters();
@@ -443,8 +442,8 @@ static void SCREEN_Test_Circle(void)
 	lenStr=LCD_Str(fontID_1, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,5), StrAll(6,"Backup:",INT2STR(Circle.bk[0]),   " ",INT2STR(Circle.bk[1]),   " ",INT2STR(Circle.bk[2])),   halfHight,0,_BkColor(),1,1);
 	lenStr=LCD_Str(fontID_2, LCD_Xpos(lenStr,GetPos,0), LCD_Ypos(lenStr,IncPos,5), StrAll(4,"AA out:",Float2Str(Circle.ratioBk,' ',1,Sign_none,2),"  AA in:",Float2Str(Circle.ratioFill,' ',1,Sign_none,2)), 	 halfHight,0,_BkColor(),1,1);
 
-	if(Circle.bold > Circle.width/INCR_WIDTH_CIRCLE_STEP-1)
-		Circle.bold=Circle.width/INCR_WIDTH_CIRCLE_STEP-1;
+	if(Circle.bold > Circle.width/2-1)
+		Circle.bold= Circle.width/2-1;
 
 	LCD_SetCircleAA(Circle.ratioBk,Circle.ratioFill);
 	CorrectLineAA_on();
@@ -474,8 +473,8 @@ static void DBG_SCREEN_Test_Circle(void)
 {
 	int refresh_Screen=1;
 
-		  if(DEBUG_RcvStr("]")) { if(Circle.width < MAX_WIDTH_CIRCLE) Circle.width=LCD_GetNextIncrCircleWidth(Circle.width); /* INCR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE); */ }
-	else if(DEBUG_RcvStr("\\")){ if(Circle.width > MIN_WIDTH_CIRCLE) Circle.width=LCD_GetNextDecrCircleWidth(Circle.width); /* DECR_WRAP(Circle.width,INCR_WIDTH_CIRCLE_STEP,12,MAX_WIDTH_CIRCLE); */ }
+		  if(DEBUG_RcvStr("]")) { if(Circle.width < MAX_WIDTH_CIRCLE) Circle.width=LCD_GetNextIncrCircleWidth(Circle.width); }
+	else if(DEBUG_RcvStr("\\")){ if(Circle.width > MIN_WIDTH_CIRCLE) Circle.width=LCD_GetNextDecrCircleWidth(Circle.width); }
 
 	else if(DEBUG_RcvStr("1")) INCR_WRAP(Circle.frame[0],1,0,255);
 	else if(DEBUG_RcvStr("2")) INCR_WRAP(Circle.frame[1],1,0,255);
@@ -504,12 +503,14 @@ static void DBG_SCREEN_Test_Circle(void)
 	else if(DEBUG_RcvStr("m")) DECR_FLOAT_WRAP(Circle.ratioFill,0.10, 0.00, 1.00);
 
 	else if(DEBUG_RcvStr("g")){
-		uint16_t width_temp = Circle.width-2*Circle.bold;
-		while(LCD_CalculateCircleWidth(Circle.width-2*INCR_WRAP(Circle.bold,1,0,Circle.width/2-1)) == LCD_CalculateCircleWidth(width_temp));  //DAC funkcie grubosc zwiekszajaca w LCD_BASIC.... !!!!
+		Circle.bold= LCD_IncrCircleBold(Circle.width,Circle.bold);
+//		uint16_t width_temp = Circle.width-2*Circle.bold;
+//		while(LCD_CalculateCircleWidth(Circle.width-2*INCR_WRAP(Circle.bold,1,0,Circle.width/2-1)) == LCD_CalculateCircleWidth(width_temp));
 	}
 	else if(DEBUG_RcvStr("b")){
-		uint16_t width_temp = Circle.width-2*Circle.bold;
-		while(LCD_CalculateCircleWidth(Circle.width-2*DECR_WRAP(Circle.bold,1,0,Circle.width/2-1)) == LCD_CalculateCircleWidth(width_temp));
+		Circle.bold= LCD_DecrCircleBold(Circle.width,Circle.bold);
+//		uint16_t width_temp = Circle.width-2*Circle.bold;
+//		while(LCD_CalculateCircleWidth(Circle.width-2*DECR_WRAP(Circle.bold,1,0,Circle.width/2-1)) == LCD_CalculateCircleWidth(width_temp));
 	}
 
 	else if(DEBUG_RcvStr("o")) INCR_WRAP(Circle.halfCircle,1,0,3);
