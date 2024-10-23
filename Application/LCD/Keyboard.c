@@ -268,6 +268,15 @@ static void ShapeWin(int nr, int width_all, int height_all){
 	LCD_ShapeWindow( s[nr].shape,0,width_all,height_all, 0,0, width_all,height_all, SetBold2Color(frameMainColor,s[nr].bold), fillMainColor,bkColor );
 }
 
+static int GetPosKeySize(void){
+	int countKey = dimKeys[0]*dimKeys[1];		if(countKey > MAX_WIN_Y-1)  countKey= MAX_WIN_Y;
+	return countKey;
+}
+static int _GetPosKeySize(uint16_t dimKey[]){
+	int countKey = dimKey[0]*dimKey[1];		if(countKey > MAX_WIN_Y-1)  countKey= MAX_WIN_Y;
+	return countKey;
+}
+
 static void KeyShapePressDisp_oneBlock(int nr, XY_Touch_Struct pos, ShapeFunc pShape, SHAPE_PARAMS param){
 	LCD_ShapeWindow( s[nr].shape, 0, s[nr].widthKey,s[nr].heightKey, 0,0, s[nr].widthKey,s[nr].heightKey, SetBold2Color(framePressColor,s[nr].bold),fillPressColor,bkColor);
 	pShape(0,param);
@@ -547,7 +556,7 @@ static void _KeysSelectOne(int nr, XY_Touch_Struct posKeys[], int value, uint16_
 
 static void SetTouch_Button(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys){
 	if(startTouchIdx){
-		for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i)
+		for(int i=0; i<GetPosKeySize(); ++i)
 			SetTouch(nr,ID_TOUCH_GET_ANY_POINT_WITH_WAIT, s[nr].startTouchIdx + i, TOUCH_GET_PER_X_PROBE, posKeys[i]);
 }}
 static void _SetTouch_Button(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys, uint16_t dimKey[], int nrWH){
@@ -559,7 +568,7 @@ static void _SetTouch_Button(int nr, uint16_t startTouchIdx, XY_Touch_Struct* po
 
 static void SetTouch_Select(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys){
 	if(startTouchIdx){
-		for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i)
+		for(int i=0; i<GetPosKeySize(); ++i)
 			SetTouch(nr,ID_TOUCH_POINT, s[nr].startTouchIdx + i, press, posKeys[i]);
 }}
 static void _SetTouch_Select(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys, uint16_t dimKey[], int nrWH){
@@ -572,18 +581,13 @@ static void _SetTouch_Select(int nr, uint16_t startTouchIdx, XY_Touch_Struct* po
 
 static void SetTouch_CircleSlider(int nr, uint16_t startTouchIdx, XY_Touch_Struct* posKeys){
 	if(startTouchIdx){
-		for(int i=0; i<dimKeys[0]*dimKeys[1]; ++i)
+		for(int i=0; i<GetPosKeySize(); ++i)
 			SetTouch(nr,ID_TOUCH_GET_ANY_POINT, s[nr].startTouchIdx + i, TOUCH_GET_PER_ANY_PROBE, posKeys[i]);
 }}
+//static void SetTouch_ChangeStyle(int nr, uint16_t startTouchIdx, XY_Touch_Struct posKeys){
+//	SetTouch(nr,ID_TOUCH_POINT, s[nr].startTouchIdx + GetPosKeySize(), press, posKeys);
+//}
 
-static int GetPosKeySize(void){
-	int countKey = dimKeys[0]*dimKeys[1];		if(countKey > MAX_WIN_Y-1)  countKey= MAX_WIN_Y;
-	return countKey;
-}
-static int _GetPosKeySize(uint16_t dimKey[]){
-	int countKey = dimKey[0]*dimKey[1];		if(countKey > MAX_WIN_Y-1)  countKey= MAX_WIN_Y;
-	return countKey;
-}
 static void WinInfo(char* txt, int x,int y, int w,int h, TIMER_ID tim){
 	uint32_t fillCol = BrightIncr(fillColor,0x1A);
 	LCD_ShapeWindow( LCD_RoundRectangle, 0, w,h, 0,0, w,h, SetBold2Color(frameColor,0), fillCol,bkColor );
@@ -958,6 +962,8 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 	SetPosKey(k,posKey,interSp,head);
 	SetDimAll(k,interSp,head);
 
+	//XY_Touch_Struct posChangeStyle = {widthAll-20, 0};
+
 	bkColor = fillMainColor;
 	if(TOUCH_Release == selBlockPress){
 		ShapeWin(k,widthAll,heightAll);
@@ -972,6 +978,7 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 			KeyPress_CircleSlider(k, x,y, posKey[nrCircSlid], radius, value+nrCircSlid, pfunc, BROWN);
 	}
 	SetTouch_CircleSlider(k, startTouchIdx, posKey);
+	//SetTouch_ChangeStyle(k, startTouchIdx, posKey);
 }
 
 
