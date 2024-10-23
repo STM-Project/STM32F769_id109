@@ -966,7 +966,10 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 	}
 	else{
 		INIT(nrCircSlid, selBlockPress-TOUCH_Action);
-		KeyPress_CircleSlider(k, x,y, posKey[nrCircSlid], radius, value+nrCircSlid, pfunc, colorTxtPressKey[nrCircSlid]);
+		if(nrCircSlid < GetPosKeySize())
+			KeyPress_CircleSlider(k, x,y, posKey[nrCircSlid], radius, value+nrCircSlid, pfunc, colorTxtPressKey[nrCircSlid]);
+		else
+			KeyPress_CircleSlider(k, x,y, posKey[nrCircSlid], radius, value+nrCircSlid, pfunc, BROWN);
 	}
 	SetTouch_CircleSlider(k, startTouchIdx, posKey);
 }
