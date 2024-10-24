@@ -3370,6 +3370,16 @@ uint16_t LCD_DecrCircleBold(uint16_t width, uint16_t bold){
 	if(20==i) return bold;
 	else		 return bold_temp;
 }
+uint16_t LCD_IncrWrapPercCircleBold(uint16_t radius, uint16_t bold, uint8_t minPerc, uint8_t maxPerc, uint8_t stepPerc){
+	uint16_t _bold= bold;
+	INIT(minVal, VALPERC(radius,minPerc));
+	INIT(maxVal, VALPERC(radius,maxPerc));
+	INIT(stepVal,VALPERC(radius,stepPerc));
+		  if(minVal >  _bold)  _bold= minVal;
+	else if(maxVal <= _bold)  _bold= 0;
+	else			 				  INCR_WRAP( _bold, stepVal, minVal, maxVal);
+	return _bold;
+}
 uint16_t LCD_GetNextIncrCircleWidth(uint32_t width){
 	uint32_t width_start= width;
 	for(int i=0;	i<20 && width_start<=width; 	width_start=LCD_CalculateCircleWidth(width+i++));
