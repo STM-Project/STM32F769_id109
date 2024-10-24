@@ -648,11 +648,6 @@ void SCREEN_ReadPanel(void)
 
 }
 
-//	StartMeasureTime_us();
-//	LCD_Znak_XX(0,LCD_X,LCD_Y, 240,136, 30,15, LIGHTGRAY,WHITE,WHITE);
-//	StopMeasureTime_us("\r\nLCD_Znak_XX:");
-//od  &fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages]  korzystaj z memory !!!!!!!!!!!!
-
 /*
  Jak czytam zycie ludzi swietych kazdego dnia jak jest wspomnienie w kosciolacj to jest to heroizm, Aga mowi ze to luzie chorzy psychicznie i ma racje w 100% jesli myslimy wylacznie po ludzku
 
