@@ -227,7 +227,7 @@ static uint8_t StructSpaceCount=0;
 
 static uint32_t CounterBusyBytesForFontsImages=0;
 
-//####################### -- My Settings -- #######################################################################
+//####################### -- My Settings -- #####################
 
 static int MyRealizeSpaceCorrect(char *txt, int id) //jako osobna funkcja w kazdym screen ustawiana a pozniej wymazywana !!!
 {
@@ -246,8 +246,7 @@ static int RealizeWidthConst(const char _char)
 	else
 		return 0;
 }
-
-//################################################################################################################
+//################# -- End My Settings -- ########################################################################
 
 static void LCD_CopyBuff2pLcd(int rot, uint32_t posBuff, uint32_t *buff, uint32_t xImgWidth, uint32_t yImgHeight, int posWin, uint16_t windowWidth, uint16_t xPosLcd, uint16_t yPosLcd, int param)
 {
@@ -1396,8 +1395,108 @@ static int ReadSpacesBetweenFontsFromSDcard(void){
 }
 
 //################################## -- Global Declarations -- #########################################################
-//################################## -- Global Declarations -- #########################################################
-//################################## -- Global Declarations -- #########################################################
+
+int SETVAL_char(uint32_t nrVal, char val){
+	if( MAX_FONTS_AND_IMAGES_MEMORY_SIZE > CounterBusyBytesForFontsImages+1 + nrVal ){
+		fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal] = val;
+		return 1;
+	}
+	return 0;
+}
+int SETVAL_str(uint32_t nrVal, char* val, uint32_t len){
+	if( MAX_FONTS_AND_IMAGES_MEMORY_SIZE > CounterBusyBytesForFontsImages+1 + nrVal + len ){
+		for(int i=0; i<len; i++)
+			fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + i] = *(val+i);
+		return 1;
+	}
+	return 0;
+}
+int SETVAL_int16(uint32_t nrVal, uint16_t val){
+	if( MAX_FONTS_AND_IMAGES_MEMORY_SIZE > CounterBusyBytesForFontsImages+1 + nrVal+1 ){
+		fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal]   = val>>8;
+		fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal+1] = val;
+		return 1;
+	}
+	return 0;
+}
+int SETVAL_int32(uint32_t nrVal, uint32_t val){
+	if( MAX_FONTS_AND_IMAGES_MEMORY_SIZE > CounterBusyBytesForFontsImages+1 + nrVal+3 ){
+		fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal]   = val>>24;
+		fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal+1] = val>>16;
+		fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal+2] = val>>8;
+		fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal+3] = val;
+		return 1;
+	}
+	return 0;
+}
+int SETVAL_array16(uint32_t nrVal, uint16_t* val, uint32_t len){
+	if( MAX_FONTS_AND_IMAGES_MEMORY_SIZE > CounterBusyBytesForFontsImages+1 + nrVal + 2*len ){
+		for(int i=0,j=0; i<len; i++){
+			fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j++] = *(val+i)>>8;
+			fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j++] = *(val+i);
+		}
+		return 1;
+	}
+	return 0;
+}
+int SETVAL_array32(uint32_t nrVal, uint32_t* val, uint32_t len){
+	if( MAX_FONTS_AND_IMAGES_MEMORY_SIZE > CounterBusyBytesForFontsImages+1 + nrVal + 4*len ){
+		for(int i=0,j=0; i<len; i++){
+			fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j++] = *(val+i)>>24;
+			fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j++] = *(val+i)>>16;
+			fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j++] = *(val+i)>>8;
+			fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j++] = *(val+i);
+		}
+		return 1;
+	}
+	return 0;
+}
+
+char GETVAL_char(uint32_t nrVal){
+	return fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal];
+}
+int GETVAL_str(uint32_t nrVal, char* val, uint32_t len){
+	if( MAX_FONTS_AND_IMAGES_MEMORY_SIZE > CounterBusyBytesForFontsImages+1 + nrVal + len ){
+		for(int i=0; i<len; i++)
+			*(val+i) = fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + i];
+		return 1;
+	}
+	return 0;
+}
+uint16_t GETVAL_int16(uint32_t nrVal){
+	return fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal]<<8
+		  | fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal+1];
+}
+uint32_t GETVAL_int32(uint32_t nrVal){
+	return fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal]  <<24
+		  | fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal+1]<<16
+		  | fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal+2]<<8
+		  | fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal+3];
+}
+int GETVAL_array16(uint32_t nrVal, uint16_t* val, uint32_t len){
+	if( MAX_FONTS_AND_IMAGES_MEMORY_SIZE > CounterBusyBytesForFontsImages+1 + nrVal + 2*len ){
+		for(int i=0,j=0; i<len; i++){
+			*(val+i) = fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j]<<8
+						| fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j+1];
+			j+=2;
+		}
+		return 1;
+	}
+	return 0;
+}
+int GETVAL_array32(uint32_t nrVal, uint32_t* val, uint32_t len){
+	if( MAX_FONTS_AND_IMAGES_MEMORY_SIZE > CounterBusyBytesForFontsImages+1 + nrVal + 4*len ){
+		for(int i=0,j=0; i<len; i++){
+			*(val+i) = fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j]	 <<24
+						| fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j+1]<<16
+						| fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j+2]<<8
+						| fontsImagesMemoryBuffer[CounterBusyBytesForFontsImages+1 + nrVal + j+3];
+			j+=4;
+		}
+		return 1;
+	}
+	return 0;
+}
 
 void LCD_SetStrVar_bkColor(int idVar, uint32_t bkColor){
 	FontVar[idVar].bkColor=bkColor;
