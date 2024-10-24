@@ -976,6 +976,7 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 	void _FuncAllRelease(void){
 		ShapeWin(k,widthAll,heightAll);
 		fieldTxtDescr = TxtDescr(k, 0,0, txtDescr);
+		if(s[k].bold)  frameColor = BrightDecr(frameColor,0x40);
 		KeysAllRelease_CircleSlider(k, posKey,value);
 	}
 
@@ -985,14 +986,11 @@ void KEYBOARD_ServiceCircleSliderRGB(int k, int selBlockPress, INIT_KEYBOARD_PAR
 	{	INIT(nrCircSlid, selBlockPress-TOUCH_Action);
 		float radius = ((float)LCD_GetCircleWidth())/2;
 
-			  if(nrCircSlid  < GetPosKeySize())  KeyPress_CircleSlider(k, x,y, posKey[nrCircSlid], radius, value+nrCircSlid, pfunc, colorTxtPressKey[nrCircSlid]);
+		if(nrCircSlid  < GetPosKeySize()){
+			if(s[k].bold)  frameColor = BrightDecr(frameColor,0x40);
+			KeyPress_CircleSlider(k, x,y, posKey[nrCircSlid], radius, value+nrCircSlid, pfunc, colorTxtPressKey[nrCircSlid]);
+		}
 		else if(nrCircSlid == GetPosKeySize()){
-//			INIT(minVal,VALPERC(radius,20));
-//			INIT(maxVal,VALPERC(radius,80));
-//			INIT(step,  VALPERC(radius,10));
-//				  if(minVal >  s[k].bold)  s[k].bold= minVal;
-//			else if(maxVal <= s[k].bold)  s[k].bold= 0;
-//			else			 					   INCR_WRAP( s[k].bold, step, minVal, maxVal);
 			s[k].bold = LCD_IncrWrapPercCircleBold(radius, s[k].bold, 20,80, 10);
 			_FuncAllRelease();
 		}
