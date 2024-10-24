@@ -12,7 +12,7 @@
 #include "LCD_Common.h"
 #include <stdbool.h>
 
-#define MAX_SIZE_TAB_AA		500   //!!!!!!!!!!  tREBA if >MAX_SIZE_TAB_AA to break; !!!! bo inaczej sa czarne kropki !!!!!
+#define MAX_SIZE_TAB_AA		500
 #define MAX_LINE_BUFF_CIRCLE_SIZE  500
 #define MAX_DEGREE_CIRCLE  10
 #define CORRECT_FOR_RADIUS  100
